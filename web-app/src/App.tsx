@@ -13,7 +13,7 @@ function App() {
     if (appContext.recentNote) {
       appContext.setEditingNoteId(appContext.recentNote.id);
     }
-  }, [appContext.recentNote])
+  }, [appContext.recentNote]);
 
   const handleNoteChange = (newNote: Note) => {
     appContext.saveNote(newNote);
@@ -24,11 +24,11 @@ function App() {
   return (
     <AppContext.Provider value={appContext}>
       <div className="font-SpecialElite text-slate-700">
-        <div className="p-4 flex">
-          <div className="flex-1 pr-20 max-w-[1000px]">
+        <div className="p-4 md:flex">
+          <div className="flex-1 md:pr-20 max-w-[1000px]">
             {note && <Editor note={note} onChange={handleNoteChange} />}
           </div>
-          {!appContext.focusMode && <SideBar />}
+          <div className="hidden md:block w-full md:w-3/12">{!appContext.focusMode && <SideBar />}</div>
         </div>
         <div className="absolute w-full bottom-0">
           <Nav />
