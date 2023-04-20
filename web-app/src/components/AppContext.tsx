@@ -9,6 +9,8 @@ import {
 import { createContext, useMemo, useState } from "react";
 import { Note } from "../type";
 
+export type TextMetricType = "words" | "readTime";
+
 export type AppContextType = {
   collection?: NoteCollection;
   editingNoteId?: number;
@@ -24,6 +26,10 @@ export type AppContextType = {
 
   focusMode: boolean;
   setFocusMode: (focusMode: boolean) => void;
+
+  textMetricType: TextMetricType;
+  setTextMetricType: (type: TextMetricType) => void;
+  toggleTextMetricType: () => void;
 };
 
 export const AppContext = createContext<AppContextType>({} as AppContextType);
@@ -34,6 +40,7 @@ export const useAppContext = (): AppContextType => {
   );
   const [editingNoteId, setEditingNoteId] = useState<number>();
   const [focusMode, setFocusMode] = useState<boolean>(false);
+  const [textMetricType, setTextMetricType] = useState<TextMetricType>("words");
   const recentNote = useMemo(() => {
     if (collection && Object.keys(collection).length) {
       const keys = Object.keys(collection);
@@ -74,6 +81,15 @@ export const useAppContext = (): AppContextType => {
     }
   };
 
+  const toggleTextMetricType = () => {
+    if (textMetricType === "readTime") {
+      setTextMetricType("words");
+    }
+    if (textMetricType === "words") {
+      setTextMetricType("readTime");
+    }
+  };
+
   return {
     collection,
     editingNoteId,
@@ -88,5 +104,9 @@ export const useAppContext = (): AppContextType => {
 
     focusMode,
     setFocusMode,
+
+    textMetricType,
+    setTextMetricType,
+    toggleTextMetricType
   };
 };

@@ -36,7 +36,7 @@ const Editor = ({
       <input
         type="text"
         value={note.title}
-        className="text-3xl outline-none w-full py-4"
+        className="text-3xl outline-none w-full pb-2"
         onChange={handleTitleChange}
       />
       <textarea

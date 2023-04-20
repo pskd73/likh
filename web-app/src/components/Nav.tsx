@@ -2,6 +2,7 @@ import * as React from "react";
 import { useContext } from "react";
 import { AppContext } from "./AppContext";
 import Clickable from "./Clickable";
+import TextCount from "./TextCount";
 
 const Nav = () => {
   const appContext = useContext(AppContext);
@@ -22,6 +23,13 @@ const Nav = () => {
       </div>
       <div>
         <ul className="flex space-x-6">
+          <li>
+            <Clickable lite>
+              <span onClick={() => appContext.toggleTextMetricType()}>
+                <TextCount />
+              </span>
+            </Clickable>
+          </li>
           <li onClick={handleNewNote}>
             <Clickable lite>
               <span>new</span>
