@@ -18,7 +18,7 @@ const Nav = () => {
   return (
     <div className="px-4 flex justify-between items-center h-[40px]">
       <div>
-        <h1 className="opacity-50 text-xl">The retro writing</h1>
+        <h1 className="opacity-50 text-xl">Retro Note</h1>
       </div>
       <div>
         <ul className="flex space-x-6">
