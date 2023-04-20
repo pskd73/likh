@@ -36,14 +36,14 @@ const Editor = ({
       <input
         type="text"
         value={note.title}
-        className="text-3xl outline-none mb-10 w-full"
+        className="text-3xl outline-none w-full py-4"
         onChange={handleTitleChange}
       />
       <textarea
         ref={textRef}
         value={note.text}
         onChange={handleTextChange}
-        className="outline-none w-full scrollbar-hide text-lg overflow-y-scroll resize-none"
+        className="outline-none w-full pt-6 scrollbar-hide text-lg overflow-y-scroll resize-none"
       ></textarea>
     </div>
   );

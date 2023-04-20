@@ -12,7 +12,7 @@ const SideBar = () => {
   };
 
   return (
-    <div className="w-96">
+    <div className="w-4/12">
       My notes
       <br />
       -------
