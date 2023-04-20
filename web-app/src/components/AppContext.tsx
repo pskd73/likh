@@ -6,10 +6,10 @@ import {
   deleteNote as storageDeleteNote,
   getNextId,
 } from "./localStorage";
-import { createContext, useState } from "react";
+import { createContext, useMemo, useState } from "react";
 import { Note } from "../type";
 
-type AppContextType = {
+export type AppContextType = {
   collection?: NoteCollection;
   editingNoteId?: number;
 
@@ -19,7 +19,11 @@ type AppContextType = {
   deleteNote: (id: number) => void;
   setEditingNoteId: (id: number) => void;
   getEditingNote: () => undefined | Note;
-  getRecentNote: () => undefined | Note;
+
+  recentNote?: Note;
+
+  focusMode: boolean;
+  setFocusMode: (focusMode: boolean) => void;
 };
 
 export const AppContext = createContext<AppContextType>({} as AppContextType);
@@ -29,6 +33,13 @@ export const useAppContext = (): AppContextType => {
     getNoteCollection()
   );
   const [editingNoteId, setEditingNoteId] = useState<number>();
+  const [focusMode, setFocusMode] = useState<boolean>(false);
+  const recentNote = useMemo(() => {
+    if (collection && Object.keys(collection).length) {
+      const keys = Object.keys(collection);
+      return collection[keys[keys.length - 1]];
+    }
+  }, [Object.keys(collection).length]);
 
   const saveNote = (note: Note) => {
     storageSaveNote(note);
@@ -63,13 +74,6 @@ export const useAppContext = (): AppContextType => {
     }
   };
 
-  const getRecentNote = () => {
-    if (collection && Object.keys(collection).length) {
-      const keys = Object.keys(collection);
-      return collection[keys[keys.length - 1]]
-    }
-  }
-
   return {
     collection,
     editingNoteId,
@@ -80,6 +84,9 @@ export const useAppContext = (): AppContextType => {
     newNote,
     deleteNote,
     getEditingNote,
-    getRecentNote
+    recentNote,
+
+    focusMode,
+    setFocusMode,
   };
 };

@@ -10,13 +10,10 @@ function App() {
   const appContext = useAppContext();
 
   useEffect(() => {
-    if (!appContext.editingNoteId) {
-      const recentNote = appContext.getRecentNote();
-      if (recentNote) {
-        appContext.setEditingNoteId(recentNote.id);
-      }
+    if (appContext.recentNote) {
+      appContext.setEditingNoteId(appContext.recentNote.id);
     }
-  }, []);
+  }, [appContext.recentNote])
 
   const handleNoteChange = (newNote: Note) => {
     appContext.saveNote(newNote);
@@ -28,10 +25,10 @@ function App() {
     <AppContext.Provider value={appContext}>
       <div className="font-SpecialElite text-slate-700">
         <div className="p-4 flex">
-          <div className="flex-1 pr-20">
+          <div className="flex-1 pr-20 max-w-[1000px]">
             {note && <Editor note={note} onChange={handleNoteChange} />}
           </div>
-          <SideBar />
+          {!appContext.focusMode && <SideBar />}
         </div>
         <div className="absolute w-full bottom-0">
           <Nav />

@@ -1,24 +1,18 @@
 import * as React from "react";
 import { useContext } from "react";
 import { AppContext } from "./AppContext";
-
-type MenuItem = {
-  key: string;
-  label: string;
-};
-
-const menuItems: MenuItem[] = [
-  { key: "new", label: "new" },
-  { key: "focus", label: "focus" },
-];
+import Clickable from "./Clickable";
 
 const Nav = () => {
   const appContext = useContext(AppContext);
 
-  const handleMenuItemClick = (menuItem: MenuItem) => {
-    if (menuItem.key === "new") {
-      appContext.newNote();
-    }
+  const handleNewNote = () => {
+    const note = appContext.newNote();
+    appContext.setEditingNoteId(note.id);
+  };
+
+  const handleFocus = () => {
+    appContext.setFocusMode(!appContext.focusMode);
   };
 
   return (
@@ -28,15 +22,16 @@ const Nav = () => {
       </div>
       <div>
         <ul className="flex space-x-6">
-          {menuItems.map((menuItem, i) => (
-            <li
-              key={i}
-              className="opacity-50 hover:opacity-100 cursor-pointer"
-              onClick={() => handleMenuItemClick(menuItem)}
-            >
-              {menuItem.label}
-            </li>
-          ))}
+          <li onClick={handleNewNote}>
+            <Clickable lite>
+              <span>new</span>
+            </Clickable>
+          </li>
+          <li onClick={handleFocus}>
+            <Clickable lite>
+              <span>{appContext.focusMode ? "relax" : "focus"}</span>
+            </Clickable>
+          </li>
         </ul>
       </div>
     </div>

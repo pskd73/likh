@@ -4,7 +4,12 @@ import { AppContext } from "./AppContext";
 import Clickable from "./Clickable";
 
 const SideBar = () => {
-  const { collection, deleteNote, setEditingNoteId } = useContext(AppContext);
+  const { collection, deleteNote, setEditingNoteId, recentNote } =
+    useContext(AppContext);
+
+  const handleDeleteNote = (id: number) => {
+    deleteNote(id);
+  };
 
   return (
     <div className="w-96">
@@ -12,7 +17,7 @@ const SideBar = () => {
       <br />
       -------
       {collection && (
-        <ul className="space-y-2">
+        <ul className="space-y-2 max-h-[400px] overflow-y-scroll scrollbar-hide">
           {Object.values(collection).map((note, i) => (
             <li key={i} className="flex">
               <div className="mr-2">{i + 1}.</div>
@@ -23,10 +28,10 @@ const SideBar = () => {
                   </span>
                 </Clickable>
                 <div className="py-1">
-                  <Clickable>
+                  <Clickable lite>
                     <span
                       className="text-sm"
-                      onClick={() => deleteNote(note.id)}
+                      onClick={() => handleDeleteNote(note.id)}
                     >
                       delete
                     </span>
