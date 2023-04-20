@@ -28,7 +28,11 @@ function App() {
           <div className="flex-1 md:pr-20 max-w-[1000px]">
             {note && <Editor note={note} onChange={handleNoteChange} />}
           </div>
-          <div className="hidden md:block w-full md:w-3/12">{!appContext.focusMode && <SideBar />}</div>
+          {!appContext.focusMode && (
+            <div className="hidden md:block w-full md:w-3/12">
+              <SideBar />
+            </div>
+          )}
         </div>
         <div className="absolute w-full bottom-0">
           <Nav />
