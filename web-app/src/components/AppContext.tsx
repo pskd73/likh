@@ -25,7 +25,7 @@ export type AppContextType = {
   recentNote?: Note;
 
   focusMode: boolean;
-  setFocusMode: (focusMode: boolean) => void;
+  setFocusMode: (focusMode: boolean | ((old: boolean) => boolean)) => void;
 
   textMetricType: TextMetricType;
   setTextMetricType: (type: TextMetricType) => void;
