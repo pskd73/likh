@@ -27,7 +27,7 @@ const SideBar = () => {
                     {note.title}
                   </span>
                 </Clickable>
-                <div className="py-1">
+                <div>
                   <Clickable lite>
                     <span
                       className="text-sm"

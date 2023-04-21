@@ -23,25 +23,31 @@ const Nav = () => {
       </div>
       <div>
         <ul className="flex space-x-6">
-          <li>
-            <Clickable lite>
-              <span onClick={() => appContext.toggleTextMetricType()}>
-                <TextCount />
-              </span>
-            </Clickable>
-          </li>
-          <li>
-            <Clickable lite>
-              <span onClick={() => appContext.setTrayOpen(!appContext.trayOpen)}>
-                more
-              </span>
-            </Clickable>
-          </li>
-          <li onClick={handleNewNote}>
-            <Clickable lite>
-              <span>new</span>
-            </Clickable>
-          </li>
+          {!appContext.focusMode && (
+            <>
+              <li>
+                <Clickable lite>
+                  <span onClick={() => appContext.toggleTextMetricType()}>
+                    <TextCount />
+                  </span>
+                </Clickable>
+              </li>
+              <li>
+                <Clickable lite>
+                  <span
+                    onClick={() => appContext.setTrayOpen(!appContext.trayOpen)}
+                  >
+                    more
+                  </span>
+                </Clickable>
+              </li>
+              <li onClick={handleNewNote}>
+                <Clickable lite>
+                  <span>new</span>
+                </Clickable>
+              </li>
+            </>
+          )}
           <li onClick={handleFocus}>
             <Clickable lite>
               <span>{appContext.focusMode ? "relax" : "focus"}</span>
