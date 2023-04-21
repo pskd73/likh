@@ -5,7 +5,7 @@ import { twMerge } from "tailwind-merge";
 const Tray = ({ children, className, ...restProps }: ComponentProps<"div">) => {
   return (
     <div
-      className={twMerge(className, "absolute top-0 h-full w-full shadow-md")}
+      className={twMerge(className, "absolute top-0 h-full w-full shadow-md bg-white")}
       {...restProps}
     >
       {children}
