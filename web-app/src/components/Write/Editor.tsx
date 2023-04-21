@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ChangeEventHandler, useEffect, useRef } from "react";
-import { Note } from "../type";
+import { Note } from "../../type";
 
 const Editor = ({
   note,

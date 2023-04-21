@@ -1,11 +1,11 @@
 import { useContext } from "react";
-import { AppContext } from "./AppContext";
+import { AppContext } from "../AppContext";
 import Editor from "./Editor";
-import { Note } from "../type";
+import { Note } from "../../type";
 import SideBar from "./SideBar";
-import Nav from "./Nav";
+import WriteToolbar from "./Toolbar";
 
-const WriteTray = () => {
+const Write = () => {
   const { getEditingNote, saveNote, focusMode } = useContext(AppContext);
 
   const handleNoteChange = (newNote: Note) => {
@@ -15,7 +15,7 @@ const WriteTray = () => {
   const note = getEditingNote();
 
   return (
-    <>
+    <div>
       <div className="p-4 md:flex">
         <div className="flex-1 md:pr-20">
           {note && <Editor note={note} onChange={handleNoteChange} />}
@@ -27,10 +27,10 @@ const WriteTray = () => {
         )}
       </div>
       <div>
-        <Nav />
+        <WriteToolbar />
       </div>
-    </>
+    </div>
   );
 };
 
-export default WriteTray;
+export default Write;

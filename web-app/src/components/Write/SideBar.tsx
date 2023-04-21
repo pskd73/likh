@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useContext, useEffect } from "react";
-import { AppContext } from "./AppContext";
-import Clickable from "./Clickable";
+import { AppContext } from "../AppContext";
+import Clickable from "../Clickable";
 
 const SideBar = () => {
   const { collection, deleteNote, setEditingNoteId, recentNote } =

@@ -1,14 +1,16 @@
 import React, { ReactElement, createElement, useEffect, useMemo } from "react";
-import Nav from "./components/Nav";
+import Nav from "./components/Write/Toolbar";
 import { AppContext, useAppContext } from "./components/AppContext";
 import Tray from "./components/Tray";
-import WriteTray from "./components/WriteTray";
+import Write from "./components/Write/Write";
 import "./index.css";
+import Settings from "./components/Settings/Settings";
+import Help from "./components/Help/Help";
 
 const trays: Record<string, () => ReactElement> = {
-  write: WriteTray,
-  tray2: Nav,
-  tray3: Nav,
+  write: Write,
+  // settings: Settings,
+  help: Help,
 };
 
 function App() {
