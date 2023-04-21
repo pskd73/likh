@@ -14,10 +14,9 @@ const Editor = ({
   useEffect(() => {
     if (textRef.current) {
       const NAV_HEIGHT = 40;
-      const TITLE_HEIGHT = 150;
-      const height = Math.min(500, window.innerHeight - NAV_HEIGHT - TITLE_HEIGHT);
-
-      console.log({ height });
+      const TITLE_HEIGHT = 80;
+      const MAX = 10000; // 500
+      const height = Math.min(MAX, window.innerHeight - NAV_HEIGHT - TITLE_HEIGHT);
 
       textRef.current.style.height = `${height}px`;
     }

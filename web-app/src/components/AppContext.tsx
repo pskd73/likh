@@ -30,6 +30,11 @@ export type AppContextType = {
   textMetricType: TextMetricType;
   setTextMetricType: (type: TextMetricType) => void;
   toggleTextMetricType: () => void;
+
+  trayOpen: boolean;
+  activeTray: string;
+  setTrayOpen: (open: boolean) => void;
+  setActiveTray: (key: string) => void;
 };
 
 export const AppContext = createContext<AppContextType>({} as AppContextType);
@@ -41,6 +46,9 @@ export const useAppContext = (): AppContextType => {
   const [editingNoteId, setEditingNoteId] = useState<number>();
   const [focusMode, setFocusMode] = useState<boolean>(false);
   const [textMetricType, setTextMetricType] = useState<TextMetricType>("words");
+  const [trayOpen, setTrayOpen] = useState(false);
+  const [activeTray, setActiveTray] = useState("write");
+
   const recentNote = useMemo(() => {
     if (collection && Object.keys(collection).length) {
       const keys = Object.keys(collection);
@@ -107,6 +115,11 @@ export const useAppContext = (): AppContextType => {
 
     textMetricType,
     setTextMetricType,
-    toggleTextMetricType
+    toggleTextMetricType,
+
+    trayOpen,
+    setTrayOpen,
+    activeTray,
+    setActiveTray,
   };
 };

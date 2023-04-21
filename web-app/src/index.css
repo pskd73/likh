@@ -12,3 +12,9 @@
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+html, body {
+  overflow-y: hidden;
+  overflow-x: hidden;
+  height: 100vh;
+}

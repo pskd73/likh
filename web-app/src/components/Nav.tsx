@@ -17,7 +17,7 @@ const Nav = () => {
   };
 
   return (
-    <div className="px-4 flex justify-between items-center h-[40px]">
+    <div className="absolute w-full bottom-0 px-4 flex justify-between items-center h-[40px]">
       <div>
         <h1 className="opacity-50 text-xl">Retro Note</h1>
       </div>
@@ -27,6 +27,13 @@ const Nav = () => {
             <Clickable lite>
               <span onClick={() => appContext.toggleTextMetricType()}>
                 <TextCount />
+              </span>
+            </Clickable>
+          </li>
+          <li>
+            <Clickable lite>
+              <span onClick={() => appContext.setTrayOpen(!appContext.trayOpen)}>
+                more
               </span>
             </Clickable>
           </li>
