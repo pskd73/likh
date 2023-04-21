@@ -13,7 +13,7 @@ const Help = () => {
 
   return (
     <div>
-      <div className="p-4">
+      <div className="p-4 overflow-y-scroll max-h-[90vh] scrollbar-hide">
         <div className="space-y-6 max-w-[800px]">
           <div>
             <h3 className="mb-1">
@@ -71,7 +71,7 @@ const Help = () => {
         </div>
       </div>
 
-      <Toolbar>
+      <Toolbar className="bg-white">
         <Toolbar.Title>
           <Clickable>
             <span onClick={handleTitleClick}>Help</span>
