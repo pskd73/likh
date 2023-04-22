@@ -47,7 +47,7 @@ export const useAppContext = (): AppContextType => {
   const [focusMode, setFocusMode] = useState<boolean>(false);
   const [textMetricType, setTextMetricType] = useState<TextMetricType>("words");
   const [trayOpen, setTrayOpen] = useState(false);
-  const [activeTray, setActiveTray] = useState("help");
+  const [activeTray, setActiveTray] = useState("write");
 
   const recentNote = useMemo(() => {
     if (collection && Object.keys(collection).length) {
