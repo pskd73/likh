@@ -11,8 +11,8 @@ import "./index.css";
 import { getIntroNote } from "./components/Write/Intro";
 
 const trays: Record<string, () => ReactElement> = {
-  help: Help,
   write: Write,
+  help: Help,
 };
 
 const keyBindings: Record<string, (context: AppContextType) => void> = {
