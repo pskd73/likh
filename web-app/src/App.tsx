@@ -10,8 +10,8 @@ import Help from "./components/Help/Help";
 import "./index.css";
 
 const trays: Record<string, () => ReactElement> = {
-  write: Write,
   help: Help,
+  write: Write,
 };
 
 const keyBindings: Record<string, (context: AppContextType) => void> = {
