@@ -3,5 +3,10 @@ export type Note = {
   title: string;
   text: string;
   createdAt: number;
-  hashtags: string[]
-}
+  hashtags: string[];
+};
+
+export type Topic = {
+  title: string;
+  createdAt: number;
+};

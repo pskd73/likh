@@ -9,9 +9,11 @@ import Write from "./components/Write/Write";
 import Help from "./components/Help/Help";
 import "./index.css";
 import { getIntroNote } from "./components/Write/Intro";
+import Habit from "./components/Habit/Habit";
 
 const trays: Record<string, () => ReactElement> = {
   write: Write,
+  habit: Habit,
   help: Help,
 };
 

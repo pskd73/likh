@@ -1,9 +1,10 @@
-import { Note } from "../type";
+import { Note, Topic } from "../type";
 
 export type NoteCollection = Record<string, Note>;
 
 const STORAGE_KEY_NOTES = "notes";
 const STORAGE_KEY_IDS = "ids";
+const STORAGE_KEY_TOPICS = "topics";
 
 const saveNoteCollection = (collection: NoteCollection) => {
   localStorage.setItem(STORAGE_KEY_NOTES, JSON.stringify(collection));
@@ -44,4 +45,24 @@ export const getNextId = (type: string): number => {
   ids[type] = next;
   localStorage.setItem(STORAGE_KEY_IDS, JSON.stringify(ids));
   return ids[type];
+};
+
+export const getTopics = (): Record<string, Topic> => {
+  return JSON.parse(localStorage.getItem(STORAGE_KEY_TOPICS) || "{}");
+};
+
+export const saveTopicCollection = (coll: Record<string, Topic>) => {
+  localStorage.setItem(STORAGE_KEY_TOPICS, JSON.stringify(coll));
+};
+
+export const addTopic = (topic: Topic) => {
+  const topics = getTopics();
+  topics[topic.title] = topic;
+  saveTopicCollection(topics);
+};
+
+export const removeTopic = (title: string) => {
+  const topics = getTopics();
+  delete topics[title];
+  saveTopicCollection(topics);
 };
