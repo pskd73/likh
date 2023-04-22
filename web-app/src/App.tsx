@@ -8,6 +8,7 @@ import Tray from "./components/Tray";
 import Write from "./components/Write/Write";
 import Help from "./components/Help/Help";
 import "./index.css";
+import { getIntroNote } from "./components/Write/Intro";
 
 const trays: Record<string, () => ReactElement> = {
   help: Help,
@@ -29,7 +30,13 @@ function App() {
     if (!appContext.trayOpen) {
       return [trays[appContext.activeTray]];
     }
-    return Object.values(trays);
+    const trays_ = [trays[appContext.activeTray]];
+    for (const key of Object.keys(trays)) {
+      if (key !== appContext.activeTray) {
+        trays_.push(trays[key]);
+      }
+    }
+    return trays_;
   }, [appContext.trayOpen]);
 
   useEffect(() => {
@@ -39,6 +46,10 @@ function App() {
   }, [appContext.recentNote]);
 
   useEffect(() => {
+    if (!appContext.recentNote) {
+      appContext.saveNote(getIntroNote());
+    }
+
     document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.removeEventListener("keydown", handleKeyDown);

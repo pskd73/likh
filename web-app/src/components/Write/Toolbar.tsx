@@ -4,6 +4,7 @@ import { AppContext } from "../AppContext";
 import Clickable from "../Clickable";
 import TextCount from "./TextCount";
 import Toolbar from "../Toolbar";
+import { getIntroNote } from "./Intro";
 
 const WriteToolbar = () => {
   const appContext = useContext(AppContext);
