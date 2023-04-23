@@ -10,7 +10,7 @@ const Toolbar = ({
     <div
       className={twMerge(
         className,
-        "absolute w-full bottom-0 px-4 flex justify-between items-center h-[40px]"
+        "absolute w-full bottom-0 px-4 flex justify-between items-center h-[45px] bg-white"
       )}
       {...restProps}
     >

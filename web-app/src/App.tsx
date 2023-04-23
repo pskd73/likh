@@ -77,7 +77,7 @@ function App() {
             key={i}
             style={{
               zIndex: 20 - i,
-              top: -40 * (traysToShow.length - i - 1),
+              top: -45 * (traysToShow.length - i - 1),
             }}
           >
             {createElement(tray, {})}

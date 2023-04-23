@@ -16,11 +16,11 @@ const Habit = () => {
 
   return (
     <div>
-      <div className="p-4 flex space-x-6">
-        <div className="w-1/2 overflow-y-scroll max-h-[90vh] scrollbar-hide">
+      <div className="flex">
+        <div className="p-4 w-1/2 overflow-y-scroll max-h-[90vh] scrollbar-hide">
           <Suggestions />
         </div>
-        <div className="w-1/2">
+        <div className="p-4 w-1/2">
           <Topics />
         </div>
       </div>

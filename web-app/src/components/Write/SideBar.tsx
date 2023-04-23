@@ -12,12 +12,12 @@ const SideBar = () => {
   };
 
   return (
-    <div>
+    <div className="max-h-[90vh] overflow-y-scroll scrollbar-hide p-4">
       My notes
       <br />
       -------
       {collection && (
-        <ul className="space-y-2 max-h-[400px] overflow-y-scroll scrollbar-hide">
+        <ul className="space-y-2">
           {Object.values(collection).map((note, i) => (
             <li key={i} className="flex">
               <div className="mr-2">{i + 1}.</div>

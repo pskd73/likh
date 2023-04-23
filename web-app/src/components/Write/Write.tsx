@@ -16,8 +16,8 @@ const Write = () => {
 
   return (
     <div>
-      <div className="p-4 md:flex">
-        <div className="flex-1 md:pr-20">
+      <div className="md:flex">
+        <div className="flex-1 p-4">
           {note && <Editor note={note} onChange={handleNoteChange} />}
         </div>
         {!focusMode && (
@@ -26,9 +26,7 @@ const Write = () => {
           </div>
         )}
       </div>
-      <div>
-        <WriteToolbar />
-      </div>
+      <WriteToolbar />
     </div>
   );
 };
