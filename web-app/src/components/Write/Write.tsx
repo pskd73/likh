@@ -21,7 +21,7 @@ const Write = () => {
           {note && <Editor note={note} onChange={handleNoteChange} />}
         </div>
         {!focusMode && (
-          <div className="hidden md:block w-full md:w-3/12">
+          <div className="hidden md:block w-full md:w-4/12">
             <SideBar />
           </div>
         )}
