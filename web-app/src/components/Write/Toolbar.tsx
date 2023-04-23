@@ -27,7 +27,7 @@ const WriteToolbar = () => {
     <Toolbar>
       <Toolbar.Title>
         <Clickable>
-          <span onClick={handleTitleClick}>Retro Note</span>
+          <span onClick={handleTitleClick}>Retro Note &darr;</span>
         </Clickable>
       </Toolbar.Title>
 
