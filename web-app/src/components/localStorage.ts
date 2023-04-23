@@ -1,6 +1,7 @@
 import { Note, Topic } from "../type";
 
 export type NoteCollection = Record<string, Note>;
+export type TopicCollection = Record<string, Topic>;
 
 const STORAGE_KEY_NOTES = "notes";
 const STORAGE_KEY_IDS = "ids";
@@ -47,11 +48,11 @@ export const getNextId = (type: string): number => {
   return ids[type];
 };
 
-export const getTopics = (): Record<string, Topic> => {
+export const getTopics = (): TopicCollection => {
   return JSON.parse(localStorage.getItem(STORAGE_KEY_TOPICS) || "{}");
 };
 
-export const saveTopicCollection = (coll: Record<string, Topic>) => {
+export const saveTopicCollection = (coll: TopicCollection) => {
   localStorage.setItem(STORAGE_KEY_TOPICS, JSON.stringify(coll));
 };
 
@@ -61,7 +62,7 @@ export const addTopic = (topic: Topic) => {
   saveTopicCollection(topics);
 };
 
-export const removeTopic = (title: string) => {
+export const deleteTopic = (title: string) => {
   const topics = getTopics();
   delete topics[title];
   saveTopicCollection(topics);

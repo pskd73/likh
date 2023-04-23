@@ -1,16 +1,44 @@
-import { useContext } from "react";
+import {
+  ChangeEventHandler,
+  KeyboardEventHandler,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 import { AppContext } from "../AppContext";
 import Clickable from "../Clickable";
 import Toolbar from "../Toolbar";
 import { Topic } from "../../type";
 
-const topics: Topic[] = [
-  { title: "Python", createdAt: new Date().getTime() },
-  { title: "Philosophy", createdAt: new Date().getTime() },
-];
-
 const Habit = () => {
-  const { trayOpen, setActiveTray, setTrayOpen } = useContext(AppContext);
+  const {
+    trayOpen,
+    setActiveTray,
+    setTrayOpen,
+    addTopic,
+    topicCollection,
+    deleteTopic,
+  } = useContext(AppContext);
+  const [newTopic, setNewTopic] = useState("");
+  const topics = useMemo(
+    () => Object.values(topicCollection || {}),
+    [topicCollection]
+  );
+
+  const handleNewTopicChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setNewTopic(e.target.value);
+  };
+
+  const handleNewTopicKeyUp: KeyboardEventHandler<HTMLInputElement> = (e) => {
+    if (e.code === "Enter") {
+      addTopic({ title: newTopic, createdAt: new Date().getTime() });
+      setNewTopic("");
+    }
+  };
+
+  const handleDeleteTopic = (name: string) => {
+    deleteTopic(name);
+  };
 
   const handleTitleClick = () => {
     setActiveTray("habit");
@@ -30,7 +58,9 @@ const Habit = () => {
               <div>
                 <div>{topic.title}</div>
                 <Clickable lite>
-                  <span>delete</span>
+                  <span onClick={() => handleDeleteTopic(topic.title)}>
+                    delete
+                  </span>
                 </Clickable>
               </div>
             </li>
@@ -43,6 +73,9 @@ const Habit = () => {
                 type="text"
                 placeholder="Add topic"
                 className="outline-none py-1"
+                onChange={handleNewTopicChange}
+                onKeyUp={handleNewTopicKeyUp}
+                value={newTopic}
               />
               <div className="-mt-3">
                 <span className="opacity-50">-----</span>

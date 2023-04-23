@@ -5,9 +5,13 @@ import {
   saveNote as storageSaveNote,
   deleteNote as storageDeleteNote,
   getNextId,
+  TopicCollection,
+  getTopics,
+  addTopic as storageAddTopic,
+  deleteTopic as storageDeleteTopic,
 } from "./localStorage";
 import { createContext, useMemo, useState } from "react";
-import { Note } from "../type";
+import { Note, Topic } from "../type";
 
 export type TextMetricType = "words" | "readTime";
 
@@ -35,6 +39,10 @@ export type AppContextType = {
   activeTray: string;
   setTrayOpen: (open: boolean) => void;
   setActiveTray: (key: string) => void;
+
+  topicCollection?: TopicCollection;
+  addTopic: (topic: Topic) => void;
+  deleteTopic: (name: string) => void;
 };
 
 export const AppContext = createContext<AppContextType>({} as AppContextType);
@@ -48,6 +56,9 @@ export const useAppContext = (): AppContextType => {
   const [textMetricType, setTextMetricType] = useState<TextMetricType>("words");
   const [trayOpen, setTrayOpen] = useState(false);
   const [activeTray, setActiveTray] = useState("write");
+  const [topicCollection, setTopicCollection] = useState<TopicCollection>(
+    getTopics()
+  );
 
   const recentNote = useMemo(() => {
     if (collection && Object.keys(collection).length) {
@@ -98,6 +109,16 @@ export const useAppContext = (): AppContextType => {
     }
   };
 
+  const addTopic = (topic: Topic) => {
+    storageAddTopic(topic);
+    setTopicCollection(getTopics());
+  };
+
+  const deleteTopic = (name: string) => {
+    storageDeleteTopic(name);
+    setTopicCollection(getTopics());
+  };
+
   return {
     collection,
     editingNoteId,
@@ -121,5 +142,9 @@ export const useAppContext = (): AppContextType => {
     setTrayOpen,
     activeTray,
     setActiveTray,
+
+    topicCollection,
+    addTopic,
+    deleteTopic,
   };
 };
