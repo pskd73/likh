@@ -39,7 +39,7 @@ function App() {
       }
     }
     return trays_;
-  }, [appContext.trayOpen]);
+  }, [appContext.trayOpen, appContext.activeTray]);
 
   useEffect(() => {
     if (appContext.recentNote) {

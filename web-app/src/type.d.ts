@@ -10,3 +10,9 @@ export type Topic = {
   title: string;
   createdAt: number;
 };
+
+export type Suggestion = {
+  title: string;
+  createdAt: number;
+  topicName: string;
+}
