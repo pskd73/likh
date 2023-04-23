@@ -9,6 +9,7 @@ import { AppContext } from "../AppContext";
 import Clickable from "../Clickable";
 import Toolbar from "../Toolbar";
 import { Topic } from "../../type";
+import TrayExpandIcon from "../TrayExpandIcon";
 
 const Habit = () => {
   const {
@@ -87,7 +88,10 @@ const Habit = () => {
       <Toolbar className="bg-white">
         <Toolbar.Title>
           <Clickable>
-            <span onClick={handleTitleClick}>Habit</span>
+            <span onClick={handleTitleClick}>
+              <TrayExpandIcon />
+              Habit
+            </span>
           </Clickable>
         </Toolbar.Title>
       </Toolbar>

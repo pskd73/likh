@@ -5,6 +5,7 @@ import Clickable from "../Clickable";
 import TextCount from "./TextCount";
 import Toolbar from "../Toolbar";
 import { getIntroNote } from "./Intro";
+import TrayExpandIcon from "../TrayExpandIcon";
 
 const WriteToolbar = () => {
   const appContext = useContext(AppContext);
@@ -27,7 +28,10 @@ const WriteToolbar = () => {
     <Toolbar>
       <Toolbar.Title>
         <Clickable>
-          <span onClick={handleTitleClick}>Retro Note &darr;</span>
+          <span onClick={handleTitleClick}>
+            <TrayExpandIcon />
+            Retro Note
+          </span>
         </Clickable>
       </Toolbar.Title>
 

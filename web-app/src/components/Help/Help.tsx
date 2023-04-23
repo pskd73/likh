@@ -2,6 +2,7 @@ import { useContext } from "react";
 import Clickable from "../Clickable";
 import Toolbar from "../Toolbar";
 import { AppContext } from "../AppContext";
+import TrayExpandIcon from "../TrayExpandIcon";
 
 const Help = () => {
   const { trayOpen, setActiveTray, setTrayOpen } = useContext(AppContext);
@@ -74,7 +75,10 @@ const Help = () => {
       <Toolbar className="bg-white">
         <Toolbar.Title>
           <Clickable>
-            <span onClick={handleTitleClick}>Help</span>
+            <span onClick={handleTitleClick}>
+              <TrayExpandIcon />
+              Help
+            </span>
           </Clickable>
         </Toolbar.Title>
       </Toolbar>
