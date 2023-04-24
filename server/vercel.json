@@ -8,10 +8,6 @@
     {
       "src": "/suggestions",
       "dest": "main.py"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "main.py"
     }
   ]
 }
