@@ -1,4 +1,10 @@
-import React, { ReactElement, createElement, useEffect, useMemo } from "react";
+import React, {
+  ReactElement,
+  createElement,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
 import {
   AppContext,
   AppContextType,
@@ -10,6 +16,7 @@ import Help from "./components/Help/Help";
 import "./index.css";
 import { getIntroNote } from "./components/Write/Intro";
 import Habit from "./components/Habit/Habit";
+import Clickable from "./components/Clickable";
 
 const trays: Record<string, () => ReactElement> = {
   write: Write,
@@ -26,6 +33,8 @@ const keyBindings: Record<string, (context: AppContextType) => void> = {
   },
 };
 
+let event: any = null;
+
 function App() {
   const appContext = useAppContext();
   const traysToShow = useMemo(() => {
@@ -40,6 +49,12 @@ function App() {
     }
     return trays_;
   }, [appContext.trayOpen, appContext.activeTray]);
+  const isApp = useMemo(() => {
+    return (
+      window.location.hostname.startsWith("app") ||
+      window.location.pathname.startsWith("/app")
+    );
+  }, [window.location]);
 
   useEffect(() => {
     if (appContext.recentNote) {
@@ -53,8 +68,10 @@ function App() {
     }
 
     document.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("beforeinstallprompt", handleBeforeInstall);
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstall);
     };
   }, []);
 
@@ -69,22 +86,49 @@ function App() {
     }
   };
 
+  const handleBeforeInstall = (e: Event) => {
+    event = e;
+  };
+
+  const handleInstall = async () => {
+    if (event) {
+      event.prompt();
+      const { outcome } = await event.userChoice;
+      if (outcome === "accepted") {
+        event = null;
+      }
+    }
+  };
+
   return (
     <div className="font-SpecialElite text-slate-700 relative h-[100vh]">
       <div className="hidden md:block">
-        <AppContext.Provider value={appContext}>
-          {traysToShow.map((tray, i) => (
-            <Tray
-              key={i}
-              style={{
-                zIndex: 20 - i,
-                top: -45 * (traysToShow.length - i - 1),
-              }}
-            >
-              {createElement(tray, {})}
-            </Tray>
-          ))}
-        </AppContext.Provider>
+        {isApp && (
+          <AppContext.Provider value={appContext}>
+            {traysToShow.map((tray, i) => (
+              <Tray
+                key={i}
+                style={{
+                  zIndex: 20 - i,
+                  top: -45 * (traysToShow.length - i - 1),
+                }}
+              >
+                {createElement(tray, {})}
+              </Tray>
+            ))}
+          </AppContext.Provider>
+        )}
+        {!isApp && (
+          <div className="flex h-[100vh] w-full justify-center items-center">
+            <div className="w-1/2 text-center">
+              Install the app{" "}
+              <Clickable className="underline" onClick={handleInstall}>
+                here
+              </Clickable>{" "}
+              to start building the habit of focused writing
+            </div>
+          </div>
+        )}
       </div>
       <div className="md:hidden h-[100vh] w-full flex justify-center items-center">
         <div className="w-1/2 text-center">
