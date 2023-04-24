@@ -3,6 +3,11 @@ from flask import Flask
 app = Flask(__name__)
 
 
-@app.route("/")
+@app.route("/health")
 def hello_world():
-    return '<p>Hello, World!</p>'
+    return 'alive'
+
+
+@app.route("/suggestions")
+def hello_world():
+    return 'working'
