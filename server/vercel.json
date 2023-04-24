@@ -6,7 +6,7 @@
   }],
   "routes": [
     {
-      "src": "/suggestions",
+      "src": "/(.*)",
       "dest": "main.py"
     }
   ]
