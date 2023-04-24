@@ -13,17 +13,17 @@ const Editor = ({
   const titleRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    // if (textRef.current) {
-    //   const NAV_HEIGHT = 40;
-    //   const TITLE_HEIGHT = 80;
-    //   const MAX = 10000; // 500
-    //   const height = Math.min(
-    //     MAX,
-    //     window.innerHeight - NAV_HEIGHT - TITLE_HEIGHT
-    //   );
+    if (textRef.current) {
+      const NAV_HEIGHT = 40;
+      const TITLE_HEIGHT = 80;
+      const MAX = 10000; // 500
+      const height = Math.min(
+        MAX,
+        window.innerHeight - NAV_HEIGHT - TITLE_HEIGHT
+      );
 
-    //   textRef.current.style.height = `${height}px`;
-    // }
+      textRef.current.style.height = `${height}px`;
+    }
   }, []);
 
   useEffect(() => {
@@ -32,6 +32,13 @@ const Editor = ({
       titleRef.current.style.height = titleRef.current.scrollHeight + "px";
     }
   }, [titleRef.current, note.title]);
+
+  // useEffect(() => {
+  //   if (textRef.current) {
+  //     textRef.current.style.height = "0";
+  //     textRef.current.style.height = textRef.current.scrollHeight + "px";
+  //   }
+  // }, [textRef.current, note.title]);
 
   const handleTextChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     onChange({ ...note, text: e.target.value });
@@ -67,11 +74,10 @@ const Editor = ({
       </div> */}
       <textarea
         ref={textRef}
-        rows={2}
         value={note.text}
         onChange={handleTextChange}
         className="outline-none w-full scrollbar-hide text-lg overflow-y-scroll resize-none"
-      ></textarea>
+      />
     </div>
   );
 };
