@@ -45,15 +45,11 @@ const WriteToolbar = () => {
                 </span>
               </Clickable>
             </li>
-            {/* <li>
-              <Clickable lite>
-                <span
-                  onClick={() => appContext.setTrayOpen(!appContext.trayOpen)}
-                >
-                  more
-                </span>
+            <li>
+              <Clickable lite onClick={() => appContext.setActiveTray("habit")}>
+                suggest
               </Clickable>
-            </li> */}
+            </li>
             <li onClick={handleNewNote}>
               <Clickable lite>
                 <span>new</span>

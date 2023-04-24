@@ -1,41 +1,8 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Suggestion } from "../../type";
 import Clickable from "../Clickable";
 import { AppContext } from "../AppContext";
 import { getNextId } from "../localStorage";
-
-// const suggestions: Suggestion[] = [
-//   {
-//     title: "Functions in Python",
-//     createdAt: new Date().getTime(),
-//     topicName: "Python Programming",
-//   },
-//   {
-//     title: "The Concept of Free Will in Philosophy",
-//     createdAt: new Date().getTime(),
-//     topicName: "Philosophy",
-//   },
-//   {
-//     title: "Agile Product Development Methodology",
-//     createdAt: new Date().getTime(),
-//     topicName: "Product Development",
-//   },
-//   {
-//     title: "Racial and Social Inequality in America",
-//     createdAt: new Date().getTime(),
-//     topicName: "Social Problems",
-//   },
-//   {
-//     title: "Cloud Computing and SaaS",
-//     createdAt: new Date().getTime(),
-//     topicName: "SaaS",
-//   },
-//   {
-//     title: "Benefits of Building in Public",
-//     createdAt: new Date().getTime(),
-//     topicName: "Build in Public",
-//   },
-// ];
 
 const Suggestions = () => {
   const {
@@ -45,6 +12,7 @@ const Suggestions = () => {
     suggestions,
     setSuggestions,
   } = useContext(AppContext);
+  const [loading, setLoading] = useState(false);
 
   const handleWrite = (suggestion: Suggestion) => {
     saveNote({
@@ -59,6 +27,7 @@ const Suggestions = () => {
 
   const handleRefresh = async () => {
     if (topicCollection) {
+      setLoading(true);
       const topicNames = Object.values(topicCollection).map(
         (topic) => topic.title
       );
@@ -67,6 +36,7 @@ const Suggestions = () => {
       );
       const suggestions: Suggestion[] = await res.json();
       setSuggestions(suggestions);
+      setLoading(false);
     }
   };
 
@@ -78,8 +48,8 @@ const Suggestions = () => {
           <br />
           ~~~~~~~~~~~
         </div>
-        <Clickable lite>
-          <span onClick={handleRefresh}>refresh</span>
+        <Clickable lite onClick={handleRefresh} disabled={loading}>
+          {loading ? "loading" : "refresh"}
         </Clickable>
       </div>
       <ul className="space-y-2">
