@@ -9,5 +9,5 @@ def hello_world():
 
 
 @app.route("/suggestions")
-def hello_world():
+def get_suggestions():
     return 'working'
