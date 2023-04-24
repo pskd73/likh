@@ -1,8 +1,10 @@
 from flask import Flask, request
+from flask_cors import CORS
 
 from chatgpt import get_suggestions
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route("/health")
