@@ -16,12 +16,12 @@ const Write = () => {
 
   return (
     <div>
-      <div className="md:flex">
+      <div className="flex">
         <div className="flex-1 p-4">
           {note && <Editor note={note} onChange={handleNoteChange} />}
         </div>
         {!focusMode && (
-          <div className="hidden md:block w-full md:w-4/12">
+          <div className="w-4/12">
             <SideBar />
           </div>
         )}

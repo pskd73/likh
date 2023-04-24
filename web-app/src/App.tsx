@@ -71,19 +71,26 @@ function App() {
 
   return (
     <div className="font-SpecialElite text-slate-700 relative h-[100vh]">
-      <AppContext.Provider value={appContext}>
-        {traysToShow.map((tray, i) => (
-          <Tray
-            key={i}
-            style={{
-              zIndex: 20 - i,
-              top: -45 * (traysToShow.length - i - 1),
-            }}
-          >
-            {createElement(tray, {})}
-          </Tray>
-        ))}
-      </AppContext.Provider>
+      <div className="hidden md:block">
+        <AppContext.Provider value={appContext}>
+          {traysToShow.map((tray, i) => (
+            <Tray
+              key={i}
+              style={{
+                zIndex: 20 - i,
+                top: -45 * (traysToShow.length - i - 1),
+              }}
+            >
+              {createElement(tray, {})}
+            </Tray>
+          ))}
+        </AppContext.Provider>
+      </div>
+      <div className="md:hidden h-[100vh] w-full flex justify-center items-center">
+        <div className="w-1/2 text-center">
+          This is not supported on mobile! Please open it on a Mac/PC
+        </div>
+      </div>
     </div>
   );
 }

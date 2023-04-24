@@ -5,6 +5,7 @@ import Toolbar from "../Toolbar";
 import TrayExpandIcon from "../TrayExpandIcon";
 import Topics from "./Topics";
 import Suggestions from "./Suggestions";
+import ScrollableCol from "../ScrollableCol";
 
 const Habit = () => {
   const { trayOpen, setActiveTray, setTrayOpen } = useContext(AppContext);
@@ -15,14 +16,14 @@ const Habit = () => {
   };
 
   return (
-    <div className="overflow-y-none">
-      <div className="md:flex">
-        <div className="p-4 md:w-8/12 overflow-y-scroll max-h-[90vh] scrollbar-hide">
+    <div>
+      <div className="flex">
+        <ScrollableCol className="p-4 w-8/12">
           <Suggestions />
-        </div>
-        <div className="p-4 md:w-4/12 overflow-y-scroll max-h-[90vh] scrollbar-hide">
+        </ScrollableCol>
+        <ScrollableCol className="p-4 w-4/12">
           <Topics />
-        </div>
+        </ScrollableCol>
       </div>
       <Toolbar className="bg-white">
         <Toolbar.Title>
