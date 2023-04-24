@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ChangeEventHandler, FormEventHandler, useEffect, useRef } from "react";
+import { ChangeEventHandler, useEffect, useRef } from "react";
 import { Note } from "../../type";
 
 const Editor = ({
@@ -14,12 +14,11 @@ const Editor = ({
 
   useEffect(() => {
     if (textRef.current) {
-      const NAV_HEIGHT = 40;
-      const TITLE_HEIGHT = 80;
-      const MAX = 10000; // 500
+      const NAV_HEIGHT = 45;
+      const MAX = 10000;
       const height = Math.min(
         MAX,
-        window.innerHeight - NAV_HEIGHT - TITLE_HEIGHT
+        window.innerHeight - NAV_HEIGHT - (titleRef.current?.scrollHeight || 0) - 20
       );
 
       textRef.current.style.height = `${height}px`;
@@ -33,13 +32,6 @@ const Editor = ({
     }
   }, [titleRef.current, note.title]);
 
-  // useEffect(() => {
-  //   if (textRef.current) {
-  //     textRef.current.style.height = "0";
-  //     textRef.current.style.height = textRef.current.scrollHeight + "px";
-  //   }
-  // }, [textRef.current, note.title]);
-
   const handleTextChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     onChange({ ...note, text: e.target.value });
   };
@@ -51,27 +43,14 @@ const Editor = ({
     onChange({ ...note, title: e.target.value });
   };
 
-  const handleTitleChange_: FormEventHandler<HTMLDivElement> = (e) => {
-    onChange({ ...note, title: e.currentTarget.innerText });
-  };
-
   return (
-    <div>
+    <div className="flex flex-col">
       <textarea
-        // type="text"
-        // rows={1}
         value={note.title}
         ref={titleRef}
-        className="text-3xl outline-none w-full pb-2 resize-none"
+        className="text-3xl outline-none w-full resize-none"
         onChange={handleTitleChange}
       />
-      {/* <div
-        className="text-3xl outline-none w-full pb-2 resize-none"
-        contentEditable
-        onInput={handleTitleChange_}
-      >
-        {note.title}
-      </div> */}
       <textarea
         ref={textRef}
         value={note.text}

@@ -15,7 +15,7 @@ const Write = () => {
   const note = getEditingNote();
 
   return (
-    <div>
+    <div className="h-full">
       <div className="flex">
         <div className="flex-1 p-4">
           {note && <Editor note={note} onChange={handleNoteChange} />}
