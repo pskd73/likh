@@ -1,4 +1,6 @@
-from flask import Flask
+from flask import Flask, request
+
+from chatgpt import get_suggestions
 
 app = Flask(__name__)
 
@@ -9,5 +11,5 @@ def hello_world():
 
 
 @app.route("/suggestions")
-def get_suggestions():
-    return 'working'
+def handle_get_suggestions():
+    return get_suggestions(request.args.get('topics', '').split(','))
