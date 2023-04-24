@@ -14,5 +14,5 @@ export type Topic = {
 export type Suggestion = {
   title: string;
   createdAt: number;
-  topicName: string;
+  topic: string;
 }

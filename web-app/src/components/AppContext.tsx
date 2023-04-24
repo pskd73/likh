@@ -9,9 +9,11 @@ import {
   getTopics,
   addTopic as storageAddTopic,
   deleteTopic as storageDeleteTopic,
+  getSuggestions as storageGetSuggestions,
+  setSuggestions as storageSetSuggestions,
 } from "./localStorage";
 import { createContext, useMemo, useState } from "react";
-import { Note, Topic } from "../type";
+import { Note, Suggestion, Topic } from "../type";
 
 export type TextMetricType = "words" | "readTime";
 
@@ -43,6 +45,9 @@ export type AppContextType = {
   topicCollection?: TopicCollection;
   addTopic: (topic: Topic) => void;
   deleteTopic: (name: string) => void;
+
+  suggestions: Suggestion[];
+  setSuggestions: (suggestions: Suggestion[]) => void;
 };
 
 export const AppContext = createContext<AppContextType>({} as AppContextType);
@@ -58,6 +63,9 @@ export const useAppContext = (): AppContextType => {
   const [activeTray, setActiveTray] = useState("write");
   const [topicCollection, setTopicCollection] = useState<TopicCollection>(
     getTopics()
+  );
+  const [suggestions, setSuggestions] = useState<Suggestion[]>(
+    storageGetSuggestions()
   );
 
   const recentNote = useMemo(() => {
@@ -119,6 +127,11 @@ export const useAppContext = (): AppContextType => {
     setTopicCollection(getTopics());
   };
 
+  const setSuggestions_ = (suggestions: Suggestion[]) => {
+    storageSetSuggestions(suggestions);
+    setSuggestions(suggestions);
+  };
+
   return {
     collection,
     editingNoteId,
@@ -146,5 +159,8 @@ export const useAppContext = (): AppContextType => {
     topicCollection,
     addTopic,
     deleteTopic,
+
+    suggestions,
+    setSuggestions: setSuggestions_,
   };
 };

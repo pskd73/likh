@@ -32,7 +32,7 @@ const Topics = () => {
   };
 
   return (
-    <div className="overflow-y-scroll">
+    <div>
       Interested topics
       <br />
       ~~~~~~~~~~~~~~~~

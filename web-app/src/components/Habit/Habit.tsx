@@ -20,7 +20,7 @@ const Habit = () => {
         <div className="p-4 md:w-8/12 overflow-y-scroll max-h-[90vh] scrollbar-hide">
           <Suggestions />
         </div>
-        <div className="p-4 md:w-4/12">
+        <div className="p-4 md:w-4/12 overflow-y-scroll max-h-[90vh] scrollbar-hide">
           <Topics />
         </div>
       </div>
