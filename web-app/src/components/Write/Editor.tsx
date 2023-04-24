@@ -13,16 +13,12 @@ const Editor = ({
   const titleRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    if (textRef.current) {
-      const NAV_HEIGHT = 45;
-      const MAX = 10000;
-      const height = Math.min(
-        MAX,
-        window.innerHeight - NAV_HEIGHT - (titleRef.current?.scrollHeight || 0) - 20
-      );
+    updateTextareaSize();
 
-      textRef.current.style.height = `${height}px`;
-    }
+    window.addEventListener("resize", updateTextareaSize);
+    return () => {
+      window.removeEventListener("resize", updateTextareaSize);
+    };
   }, []);
 
   useEffect(() => {
@@ -41,6 +37,22 @@ const Editor = ({
     e.target.style.height = e.target.scrollHeight + "px";
 
     onChange({ ...note, title: e.target.value });
+  };
+
+  const updateTextareaSize = () => {
+    if (textRef.current) {
+      const NAV_HEIGHT = 45;
+      const MAX = 10000;
+      const height = Math.min(
+        MAX,
+        window.innerHeight -
+          NAV_HEIGHT -
+          (titleRef.current?.scrollHeight || 0) -
+          20
+      );
+
+      textRef.current.style.height = `${height}px`;
+    }
   };
 
   return (
