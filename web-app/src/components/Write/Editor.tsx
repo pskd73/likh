@@ -2,6 +2,8 @@ import * as React from "react";
 import { ChangeEventHandler, useEffect, useRef } from "react";
 import { Note } from "../../type";
 
+const TITLE_MARGIN_BOTTOM = 16;
+
 const Editor = ({
   note,
   onChange,
@@ -49,6 +51,7 @@ const Editor = ({
         window.innerHeight -
           NAV_HEIGHT -
           (titleRef.current?.scrollHeight || 0) -
+          TITLE_MARGIN_BOTTOM -
           20
       );
 
@@ -63,6 +66,7 @@ const Editor = ({
         ref={titleRef}
         className="text-3xl outline-none w-full resize-none"
         onChange={handleTitleChange}
+        style={{ marginBottom: TITLE_MARGIN_BOTTOM }}
       />
       <textarea
         ref={textRef}
