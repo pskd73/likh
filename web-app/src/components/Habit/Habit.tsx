@@ -31,7 +31,9 @@ const Habit = () => {
   };
 
   const handleAddToCalendar = () => {
-    const start = new Date().getTime();
+    const dayStart = new Date();
+    dayStart.setHours(0, 0, 0, 0);
+    const start = dayStart.getTime() + 21 * 60 * 60 * 1000;
     const end = start + 60 * 60 * 1000;
     let url = [
       "BEGIN:VCALENDAR",
