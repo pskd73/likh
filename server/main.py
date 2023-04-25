@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, make_response
 from flask_cors import CORS
 
 from cal import get_event
@@ -20,4 +20,6 @@ def handle_get_suggestions():
 
 @app.route('/event')
 def handle_get_event():
-    return get_event(start_hour=21).decode()
+    response = make_response(get_event(start_hour=21).decode())
+    response.headers['Content-Type'] = 'text/calendar; charset=utf-8'
+    return response
