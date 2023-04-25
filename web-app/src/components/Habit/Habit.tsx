@@ -9,18 +9,18 @@ import ScrollableCol from "../ScrollableCol";
 
 const formatDate = (dateTime: Date) => {
   return [
-      dateTime.getUTCFullYear(),
-      pad(dateTime.getUTCMonth() + 1),
-      pad(dateTime.getUTCDate()),
-      "T",
-      pad(dateTime.getUTCHours()),
-      pad(dateTime.getUTCMinutes()) + "00Z"
+    dateTime.getUTCFullYear(),
+    pad(dateTime.getUTCMonth() + 1),
+    pad(dateTime.getUTCDate()),
+    "T",
+    pad(dateTime.getUTCHours()),
+    pad(dateTime.getUTCMinutes()) + "00Z",
   ].join("");
-}
+};
 
 const pad = (num: number) => {
   return num < 10 ? "0" + num : num;
-}
+};
 
 const Habit = () => {
   const { trayOpen, setActiveTray, setTrayOpen } = useContext(AppContext);
@@ -31,12 +31,14 @@ const Habit = () => {
   };
 
   const handleAddToCalendar = () => {
+    const start = new Date().getTime();
+    const end = start + 60 * 60 * 1000;
     let url = [
       "BEGIN:VCALENDAR",
       "VERSION:2.0",
       "BEGIN:VEVENT",
-      "DTSTART:" + formatDate(new Date()),
-      "DTEND:" + formatDate(new Date()),
+      "DTSTART:" + formatDate(new Date(start)),
+      "DTEND:" + formatDate(new Date(end)),
       "SUMMARY:Write on Retro Note",
       "DESCRIPTION:Build writing habits",
       "LOCATION:On Retro Note",
@@ -51,7 +53,7 @@ const Habit = () => {
       "END:VCALENDAR",
     ].join("\n");
 
-    const uri = encodeURI("data:text/calendar;charset=utf8," + url)
+    const uri = encodeURI("data:text/calendar;charset=utf8," + url);
 
     var downloadLink = document.createElement("a");
     downloadLink.href = uri;
