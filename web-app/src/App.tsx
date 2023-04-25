@@ -34,6 +34,10 @@ const keyBindings: Record<string, (context: AppContextType) => void> = {
 };
 
 let event: any = null;
+const isApp =
+  window.matchMedia("(display-mode: standalone)").matches ||
+  window.location.hostname.startsWith("app") ||
+  window.location.pathname.startsWith("/app");
 
 function App() {
   const appContext = useAppContext();
@@ -49,12 +53,6 @@ function App() {
     }
     return trays_;
   }, [appContext.trayOpen, appContext.activeTray]);
-  const isApp = useMemo(() => {
-    return (
-      window.location.hostname.startsWith("app") ||
-      window.location.pathname.startsWith("/app")
-    );
-  }, [window.location]);
 
   useEffect(() => {
     if (appContext.recentNote) {

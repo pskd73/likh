@@ -26,6 +26,7 @@ const Editor = ({
       titleRef.current.style.height = "0";
       titleRef.current.style.height = titleRef.current.scrollHeight + "px";
     }
+    updateTextareaSize();
   }, [titleRef.current, note.title]);
 
   const handleTextChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
