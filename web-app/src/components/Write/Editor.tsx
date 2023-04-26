@@ -1,5 +1,10 @@
 import * as React from "react";
-import { ChangeEventHandler, useEffect, useRef } from "react";
+import {
+  ChangeEventHandler,
+  KeyboardEventHandler,
+  useEffect,
+  useRef,
+} from "react";
 import { Note } from "../../type";
 
 const TITLE_MARGIN_BOTTOM = 16;
@@ -13,6 +18,7 @@ const Editor = ({
 }) => {
   const textRef = useRef<HTMLTextAreaElement>(null);
   const titleRef = useRef<HTMLTextAreaElement>(null);
+  const keyAudioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
     updateTextareaSize();
@@ -33,6 +39,7 @@ const Editor = ({
 
   const handleTextChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     onChange({ ...note, text: e.target.value });
+    playType();
   };
 
   const handleTitleChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
@@ -40,6 +47,14 @@ const Editor = ({
     e.target.style.height = e.target.scrollHeight + "px";
 
     onChange({ ...note, title: e.target.value });
+    playType();
+  };
+
+  const playType = () => {
+    if (keyAudioRef.current) {
+      keyAudioRef.current.volume = 0.07;
+      keyAudioRef.current.play();
+    }
   };
 
   const updateTextareaSize = () => {
@@ -61,6 +76,12 @@ const Editor = ({
 
   return (
     <div className="flex flex-col">
+      <audio ref={keyAudioRef} controls style={{ display: "none" }}>
+        <source
+          src="/mixkit-typewriter-hit-1362_M410No0n.wav"
+          type="audio/mpeg"
+        />
+      </audio>
       <textarea
         value={note.title}
         ref={titleRef}
