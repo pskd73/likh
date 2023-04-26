@@ -34,10 +34,7 @@ const keyBindings: Record<string, (context: AppContextType) => void> = {
 };
 
 let event: any = null;
-const isApp =
-  window.matchMedia("(display-mode: standalone)").matches ||
-  window.location.hostname.startsWith("app") ||
-  window.location.pathname.startsWith("/app");
+const isApp = true;
 
 function App() {
   const appContext = useAppContext();
