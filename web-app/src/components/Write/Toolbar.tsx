@@ -4,8 +4,8 @@ import { AppContext } from "../AppContext";
 import Clickable from "../Clickable";
 import TextCount from "./TextCount";
 import Toolbar from "../Toolbar";
-import { getIntroNote } from "./Intro";
 import TrayExpandIcon from "../TrayExpandIcon";
+import Event from "../Event";
 
 const WriteToolbar = () => {
   const appContext = useContext(AppContext);
@@ -13,6 +13,7 @@ const WriteToolbar = () => {
   const handleNewNote = () => {
     const note = appContext.newNote();
     appContext.setEditingNoteId(note.id);
+    Event.track("new_note");
   };
 
   const handleFocus = () => {

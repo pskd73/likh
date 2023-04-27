@@ -17,6 +17,7 @@ import "./index.css";
 import { getIntroNote } from "./components/Write/Intro";
 import Habit from "./components/Habit/Habit";
 import Clickable from "./components/Clickable";
+import Event from "./components/Event";
 
 const trays: Record<string, () => ReactElement> = {
   write: Write,
@@ -30,6 +31,7 @@ const keyBindings: Record<string, (context: AppContextType) => void> = {
     const note = context.newNote();
     context.setEditingNoteId(note.id);
     context.setActiveTray("write");
+    Event.track("new_note");
   },
 };
 

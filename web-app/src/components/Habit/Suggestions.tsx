@@ -3,6 +3,7 @@ import { Suggestion } from "../../type";
 import Clickable from "../Clickable";
 import { AppContext } from "../AppContext";
 import { getNextId } from "../localStorage";
+import Event from "../Event";
 
 const Suggestions = () => {
   const {
@@ -23,6 +24,7 @@ const Suggestions = () => {
       hashtags: [],
     });
     setActiveTray("write");
+    Event.track("new_note")
   };
 
   const handleRefresh = async () => {
