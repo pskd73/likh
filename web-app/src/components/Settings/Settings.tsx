@@ -40,6 +40,10 @@ const Settings = () => {
     saveSettings({ ...settings, typeSounds: onOff === "on" });
   };
 
+  const handleDarkModeChange = (onOff: string) => {
+    saveSettings({ ...settings, darkMode: onOff === "on" });
+  }
+
   return (
     <div>
       <div className="p-4">
@@ -65,6 +69,18 @@ const Settings = () => {
               <Select
                 value={settings.typeSounds ? "on" : "off"}
                 onValueChange={handleTypeSoundsChange}
+              >
+                <Select.Option value="on">on</Select.Option>
+                <Select.Option value="off">off</Select.Option>
+              </Select>
+            </div>
+          </SettingItem>
+          <SettingItem>
+            <Label>Dark mode</Label>
+            <div>
+              <Select
+                value={settings.darkMode ? "on" : "off"}
+                onValueChange={handleDarkModeChange}
               >
                 <Select.Option value="on">on</Select.Option>
                 <Select.Option value="off">off</Select.Option>

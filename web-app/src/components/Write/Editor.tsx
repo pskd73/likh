@@ -1,10 +1,5 @@
 import * as React from "react";
-import {
-  ChangeEventHandler,
-  useContext,
-  useEffect,
-  useRef,
-} from "react";
+import { ChangeEventHandler, useContext, useEffect, useRef } from "react";
 import { Note } from "../../type";
 import { AppContext } from "../AppContext";
 
@@ -12,8 +7,8 @@ const TITLE_MARGIN_BOTTOM = 16;
 const audio = new Audio("/mixkit-typewriter-hit-1362_M410No0n.wav");
 
 const random = (min: number, max: number) => {
-  return Math.floor(Math.random() * (max - min + 1) + min)
-}
+  return Math.floor(Math.random() * (max - min + 1) + min);
+};
 
 const Editor = ({
   note,
@@ -94,7 +89,7 @@ const Editor = ({
       <textarea
         value={note.title}
         ref={titleRef}
-        className="text-3xl outline-none w-full resize-none"
+        className="text-3xl outline-none w-full resize-none dark:bg-iblack"
         onChange={handleTitleChange}
         style={{ marginBottom: TITLE_MARGIN_BOTTOM }}
       />
@@ -102,7 +97,7 @@ const Editor = ({
         ref={textRef}
         value={note.text}
         onChange={handleTextChange}
-        className="outline-none w-full scrollbar-hide text-lg overflow-y-scroll resize-none"
+        className="outline-none w-full scrollbar-hide text-lg overflow-y-scroll resize-none dark:bg-iblack"
       />
     </div>
   );

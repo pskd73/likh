@@ -25,4 +25,5 @@ export enum Font {
 export type Settings = {
   font?: string;
   typeSounds?: boolean;
+  darkMode?: boolean;
 };

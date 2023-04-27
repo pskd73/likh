@@ -57,7 +57,7 @@ const Topics = () => {
             <input
               type="text"
               placeholder="Add topic"
-              className="outline-none py-1"
+              className="outline-none py-1 dark:bg-iblack"
               onChange={handleNewTopicChange}
               onKeyUp={handleNewTopicKeyUp}
               value={newTopic}

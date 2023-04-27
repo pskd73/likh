@@ -105,6 +105,7 @@ function App() {
   return (
     <div
       className={classNames("text-slate-700 relative h-[100vh]", {
+        "dark": appContext.settings.darkMode,
         "font-JetBrainsMono":
           appContext.settings.font === "font-JetBrainsMono",
         "font-SpecialElite":
