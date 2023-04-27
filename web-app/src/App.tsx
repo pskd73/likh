@@ -60,6 +60,7 @@ function App() {
   }, [appContext.recentNote]);
 
   useEffect(() => {
+    Event.track("load");
     if (!appContext.recentNote) {
       appContext.saveNote(getIntroNote());
     }
