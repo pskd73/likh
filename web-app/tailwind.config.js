@@ -6,10 +6,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        Martel: ['Martel', 'serif'],
-        Playfair: ['Playfair Display', 'serif'],
-        Sumana: ['Sumana', 'serif'],
-        SpecialElite: ['Special Elite', 'cursive']
+        SpecialElite: ['Special Elite', 'cursive'],
+        JetBrainsMono: ['JetBrains Mono', 'monospace']
       }
     },
   },

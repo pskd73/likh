@@ -15,4 +15,14 @@ export type Suggestion = {
   title: string;
   createdAt: number;
   topic: string;
+};
+
+export enum Font {
+  SpecialElite = "Special Elite",
+  JetBrainsMono = "JetBrains Mono"
 }
+
+export type Settings = {
+  font?: string;
+  typeSounds?: boolean;
+};

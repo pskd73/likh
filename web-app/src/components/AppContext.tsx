@@ -11,9 +11,11 @@ import {
   deleteTopic as storageDeleteTopic,
   getSuggestions as storageGetSuggestions,
   setSuggestions as storageSetSuggestions,
+  saveSettings as storageSaveSettings,
+  getSettings,
 } from "./localStorage";
 import { createContext, useMemo, useState } from "react";
-import { Note, Suggestion, Topic } from "../type";
+import { Note, Settings, Suggestion, Topic } from "../type";
 
 export type TextMetricType = "words" | "readTime";
 
@@ -48,6 +50,9 @@ export type AppContextType = {
 
   suggestions: Suggestion[];
   setSuggestions: (suggestions: Suggestion[]) => void;
+
+  settings: Settings;
+  saveSettings: (settings: Settings) => void;
 };
 
 export const AppContext = createContext<AppContextType>({} as AppContextType);
@@ -67,6 +72,7 @@ export const useAppContext = (): AppContextType => {
   const [suggestions, setSuggestions] = useState<Suggestion[]>(
     storageGetSuggestions()
   );
+  const [settings, setSettings] = useState<Settings>(getSettings());
 
   const recentNote = useMemo(() => {
     if (collection && Object.keys(collection).length) {
@@ -132,6 +138,11 @@ export const useAppContext = (): AppContextType => {
     setSuggestions(suggestions);
   };
 
+  const saveSettings = (settings: Settings) => {
+    storageSaveSettings(settings);
+    setSettings(getSettings());
+  };
+
   return {
     collection,
     editingNoteId,
@@ -162,5 +173,8 @@ export const useAppContext = (): AppContextType => {
 
     suggestions,
     setSuggestions: setSuggestions_,
+
+    settings,
+    saveSettings,
   };
 };

@@ -2,10 +2,12 @@ import * as React from "react";
 import {
   ChangeEventHandler,
   KeyboardEventHandler,
+  useContext,
   useEffect,
   useRef,
 } from "react";
 import { Note } from "../../type";
+import { AppContext } from "../AppContext";
 
 const TITLE_MARGIN_BOTTOM = 16;
 
@@ -16,6 +18,7 @@ const Editor = ({
   note: Note;
   onChange: (note: Note) => void;
 }) => {
+  const { settings } = useContext(AppContext);
   const textRef = useRef<HTMLTextAreaElement>(null);
   const titleRef = useRef<HTMLTextAreaElement>(null);
   const keyAudioRef = useRef<HTMLAudioElement>(null);
@@ -51,7 +54,7 @@ const Editor = ({
   };
 
   const playType = () => {
-    if (keyAudioRef.current) {
+    if (keyAudioRef.current && settings.typeSounds) {
       keyAudioRef.current.volume = 0.07;
       keyAudioRef.current.play();
     }

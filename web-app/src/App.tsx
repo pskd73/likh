@@ -18,10 +18,14 @@ import { getIntroNote } from "./components/Write/Intro";
 import Habit from "./components/Habit/Habit";
 import Clickable from "./components/Clickable";
 import Event from "./components/Event";
+import Settings from "./components/Settings/Settings";
+import classNames from "classnames";
+import { Font } from "./type.d";
 
 const trays: Record<string, () => ReactElement> = {
   write: Write,
   habit: Habit,
+  settings: Settings,
   help: Help,
 };
 
@@ -99,7 +103,15 @@ function App() {
   };
 
   return (
-    <div className="font-SpecialElite text-slate-700 relative h-[100vh]">
+    <div
+      className={classNames("text-slate-700 relative h-[100vh]", {
+        "font-JetBrainsMono":
+          appContext.settings.font === "font-JetBrainsMono",
+        "font-SpecialElite":
+          appContext.settings.font === "SpecialElite" ||
+          !appContext.settings.font,
+      })}
+    >
       <div className="hidden md:block">
         {isApp && (
           <AppContext.Provider value={appContext}>
