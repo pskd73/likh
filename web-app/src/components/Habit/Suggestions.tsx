@@ -39,6 +39,7 @@ const Suggestions = () => {
       const suggestions: Suggestion[] = await res.json();
       setSuggestions(suggestions);
       setLoading(false);
+      Event.track("fetch_suggestions")
     }
   };
 
