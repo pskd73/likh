@@ -1,7 +1,6 @@
 import * as React from "react";
 import {
   ChangeEventHandler,
-  KeyboardEventHandler,
   useContext,
   useEffect,
   useRef,
@@ -10,6 +9,11 @@ import { Note } from "../../type";
 import { AppContext } from "../AppContext";
 
 const TITLE_MARGIN_BOTTOM = 16;
+const audio = new Audio("/mixkit-typewriter-hit-1362_M410No0n.wav");
+
+const random = (min: number, max: number) => {
+  return Math.floor(Math.random() * (max - min + 1) + min)
+}
 
 const Editor = ({
   note,
@@ -55,8 +59,10 @@ const Editor = ({
 
   const playType = () => {
     if (keyAudioRef.current && settings.typeSounds) {
-      keyAudioRef.current.volume = 0.07;
-      keyAudioRef.current.play();
+      const aud = audio.cloneNode() as HTMLAudioElement;
+      aud.volume = 0.07;
+      aud.playbackRate = random(5, 15) / 10;
+      aud.play();
     }
   };
 
