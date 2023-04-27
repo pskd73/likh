@@ -121,6 +121,7 @@ function App() {
                 style={{
                   zIndex: 20 - i,
                   top: -45 * (traysToShow.length - i - 1),
+                  transition: "top 0.2s ease 0s"
                 }}
               >
                 {createElement(tray, {})}
