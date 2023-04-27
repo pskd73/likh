@@ -6,6 +6,7 @@ import TrayExpandIcon from "../TrayExpandIcon";
 import Topics from "./Topics";
 import Suggestions from "./Suggestions";
 import ScrollableCol from "../ScrollableCol";
+import Event from "../Event";
 
 const formatDate = (dateTime: Date) => {
   return [
@@ -79,6 +80,7 @@ const Habit = () => {
       "location=Retro Note",
       "recur=RRULE:FREQ%3DDAILY;INTERVAL%3D1",
     ];
+    Event.track("add_to_calendar");
     window.open(
       "https://calendar.google.com/calendar/event?" + parts.join("&"),
       "_blank"
