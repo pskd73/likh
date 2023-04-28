@@ -21,6 +21,7 @@ import Event from "./components/Event";
 import Settings from "./components/Settings/Settings";
 import classNames from "classnames";
 import { Font } from "./type.d";
+import Landing from "./Landing";
 
 const trays: Record<string, () => ReactElement> = {
   write: Write,
@@ -40,7 +41,9 @@ const keyBindings: Record<string, (context: AppContextType) => void> = {
 };
 
 let event: any = null;
-const isApp = true;
+const isApp =
+  window.location.hostname.startsWith("app") ||
+  window.location.pathname.startsWith("/app");
 
 function App() {
   const appContext = useAppContext();
@@ -105,48 +108,39 @@ function App() {
   return (
     <div
       className={classNames("text-slate-700 relative h-[100vh]", {
-        "dark": appContext.settings.darkMode,
-        "font-JetBrainsMono":
-          appContext.settings.font === "font-JetBrainsMono",
+        dark: appContext.settings.darkMode,
+        "font-JetBrainsMono": appContext.settings.font === "font-JetBrainsMono",
         "font-SpecialElite":
           appContext.settings.font === "SpecialElite" ||
           !appContext.settings.font,
       })}
     >
-      <div className="hidden md:block">
-        {isApp && (
-          <AppContext.Provider value={appContext}>
-            {traysToShow.map((tray, i) => (
-              <Tray
-                key={i}
-                style={{
-                  zIndex: 20 - i,
-                  top: -45 * (traysToShow.length - i - 1),
-                  transition: "top 0.2s ease 0s"
-                }}
-              >
-                {createElement(tray, {})}
-              </Tray>
-            ))}
-          </AppContext.Provider>
-        )}
-        {!isApp && (
-          <div className="flex h-[100vh] w-full justify-center items-center">
+      {isApp && (
+        <>
+          <div className="hidden md:block">
+            <AppContext.Provider value={appContext}>
+              {traysToShow.map((tray, i) => (
+                <Tray
+                  key={i}
+                  style={{
+                    zIndex: 20 - i,
+                    top: -45 * (traysToShow.length - i - 1),
+                    transition: "top 0.2s ease 0s",
+                  }}
+                >
+                  {createElement(tray, {})}
+                </Tray>
+              ))}
+            </AppContext.Provider>
+          </div>
+          <div className="md:hidden h-[100vh] w-full flex justify-center items-center">
             <div className="w-1/2 text-center">
-              Install the app{" "}
-              <Clickable className="underline" onClick={handleInstall}>
-                here
-              </Clickable>{" "}
-              to start building the habit of focused writing
+              This is not supported on mobile! Please open it on a Mac/PC
             </div>
           </div>
-        )}
-      </div>
-      <div className="md:hidden h-[100vh] w-full flex justify-center items-center">
-        <div className="w-1/2 text-center">
-          This is not supported on mobile! Please open it on a Mac/PC
-        </div>
-      </div>
+        </>
+      )}
+      {!isApp && <Landing />}
     </div>
   );
 }
