@@ -15,7 +15,10 @@ def hello_world():
 
 @app.route('/suggestions')
 def handle_get_suggestions():
-    return get_suggestions(request.args.get('topics', '').split(','))
+    topics = request.args.get('topics', '').split(',')
+    if len(topics) == 0:
+        return []
+    return get_suggestions(topics)
 
 
 @app.route('/event')
