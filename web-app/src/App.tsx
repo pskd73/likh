@@ -74,6 +74,12 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    if (appContext.loggedInUser) {
+      Event.track("logged_in");
+    }
+  }, [appContext.loggedInUser]);
+
   const handleKeyDown = (e: KeyboardEvent) => {
     if ((e.metaKey || e.ctrlKey) && e.altKey) {
       if (keyBindings[e.code]) {
