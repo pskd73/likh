@@ -4,8 +4,8 @@ import { LoggedInUser } from "../type";
 import { useEffect } from "react";
 
 export const supabase = createClient(
-  "https://crsbxqtxjqprmhrgdylk.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNyc2J4cXR4anFwcm1ocmdkeWxrIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Nzc0MTE0NTksImV4cCI6MTk5Mjk4NzQ1OX0.ySVSLlEBQRPkVG-rA-Ul6jswXMa_NzeZIZUp0k-2oig"
+  "https://gfbrmxfdddmpwlqtvwsh.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmYnJteGZkZGRtcHdscXR2d3NoIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODI3NzMwNjQsImV4cCI6MTk5ODM0OTA2NH0.44lRQgUo7MOULLBvJ3moD6Z_XhA7FOcxqCA0kH22H9M"
 );
 
 export const useSupabase = ({
