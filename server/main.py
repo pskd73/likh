@@ -1,3 +1,6 @@
+import os
+
+import jwt
 from flask import Flask, request, make_response
 from flask_cors import CORS
 
@@ -26,3 +29,17 @@ def handle_get_event():
     response = make_response(get_event(start_hour=21).decode())
     response.headers['Content-Type'] = 'text/calendar; charset=utf-8'
     return response
+
+
+@app.route('/test')
+def handle_test():
+    token = request.headers.get('authorization')
+    print(
+        jwt.decode(
+            jwt=token,
+            key=os.environ['SUPABASE_PRIVATE_KEY'],
+            algorithms=['HS256'],
+            audience='authenticated'
+        )
+    )
+    return 'success'
