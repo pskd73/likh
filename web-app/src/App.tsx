@@ -76,7 +76,7 @@ function App() {
 
   useEffect(() => {
     if (appContext.loggedInUser) {
-      Event.track("logged_in");
+      // Event.track("logged_in");
     }
   }, [appContext.loggedInUser]);
 
