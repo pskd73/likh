@@ -1,9 +1,4 @@
-import React, {
-  ReactElement,
-  createElement,
-  useEffect,
-  useMemo,
-} from "react";
+import React, { ReactElement, createElement, useEffect, useMemo } from "react";
 import {
   AppContext,
   AppContextType,
@@ -19,6 +14,7 @@ import Event from "./components/Event";
 import Settings from "./components/Settings/Settings";
 import classNames from "classnames";
 import Landing from "./Landing";
+import { useSupabase } from "./components/supabase";
 
 const trays: Record<string, () => ReactElement> = {
   write: Write,
@@ -56,6 +52,7 @@ function App() {
     }
     return trays_;
   }, [appContext.trayOpen, appContext.activeTray]);
+  useSupabase({ setLoggedInUser: appContext.setLoggedInUser });
 
   useEffect(() => {
     if (appContext.recentNote) {
@@ -102,6 +99,10 @@ function App() {
     }
   };
 
+  if (!appContext.loggedInUser) {
+    return <Landing />;
+  }
+
   return (
     <div
       className={classNames("text-slate-700 relative h-[100vh]", {
@@ -112,32 +113,27 @@ function App() {
           !appContext.settings.font,
       })}
     >
-      {isApp && (
-        <>
-          <div className="hidden md:block">
-            <AppContext.Provider value={appContext}>
-              {traysToShow.map((tray, i) => (
-                <Tray
-                  key={i}
-                  style={{
-                    zIndex: 20 - i,
-                    top: -45 * (traysToShow.length - i - 1),
-                    transition: "top 0.2s ease 0s",
-                  }}
-                >
-                  {createElement(tray, {})}
-                </Tray>
-              ))}
-            </AppContext.Provider>
-          </div>
-          <div className="md:hidden h-[100vh] w-full flex justify-center items-center">
-            <div className="w-1/2 text-center">
-              This is not supported on mobile! Please open it on a Mac/PC
-            </div>
-          </div>
-        </>
-      )}
-      {!isApp && <Landing />}
+      <div className="hidden md:block">
+        <AppContext.Provider value={appContext}>
+          {traysToShow.map((tray, i) => (
+            <Tray
+              key={i}
+              style={{
+                zIndex: 20 - i,
+                top: -45 * (traysToShow.length - i - 1),
+                transition: "top 0.2s ease 0s",
+              }}
+            >
+              {createElement(tray, {})}
+            </Tray>
+          ))}
+        </AppContext.Provider>
+      </div>
+      <div className="md:hidden h-[100vh] w-full flex justify-center items-center">
+        <div className="w-1/2 text-center">
+          This is not supported on mobile! Please open it on a Mac/PC
+        </div>
+      </div>
     </div>
   );
 }

@@ -27,3 +27,8 @@ export type Settings = {
   typeSounds?: boolean;
   darkMode?: boolean;
 };
+
+export type LoggedInUser = {
+  email: string;
+  token: string;
+}

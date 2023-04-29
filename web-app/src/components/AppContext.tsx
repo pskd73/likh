@@ -15,7 +15,7 @@ import {
   getSettings,
 } from "./localStorage";
 import { createContext, useMemo, useState } from "react";
-import { Note, Settings, Suggestion, Topic } from "../type";
+import { LoggedInUser, Note, Settings, Suggestion, Topic } from "../type";
 
 export type TextMetricType = "words" | "readTime";
 
@@ -53,6 +53,9 @@ export type AppContextType = {
 
   settings: Settings;
   saveSettings: (settings: Settings) => void;
+
+  loggedInUser?: LoggedInUser;
+  setLoggedInUser: (user?: LoggedInUser) => void;
 };
 
 export const AppContext = createContext<AppContextType>({} as AppContextType);
@@ -73,6 +76,7 @@ export const useAppContext = (): AppContextType => {
     storageGetSuggestions()
   );
   const [settings, setSettings] = useState<Settings>(getSettings());
+  const [loggedInUser, setLoggedInUser] = useState<LoggedInUser>();
 
   const recentNote = useMemo(() => {
     if (collection && Object.keys(collection).length) {
@@ -176,5 +180,8 @@ export const useAppContext = (): AppContextType => {
 
     settings,
     saveSettings,
+
+    loggedInUser,
+    setLoggedInUser,
   };
 };

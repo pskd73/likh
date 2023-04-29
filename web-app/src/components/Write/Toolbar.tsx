@@ -6,6 +6,7 @@ import TextCount from "./TextCount";
 import Toolbar from "../Toolbar";
 import TrayExpandIcon from "../TrayExpandIcon";
 import Event from "../Event";
+import { supabase } from "../supabase";
 
 const WriteToolbar = () => {
   const appContext = useContext(AppContext);
@@ -25,6 +26,11 @@ const WriteToolbar = () => {
     appContext.setTrayOpen(!appContext.trayOpen);
   };
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    appContext.setLoggedInUser(undefined);
+  };
+
   return (
     <Toolbar>
       <Toolbar.Title>
@@ -34,6 +40,14 @@ const WriteToolbar = () => {
             Retro Note
           </span>
         </Clickable>
+        {!appContext.focusMode && (
+          <span className="text-base ml-4">
+            {appContext.loggedInUser?.email} &nbsp;
+            <Clickable lite onClick={handleLogout}>
+              logout
+            </Clickable>
+          </span>
+        )}
       </Toolbar.Title>
 
       <Toolbar.MenuList>
