@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { AppContext } from "../AppContext";
+import { getNWords } from "../../util";
 
 const READ_WORDS_PER_MIN = 245;
 
@@ -7,7 +8,7 @@ const TextCount = () => {
   const { textMetricType, getEditingNote } = useContext(AppContext);
 
   const note = getEditingNote();
-  const words = note?.text.replaceAll(/[\n ]+/g, " ").split(/[ \n]/).length || 0;
+  const words = note ? getNWords(note.text) : 0;
   const readTime = (words * 60) / READ_WORDS_PER_MIN;
 
   const pad = (n: number) => {
