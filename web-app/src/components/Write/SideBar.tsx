@@ -1,11 +1,14 @@
 import * as React from "react";
-import { useContext, useEffect } from "react";
+import { useContext, useMemo } from "react";
 import { AppContext } from "../AppContext";
 import Clickable from "../Clickable";
 
 const SideBar = () => {
-  const { collection, deleteNote, setEditingNoteId, recentNote } =
-    useContext(AppContext);
+  const { collection, deleteNote, setEditingNoteId } = useContext(AppContext);
+  const notes = useMemo(
+    () => (collection ? Object.values(collection).reverse() : []),
+    [collection]
+  );
 
   const handleDeleteNote = (id: number) => {
     deleteNote(id);
@@ -18,7 +21,7 @@ const SideBar = () => {
       -------
       {collection && (
         <ul className="space-y-2">
-          {Object.values(collection).map((note, i) => (
+          {notes.map((note, i) => (
             <li key={i} className="flex">
               <div className="mr-2">{i + 1}.</div>
               <div>
