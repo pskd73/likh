@@ -3,7 +3,6 @@ import React, {
   createElement,
   useEffect,
   useMemo,
-  useRef,
 } from "react";
 import {
   AppContext,
@@ -16,11 +15,9 @@ import Help from "./components/Help/Help";
 import "./index.css";
 import { getIntroNote } from "./components/Write/Intro";
 import Habit from "./components/Habit/Habit";
-import Clickable from "./components/Clickable";
 import Event from "./components/Event";
 import Settings from "./components/Settings/Settings";
 import classNames from "classnames";
-import { Font } from "./type.d";
 import Landing from "./Landing";
 
 const trays: Record<string, () => ReactElement> = {

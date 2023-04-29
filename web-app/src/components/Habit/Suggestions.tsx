@@ -24,7 +24,7 @@ const Suggestions = () => {
       hashtags: [],
     });
     setActiveTray("write");
-    Event.track("new_note")
+    Event.track("new_note");
   };
 
   const handleRefresh = async () => {
@@ -39,7 +39,7 @@ const Suggestions = () => {
       const suggestions: Suggestion[] = await res.json();
       setSuggestions(suggestions);
       setLoading(false);
-      Event.track("fetch_suggestions")
+      Event.track("fetch_suggestions");
     }
   };
 
@@ -55,6 +55,12 @@ const Suggestions = () => {
           {loading ? "loading" : "refresh"}
         </Clickable>
       </div>
+      {!suggestions.length && (
+        <div>
+          Add the topics you are interested in and refresh to get suggestions to
+          write on!
+        </div>
+      )}
       <ul className="space-y-2">
         {suggestions.map((suggestion, i) => (
           <li key={i} className="flex">

@@ -85,3 +85,7 @@ export const getSettings = (): Settings => {
 export const saveSettings = (settings: Settings) => {
   return localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(settings));
 };
+
+export const isEmpty = () => {
+  return localStorage.getItem(STORAGE_KEY_IDS) === null;
+};
