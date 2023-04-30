@@ -71,7 +71,7 @@ const Landing = () => {
                 -----------------
               </span>
               <Clickable onClick={handleSubmit} disabled={loading}>
-                get login link &rarr;
+                login &rarr;
               </Clickable>
             </div>
             {mailSent && <div className="mt-2">Sent! Check your inbox</div>}
