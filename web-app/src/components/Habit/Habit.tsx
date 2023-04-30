@@ -8,6 +8,7 @@ import Suggestions from "./Suggestions";
 import ScrollableCol from "../ScrollableCol";
 import Event from "../Event";
 import Streak from "./Streak";
+import Goal from "./Goal";
 
 const formatDate = (dateTime: Date) => {
   return [
@@ -94,8 +95,9 @@ const Habit = () => {
         <ScrollableCol className="p-4 w-8/12">
           <Suggestions />
         </ScrollableCol>
-        <ScrollableCol className="p-4 w-4/12 space-y-6">
+        <ScrollableCol className="p-4 w-4/12 space-y-10">
           <Streak />
+          <Goal />
           <Topics />
         </ScrollableCol>
       </div>

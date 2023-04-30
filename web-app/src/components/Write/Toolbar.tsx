@@ -7,6 +7,7 @@ import Toolbar from "../Toolbar";
 import TrayExpandIcon from "../TrayExpandIcon";
 import Event from "../Event";
 import { supabase } from "../supabase";
+import GoalTracker from "./GoalTracker";
 
 const WriteToolbar = () => {
   const appContext = useContext(AppContext);
@@ -53,6 +54,9 @@ const WriteToolbar = () => {
       <Toolbar.MenuList>
         {!appContext.focusMode && (
           <>
+            <li>
+              <GoalTracker />
+            </li>
             <li>
               <Clickable lite>
                 <span onClick={() => appContext.toggleTextMetricType()}>

@@ -19,16 +19,17 @@ export type Suggestion = {
 
 export enum Font {
   SpecialElite = "Special Elite",
-  JetBrainsMono = "JetBrains Mono"
+  JetBrainsMono = "JetBrains Mono",
 }
 
 export type Settings = {
   font?: string;
   typeSounds?: boolean;
   darkMode?: boolean;
+  goal?: string;
 };
 
 export type LoggedInUser = {
   email: string;
   token: string;
-}
+};
