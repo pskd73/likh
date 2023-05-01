@@ -19,7 +19,8 @@ export type Suggestion = {
 
 export enum Font {
   SpecialElite = "Special Elite",
-  JetBrainsMono = "JetBrains Mono",
+  CourierPrime = "Courier Prime",
+  CutiveMono = "Cutive Mono",
 }
 
 export type Settings = {

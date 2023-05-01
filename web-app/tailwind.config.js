@@ -8,7 +8,8 @@ module.exports = {
     extend: {
       fontFamily: {
         SpecialElite: ['Special Elite', 'cursive'],
-        JetBrainsMono: ['JetBrains Mono', 'monospace']
+        CourierPrime: ['Courier Prime', 'monospace'],
+        CutiveMono: ['Cutive Mono', 'monospace']
       },
       colors: {
         iblack: "#121212",
