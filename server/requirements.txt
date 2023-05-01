@@ -3,3 +3,4 @@ openai==0.27.4
 Flask-Cors==3.0.10
 icalendar==5.0.5
 PyJWT==2.6.0
+mongoengine==0.27.0

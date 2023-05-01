@@ -52,13 +52,33 @@ function App() {
     }
     return trays_;
   }, [appContext.trayOpen, appContext.activeTray]);
-  useSupabase({ setLoggedInUser: appContext.setLoggedInUser });
+  useSupabase({
+    setLoggedInUser: appContext.setLoggedInUser,
+  });
 
   useEffect(() => {
     if (appContext.recentNote) {
       appContext.setEditingNoteId(appContext.recentNote.id);
     }
   }, [appContext.recentNote]);
+
+  useEffect(() => {
+    const note = appContext.getEditingNote();
+    if (appContext.loggedInUser && note) {
+      fetch("http://localhost:5000/note", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${appContext.loggedInUser.token}`,
+        },
+        body: JSON.stringify({
+          title: note.title,
+          text: note.text,
+          id: "645007dcf6a2ede17debed90",
+        }),
+      });
+    }
+  }, [appContext.collection]);
 
   useEffect(() => {
     Event.track("load");
