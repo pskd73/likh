@@ -8,7 +8,6 @@ import Tray from "./components/Tray";
 import Write from "./components/Write/Write";
 import Help from "./components/Help/Help";
 import "./index.css";
-import { getIntroNote } from "./components/Write/Intro";
 import Habit from "./components/Habit/Habit";
 import Event from "./components/Event";
 import Settings from "./components/Settings/Settings";
@@ -63,32 +62,7 @@ function App() {
   }, [appContext.recentNote]);
 
   useEffect(() => {
-    const note = appContext.getEditingNote();
-    if (appContext.loggedInUser && note) {
-      // fetch("http://localhost:5000/note", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     Authorization: `Bearer ${appContext.loggedInUser.token}`,
-      //   },
-      //   body: JSON.stringify({
-      //     title: note.title,
-      //     text: note.text,
-      //     id: "645007dcf6a2ede17debed90",
-      //   }),
-      // });
-    }
-  }, [appContext.collection]);
-
-  useEffect(() => {
     Event.track("load");
-    if (!appContext.recentNote) {
-      (async () => {
-        const intro = getIntroNote();
-        await appContext.newNote(intro.title, intro.text);
-      })();
-    }
-
     document.addEventListener("keydown", handleKeyDown);
     window.addEventListener("beforeinstallprompt", handleBeforeInstall);
     return () => {
@@ -96,12 +70,6 @@ function App() {
       window.removeEventListener("beforeinstallprompt", handleBeforeInstall);
     };
   }, []);
-
-  useEffect(() => {
-    if (appContext.loggedInUser) {
-      // Event.track("logged_in");
-    }
-  }, [appContext.loggedInUser]);
 
   const handleKeyDown = (e: KeyboardEvent) => {
     if ((e.metaKey || e.ctrlKey) && e.altKey) {
