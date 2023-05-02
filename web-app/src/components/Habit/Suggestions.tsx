@@ -2,12 +2,10 @@ import { useContext, useState } from "react";
 import { Suggestion } from "../../type";
 import Clickable from "../Clickable";
 import { AppContext } from "../AppContext";
-import { getNextId } from "../localStorage";
 import Event from "../Event";
 
 const Suggestions = () => {
   const {
-    saveNote,
     setActiveTray,
     topicCollection,
     suggestions,
@@ -17,12 +15,6 @@ const Suggestions = () => {
   const [loading, setLoading] = useState(false);
 
   const handleWrite = async (suggestion: Suggestion) => {
-    // saveNote({
-    //   id: getNextId("note"),
-    //   title: suggestion.title,
-    //   text: `This is an article from ${suggestion.topic} topic.`,
-    //   created_at: new Date().getTime(),
-    // });
     await newNote(suggestion.title, `This is an article from ${suggestion.topic} topic.`)
     setActiveTray("write");
     Event.track("new_note");
