@@ -3,6 +3,7 @@ export type Note = {
   title: string;
   text: string;
   created_at: number;
+  visibility: "private" | "public";
 };
 
 export type NewNote = Omit<Note, "id">;

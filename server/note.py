@@ -8,6 +8,7 @@ class Note(Document):
     created_at = IntField(requests=True)
     title = StringField()
     text = StringField()
+    visibility = StringField(default='private')
 
 
 def get_note_by_id(note_id: str) -> Note:

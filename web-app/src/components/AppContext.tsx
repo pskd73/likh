@@ -10,24 +10,16 @@ import {
   saveSettings as storageSaveSettings,
   getSettings,
 } from "./localStorage";
-import { createContext, useEffect, useMemo, useState } from "react";
+import { createContext, useState } from "react";
 import { LoggedInUser, Note, Settings, Suggestion, Topic } from "../type";
-import * as api from "./api";
 
 export type TextMetricType = "words" | "readTime";
 
 export type AppContextType = {
-  collection?: NoteCollection;
-  editingNoteId?: string;
-
-  saveNote: (note: Note) => void;
-  refresh: () => void;
-  newNote: (title: string, text: string) => Promise<Note>;
-  deleteNote: (id: string) => void;
-  setEditingNoteId: (id: string) => void;
-  getEditingNote: () => undefined | Note;
-
-  recentNote?: Note;
+  notes: NoteCollection;
+  note?: Note;
+  setNotes: (notes: NoteCollection) => void;
+  setNote: (note: Note) => void;
 
   focusMode: boolean;
   setFocusMode: (focusMode: boolean | ((old: boolean) => boolean)) => void;
@@ -53,15 +45,11 @@ export type AppContextType = {
 
   loggedInUser?: LoggedInUser;
   setLoggedInUser: (user?: LoggedInUser) => void;
-
-  loading: boolean;
 };
 
 export const AppContext = createContext<AppContextType>({} as AppContextType);
 
 export const useAppContext = (): AppContextType => {
-  const [collection, setCollection] = useState<NoteCollection>({});
-  const [editingNoteId, setEditingNoteId] = useState<string>();
   const [focusMode, setFocusMode] = useState<boolean>(false);
   const [textMetricType, setTextMetricType] = useState<TextMetricType>("words");
   const [trayOpen, setTrayOpen] = useState(false);
@@ -74,52 +62,8 @@ export const useAppContext = (): AppContextType => {
   );
   const [settings, setSettings] = useState<Settings>(getSettings());
   const [loggedInUser, setLoggedInUser] = useState<LoggedInUser>();
-  const [loading, setLoading] = useState(true);
-
-  const recentNote = useMemo(() => {
-    if (collection && Object.keys(collection).length) {
-      const keys = Object.keys(collection);
-      return collection[keys[keys.length - 1]];
-    }
-  }, [Object.keys(collection).length]);
-
-  useEffect(() => {
-    (async () => {
-      refresh();
-    })();
-  }, [loggedInUser]);
-
-  const saveNote = (note: Note) => {
-    setCollection({ ...collection, [note.id]: note });
-    api.saveNote(loggedInUser!, note);
-  };
-
-  const refresh = async () => {
-    if (loggedInUser) {
-      setLoading(true);
-      setCollection(await api.getNotes(loggedInUser));
-      setLoading(false);
-    }
-  };
-
-  const newNote = async (title: string, text: string) => {
-    const note = await api.createNote(loggedInUser!, title, text);
-    setCollection({ ...collection, [note.id]: note });
-    return note;
-  };
-
-  const deleteNote = async (id: string) => {
-    await api.deleteNote(loggedInUser!, id);
-    const coll = { ...collection };
-    delete coll[id];
-    setCollection(coll);
-  };
-
-  const getEditingNote = () => {
-    if (editingNoteId && collection) {
-      return collection[editingNoteId];
-    }
-  };
+  const [notes, setNotes] = useState<NoteCollection>({});
+  const [note, setNote] = useState<Note>();
 
   const toggleTextMetricType = () => {
     if (textMetricType === "readTime") {
@@ -151,17 +95,6 @@ export const useAppContext = (): AppContextType => {
   };
 
   return {
-    collection,
-    editingNoteId,
-    setEditingNoteId,
-
-    saveNote,
-    refresh,
-    newNote,
-    deleteNote,
-    getEditingNote,
-    recentNote,
-
     focusMode,
     setFocusMode,
 
@@ -187,6 +120,10 @@ export const useAppContext = (): AppContextType => {
     loggedInUser,
     setLoggedInUser,
 
-    loading,
+    notes,
+    setNotes,
+
+    note,
+    setNote,
   };
 };

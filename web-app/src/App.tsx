@@ -23,13 +23,7 @@ const trays: Record<string, () => ReactElement> = {
 };
 
 const keyBindings: Record<string, (context: AppContextType) => void> = {
-  KeyF: (context: AppContextType) => context.setFocusMode((old) => !old),
-  KeyN: async (context: AppContextType) => {
-    const note = await context.newNote("My new note", "Write here ...");
-    context.setEditingNoteId(note.id);
-    context.setActiveTray("write");
-    Event.track("new_note");
-  },
+  KeyF: (context: AppContextType) => context.setFocusMode((old) => !old)
 };
 
 let event: any = null;
@@ -54,12 +48,6 @@ function App() {
   useSupabase({
     setLoggedInUser: appContext.setLoggedInUser,
   });
-
-  useEffect(() => {
-    if (appContext.recentNote) {
-      appContext.setEditingNoteId(appContext.recentNote.id);
-    }
-  }, [appContext.recentNote]);
 
   useEffect(() => {
     Event.track("load");

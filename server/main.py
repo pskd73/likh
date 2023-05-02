@@ -78,20 +78,6 @@ def handle_get_event():
     return response
 
 
-@app.route('/test')
-def handle_test():
-    token = request.headers.get('authorization')
-    print(
-        jwt.decode(
-            jwt=token,
-            key=os.environ['SUPABASE_PRIVATE_KEY'],
-            algorithms=['HS256'],
-            audience='authenticated'
-        )
-    )
-    return 'success'
-
-
 @app.route('/note', methods=['POST'])
 @login_required
 def handle_new_note(user: User):
@@ -125,5 +111,17 @@ def handle_delete_note(user: User):
     note = get_note_by_id(request.json['note_id'])
     if note.user_id != str(user.id):
         return '', 401
-    delete_note(note.id)
-    return ''
+    delete_note(str(note.id))
+    return m_to_d(note)
+
+
+@app.route('/note/visibility', methods=['POST'])
+@login_required
+def handle_update_note_visibility(user: User):
+    note = get_note_by_id(request.json['note_id'])
+    if note.user_id != str(user.id):
+        return '', 401
+    visibility = request.json['visibility']
+    assert visibility in ['public', 'private']
+    note.visibility = visibility
+    note.save()

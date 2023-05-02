@@ -18,7 +18,7 @@ const getOpacity = (num: number, max: number) => {
 const dtToStr = (dt: Date) =>
   `${dt.getFullYear()}-${dt.getMonth()}-${dt.getDate()}`;
 
-const getStreakCounts = (collection: NoteCollection, n: number) => {
+const getStreakCounts = (notes: NoteCollection, n: number) => {
   const countsMap: Record<string, number> = {};
   const DAY = 24 * 60 * 60 * 1000;
 
@@ -26,7 +26,7 @@ const getStreakCounts = (collection: NoteCollection, n: number) => {
   for (let i = 0; i < n; i++) {
     countsMap[dtToStr(new Date(now - i * DAY))] = 0;
   }
-  for (const note of Object.values(collection)) {
+  for (const note of Object.values(notes)) {
     const dt = new Date(note.created_at);
     const dtStr = dtToStr(dt);
     if (countsMap[dtStr] !== undefined) {
@@ -37,11 +37,8 @@ const getStreakCounts = (collection: NoteCollection, n: number) => {
 };
 
 const Streak = () => {
-  const { collection } = useContext(AppContext);
-  const counts = useMemo(
-    () => (collection ? getStreakCounts(collection, 7) : []),
-    [collection]
-  );
+  const { notes } = useContext(AppContext);
+  const counts = useMemo(() => getStreakCounts(notes, 7), [notes]);
 
   return (
     <div>
