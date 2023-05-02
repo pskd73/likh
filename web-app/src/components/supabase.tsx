@@ -8,7 +8,7 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 export const useSupabase = ({
   setUser,
 }: {
-  setUser: (user: User) => void;
+  setUser: (user?: User | null) => void;
 }) => {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -28,6 +28,8 @@ export const useSupabase = ({
           email: session.user.email,
           token: session.access_token,
         });
+      } else {
+        setUser(null);
       }
     });
 

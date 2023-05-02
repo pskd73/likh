@@ -23,7 +23,7 @@ const trays: Record<string, () => ReactElement> = {
 };
 
 const keyBindings: Record<string, (context: AppContextType) => void> = {
-  KeyF: (context: AppContextType) => context.setFocusMode((old) => !old)
+  KeyF: (context: AppContextType) => context.setFocusMode((old) => !old),
 };
 
 const isApp =
@@ -67,7 +67,15 @@ function App() {
     }
   };
 
-  if (!appContext.user) {
+  if (appContext.user === undefined) {
+    return (
+      <div className="w-full h-[100vh] flex justify-center items-center font-SpecialElite">
+        Loading
+      </div>
+    );
+  }
+
+  if (appContext.user === null) {
     return <Landing />;
   }
 
