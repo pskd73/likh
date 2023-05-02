@@ -24,12 +24,12 @@ const trays: Record<string, () => ReactElement> = {
 
 const keyBindings: Record<string, (context: AppContextType) => void> = {
   KeyF: (context: AppContextType) => context.setFocusMode((old) => !old),
-  // KeyN: (context: AppContextType) => {
-  //   const note = context.newNote();
-  //   context.setEditingNoteId(note.id);
-  //   context.setActiveTray("write");
-  //   Event.track("new_note");
-  // },
+  KeyN: async (context: AppContextType) => {
+    const note = await context.newNote("My new note", "Write here ...");
+    context.setEditingNoteId(note.id);
+    context.setActiveTray("write");
+    Event.track("new_note");
+  },
 };
 
 let event: any = null;
