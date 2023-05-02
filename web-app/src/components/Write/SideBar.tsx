@@ -2,12 +2,22 @@ import * as React from "react";
 import MyNotes from "./MyNotes";
 import Select from "../Select";
 import Clickable from "../Clickable";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../AppContext";
 import { twMerge } from "tailwind-merge";
 import useFetch from "../../useFetch";
 import { API_HOST } from "../../config";
 import { Note } from "../../type";
+
+function copy(text: string) {
+  var input = document.createElement("textarea");
+  input.innerHTML = text;
+  document.body.appendChild(input);
+  input.select();
+  var result = document.execCommand("copy");
+  document.body.removeChild(input);
+  return result;
+}
 
 const Label = ({
   children,
@@ -28,6 +38,7 @@ const Item = ({ children }: React.PropsWithChildren) => {
 const SideBar = () => {
   const { note, user, notes, setNote, setNotes } = useContext(AppContext);
   const visibilityApi = useFetch<Note>();
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (visibilityApi.response) {
@@ -55,6 +66,14 @@ const SideBar = () => {
     );
   };
 
+  const handleCopy = () => {
+    copy(`https://retronote.app/note/${note!.id}`);
+    setCopied(true);
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
+  };
+
   return note ? (
     <div className="max-h-[90vh] overflow-y-scroll scrollbar-hide p-4 space-y-6">
       <div>
@@ -75,7 +94,9 @@ const SideBar = () => {
             <Item>
               <Label>Link</Label>
               <div>
-                <Clickable lite>copy &rarr;</Clickable>
+                <Clickable lite onClick={handleCopy}>
+                  {copied ? <span>copied!</span> : <span>copy &rarr;</span>}
+                </Clickable>
               </div>
             </Item>
           )}
