@@ -10,10 +10,6 @@ const PublicNote = () => {
   const noteApi = useFetch<{ note: Note; user: { email: string } }>();
 
   useEffect(() => {
-    console.log(noteApi.error);
-  }, [noteApi.rawResponse]);
-
-  useEffect(() => {
     noteApi.handle(fetch(`${API_HOST}/public/note?note_id=${noteId}`));
   }, []);
 
