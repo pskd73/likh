@@ -33,7 +33,7 @@ const WriteToolbar = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${appContext.loggedInUser!.token}`,
+          Authorization: `Bearer ${appContext.user!.token}`,
         },
         body: JSON.stringify({
           title: `My new note - ${new Date().toISOString()}`,
@@ -54,7 +54,7 @@ const WriteToolbar = () => {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    appContext.setLoggedInUser(undefined);
+    appContext.setUser(undefined);
   };
 
   return (
@@ -68,7 +68,7 @@ const WriteToolbar = () => {
         </Clickable>
         {!appContext.focusMode && (
           <span className="text-base ml-4">
-            {appContext.loggedInUser?.email} &nbsp;
+            {appContext.user?.email} &nbsp;
             <Clickable lite onClick={handleLogout}>
               logout
             </Clickable>

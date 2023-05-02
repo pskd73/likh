@@ -11,7 +11,7 @@ import {
   getSettings,
 } from "./localStorage";
 import { createContext, useState } from "react";
-import { LoggedInUser, Note, Settings, Suggestion, Topic } from "../type";
+import { User, Note, Settings, Suggestion, Topic } from "../type";
 
 export type TextMetricType = "words" | "readTime";
 
@@ -43,8 +43,8 @@ export type AppContextType = {
   settings: Settings;
   saveSettings: (settings: Settings) => void;
 
-  loggedInUser?: LoggedInUser;
-  setLoggedInUser: (user?: LoggedInUser) => void;
+  user?: User;
+  setUser: (user?: User) => void;
 };
 
 export const AppContext = createContext<AppContextType>({} as AppContextType);
@@ -61,7 +61,7 @@ export const useAppContext = (): AppContextType => {
     storageGetSuggestions()
   );
   const [settings, setSettings] = useState<Settings>(getSettings());
-  const [loggedInUser, setLoggedInUser] = useState<LoggedInUser>();
+  const [user, setUser] = useState<User>();
   const [notes, setNotes] = useState<NoteCollection>({});
   const [note, setNote] = useState<Note>();
 
@@ -117,8 +117,8 @@ export const useAppContext = (): AppContextType => {
     settings,
     saveSettings,
 
-    loggedInUser,
-    setLoggedInUser,
+    user,
+    setUser,
 
     notes,
     setNotes,

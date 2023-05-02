@@ -10,20 +10,20 @@ import { API_HOST } from "../../config";
 const Write = () => {
   const notesFetch = useFetch<Note[]>();
   const saveFetch = useFetch();
-  const { note, setNote, focusMode, loggedInUser, setNotes } =
+  const { note, setNote, focusMode, user, setNotes } =
     useContext(AppContext);
 
   useEffect(() => {
-    if (loggedInUser) {
+    if (user) {
       notesFetch.handle(
         fetch(`${API_HOST}/notes`, {
           headers: {
-            Authorization: `Bearer ${loggedInUser.token}`,
+            Authorization: `Bearer ${user.token}`,
           },
         })
       );
     }
-  }, [loggedInUser]);
+  }, [user]);
 
   useEffect(() => {
     if (notesFetch.response) {
@@ -43,7 +43,7 @@ const Write = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${loggedInUser!.token}`,
+          Authorization: `Bearer ${user!.token}`,
         },
         body: JSON.stringify({
           id: newNote.id,

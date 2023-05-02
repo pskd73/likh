@@ -12,7 +12,7 @@ const Suggestions = () => {
     topicCollection,
     suggestions,
     setSuggestions,
-    loggedInUser,
+    user,
   } = useContext(AppContext);
   const newFetch = useFetch<Note>();
   const [loading, setLoading] = useState(false);
@@ -30,7 +30,7 @@ const Suggestions = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${loggedInUser!.token}`,
+          Authorization: `Bearer ${user!.token}`,
         },
         body: JSON.stringify({
           title: suggestion.title,

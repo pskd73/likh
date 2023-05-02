@@ -26,7 +26,6 @@ const keyBindings: Record<string, (context: AppContextType) => void> = {
   KeyF: (context: AppContextType) => context.setFocusMode((old) => !old)
 };
 
-let event: any = null;
 const isApp =
   window.location.hostname.startsWith("app") ||
   window.location.pathname.startsWith("/app");
@@ -46,16 +45,14 @@ function App() {
     return trays_;
   }, [appContext.trayOpen, appContext.activeTray]);
   useSupabase({
-    setLoggedInUser: appContext.setLoggedInUser,
+    setUser: appContext.setUser,
   });
 
   useEffect(() => {
     Event.track("load");
     document.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("beforeinstallprompt", handleBeforeInstall);
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("beforeinstallprompt", handleBeforeInstall);
     };
   }, []);
 
@@ -70,21 +67,7 @@ function App() {
     }
   };
 
-  const handleBeforeInstall = (e: Event) => {
-    event = e;
-  };
-
-  const handleInstall = async () => {
-    if (event) {
-      event.prompt();
-      const { outcome } = await event.userChoice;
-      if (outcome === "accepted") {
-        event = null;
-      }
-    }
-  };
-
-  if (!appContext.loggedInUser) {
+  if (!appContext.user) {
     return <Landing />;
   }
 

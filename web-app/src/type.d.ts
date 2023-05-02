@@ -32,7 +32,7 @@ export type Settings = {
   goal?: string;
 };
 
-export type LoggedInUser = {
+export type User = {
   email: string;
   token: string;
 };

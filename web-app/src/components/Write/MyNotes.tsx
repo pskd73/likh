@@ -6,7 +6,7 @@ import { API_HOST } from "../../config";
 import { Note } from "../../type";
 
 const MyNotes = () => {
-  const { notes, setNote, loggedInUser, setNotes } = useContext(AppContext);
+  const { notes, setNote, user, setNotes } = useContext(AppContext);
   const deleteFetch = useFetch<Note>();
 
   useEffect(() => {
@@ -24,7 +24,7 @@ const MyNotes = () => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${loggedInUser!.token}`,
+          Authorization: `Bearer ${user!.token}`,
         },
         body: JSON.stringify({
           note_id: id,
