@@ -9,19 +9,17 @@ const goalToWordCount: Record<string, number> = {
 };
 
 const GoalTracker = () => {
-  const { getEditingNote, collection, editingNoteId, settings } =
-    useContext(AppContext);
+  const { note, notes, settings } = useContext(AppContext);
   const pct = useMemo(() => {
-    const note = getEditingNote();
     if (note && settings.goal) {
       const goalWords = goalToWordCount[settings.goal];
       const currentWords = getNWords(note.text);
       return Math.floor(Math.min(100, (currentWords / goalWords) * 100));
     }
-  }, [collection, editingNoteId, settings.goal]);
+  }, [notes, note, settings.goal]);
 
   return pct !== undefined ? (
-    <div style={{ opacity: Math.max(pct / 100, 0.1) }}>{pct}%</div>
+    <div style={{ opacity: Math.max(pct / 100, 0.3) }}>{pct}%</div>
   ) : null;
 };
 

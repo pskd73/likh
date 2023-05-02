@@ -24,15 +24,8 @@ const trays: Record<string, () => ReactElement> = {
 
 const keyBindings: Record<string, (context: AppContextType) => void> = {
   KeyF: (context: AppContextType) => context.setFocusMode((old) => !old),
-  KeyN: async (context: AppContextType) => {
-    const note = await context.newNote("My new note", "Write here ...");
-    context.setEditingNoteId(note.id);
-    context.setActiveTray("write");
-    Event.track("new_note");
-  },
 };
 
-let event: any = null;
 const isApp =
   window.location.hostname.startsWith("app") ||
   window.location.pathname.startsWith("/app");
@@ -52,22 +45,14 @@ function App() {
     return trays_;
   }, [appContext.trayOpen, appContext.activeTray]);
   useSupabase({
-    setLoggedInUser: appContext.setLoggedInUser,
+    setUser: appContext.setUser,
   });
-
-  useEffect(() => {
-    if (appContext.recentNote) {
-      appContext.setEditingNoteId(appContext.recentNote.id);
-    }
-  }, [appContext.recentNote]);
 
   useEffect(() => {
     Event.track("load");
     document.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("beforeinstallprompt", handleBeforeInstall);
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("beforeinstallprompt", handleBeforeInstall);
     };
   }, []);
 
@@ -82,21 +67,15 @@ function App() {
     }
   };
 
-  const handleBeforeInstall = (e: Event) => {
-    event = e;
-  };
+  if (appContext.user === undefined) {
+    return (
+      <div className="w-full h-[100vh] flex justify-center items-center font-SpecialElite">
+        Loading
+      </div>
+    );
+  }
 
-  const handleInstall = async () => {
-    if (event) {
-      event.prompt();
-      const { outcome } = await event.userChoice;
-      if (outcome === "accepted") {
-        event = null;
-      }
-    }
-  };
-
-  if (!appContext.loggedInUser) {
+  if (appContext.user === null) {
     return <Landing />;
   }
 

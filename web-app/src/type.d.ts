@@ -3,6 +3,7 @@ export type Note = {
   title: string;
   text: string;
   created_at: number;
+  visibility: "private" | "public";
 };
 
 export type NewNote = Omit<Note, "id">;
@@ -31,7 +32,7 @@ export type Settings = {
   goal?: string;
 };
 
-export type LoggedInUser = {
+export type User = {
   email: string;
   token: string;
 };

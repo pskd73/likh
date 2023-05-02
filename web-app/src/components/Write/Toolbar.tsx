@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AppContext } from "../AppContext";
 import Clickable from "../Clickable";
 import TextCount from "./TextCount";
@@ -8,14 +8,39 @@ import TrayExpandIcon from "../TrayExpandIcon";
 import Event from "../Event";
 import { supabase } from "../supabase";
 import GoalTracker from "./GoalTracker";
+import useFetch from "../../useFetch";
+import { Note } from "../../type";
+import { API_HOST } from "../../config";
 
 const WriteToolbar = () => {
   const appContext = useContext(AppContext);
+  const newFetch = useFetch<Note>();
+
+  useEffect(() => {
+    if (newFetch.response) {
+      appContext.setNotes({
+        ...appContext.notes,
+        [newFetch.response.id]: newFetch.response,
+      });
+      appContext.setNote(newFetch.response);
+      Event.track("new_note");
+    }
+  }, [newFetch.response]);
 
   const handleNewNote = async () => {
-    const note = await appContext.newNote("My new note", "Write here ...");
-    appContext.setEditingNoteId(note.id);
-    Event.track("new_note");
+    newFetch.handle(
+      fetch(`${API_HOST}/note`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${appContext.user!.token}`,
+        },
+        body: JSON.stringify({
+          title: `My new note - ${new Date().toLocaleString()}`,
+          text: "Write here ...",
+        }),
+      })
+    );
   };
 
   const handleFocus = () => {
@@ -29,7 +54,7 @@ const WriteToolbar = () => {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    appContext.setLoggedInUser(undefined);
+    appContext.setUser(undefined);
   };
 
   return (
@@ -43,7 +68,7 @@ const WriteToolbar = () => {
         </Clickable>
         {!appContext.focusMode && (
           <span className="text-base ml-4">
-            {appContext.loggedInUser?.email} &nbsp;
+            {appContext.user?.email} &nbsp;
             <Clickable lite onClick={handleLogout}>
               logout
             </Clickable>

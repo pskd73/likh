@@ -1,8 +1,10 @@
-import { useContext, useState } from "react";
-import { Suggestion } from "../../type";
+import { useContext, useEffect, useState } from "react";
+import { Note, Suggestion } from "../../type";
 import Clickable from "../Clickable";
 import { AppContext } from "../AppContext";
 import Event from "../Event";
+import useFetch from "../../useFetch";
+import { API_HOST } from "../../config";
 
 const Suggestions = () => {
   const {
@@ -10,14 +12,32 @@ const Suggestions = () => {
     topicCollection,
     suggestions,
     setSuggestions,
-    newNote
+    user,
   } = useContext(AppContext);
+  const newFetch = useFetch<Note>();
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    if (newFetch.response) {
+      setActiveTray("write");
+      Event.track("new_note");
+    }
+  }, [newFetch.response]);
+
   const handleWrite = async (suggestion: Suggestion) => {
-    await newNote(suggestion.title, `This is an article from ${suggestion.topic} topic.`)
-    setActiveTray("write");
-    Event.track("new_note");
+    newFetch.handle(
+      fetch(`${API_HOST}/note`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user!.token}`,
+        },
+        body: JSON.stringify({
+          title: suggestion.title,
+          text: `This is an article from ${suggestion.topic} topic.`,
+        }),
+      })
+    );
   };
 
   const handleRefresh = async () => {

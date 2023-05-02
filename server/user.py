@@ -19,3 +19,10 @@ def get_user_by_email(email: str) -> Optional[User]:
         return User.objects.get(email=email)
     except DoesNotExist:
         return None
+
+
+def get_user_by_id(user_id: str) -> Optional[User]:
+    try:
+        return User.objects.get(id=user_id)
+    except DoesNotExist:
+        return None
