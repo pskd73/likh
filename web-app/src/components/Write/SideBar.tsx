@@ -58,7 +58,7 @@ const SideBar = () => {
   return note ? (
     <div className="max-h-[90vh] overflow-y-scroll scrollbar-hide p-4 space-y-6">
       <div>
-        <ul>
+        <ul className="space-y-2">
           <Item>
             <Label>Visibility</Label>
             <div>

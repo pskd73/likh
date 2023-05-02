@@ -19,7 +19,7 @@ const GoalTracker = () => {
   }, [notes, note, settings.goal]);
 
   return pct !== undefined ? (
-    <div style={{ opacity: Math.max(pct / 100, 0.1) }}>{pct}%</div>
+    <div style={{ opacity: Math.max(pct / 100, 0.3) }}>{pct}%</div>
   ) : null;
 };
 
