@@ -4,12 +4,14 @@ import { Note } from "../type.d";
 import { useEffect } from "react";
 import { API_HOST } from "../config";
 import Clickable from "../components/Clickable";
+import Event from "../components/Event";
 
 const PublicNote = () => {
   const { noteId } = useParams();
   const noteApi = useFetch<{ note: Note; user: { email: string } }>();
 
   useEffect(() => {
+    Event.track("public_note", { note_id: noteId });
     noteApi.handle(fetch(`${API_HOST}/public/note?note_id=${noteId}`));
   }, []);
 
