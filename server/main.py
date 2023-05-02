@@ -125,3 +125,4 @@ def handle_update_note_visibility(user: User):
     assert visibility in ['public', 'private']
     note.visibility = visibility
     note.save()
+    return m_to_d(note)
