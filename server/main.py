@@ -14,8 +14,7 @@ from chatgpt import get_suggestions
 from constant import SAMPLE_TEXT
 from date import to_millis
 from note import Note, get_note_by_id, get_user_notes, delete_note
-from user import get_user_by_email, User
-
+from user import get_user_by_email, User, get_user_by_id
 
 connect(host=os.environ['MONGO_CONN_STR'])
 app = Flask(__name__)
@@ -126,3 +125,17 @@ def handle_update_note_visibility(user: User):
     note.visibility = visibility
     note.save()
     return m_to_d(note)
+
+
+@app.route('/public/note')
+def handle_get_public_note():
+    note = get_note_by_id(request.args['note_id'])
+    if note.visibility != 'public':
+        return '', 401
+    user = get_user_by_id(note.user_id)
+    return {
+        'note': m_to_d(note),
+        'user': {
+            'email': user.email
+        }
+    }
