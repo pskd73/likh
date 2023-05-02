@@ -36,7 +36,7 @@ const WriteToolbar = () => {
           Authorization: `Bearer ${appContext.user!.token}`,
         },
         body: JSON.stringify({
-          title: `My new note - ${new Date().toISOString()}`,
+          title: `My new note - ${new Date().toLocaleString()}`,
           text: "Write here ...",
         }),
       })
