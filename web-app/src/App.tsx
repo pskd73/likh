@@ -25,12 +25,12 @@ const trays: Record<string, () => ReactElement> = {
 
 const keyBindings: Record<string, (context: AppContextType) => void> = {
   KeyF: (context: AppContextType) => context.setFocusMode((old) => !old),
-  KeyN: (context: AppContextType) => {
-    const note = context.newNote();
-    context.setEditingNoteId(note.id);
-    context.setActiveTray("write");
-    Event.track("new_note");
-  },
+  // KeyN: (context: AppContextType) => {
+  //   const note = context.newNote();
+  //   context.setEditingNoteId(note.id);
+  //   context.setActiveTray("write");
+  //   Event.track("new_note");
+  // },
 };
 
 let event: any = null;
@@ -65,25 +65,28 @@ function App() {
   useEffect(() => {
     const note = appContext.getEditingNote();
     if (appContext.loggedInUser && note) {
-      fetch("http://localhost:5000/note", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${appContext.loggedInUser.token}`,
-        },
-        body: JSON.stringify({
-          title: note.title,
-          text: note.text,
-          id: "645007dcf6a2ede17debed90",
-        }),
-      });
+      // fetch("http://localhost:5000/note", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Authorization: `Bearer ${appContext.loggedInUser.token}`,
+      //   },
+      //   body: JSON.stringify({
+      //     title: note.title,
+      //     text: note.text,
+      //     id: "645007dcf6a2ede17debed90",
+      //   }),
+      // });
     }
   }, [appContext.collection]);
 
   useEffect(() => {
     Event.track("load");
     if (!appContext.recentNote) {
-      appContext.saveNote(getIntroNote());
+      (async () => {
+        const intro = getIntroNote();
+        await appContext.newNote(intro.title, intro.text);
+      })();
     }
 
     document.addEventListener("keydown", handleKeyDown);

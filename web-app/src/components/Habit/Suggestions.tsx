@@ -12,17 +12,18 @@ const Suggestions = () => {
     topicCollection,
     suggestions,
     setSuggestions,
+    newNote
   } = useContext(AppContext);
   const [loading, setLoading] = useState(false);
 
-  const handleWrite = (suggestion: Suggestion) => {
-    saveNote({
-      id: getNextId("note"),
-      title: suggestion.title,
-      text: `This is an article from ${suggestion.topic} topic.`,
-      createdAt: new Date().getTime(),
-      hashtags: [],
-    });
+  const handleWrite = async (suggestion: Suggestion) => {
+    // saveNote({
+    //   id: getNextId("note"),
+    //   title: suggestion.title,
+    //   text: `This is an article from ${suggestion.topic} topic.`,
+    //   created_at: new Date().getTime(),
+    // });
+    await newNote(suggestion.title, `This is an article from ${suggestion.topic} topic.`)
     setActiveTray("write");
     Event.track("new_note");
   };

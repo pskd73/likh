@@ -27,7 +27,7 @@ const getStreakCounts = (collection: NoteCollection, n: number) => {
     countsMap[dtToStr(new Date(now - i * DAY))] = 0;
   }
   for (const note of Object.values(collection)) {
-    const dt = new Date(note.createdAt);
+    const dt = new Date(note.created_at);
     const dtStr = dtToStr(dt);
     if (countsMap[dtStr] !== undefined) {
       countsMap[dtStr] += getNWords(note.text);

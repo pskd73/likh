@@ -1,12 +1,7 @@
-import { Note } from "../../type";
-import { getNextId } from "../localStorage";
-
-export const getIntroNote = (): Note => {
+export const getIntroNote = () => {
   return {
-    id: getNextId("note"),
     title: "Introduction",
-    text: 
-`This is a simple note taking app to build up writing habits and write without distractions. It is all old school here. No styles or corrections. Corrections and styling come in the later phases. The writing experience here will be as close as possible to writing on a white paper with a pen.
+    text: `This is a simple note taking app to build up writing habits and write without distractions. It is all old school here. No styles or corrections. Corrections and styling come in the later phases. The writing experience here will be as close as possible to writing on a white paper with a pen.
 
 This note itself is a sample one. Checkout "Help" section for more info.
 
@@ -18,7 +13,5 @@ Tips
 Happy writing :)
 
 `,
-    createdAt: new Date().getTime(),
-    hashtags: [],
   };
 };

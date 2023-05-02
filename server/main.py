@@ -6,18 +6,25 @@ import jwt
 from flask import Flask, request, make_response
 from flask_cors import CORS
 from jwt import DecodeError
-from mongoengine import connect
+from mongoengine import connect, Document
 
 from cal import get_event
 from chatgpt import get_suggestions
 from date import to_millis
-from note import Note, get_note_by_id
+from note import Note, get_note_by_id, get_user_notes, delete_note
 from user import get_user_by_email, User
 
 
 connect(host='')
 app = Flask(__name__)
 CORS(app)
+
+
+def m_to_d(obj: Document):
+    d = obj.to_mongo().to_dict()
+    d['_id'] = str(obj.id)
+    d['id'] = str(obj.id)
+    return d
 
 
 def login_required(f):
@@ -93,4 +100,20 @@ def handle_new_note(user: User):
         note.title = title
         note.text = text
     note.save()
-    return '', 200
+    return m_to_d(note), 200
+
+
+@app.route('/notes')
+@login_required
+def handle_get_note(user: User):
+    return [m_to_d(n) for n in get_user_notes(str(user.id))], 200
+
+
+@app.route('/delete-note', methods=['DELETE'])
+@login_required
+def handle_delete_note(user: User):
+    note = get_note_by_id(request.json['note_id'])
+    if note.user_id != str(user.id):
+        return '', 401
+    delete_note(note.id)
+    return ''

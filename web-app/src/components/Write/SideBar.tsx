@@ -10,7 +10,7 @@ const SideBar = () => {
     [collection]
   );
 
-  const handleDeleteNote = (id: number) => {
+  const handleDeleteNote = (id: string) => {
     deleteNote(id);
   };
 
@@ -39,11 +39,6 @@ const SideBar = () => {
                       delete
                     </span>
                   </Clickable>
-                  {note.hashtags.map((tag, j) => (
-                    <span key={j} className="text-sm opacity-60">
-                      {tag}
-                    </span>
-                  ))}
                 </div>
               </div>
             </li>
