@@ -1,10 +1,6 @@
 import * as React from "react";
 import {
   NoteCollection,
-  getNoteCollection,
-  saveNote as storageSaveNote,
-  deleteNote as storageDeleteNote,
-  getNextId,
   TopicCollection,
   getTopics,
   addTopic as storageAddTopic,
@@ -14,20 +10,21 @@ import {
   saveSettings as storageSaveSettings,
   getSettings,
 } from "./localStorage";
-import { createContext, useMemo, useState } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 import { LoggedInUser, Note, Settings, Suggestion, Topic } from "../type";
+import * as api from "./api";
 
 export type TextMetricType = "words" | "readTime";
 
 export type AppContextType = {
   collection?: NoteCollection;
-  editingNoteId?: number;
+  editingNoteId?: string;
 
   saveNote: (note: Note) => void;
   refresh: () => void;
-  newNote: () => Note;
-  deleteNote: (id: number) => void;
-  setEditingNoteId: (id: number) => void;
+  newNote: (title: string, text: string) => Promise<Note>;
+  deleteNote: (id: string) => void;
+  setEditingNoteId: (id: string) => void;
   getEditingNote: () => undefined | Note;
 
   recentNote?: Note;
@@ -56,15 +53,15 @@ export type AppContextType = {
 
   loggedInUser?: LoggedInUser;
   setLoggedInUser: (user?: LoggedInUser) => void;
+
+  loading: boolean;
 };
 
 export const AppContext = createContext<AppContextType>({} as AppContextType);
 
 export const useAppContext = (): AppContextType => {
-  const [collection, setCollection] = useState<NoteCollection>(
-    getNoteCollection()
-  );
-  const [editingNoteId, setEditingNoteId] = useState<number>();
+  const [collection, setCollection] = useState<NoteCollection>({});
+  const [editingNoteId, setEditingNoteId] = useState<string>();
   const [focusMode, setFocusMode] = useState<boolean>(false);
   const [textMetricType, setTextMetricType] = useState<TextMetricType>("words");
   const [trayOpen, setTrayOpen] = useState(false);
@@ -77,6 +74,7 @@ export const useAppContext = (): AppContextType => {
   );
   const [settings, setSettings] = useState<Settings>(getSettings());
   const [loggedInUser, setLoggedInUser] = useState<LoggedInUser>();
+  const [loading, setLoading] = useState(true);
 
   const recentNote = useMemo(() => {
     if (collection && Object.keys(collection).length) {
@@ -85,31 +83,36 @@ export const useAppContext = (): AppContextType => {
     }
   }, [Object.keys(collection).length]);
 
+  useEffect(() => {
+    (async () => {
+      refresh();
+    })();
+  }, [loggedInUser]);
+
   const saveNote = (note: Note) => {
-    storageSaveNote(note);
-    refresh();
+    setCollection({ ...collection, [note.id]: note });
+    api.saveNote(loggedInUser!, note);
   };
 
-  const refresh = () => {
-    setCollection(getNoteCollection());
+  const refresh = async () => {
+    if (loggedInUser) {
+      setLoading(true);
+      setCollection(await api.getNotes(loggedInUser));
+      setLoading(false);
+    }
   };
 
-  const newNote = () => {
-    const id = getNextId("note");
-    const note: Note = {
-      id,
-      title: `My note #${id}`,
-      text: "Write here ...",
-      createdAt: new Date().getTime(),
-      hashtags: [],
-    };
-    saveNote(note);
+  const newNote = async (title: string, text: string) => {
+    const note = await api.createNote(loggedInUser!, title, text);
+    setCollection({ ...collection, [note.id]: note });
     return note;
   };
 
-  const deleteNote = (id: number) => {
-    storageDeleteNote(id);
-    refresh();
+  const deleteNote = async (id: string) => {
+    await api.deleteNote(loggedInUser!, id);
+    const coll = { ...collection };
+    delete coll[id];
+    setCollection(coll);
   };
 
   const getEditingNote = () => {
@@ -183,5 +186,7 @@ export const useAppContext = (): AppContextType => {
 
     loggedInUser,
     setLoggedInUser,
+
+    loading,
   };
 };

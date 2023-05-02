@@ -12,8 +12,8 @@ import GoalTracker from "./GoalTracker";
 const WriteToolbar = () => {
   const appContext = useContext(AppContext);
 
-  const handleNewNote = () => {
-    const note = appContext.newNote();
+  const handleNewNote = async () => {
+    const note = await appContext.newNote("My new note", "Write here ...");
     appContext.setEditingNoteId(note.id);
     Event.track("new_note");
   };

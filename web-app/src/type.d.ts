@@ -1,10 +1,11 @@
 export type Note = {
-  id: number;
+  id: string;
   title: string;
   text: string;
-  createdAt: number;
-  hashtags: string[];
+  created_at: number;
 };
+
+export type NewNote = Omit<Note, "id">;
 
 export type Topic = {
   title: string;

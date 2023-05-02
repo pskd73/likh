@@ -8,7 +8,6 @@ import Tray from "./components/Tray";
 import Write from "./components/Write/Write";
 import Help from "./components/Help/Help";
 import "./index.css";
-import { getIntroNote } from "./components/Write/Intro";
 import Habit from "./components/Habit/Habit";
 import Event from "./components/Event";
 import Settings from "./components/Settings/Settings";
@@ -25,8 +24,8 @@ const trays: Record<string, () => ReactElement> = {
 
 const keyBindings: Record<string, (context: AppContextType) => void> = {
   KeyF: (context: AppContextType) => context.setFocusMode((old) => !old),
-  KeyN: (context: AppContextType) => {
-    const note = context.newNote();
+  KeyN: async (context: AppContextType) => {
+    const note = await context.newNote("My new note", "Write here ...");
     context.setEditingNoteId(note.id);
     context.setActiveTray("write");
     Event.track("new_note");
@@ -52,7 +51,9 @@ function App() {
     }
     return trays_;
   }, [appContext.trayOpen, appContext.activeTray]);
-  useSupabase({ setLoggedInUser: appContext.setLoggedInUser });
+  useSupabase({
+    setLoggedInUser: appContext.setLoggedInUser,
+  });
 
   useEffect(() => {
     if (appContext.recentNote) {
@@ -62,10 +63,6 @@ function App() {
 
   useEffect(() => {
     Event.track("load");
-    if (!appContext.recentNote) {
-      appContext.saveNote(getIntroNote());
-    }
-
     document.addEventListener("keydown", handleKeyDown);
     window.addEventListener("beforeinstallprompt", handleBeforeInstall);
     return () => {
@@ -73,12 +70,6 @@ function App() {
       window.removeEventListener("beforeinstallprompt", handleBeforeInstall);
     };
   }, []);
-
-  useEffect(() => {
-    if (appContext.loggedInUser) {
-      // Event.track("logged_in");
-    }
-  }, [appContext.loggedInUser]);
 
   const handleKeyDown = (e: KeyboardEvent) => {
     if ((e.metaKey || e.ctrlKey) && e.altKey) {

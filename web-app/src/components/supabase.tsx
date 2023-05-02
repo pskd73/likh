@@ -1,12 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
-import Event from "./Event";
 import { LoggedInUser } from "../type";
 import { useEffect } from "react";
+import { SUPABASE_KEY, SUPABASE_URL } from "../config";
 
-export const supabase = createClient(
-  "https://gfbrmxfdddmpwlqtvwsh.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmYnJteGZkZGRtcHdscXR2d3NoIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODI3NzMwNjQsImV4cCI6MTk5ODM0OTA2NH0.44lRQgUo7MOULLBvJ3moD6Z_XhA7FOcxqCA0kH22H9M"
-);
+export const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 export const useSupabase = ({
   setLoggedInUser,
