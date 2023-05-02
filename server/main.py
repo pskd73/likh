@@ -1,3 +1,4 @@
+import env
 import os
 from datetime import datetime
 from functools import wraps
@@ -10,12 +11,13 @@ from mongoengine import connect, Document
 
 from cal import get_event
 from chatgpt import get_suggestions
+from constant import SAMPLE_TEXT
 from date import to_millis
 from note import Note, get_note_by_id, get_user_notes, delete_note
 from user import get_user_by_email, User
 
 
-connect(host='')
+connect(host=os.environ['MONGO_CONN_STR'])
 app = Flask(__name__)
 CORS(app)
 
