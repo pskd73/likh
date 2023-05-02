@@ -38,7 +38,7 @@ const PublicNote = () => {
               </p>
             </div>
           )}
-          {noteApi.rawResponse?.status !== 200 && (
+          {noteApi.rawResponse && noteApi.rawResponse.status !== 200 && (
             <div className="w-full h-full flex justify-center items-center flex-1">
               Note does not exist! Start writing&nbsp;
               <Clickable className="underline">
