@@ -42,6 +42,14 @@ def login_required(f):
             if user is None:
                 user = User(email=decoded['email'], created_at=to_millis(datetime.now()))
                 user.save()
+
+                note = Note(
+                    user_id=str(user.id),
+                    title='Sample note',
+                    text=SAMPLE_TEXT,
+                    created_at=to_millis(datetime.now())
+                )
+                note.save()
         except DecodeError:
             return '', 401
         return f(user, *args, **kwargs)
