@@ -119,7 +119,7 @@ const MyNotes = () => {
   return (
     <div>
       {notes && (
-        <ul className="space-y-6">
+        <ul className="space-y-2">
           {Object.values(notes)
             .sort((a, b) => b.created_at - a.created_at)
             .map((note, i) => (

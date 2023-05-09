@@ -58,7 +58,7 @@ const Suggestions = () => {
   return (
     <div>
       <div className="flex space-x-2 mb-3 items-center">
-        <Header>Write about</Header>
+        <Header className="mb-0">Write about</Header>
         <Clickable lite onClick={handleRefresh} disabled={loading}>
           [{loading ? "loading" : "refresh"}]
         </Clickable>
@@ -72,7 +72,7 @@ const Suggestions = () => {
       <ul className="space-y-6">
         {suggestions.map((suggestion, i) => (
           <li key={i} className="flex">
-            <div className="mr-2">{i + 1}.</div>
+            <div className="w-6">{i + 1}.</div>
             <div>
               <div>{suggestion.title}</div>
               <div className="text-sm">

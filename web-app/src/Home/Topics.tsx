@@ -13,6 +13,7 @@ import { Header } from "../comps/Typo";
 const Topics = () => {
   const { addTopic, topicCollection, deleteTopic } = useContext(AppContext);
   const [newTopic, setNewTopic] = useState("");
+  const [showNew, setShowNew] = useState(false);
   const topics = useMemo(
     () => Object.values(topicCollection || {}),
     [topicCollection]
@@ -26,6 +27,7 @@ const Topics = () => {
     if (e.code === "Enter") {
       addTopic({ title: newTopic, createdAt: new Date().getTime() });
       setNewTopic("");
+      setShowNew(false);
     }
   };
 
@@ -35,8 +37,26 @@ const Topics = () => {
 
   return (
     <div>
-      <Header>Interested topics</Header>
+      <div className="flex justify-between items-center">
+        <Header>Interested topics</Header>
+        <Clickable onClick={() => setShowNew((n) => !n)}>
+          {showNew ? "[-]" : "[+]"}
+        </Clickable>
+      </div>
       <ul className="space-y-3">
+        {showNew && (
+          <li>
+            <Input
+              type="text"
+              className="w-10/12"
+              placeholder="Enter the topic name"
+              onChange={handleNewTopicChange}
+              onKeyUp={handleNewTopicKeyUp}
+              value={newTopic}
+            />
+          </li>
+        )}
+
         {topics.map((topic, i) => (
           <li className="flex" key={i}>
             <div className="w-6">{i + 1}.</div>
@@ -50,18 +70,6 @@ const Topics = () => {
             </div>
           </li>
         ))}
-        <li className="flex">
-          <div className="pr-2">{topics.length + 1}.</div>
-          <div>
-            <Input
-              type="text"
-              placeholder="Add topic"
-              onChange={handleNewTopicChange}
-              onKeyUp={handleNewTopicKeyUp}
-              value={newTopic}
-            />
-          </div>
-        </li>
       </ul>
     </div>
   );
