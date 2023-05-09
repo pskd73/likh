@@ -6,6 +6,7 @@ import { API_HOST } from "../config";
 import { Note } from "../type";
 import moment from "moment";
 import { Select } from "../comps/Form";
+import { Link } from "react-router-dom";
 
 function copy(text: string) {
   var input = document.createElement("textarea");
@@ -126,7 +127,7 @@ const MyNotes = () => {
                 <div className="mr-2">{i + 1}.</div>
                 <div className="w-full">
                   <Clickable>
-                    <span onClick={() => setNote(note)}>{note.title}</span>
+                    <Link to={`/v2/write/${note.id}`}>{note.title}</Link>
                   </Clickable>
 
                   <div className="text-sm mb-2">

@@ -34,7 +34,7 @@ export const Nav = () => {
   }, [location]);
 
   return (
-    <div className="bg-primary-400 border-b-4 border-primary-500">
+    <div className="bg-primary-400 border-b-4 border-primary-500 sticky top-0 z-10">
       <Paper>
         <div className="h-[46px] flex justify-between items-center mt-2">
           <h1 className="text-lg">
@@ -68,7 +68,7 @@ export const Nav = () => {
 export const Footer = () => {
   return (
     <Paper>
-      <div className="flex justify-center text-center opacity-30 text-sm">
+      <div className="flex justify-center text-center opacity-30 text-sm mb-10">
         Built with &lt;3 by&nbsp;
         <Clickable>
           <a href="#" target="_blank">

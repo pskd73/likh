@@ -73,8 +73,7 @@ const Editor = ({
           TITLE_MARGIN_BOTTOM -
           20
       );
-
-      textRef.current.style.height = `${height}px`;
+      textRef.current.style.height = `${textRef.current?.scrollHeight}px`;
     }
   };
 
@@ -89,7 +88,7 @@ const Editor = ({
       <textarea
         value={note.title}
         ref={titleRef}
-        className="text-3xl outline-none w-full resize-none dark:bg-iblack"
+        className="text-[48px] outline-none w-full resize-none dark:bg-iblack"
         onChange={handleTitleChange}
         style={{ marginBottom: TITLE_MARGIN_BOTTOM }}
       />
@@ -97,7 +96,7 @@ const Editor = ({
         ref={textRef}
         value={note.text}
         onChange={handleTextChange}
-        className="outline-none w-full scrollbar-hide text-lg overflow-y-scroll resize-none dark:bg-iblack"
+        className="outline-none w-full scrollbar-hide overflow-y-scroll resize-none dark:bg-iblack"
       />
     </div>
   );

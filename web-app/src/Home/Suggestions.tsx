@@ -72,7 +72,7 @@ const Suggestions = () => {
             <div className="mr-2">{i + 1}.</div>
             <div>
               <div>{suggestion.title}</div>
-              <div className="text-sm mt-1">
+              <div className="text-sm">
                 <span className="opacity-50">{suggestion.topic} |&nbsp;</span>
                 <Clickable lite>
                   <span onClick={() => handleWrite(suggestion)}>write</span>

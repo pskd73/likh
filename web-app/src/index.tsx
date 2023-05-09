@@ -10,6 +10,8 @@ import PublicNoteV2 from "./Public/PublicNote";
 import Home from "./Home/Home";
 import MyNotes from "./Notes/MyNotes";
 import Settings from "./Settings/Settings";
+import Write from "./Write/Write";
+import New from "./Write/New";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +37,14 @@ const router = createBrowserRouter([
       {
         path: "settings",
         element: <Settings />,
+      },
+      {
+        path: "write/:noteId",
+        element: <Write />,
+      },
+      {
+        path: "write/new",
+        element: <New />,
       },
       {
         path: "note/:noteId",

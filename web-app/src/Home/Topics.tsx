@@ -41,19 +41,17 @@ const Topics = () => {
             <div className="pr-2">{i + 1}.</div>
             <div>
               <div>{topic.title}</div>
-              <Clickable
-                lite
-                onClick={() => handleDeleteTopic(topic.title)}
-                className="text-sm"
-              >
-                delete
-              </Clickable>
+              <div className="text-sm">
+                <Clickable lite onClick={() => handleDeleteTopic(topic.title)}>
+                  delete
+                </Clickable>
+              </div>
             </div>
           </li>
         ))}
         <li className="flex">
           <div className="pr-2">{topics.length + 1}.</div>
-          <div className="-mt-1">
+          <div>
             <Input
               type="text"
               placeholder="Add topic"

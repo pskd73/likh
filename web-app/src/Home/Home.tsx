@@ -42,11 +42,11 @@ const Home = () => {
   };
 
   return (
-    <div className="flex space-x-4">
+    <div className="flex space-x-28">
       <div className="w-8/12 space-y-6">
         <Suggestions />
       </div>
-      <div className="w-4/12 space-y-6">
+      <div className="w-4/12 space-y-10">
         <div>
           <Clickable
             className="text-lg"
