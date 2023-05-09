@@ -2,7 +2,7 @@ import { PropsWithChildren, useContext, useEffect, useState } from "react";
 import { Paper } from "./Layout";
 import classNames from "classnames";
 import Clickable from "../components/Clickable";
-import { Link, To, useLocation } from "react-router-dom";
+import { Link, To, useLocation, useNavigate } from "react-router-dom";
 import { AppContext } from "../components/AppContext";
 import { supabase } from "../components/supabase";
 
@@ -67,10 +67,12 @@ export const Nav = () => {
 
 export const Footer = () => {
   const { user, setUser } = useContext(AppContext);
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
     setUser(undefined);
+    navigate("/");
   };
 
   return (
@@ -79,10 +81,7 @@ export const Footer = () => {
         {user && (
           <p>
             Logged in as {user.email} [
-            <Clickable onClick={handleLogout}>
-              logout
-            </Clickable>
-            ]
+            <Clickable onClick={handleLogout}>logout</Clickable>]
           </p>
         )}
         <p>

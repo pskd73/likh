@@ -1,26 +1,26 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import App from "./App";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import PublicNote from "./Public/Note";
-import AppV2 from "./AppV2";
+import AppV2 from "./App";
 import PublicNoteV2 from "./Public/PublicNote";
 import Home from "./Home/Home";
 import MyNotes from "./Notes/MyNotes";
 import Settings from "./Settings/Settings";
 import Write from "./Write/Write";
 import New from "./Write/New";
+import Landing from "./Landing";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <Landing />,
   },
   {
-    path: "/note/:noteId",
-    element: <PublicNote />,
+    path: "/note",
+    element: <AppV2 />,
+    children: [{ path: ":noteId", element: <PublicNoteV2 /> }],
   },
   {
     path: "/app",
@@ -45,10 +45,6 @@ const router = createBrowserRouter([
       {
         path: "write/new",
         element: <New />,
-      },
-      {
-        path: "note/:noteId",
-        element: <PublicNoteV2 />,
       },
     ],
   },

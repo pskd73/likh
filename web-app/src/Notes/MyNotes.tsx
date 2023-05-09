@@ -127,7 +127,7 @@ const MyNotes = () => {
                 <div className="mr-2">{i + 1}.</div>
                 <div className="w-full">
                   <Clickable>
-                    <Link to={`/v2/write/${note.id}`}>{note.title}</Link>
+                    <Link to={`/app/write/${note.id}`}>{note.title}</Link>
                   </Clickable>
 
                   <div className="text-sm mb-2">
