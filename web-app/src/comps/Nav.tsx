@@ -20,7 +20,7 @@ const MenuLink = ({
   );
 };
 
-const Nav = () => {
+export const Nav = () => {
   return (
     <div className="bg-primary-400 border-b-4 border-primary-500">
       <Paper>
@@ -49,4 +49,12 @@ const Nav = () => {
   );
 };
 
-export default Nav;
+export const Footer = () => {
+  return (
+    <Paper>
+      <div className="flex justify-center text-center opacity-30 text-sm">
+        Built with &lt;3 by @pramodk73
+      </div>
+    </Paper>
+  );
+};
