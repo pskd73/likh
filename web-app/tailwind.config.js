@@ -10,7 +10,8 @@ module.exports = {
         SpecialElite: ['Special Elite', 'cursive'],
         CourierPrime: ['Courier Prime', 'monospace'],
         CutiveMono: ['Cutive Mono', 'monospace'],
-        OpenSans: ['Open Sans', 'sans-serif']
+        OpenSans: ['Open Sans', 'sans-serif'],
+        Inter: ['Inter', 'sans-serif']
       },
       colors: {
         iblack: "#121212",

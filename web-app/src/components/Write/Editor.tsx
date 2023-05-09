@@ -88,7 +88,7 @@ const Editor = ({
       <textarea
         value={note.title}
         ref={titleRef}
-        className="text-[48px] outline-none w-full resize-none dark:bg-iblack"
+        className="text-3xl outline-none w-full resize-none dark:bg-iblack font-bold"
         onChange={handleTitleChange}
         style={{ marginBottom: TITLE_MARGIN_BOTTOM }}
       />

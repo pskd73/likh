@@ -38,7 +38,7 @@ export const Nav = () => {
   return (
     <div className="bg-primary-400 border-b-4 border-primary-500 sticky top-0 z-10">
       <Paper>
-        <div className="h-[46px] flex justify-between items-center mt-2">
+        <div className="h-[46px] flex justify-between items-center">
           <h1 className="text-lg">
             <Link to="/app/">Retro Note</Link>
           </h1>

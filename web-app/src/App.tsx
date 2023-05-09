@@ -14,7 +14,7 @@ const App = ({ nav = true }: { nav?: boolean }) => {
 
   return (
     <AppContext.Provider value={appContext}>
-      <div className="font-SpecialElite text-base text-primary-700 bg-base min-h-[100vh]">
+      <div className="font-Inter text-base text-primary-700 bg-base min-h-[100vh]">
         {nav && appContext.user && <Nav />}
         <Paper className="py-8 min-h-[100vh]">
           <Outlet />

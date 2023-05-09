@@ -130,7 +130,7 @@ const MyNotes = () => {
                     <Link to={`/app/write/${note.id}`}>{note.title}</Link>
                   </Clickable>
 
-                  <div className="text-sm mb-2">
+                  <div className="text-sm mb-4">
                     <span className="opacity-50">
                       Created {moment(new Date(note.created_at)).fromNow()}
                     </span>
@@ -150,8 +150,8 @@ const MyNotes = () => {
 
                   {expandedNotes.includes(note.id) && (
                     <div className="flex items-center mb-4">
-                      <div className="w-1/4">visibility</div>
-                      <div className="space-x-4">
+                      <div className="mr-2">visibility</div>
+                      <div className="space-x-2">
                         <Select
                           className="h-9 px-2 rounded bg-primary-700 bg-opacity-30"
                           value={note.visibility || "private"}

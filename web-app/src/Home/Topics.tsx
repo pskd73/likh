@@ -8,6 +8,7 @@ import {
 import { AppContext } from "../components/AppContext";
 import Clickable from "../components/Clickable";
 import { Input } from "../comps/Form";
+import { Header } from "../comps/Typo";
 
 const Topics = () => {
   const { addTopic, topicCollection, deleteTopic } = useContext(AppContext);
@@ -34,7 +35,7 @@ const Topics = () => {
 
   return (
     <div>
-      <h3 className="text-lg mb-1">Interested topics</h3>
+      <Header>Interested topics</Header>
       <ul className="space-y-3">
         {topics.map((topic, i) => (
           <li className="flex" key={i}>

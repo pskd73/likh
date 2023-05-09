@@ -7,6 +7,7 @@ import Event from "../components/Event";
 import useFetch from "../useFetch";
 import { API_HOST } from "../config";
 import { useNavigate } from "react-router-dom";
+import { Header } from "../comps/Typo";
 
 const Suggestions = () => {
   const { topicCollection, suggestions, setSuggestions, user } =
@@ -56,10 +57,10 @@ const Suggestions = () => {
 
   return (
     <div>
-      <div className="flex space-x-5 mb-5 items-center">
-        <h3 className="text-lg">Write about ...</h3>
+      <div className="flex space-x-2 mb-3 items-center">
+        <Header>Write about</Header>
         <Clickable lite onClick={handleRefresh} disabled={loading}>
-          {loading ? "loading" : "refresh"}
+          [{loading ? "loading" : "refresh"}]
         </Clickable>
       </div>
       {!suggestions.length && (

@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import { useContext } from "react";
 import { AppContext } from "../components/AppContext";
+import { Header } from "../comps/Typo";
 
 const TextBlock = ({ height }: { height: number }) => {
   return (
@@ -47,7 +48,7 @@ const Goal = () => {
 
   return (
     <div>
-      <h3 className="text-lg mb-1">Write goal</h3>
+      <Header>Write goal</Header>
       <div className="space-y-4">
         <ul className="flex space-x-4">
           <li onClick={() => handleClick("")}>

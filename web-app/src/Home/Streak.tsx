@@ -2,6 +2,7 @@ import { useContext, useMemo } from "react";
 import { getNWords } from "../util";
 import { AppContext } from "../components/AppContext";
 import { NoteCollection } from "../components/localStorage";
+import { Header } from "../comps/Typo";
 
 const getOpacity = (num: number, max: number) => {
   let op = num / max;
@@ -46,7 +47,7 @@ const Streak = () => {
 
   return (
     <div>
-      <h3 className="text-lg mb-1">My streak</h3>
+      <Header>My streak</Header>
       <div>
         <ul className="flex space-x-2 text-sm">
           {counts.map((count, i) => (
