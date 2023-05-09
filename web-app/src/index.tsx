@@ -23,7 +23,7 @@ const router = createBrowserRouter([
     element: <PublicNote />,
   },
   {
-    path: "/v2",
+    path: "/app",
     element: <AppV2 />,
     children: [
       {

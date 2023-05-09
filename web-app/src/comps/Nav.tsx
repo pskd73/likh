@@ -40,20 +40,20 @@ export const Nav = () => {
       <Paper>
         <div className="h-[46px] flex justify-between items-center mt-2">
           <h1 className="text-lg">
-            <Link to="/v2/">Retro Note</Link>
+            <Link to="/app/">Retro Note</Link>
           </h1>
           <div>
             <ul className="flex space-x-6">
               <li>
-                <MenuLink to="/v2/write/new">new</MenuLink>
+                <MenuLink to="/app/write/new">new</MenuLink>
               </li>
               <li>
-                <MenuLink to="/v2/notes" active={activeLink === "notes"}>
+                <MenuLink to="/app/notes" active={activeLink === "notes"}>
                   my notes
                 </MenuLink>
               </li>
               <li>
-                <MenuLink to="/v2/settings" active={activeLink === "settings"}>
+                <MenuLink to="/app/settings" active={activeLink === "settings"}>
                   settings
                 </MenuLink>
               </li>
