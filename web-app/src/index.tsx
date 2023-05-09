@@ -5,11 +5,16 @@ import App from "./App";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import PublicNote from "./Public/Note";
+import AppV2 from "./AppV2";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+  },
+  {
+    path: "/v2",
+    element: <AppV2 />
   },
   {
     path: "/note/:noteId",
