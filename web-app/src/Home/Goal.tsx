@@ -1,5 +1,6 @@
 import classNames from "classnames";
-import { useState } from "react";
+import { useContext } from "react";
+import { AppContext } from "../components/AppContext";
 
 const TextBlock = ({ height }: { height: number }) => {
   return (
@@ -38,29 +39,29 @@ const GoalOption = ({
 };
 
 const Goal = () => {
-  const [activeGoal, setActiveGoal] = useState("medium");
+  const { settings, saveSettings } = useContext(AppContext);
 
-  const handleClick = (goal: string) => {
-    setActiveGoal(goal);
+  const handleClick = (val: string) => {
+    saveSettings({ ...settings, goal: val || undefined });
   };
 
   return (
     <div>
-      <h3 className="text-lg mb-1">Goal</h3>
+      <h3 className="text-lg mb-1">Write goal</h3>
       <div className="space-y-4">
         <ul className="flex space-x-4">
-          <li onClick={() => handleClick("free_style")}>
+          <li onClick={() => handleClick("")}>
             <GoalOption
               title="free style"
               blocks={[]}
-              active={activeGoal === "free_style"}
+              active={settings.goal === undefined}
             />
           </li>
           <li onClick={() => handleClick("short")}>
             <GoalOption
               title="short"
               blocks={[20]}
-              active={activeGoal === "short"}
+              active={settings.goal === "short"}
             />
           </li>
         </ul>
@@ -69,14 +70,14 @@ const Goal = () => {
             <GoalOption
               title="medium"
               blocks={[20, 10]}
-              active={activeGoal === "medium"}
+              active={settings.goal === "medium"}
             />
           </li>
           <li onClick={() => handleClick("long")}>
             <GoalOption
               title="long"
               blocks={[20, 10, 20]}
-              active={activeGoal === "long"}
+              active={settings.goal === "long"}
             />
           </li>
         </ul>

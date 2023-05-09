@@ -8,7 +8,7 @@ const AppV2 = () => {
 
   return (
     <AppContext.Provider value={appContext}>
-      <div className="font-SpecialElite text-base text-primary-700 bg-base">
+      <div className="font-SpecialElite text-base text-primary-700 bg-base min-h-[100vh]">
         <Nav />
         <Paper className="py-8">
           <Outlet />

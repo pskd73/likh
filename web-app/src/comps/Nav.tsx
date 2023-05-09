@@ -1,6 +1,7 @@
 import { ComponentProps, PropsWithChildren } from "react";
 import { Paper } from "./Layout";
 import classNames from "classnames";
+import Clickable from "../components/Clickable";
 
 const MenuLink = ({
   children,
@@ -53,7 +54,12 @@ export const Footer = () => {
   return (
     <Paper>
       <div className="flex justify-center text-center opacity-30 text-sm">
-        Built with &lt;3 by @pramodk73
+        Built with &lt;3 by&nbsp;
+        <Clickable>
+          <a href="#" target="_blank">
+            @pramodk73
+          </a>
+        </Clickable>
       </div>
     </Paper>
   );

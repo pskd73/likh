@@ -6,7 +6,7 @@ import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import PublicNote from "./Public/Note";
 import AppV2 from "./AppV2";
-import PublicNoteV2 from "./comps/PublicNote";
+import PublicNoteV2 from "./Public/PublicNote";
 import Home from "./Home/Home";
 
 const router = createBrowserRouter([
