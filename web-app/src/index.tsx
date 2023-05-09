@@ -3,28 +3,37 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import AppV2 from "./App";
-import PublicNoteV2 from "./Public/PublicNote";
+import App from "./App";
+import PublicNote from "./Public/PublicNote";
 import Home from "./Home/Home";
 import MyNotes from "./Notes/MyNotes";
 import Settings from "./Settings/Settings";
 import Write from "./Write/Write";
 import New from "./Write/New";
 import Landing from "./Landing";
+import { NoMobile } from "./comps/Layout";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Landing />,
+    element: (
+      <NoMobile>
+        <Landing />
+      </NoMobile>
+    ),
   },
   {
     path: "/note",
-    element: <AppV2 />,
-    children: [{ path: ":noteId", element: <PublicNoteV2 /> }],
+    element: <App nav={false} />,
+    children: [{ path: ":noteId", element: <PublicNote /> }],
   },
   {
     path: "/app",
-    element: <AppV2 />,
+    element: (
+      <NoMobile>
+        <App />
+      </NoMobile>
+    ),
     children: [
       {
         path: "",

@@ -5,7 +5,7 @@ import { Paper } from "./comps/Layout";
 import { Nav, Footer } from "./comps/Nav";
 import { Outlet, useNavigate } from "react-router-dom";
 
-const AppV2 = () => {
+const App = ({ nav = true }: { nav?: boolean }) => {
   const appContext = useAppContext();
   const navigate = useNavigate();
 
@@ -22,7 +22,7 @@ const AppV2 = () => {
   return (
     <AppContext.Provider value={appContext}>
       <div className="font-SpecialElite text-base text-primary-700 bg-base min-h-[100vh]">
-        {appContext.user && <Nav />}
+        {nav && appContext.user && <Nav />}
         <Paper className="py-8 min-h-[100vh]">
           <Outlet />
         </Paper>
@@ -32,4 +32,4 @@ const AppV2 = () => {
   );
 };
 
-export default AppV2;
+export default App;
