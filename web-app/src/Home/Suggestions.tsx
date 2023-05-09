@@ -6,17 +6,19 @@ import { AppContext } from "../components/AppContext";
 import Event from "../components/Event";
 import useFetch from "../useFetch";
 import { API_HOST } from "../config";
+import { useNavigate } from "react-router-dom";
 
 const Suggestions = () => {
-  const { setActiveTray, topicCollection, suggestions, setSuggestions, user } =
+  const { topicCollection, suggestions, setSuggestions, user } =
     useContext(AppContext);
   const newFetch = useFetch<Note>();
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (newFetch.response) {
-      setActiveTray("write");
       Event.track("new_note");
+      navigate(`/v2/write/${newFetch.response.id}`);
     }
   }, [newFetch.response]);
 

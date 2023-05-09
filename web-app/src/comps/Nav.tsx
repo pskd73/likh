@@ -1,8 +1,10 @@
-import { PropsWithChildren, useEffect, useState } from "react";
+import { PropsWithChildren, useContext, useEffect, useState } from "react";
 import { Paper } from "./Layout";
 import classNames from "classnames";
 import Clickable from "../components/Clickable";
 import { Link, To, useLocation } from "react-router-dom";
+import { AppContext } from "../components/AppContext";
+import { supabase } from "../components/supabase";
 
 const MenuLink = ({
   children,
@@ -43,18 +45,16 @@ export const Nav = () => {
           <div>
             <ul className="flex space-x-6">
               <li>
-                <MenuLink to="/v2/" active={activeLink === ""}>
-                  Home
-                </MenuLink>
+                <MenuLink to="/v2/write/new">new</MenuLink>
               </li>
               <li>
                 <MenuLink to="/v2/notes" active={activeLink === "notes"}>
-                  My notes
+                  my notes
                 </MenuLink>
               </li>
               <li>
                 <MenuLink to="/v2/settings" active={activeLink === "settings"}>
-                  Settings
+                  settings
                 </MenuLink>
               </li>
             </ul>
@@ -66,15 +66,37 @@ export const Nav = () => {
 };
 
 export const Footer = () => {
+  const { user, setUser } = useContext(AppContext);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setUser(undefined);
+  };
+
   return (
     <Paper>
-      <div className="flex justify-center text-center opacity-30 text-sm mb-10">
-        Built with &lt;3 by&nbsp;
-        <Clickable>
-          <a href="#" target="_blank">
-            @pramodk73
-          </a>
-        </Clickable>
+      <div className="flex flex-col justify-center text-center opacity-30 text-sm mb-10">
+        {user && (
+          <p>
+            Logged in as {user.email} [
+            <Clickable onClick={handleLogout}>
+              logout
+            </Clickable>
+            ]
+          </p>
+        )}
+        <p>
+          Built with &lt;3 by&nbsp;
+          <Clickable>
+            <a
+              href="https://twitter.com/@pramodk73"
+              target="_blank"
+              rel="noreferrer"
+            >
+              @pramodk73
+            </a>
+          </Clickable>
+        </p>
       </div>
     </Paper>
   );
