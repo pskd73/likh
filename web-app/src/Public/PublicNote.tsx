@@ -16,9 +16,9 @@ const PublicNote = () => {
   }, []);
 
   return (
-    <div className="font-SpecialElite flex justify-center">
+    <div className="flex justify-center">
       <div className="w-full max-w-[900px]">
-        <div className="min-h-[90vh] p-4 flex flex-col">
+        <div className="flex flex-col">
           {noteApi.hits < 1 && (
             <div className="w-full h-full flex justify-center items-center flex-1">
               loading
@@ -27,13 +27,13 @@ const PublicNote = () => {
           {noteApi.response && (
             <div>
               <div className="mb-4">
-                <h1 className="text-4xl">{noteApi.response.note.title}</h1>
+                <h1 className="text-[48px]">{noteApi.response.note.title}</h1>
                 <span className="opacity-50">
                   By {noteApi.response.user.email} @{" "}
                   {new Date(noteApi.response.note.created_at).toDateString()}
                 </span>
               </div>
-              <p className="text-lg whitespace-pre-wrap">
+              <p className="whitespace-pre-wrap">
                 {noteApi.response.note.text}
               </p>
             </div>
@@ -46,20 +46,6 @@ const PublicNote = () => {
               </Clickable>
             </div>
           )}
-        </div>
-        <div className="w-full h-[10vh] text-center p-6">
-          <span className="opacity-50">Powered by&nbsp;</span>
-          <Clickable lite>
-            <a href="/" target="/">
-              Retro Note
-            </a>
-          </Clickable>
-          <span className="opacity-50">&nbsp;& built by &nbsp;</span>
-          <Clickable lite>
-            <a href="https://twitter.com/pramodk73" target="_blank">
-              @pramodk73
-            </a>
-          </Clickable>
         </div>
       </div>
     </div>

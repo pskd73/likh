@@ -1,17 +1,13 @@
 import { useContext, useMemo } from "react";
-import { getNWords, numberWithCommas } from "../../util";
-import { AppContext } from "../AppContext";
-import { NoteCollection } from "../localStorage";
-
-const numToTxt = (num: number) => {
-  if (num === 0) {
-    return ":(";
-  }
-  return numberWithCommas(num);
-};
+import { getNWords } from "../util";
+import { AppContext } from "../components/AppContext";
+import { NoteCollection } from "../components/localStorage";
 
 const getOpacity = (num: number, max: number) => {
-  const op = num / max;
+  let op = num / max;
+  if (Number.isNaN(op)) {
+    op = 0;
+  }
   return Math.max(0.2, op);
 };
 
@@ -36,23 +32,26 @@ const getStreakCounts = (notes: NoteCollection, n: number) => {
   return Object.values(countsMap);
 };
 
+const StreakBox = ({ opacity }: { opacity: number }) => {
+  return (
+    <div className="w-[30px] h-[30px] border-primary-700 border rounded">
+      <div className="bg-primary-700 w-full h-full" style={{ opacity }} />
+    </div>
+  );
+};
+
 const Streak = () => {
   const { notes } = useContext(AppContext);
   const counts = useMemo(() => getStreakCounts(notes, 7), [notes]);
 
   return (
     <div>
-      Streak (w)
-      <br />
-      ~~~~~~
+      <h3 className="text-lg mb-1">My streak</h3>
       <div>
-        <ul className="flex space-x-4 text-sm">
+        <ul className="flex space-x-2 text-sm">
           {counts.map((count, i) => (
-            <li
-              key={i}
-              style={{ opacity: getOpacity(count, Math.max(...counts)) }}
-            >
-              {numToTxt(count)}
+            <li key={i}>
+              <StreakBox opacity={getOpacity(count, Math.max(...counts))} />
             </li>
           ))}
         </ul>

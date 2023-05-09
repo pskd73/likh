@@ -98,9 +98,18 @@ def handle_new_note(user: User):
     return m_to_d(note), 200
 
 
-@app.route('/notes')
+@app.route('/note')
 @login_required
 def handle_get_note(user: User):
+    note = get_note_by_id(request.args['note_id'])
+    if note.user_id != str(user.id):
+        return '', 401
+    return m_to_d(note)
+
+
+@app.route('/notes')
+@login_required
+def handle_get_notes(user: User):
     return [m_to_d(n) for n in get_user_notes(str(user.id))], 200
 
 

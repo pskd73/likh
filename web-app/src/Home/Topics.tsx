@@ -5,8 +5,9 @@ import {
   useMemo,
   useState,
 } from "react";
-import { AppContext } from "../AppContext";
-import Clickable from "../Clickable";
+import { AppContext } from "../components/AppContext";
+import Clickable from "../components/Clickable";
+import { Input } from "../comps/Form";
 
 const Topics = () => {
   const { addTopic, topicCollection, deleteTopic } = useContext(AppContext);
@@ -33,38 +34,31 @@ const Topics = () => {
 
   return (
     <div>
-      Interested topics
-      <br />
-      ~~~~~~~~~~~~~~~~
+      <h3 className="text-lg mb-1">Interested topics</h3>
       <ul className="space-y-3">
         {topics.map((topic, i) => (
           <li className="flex" key={i}>
             <div className="pr-2">{i + 1}.</div>
             <div>
               <div>{topic.title}</div>
-              <Clickable lite>
-                <span onClick={() => handleDeleteTopic(topic.title)}>
+              <div className="text-sm">
+                <Clickable lite onClick={() => handleDeleteTopic(topic.title)}>
                   delete
-                </span>
-              </Clickable>
+                </Clickable>
+              </div>
             </div>
           </li>
         ))}
-
         <li className="flex">
           <div className="pr-2">{topics.length + 1}.</div>
-          <div className="-mt-1">
-            <input
+          <div>
+            <Input
               type="text"
               placeholder="Add topic"
-              className="outline-none py-1 dark:bg-iblack"
               onChange={handleNewTopicChange}
               onKeyUp={handleNewTopicKeyUp}
               value={newTopic}
             />
-            <div className="-mt-3">
-              <span className="opacity-50">-----</span>
-            </div>
           </div>
         </li>
       </ul>

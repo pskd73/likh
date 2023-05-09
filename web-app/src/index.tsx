@@ -1,19 +1,61 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import App from "./App";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import PublicNote from "./Public/Note";
+import App from "./App";
+import PublicNote from "./Public/PublicNote";
+import Home from "./Home/Home";
+import MyNotes from "./Notes/MyNotes";
+import Settings from "./Settings/Settings";
+import Write from "./Write/Write";
+import New from "./Write/New";
+import Landing from "./Landing";
+import { NoMobile } from "./comps/Layout";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: (
+      <NoMobile>
+        <Landing />
+      </NoMobile>
+    ),
   },
   {
-    path: "/note/:noteId",
-    element: <PublicNote />,
+    path: "/note",
+    element: <App nav={false} />,
+    children: [{ path: ":noteId", element: <PublicNote /> }],
+  },
+  {
+    path: "/app",
+    element: (
+      <NoMobile>
+        <App />
+      </NoMobile>
+    ),
+    children: [
+      {
+        path: "",
+        element: <Home />,
+      },
+      {
+        path: "notes",
+        element: <MyNotes />,
+      },
+      {
+        path: "settings",
+        element: <Settings />,
+      },
+      {
+        path: "write/:noteId",
+        element: <Write />,
+      },
+      {
+        path: "write/new",
+        element: <New />,
+      },
+    ],
   },
 ]);
 

@@ -1,26 +1,24 @@
+import * as React from "react";
 import { useContext, useEffect, useState } from "react";
-import { Note, Suggestion } from "../../type";
-import Clickable from "../Clickable";
-import { AppContext } from "../AppContext";
-import Event from "../Event";
-import useFetch from "../../useFetch";
-import { API_HOST } from "../../config";
+import { Note, Suggestion } from "../type";
+import Clickable from "../components/Clickable";
+import { AppContext } from "../components/AppContext";
+import Event from "../components/Event";
+import useFetch from "../useFetch";
+import { API_HOST } from "../config";
+import { useNavigate } from "react-router-dom";
 
 const Suggestions = () => {
-  const {
-    setActiveTray,
-    topicCollection,
-    suggestions,
-    setSuggestions,
-    user,
-  } = useContext(AppContext);
+  const { topicCollection, suggestions, setSuggestions, user } =
+    useContext(AppContext);
   const newFetch = useFetch<Note>();
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (newFetch.response) {
-      setActiveTray("write");
       Event.track("new_note");
+      navigate(`/app/write/${newFetch.response.id}`);
     }
   }, [newFetch.response]);
 
@@ -58,12 +56,8 @@ const Suggestions = () => {
 
   return (
     <div>
-      <div className="flex space-x-5">
-        <div>
-          Suggestions
-          <br />
-          ~~~~~~~~~~~
-        </div>
+      <div className="flex space-x-5 mb-5 items-center">
+        <h3 className="text-lg">Write about ...</h3>
         <Clickable lite onClick={handleRefresh} disabled={loading}>
           {loading ? "loading" : "refresh"}
         </Clickable>
@@ -74,16 +68,14 @@ const Suggestions = () => {
           write on!
         </div>
       )}
-      <ul className="space-y-2">
+      <ul className="space-y-6">
         {suggestions.map((suggestion, i) => (
           <li key={i} className="flex">
-            <div className="mr-1">{i + 1}.</div>
+            <div className="mr-2">{i + 1}.</div>
             <div>
-              <div>
-                {suggestion.title}{" "}
-                <span className="opacity-20">[{suggestion.topic}]</span>
-              </div>
-              <div>
+              <div>{suggestion.title}</div>
+              <div className="text-sm">
+                <span className="opacity-50">{suggestion.topic} |&nbsp;</span>
                 <Clickable lite>
                   <span onClick={() => handleWrite(suggestion)}>write</span>
                 </Clickable>
