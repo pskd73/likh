@@ -39,7 +39,7 @@ const Topics = () => {
       <ul className="space-y-3">
         {topics.map((topic, i) => (
           <li className="flex" key={i}>
-            <div className="pr-2">{i + 1}.</div>
+            <div className="w-6">{i + 1}.</div>
             <div>
               <div>{topic.title}</div>
               <div className="text-sm">

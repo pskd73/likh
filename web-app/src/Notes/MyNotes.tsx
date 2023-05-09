@@ -18,7 +18,7 @@ function copy(text: string) {
   return result;
 }
 
-const Divider = () => <span className="opacity-50">&nbsp;|&nbsp;</span>;
+const Divider = () => <span className="opacity-50">&nbsp;•&nbsp;</span>;
 
 const MyNotes = () => {
   const { notes, setNote, user, setNotes } = useContext(AppContext);

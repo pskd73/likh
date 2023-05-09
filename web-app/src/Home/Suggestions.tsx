@@ -76,7 +76,7 @@ const Suggestions = () => {
             <div>
               <div>{suggestion.title}</div>
               <div className="text-sm">
-                <span className="opacity-50">{suggestion.topic} |&nbsp;</span>
+                <span className="opacity-50">{suggestion.topic} •&nbsp;</span>
                 <Clickable lite>
                   <span onClick={() => handleWrite(suggestion)}>write</span>
                 </Clickable>

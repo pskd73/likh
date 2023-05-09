@@ -24,7 +24,7 @@ const GoalOption = ({
   return (
     <div
       className={classNames(
-        "w-[100px] h-[100px] bg-primary-700 bg-opacity-10 rounded p-2 flex flex-col justify-between text-sm items-center",
+        "w-[70px] h-[70px] bg-primary-700 bg-opacity-10 rounded p-2 flex flex-col justify-between text-xs items-center",
         "cursor-pointer",
         { "outline outline-2": active }
       )}
@@ -61,7 +61,7 @@ const Goal = () => {
           <li onClick={() => handleClick("short")}>
             <GoalOption
               title="short"
-              blocks={[20]}
+              blocks={[16]}
               active={settings.goal === "short"}
             />
           </li>
@@ -70,14 +70,14 @@ const Goal = () => {
           <li onClick={() => handleClick("medium")}>
             <GoalOption
               title="medium"
-              blocks={[20, 10]}
+              blocks={[14, 10]}
               active={settings.goal === "medium"}
             />
           </li>
           <li onClick={() => handleClick("long")}>
             <GoalOption
               title="long"
-              blocks={[20, 10, 20]}
+              blocks={[12, 4, 12]}
               active={settings.goal === "long"}
             />
           </li>

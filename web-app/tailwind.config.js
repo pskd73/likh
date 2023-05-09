@@ -22,9 +22,9 @@ module.exports = {
         "base": "#FFFEF8"
       },
       fontSize: {
-        sm: "14px",
-        base: "18px",
-        lg: "22px"
+        // sm: "14px",
+        // base: "18px",
+        // lg: "22px"
       }
     }
   },
