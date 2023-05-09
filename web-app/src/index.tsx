@@ -11,7 +11,7 @@ import Settings from "./Settings/Settings";
 import Write from "./Write/Write";
 import New from "./Write/New";
 import Landing from "./Landing";
-import { NoMobile } from "./comps/Layout";
+import { NoMobile, Private } from "./comps/Layout";
 
 const router = createBrowserRouter([
   {
@@ -31,7 +31,9 @@ const router = createBrowserRouter([
     path: "/app",
     element: (
       <NoMobile>
-        <App />
+        <Private>
+          <App />
+        </Private>
       </NoMobile>
     ),
     children: [

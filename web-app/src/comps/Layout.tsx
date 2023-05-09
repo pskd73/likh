@@ -1,5 +1,7 @@
-import { ComponentProps, PropsWithChildren } from "react";
+import { ComponentProps, PropsWithChildren, useState } from "react";
 import { twMerge } from "tailwind-merge";
+import { useSupabase } from "../components/supabase";
+import { useNavigate } from "react-router-dom";
 
 export const Paper = ({
   children,
@@ -25,4 +27,21 @@ export const NoMobile = ({ children }: PropsWithChildren) => {
     );
   }
   return <>{children}</>;
+};
+
+export const Private = ({ children }: PropsWithChildren) => {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+  useSupabase({
+    setUser: (user) => {
+      if (!user) {
+        navigate("/");
+      } else {
+        setLoggedIn(true);
+      }
+    },
+  });
+
+  return loggedIn ? <>{children}</> : null;
 };

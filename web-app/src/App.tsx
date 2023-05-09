@@ -3,20 +3,13 @@ import { AppContext, useAppContext } from "./components/AppContext";
 import { useSupabase } from "./components/supabase";
 import { Paper } from "./comps/Layout";
 import { Nav, Footer } from "./comps/Nav";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 const App = ({ nav = true }: { nav?: boolean }) => {
   const appContext = useAppContext();
-  const navigate = useNavigate();
 
   useSupabase({
-    setUser: (user) => {
-      if (user) {
-        appContext.setUser(user);
-      } else {
-        navigate("/");
-      }
-    },
+    setUser: appContext.setUser,
   });
 
   return (
