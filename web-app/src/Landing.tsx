@@ -19,7 +19,7 @@ const Landing = () => {
   const [mailSent, setMailSent] = useState(false);
 
   useSupabase({
-    setUser: user => {
+    setUser: (user) => {
       if (user) {
         navigate("/app", { replace: true });
       }
@@ -42,9 +42,9 @@ const Landing = () => {
   };
 
   return (
-    <Paper>
-      <div className="font-SpecialElite min-h-[100vh] w-full bg-base">
-        <div className="p-4 min-h-[100vh] flex justify-center text-lg">
+    <div className="font-Inter min-h-[100vh] w-full bg-base">
+      <Paper>
+        <div className="p-4 min-h-[100vh] flex justify-center">
           <div className="max-w-[900px] space-y-10">
             <div>
               <h1 className="text-5xl mb-4">Build writing habits</h1>
@@ -69,7 +69,7 @@ const Landing = () => {
               </ul>
             </div>
             <div>
-              <div className="flex">
+              <div className="flex items-center">
                 <Input
                   type="text"
                   placeholder="Enter email"
@@ -85,12 +85,12 @@ const Landing = () => {
                   login &rarr;
                 </Clickable>
               </div>
-              {mailSent && <div className="mt-2">Sent! Check your inbox</div>}
+              {mailSent && <div className="mt-1">Sent! Check your inbox</div>}
             </div>
           </div>
         </div>
-      </div>
-    </Paper>
+      </Paper>
+    </div>
   );
 };
 
