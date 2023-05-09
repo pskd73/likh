@@ -7,6 +7,7 @@ import {
 } from "react";
 import { AppContext } from "../components/AppContext";
 import Clickable from "../components/Clickable";
+import { Input } from "../comps/Form";
 
 const Topics = () => {
   const { addTopic, topicCollection, deleteTopic } = useContext(AppContext);
@@ -53,10 +54,9 @@ const Topics = () => {
         <li className="flex">
           <div className="pr-2">{topics.length + 1}.</div>
           <div className="-mt-1">
-            <input
+            <Input
               type="text"
               placeholder="Add topic"
-              className="outline-none p-1 bg-primary-700 rounded bg-opacity-30 placeholder-primary-700"
               onChange={handleNewTopicChange}
               onKeyUp={handleNewTopicKeyUp}
               value={newTopic}

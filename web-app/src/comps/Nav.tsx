@@ -1,46 +1,61 @@
-import { ComponentProps, PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { Paper } from "./Layout";
 import classNames from "classnames";
 import Clickable from "../components/Clickable";
+import { Link, To, useLocation } from "react-router-dom";
 
 const MenuLink = ({
   children,
+  to,
   active,
-  ...restProps
-}: ComponentProps<"a"> & { active?: boolean }) => {
+}: PropsWithChildren<{ active?: boolean; to: To }>) => {
   return (
-    <a
+    <Link
+      to={to}
       className={classNames("hover:opacity-100", {
         "opacity-100": active,
         "opacity-50": !active,
       })}
-      {...restProps}
     >
       {children}
-    </a>
+    </Link>
   );
 };
 
 export const Nav = () => {
+  const location = useLocation();
+  const [activeLink, setActiveLink] = useState("");
+
+  useEffect(() => {
+    const page = location.pathname.split("/")[2];
+    if (page !== undefined) {
+      setActiveLink(page);
+    }
+  }, [location]);
+
   return (
     <div className="bg-primary-400 border-b-4 border-primary-500">
       <Paper>
         <div className="h-[46px] flex justify-between items-center mt-2">
           <h1 className="text-lg">
-            <a href="#">Retro Note</a>
+            <Link to="/v2/">Retro Note</Link>
           </h1>
           <div>
             <ul className="flex space-x-6">
               <li>
-                <MenuLink href="#" active>
+                <MenuLink to="/v2/" active={activeLink === ""}>
                   Home
                 </MenuLink>
               </li>
               <li>
-                <MenuLink href="#">My notes</MenuLink>
+                <MenuLink to="/v2/notes" active={activeLink === "notes"}>
+                  My notes
+                </MenuLink>
               </li>
               <li>
-                <MenuLink href="#">Settings</MenuLink>
+                <MenuLink to="/v2/settings" active={activeLink === "settings"}>
+                  Settings
+                </MenuLink>
               </li>
             </ul>
           </div>

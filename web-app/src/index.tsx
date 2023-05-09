@@ -8,6 +8,8 @@ import PublicNote from "./Public/Note";
 import AppV2 from "./AppV2";
 import PublicNoteV2 from "./Public/PublicNote";
 import Home from "./Home/Home";
+import MyNotes from "./Notes/MyNotes";
+import Settings from "./Settings/Settings";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +27,14 @@ const router = createBrowserRouter([
       {
         path: "",
         element: <Home />,
+      },
+      {
+        path: "notes",
+        element: <MyNotes />,
+      },
+      {
+        path: "settings",
+        element: <Settings />,
       },
       {
         path: "note/:noteId",

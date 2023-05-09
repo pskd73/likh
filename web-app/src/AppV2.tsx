@@ -1,10 +1,15 @@
 import { AppContext, useAppContext } from "./components/AppContext";
+import { useSupabase } from "./components/supabase";
 import { Paper } from "./comps/Layout";
 import { Nav, Footer } from "./comps/Nav";
 import { Outlet } from "react-router-dom";
 
 const AppV2 = () => {
   const appContext = useAppContext();
+
+  useSupabase({
+    setUser: appContext.setUser,
+  });
 
   return (
     <AppContext.Provider value={appContext}>
