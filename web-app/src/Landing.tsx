@@ -44,7 +44,7 @@ const Landing = () => {
   return (
     <div className="font-Inter min-h-[100vh] w-full bg-base">
       <Paper>
-        <div className="p-4 min-h-[100vh] flex justify-center">
+        <div className="p-4 min-h-[100vh] flex justify-center items-center">
           <div className="max-w-[900px] space-y-10">
             <div>
               <h1 className="text-5xl mb-4">Build writing habits</h1>
