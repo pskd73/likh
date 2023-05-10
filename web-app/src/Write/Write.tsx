@@ -8,11 +8,13 @@ import { useParams } from "react-router-dom";
 import TextCounter from "./TextCounter";
 import GoalTracker from "./GoalTracker";
 import Clickable from "../components/Clickable";
+import MEditor from "../comps/MEditor";
 
 const Write = () => {
   const noteApi = useFetch<Note>();
   const saveFetch = useFetch();
-  const { user, note, setNote, focusMode, setFocusMode } = useContext(AppContext);
+  const { user, note, setNote, focusMode, setFocusMode } =
+    useContext(AppContext);
   const { noteId } = useParams();
 
   useEffect(() => {
@@ -52,17 +54,20 @@ const Write = () => {
   };
 
   const handleFocus = () => {
-    setFocusMode(f => !f);
-  }
+    setFocusMode((f) => !f);
+  };
 
   return (
     <div className="h-full">
       {note && (
         <>
-          <Editor note={note} onChange={handleNoteChange} />
+          {/* <Editor note={note} onChange={handleNoteChange} /> */}
+          <MEditor />
           <div className="fixed bottom-0 right-0 p-2 flex space-x-4">
             <GoalTracker />
-            <span className="opacity-50"><TextCounter /></span>
+            <span className="opacity-50">
+              <TextCounter />
+            </span>
             <Clickable lite onClick={handleFocus}>
               {focusMode ? "relax" : "focus"}
             </Clickable>
