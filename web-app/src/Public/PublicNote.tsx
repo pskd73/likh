@@ -25,9 +25,9 @@ const PublicNote = () => {
             </div>
           )}
           {noteApi.response && (
-            <div>
+            <div className="font-CourierPrime">
               <div className="mb-4">
-                <h1 className="text-3xl font-bold">{noteApi.response.note.title}</h1>
+                <h1 className="text-3xl">{noteApi.response.note.title}</h1>
                 <span className="opacity-50">
                   By {noteApi.response.user.email} @{" "}
                   {new Date(noteApi.response.note.created_at).toDateString()}
