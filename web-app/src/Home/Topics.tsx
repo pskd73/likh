@@ -49,7 +49,7 @@ const Topics = () => {
             <Input
               type="text"
               className="w-10/12"
-              placeholder="Enter the topic name"
+              placeholder="Enter the topic"
               onChange={handleNewTopicChange}
               onKeyUp={handleNewTopicKeyUp}
               value={newTopic}

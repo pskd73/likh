@@ -4,6 +4,11 @@ import Streak from "./Streak";
 import Suggestions from "./Suggestions";
 import Topics from "./Topics";
 import Event from "../components/Event";
+import useFetch from "../useFetch";
+import { Note } from "../type";
+import { useContext, useEffect } from "react";
+import { API_HOST } from "../config";
+import { AppContext } from "../components/AppContext";
 
 const pad = (num: number) => {
   return num < 10 ? "0" + num : num;
@@ -21,6 +26,33 @@ const formatDate = (dateTime: Date) => {
 };
 
 const Home = () => {
+  const { user, setNotes } = useContext(AppContext);
+  const homeApi = useFetch<{ notes: Note[] }>();
+
+  useEffect(() => {
+    if (homeApi.response) {
+      const coll: Record<string, Note> = {};
+      for (const note of homeApi.response.notes) {
+        coll[note.id] = note;
+      }
+      setNotes(coll);
+    }
+  }, [homeApi.response]);
+
+  useEffect(() => {
+    if (user) {
+      (() => {
+        homeApi.handle(
+          fetch(`${API_HOST}/user-home`, {
+            headers: {
+              Authorization: `Bearer ${user!.token}`,
+            },
+          })
+        );
+      })();
+    }
+  }, [user]);
+
   const handleAddToGoogleCalendar = () => {
     const dayStart = new Date();
     dayStart.setHours(0, 0, 0, 0);

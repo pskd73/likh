@@ -148,3 +148,12 @@ def handle_get_public_note():
             'email': user.email
         }
     }
+
+
+@app.route('/user-home')
+@login_required
+def handle_get_user_home(user: User):
+    notes = get_user_notes(str(user.id))
+    return {
+        'notes': [m_to_d(n) for n in notes]
+    }
