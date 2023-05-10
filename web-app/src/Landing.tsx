@@ -5,6 +5,7 @@ import { Paper } from "./comps/Layout";
 import { Input } from "./comps/Form";
 import { useAppContext } from "./components/AppContext";
 import { useNavigate } from "react-router-dom";
+import classNames from "classnames";
 
 const steps = [
   "Add topics you are interested in",
@@ -85,7 +86,11 @@ const Landing = () => {
                   login &rarr;
                 </Clickable>
               </div>
-              {mailSent && <div className="mt-1">Sent! Check your inbox</div>}
+              {
+                <div className={classNames("mt-1", { invisible: !mailSent })}>
+                  Sent! Check your inbox
+                </div>
+              }
             </div>
           </div>
         </div>
