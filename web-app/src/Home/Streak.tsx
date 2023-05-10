@@ -35,7 +35,7 @@ const getStreakCounts = (notes: NoteCollection, n: number) => {
 
 const StreakBox = ({ opacity }: { opacity: number }) => {
   return (
-    <div className="w-[30px] h-[30px] border-primary-700 border rounded">
+    <div className="w-[20px] h-[20px] border-primary-700 border rounded">
       <div className="bg-primary-700 w-full h-full" style={{ opacity }} />
     </div>
   );
@@ -49,7 +49,7 @@ const Streak = () => {
     <div>
       <Header>My streak</Header>
       <div>
-        <ul className="flex space-x-2 text-sm">
+        <ul className="flex space-x-1 text-sm">
           {counts.map((count, i) => (
             <li key={i}>
               <StreakBox opacity={getOpacity(count, Math.max(...counts))} />
