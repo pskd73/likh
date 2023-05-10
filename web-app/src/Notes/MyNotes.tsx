@@ -135,6 +135,10 @@ const MyNotes = () => {
                       Created {moment(new Date(note.created_at)).fromNow()}
                     </span>
                     <Divider />
+                    <span className="opacity-50">
+                      {note.visibility || "private"}
+                    </span>
+                    <Divider />
                     <Clickable
                       className="opacity-100"
                       lite
