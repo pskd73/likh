@@ -5,19 +5,14 @@ import { Note } from "../type";
 import useFetch from "../useFetch";
 import { API_HOST } from "../config";
 import { useParams } from "react-router-dom";
+import TextCounter from "./TextCounter";
+import GoalTracker from "./GoalTracker";
 
 const Write = () => {
   const noteApi = useFetch<Note>();
   const saveFetch = useFetch();
-  const [note, setNote] = useState<Note>();
-  const { user } = useContext(AppContext);
+  const { user, note, setNote } = useContext(AppContext);
   const { noteId } = useParams();
-
-  useEffect(() => {
-    if (!noteId) {
-      console.log("create note");
-    }
-  }, [noteId]);
 
   useEffect(() => {
     if (noteApi.response) {
@@ -57,7 +52,15 @@ const Write = () => {
 
   return (
     <div className="h-full">
-      {note && <Editor note={note} onChange={handleNoteChange} />}
+      {note && (
+        <>
+          <Editor note={note} onChange={handleNoteChange} />
+          <div className="fixed bottom-0 right-0 p-2 flex space-x-4">
+            <GoalTracker />
+            <TextCounter />
+          </div>
+        </>
+      )}
     </div>
   );
 };
