@@ -62,6 +62,27 @@ const Write = () => {
     setFocusMode((f) => !f);
   };
 
+  const handleMChange = (serialized: string, text: string) => {
+    if (note) {
+      setNote({ ...note, text });
+      saveFetch.handle(
+        fetch(`${API_HOST}/note`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user!.token}`,
+          },
+          body: JSON.stringify({
+            id: note.id,
+            title: note.title,
+            text,
+            slate_value: serialized,
+          }),
+        })
+      );
+    }
+  };
+
   if (noteApi.loading) {
     return <FullLoader />;
   }
@@ -70,7 +91,11 @@ const Write = () => {
     <div className="h-full">
       {note && (
         <>
-          <Editor note={note} onChange={handleNoteChange} />
+          {/* <Editor note={note} onChange={handleNoteChange} /> */}
+          <MEditor
+            onChange={({ serialized, text }) => handleMChange(serialized, text)}
+            initValue={note.slate_value}
+          />
           <div className="fixed bottom-0 right-0 px-4 py-2 flex space-x-4">
             {!focusMode && (
               <>

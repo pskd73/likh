@@ -9,6 +9,8 @@ import {
   BaseRange,
   Range,
   Text,
+  Descendant,
+  Node,
 } from "slate";
 import { Slate, Editable, withReact, ReactEditor } from "slate-react";
 
@@ -22,23 +24,11 @@ declare module "slate" {
   }
 }
 
-const initialValue = [
-  // {
-  //   type: "paragraph",
-  //   children: [
-  //     {
-  //       text: "Slate is flexible enough to add **decorations** that can format text based on its content. For example, this editor has **Markdown** preview decorations on it, to make it _dead_ simple to make an editor with built-in Markdown previewing.",
-  //     },
-  //   ],
-  // },
-  // {
-  //   type: "paragraph",
-  //   children: [{ text: "## Try it out!" }],
-  // },
-  // {
-  //   type: "paragraph",
-  //   children: [{ text: "Try it out for yourself!" }],
-  // },
+const serialize = (value: Descendant[]) => {
+  return value.map((n) => Node.string(n)).join("\n");
+};
+
+const defaultValue = [
   {
     type: "paragraph",
     children: [{ text: "**Hello!** How are you? *go*!" }],
@@ -50,7 +40,6 @@ const initialValue = [
 ];
 
 const Leaf = ({ attributes, children, leaf }: any) => {
-  console.log(leaf);
   return (
     <span
       {...attributes}
@@ -58,9 +47,9 @@ const Leaf = ({ attributes, children, leaf }: any) => {
         "font-semibold": leaf.bold,
         italic: leaf.italic,
         "inline-block mt-6 mb-2": leaf.title,
-        "text-xl": leaf.title && leaf.titleLevel === 1,
-        "text-2xl": leaf.title && leaf.titleLevel === 2,
-        "text-3xl": leaf.title && leaf.titleLevel === 3,
+        "text-2xl": leaf.title && leaf.titleLevel === 1,
+        "text-3xl": leaf.title && leaf.titleLevel === 2,
+        "text-4xl": leaf.title && leaf.titleLevel === 3,
         "opacity-30": leaf.punctuation,
       })}
     >
@@ -69,7 +58,17 @@ const Leaf = ({ attributes, children, leaf }: any) => {
   );
 };
 
-const MEditor = () => {
+const MEditor = ({
+  onChange,
+  initValue,
+}: {
+  onChange: (val: {
+    value: Descendant[];
+    text: string;
+    serialized: string;
+  }) => void;
+  initValue?: string;
+}) => {
   const [editor] = useState(() => withReact(createEditor()));
   const renderLeaf = useCallback((props: any) => <Leaf {...props} />, []);
   const decorate = useCallback(([node, path]: NodeEntry) => {
@@ -116,8 +115,6 @@ const MEditor = () => {
               titleLevel = _length;
             }
 
-            // console.log(item, _length, _start, _end);
-
             ranges.push({
               [token.type]: true,
               [(item as any).type]: true,
@@ -143,9 +140,21 @@ const MEditor = () => {
     return ranges;
   }, []);
 
+  const handleChange = (value: Descendant[]) => {
+    onChange({
+      value,
+      text: serialize(value),
+      serialized: JSON.stringify(value),
+    });
+  };
+
   return (
     <div className="text-[20px] font-CourierPrime leading-8">
-      <Slate editor={editor} value={initialValue as any}>
+      <Slate
+        editor={editor}
+        value={JSON.parse(initValue || JSON.stringify(defaultValue)) as any}
+        onChange={handleChange}
+      >
         <Editable decorate={decorate} renderLeaf={renderLeaf} />
       </Slate>
     </div>
