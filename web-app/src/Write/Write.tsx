@@ -70,11 +70,15 @@ const Write = () => {
       {note && (
         <>
           <Editor note={note} onChange={handleNoteChange} />
-          <div className="fixed bottom-0 right-0 p-2 flex space-x-4">
-            <GoalTracker note={note} />
-            <span className="opacity-50">
-              <TextCounter note={note} />
-            </span>
+          <div className="fixed bottom-0 right-0 px-4 py-2 flex space-x-4">
+            {!focusMode && (
+              <>
+                <GoalTracker note={note} />
+                <span className="opacity-50 w-14 text-center">
+                  <TextCounter note={note} />
+                </span>
+              </>
+            )}
             <Clickable lite onClick={handleFocus}>
               {focusMode ? "relax" : "focus"}
             </Clickable>

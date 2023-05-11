@@ -9,7 +9,7 @@ const goalToWordCount: Record<string, number> = {
   long: 1000,
 };
 
-const GoalTracker = ({note}: {note: Note}) => {
+const GoalTracker = ({ note }: { note: Note }) => {
   const { settings } = useContext(AppContext);
   const pct = useMemo(() => {
     if (note && settings.goal) {
@@ -20,7 +20,15 @@ const GoalTracker = ({note}: {note: Note}) => {
   }, [note, settings.goal]);
 
   return pct !== undefined ? (
-    <div style={{ opacity: Math.max(pct / 100, 0.3) }}>{pct}%</div>
+    <div className="flex items-center">
+      <div className="w-[100px] bg-primary-700 bg-opacity-30 h-2 rounded overflow-hidden">
+        <div
+          className="h-full bg-primary-700 bg-opacity-70 rounded"
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+      &nbsp;<span className="opacity-50 w-10 text-center">{pct}%</span>
+    </div>
   ) : null;
 };
 
