@@ -5,15 +5,23 @@ import { NoteCollection } from "../components/localStorage";
 import { Header } from "../comps/Typo";
 import moment from "moment";
 
-const getOpacity = (num: number, max: number) => {
-  let op = num / max;
-  if (Number.isNaN(op)) {
-    op = 0;
+const smooth = (min: number, max: number, num: number) => {
+  let pct = num / max;
+  if (Number.isNaN(pct)) {
+    pct = 0;
   }
-  return Math.max(0.2, op);
+  return min + (max - min) * pct;
 };
 
-const dtToStr = (dt: Date) => moment(dt).format("MMM Do YY"); ;
+const getOpacity = (num: number, max: number) => {
+  const smoothen = smooth(0.2, 1, num / max);
+  if (smoothen < 0.25) return 0.25;
+  if (smoothen < 0.5) return 0.5;
+  if (smoothen < 0.75) return 0.75;
+  return smoothen;
+};
+
+const dtToStr = (dt: Date) => moment(dt).format("MMM Do YY");
 
 const getStreakCounts = (notes: NoteCollection, n: number) => {
   const countsMap: Record<string, number> = {};
