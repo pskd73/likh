@@ -13,6 +13,7 @@ from cal import get_event
 from chatgpt import get_suggestions
 from constant import SAMPLE_TEXT
 from date import to_millis
+from mail import send_welcome_mail
 from note import Note, get_note_by_id, get_user_notes, delete_note
 from user import get_user_by_email, User, get_user_by_id
 
@@ -51,6 +52,7 @@ def login_required(f):
                     created_at=to_millis(datetime.now())
                 )
                 note.save()
+                # send_welcome_mail(user.email)
         except DecodeError:
             return '', 401
         return f(user, *args, **kwargs)
