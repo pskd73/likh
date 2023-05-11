@@ -17,6 +17,10 @@ const Write = () => {
   const { noteId } = useParams();
 
   useEffect(() => {
+    return () => setFocusMode(false);
+  }, []);
+
+  useEffect(() => {
     if (noteApi.response) {
       setNote(noteApi.response);
     }
