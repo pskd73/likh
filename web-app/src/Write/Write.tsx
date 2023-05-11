@@ -95,6 +95,7 @@ const Write = () => {
           <MEditor
             onChange={({ serialized, text }) => handleMChange(serialized, text)}
             initValue={note.slate_value}
+            initText={note.text}
           />
           <div className="fixed bottom-0 right-0 px-4 py-2 flex space-x-4">
             {!focusMode && (

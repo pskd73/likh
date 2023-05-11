@@ -28,6 +28,14 @@ const serialize = (value: Descendant[]) => {
   return value.map((n) => Node.string(n)).join("\n");
 };
 
+const deserialize = (str: string) => {
+  return str.split("\n").map((line) => {
+    return {
+      children: [{ text: line }],
+    };
+  });
+};
+
 const defaultValue = [
   {
     type: "paragraph",
@@ -61,6 +69,7 @@ const Leaf = ({ attributes, children, leaf }: any) => {
 const MEditor = ({
   onChange,
   initValue,
+  initText,
 }: {
   onChange: (val: {
     value: Descendant[];
@@ -68,6 +77,7 @@ const MEditor = ({
     serialized: string;
   }) => void;
   initValue?: string;
+  initText?: string;
 }) => {
   const [editor] = useState(() => withReact(createEditor()));
   const renderLeaf = useCallback((props: any) => <Leaf {...props} />, []);
@@ -148,11 +158,21 @@ const MEditor = ({
     });
   };
 
+  const getInitValue = () => {
+    if (initValue) {
+      return JSON.parse(initValue);
+    }
+    if (initText) {
+      return deserialize(initText);
+    }
+    return JSON.stringify(defaultValue);
+  };
+
   return (
     <div className="text-[20px] font-CourierPrime leading-8">
       <Slate
         editor={editor}
-        value={JSON.parse(initValue || JSON.stringify(defaultValue)) as any}
+        value={getInitValue() as any}
         onChange={handleChange}
       >
         <Editable decorate={decorate} renderLeaf={renderLeaf} />
