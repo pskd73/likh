@@ -12,7 +12,8 @@ import Clickable from "../components/Clickable";
 const Write = () => {
   const noteApi = useFetch<Note>();
   const saveFetch = useFetch();
-  const { user, note, setNote, focusMode, setFocusMode } = useContext(AppContext);
+  const { user, focusMode, setFocusMode } = useContext(AppContext);
+  const [note, setNote] = useState<Note>();
   const { noteId } = useParams();
 
   useEffect(() => {
@@ -52,8 +53,8 @@ const Write = () => {
   };
 
   const handleFocus = () => {
-    setFocusMode(f => !f);
-  }
+    setFocusMode((f) => !f);
+  };
 
   return (
     <div className="h-full">
@@ -61,8 +62,10 @@ const Write = () => {
         <>
           <Editor note={note} onChange={handleNoteChange} />
           <div className="fixed bottom-0 right-0 p-2 flex space-x-4">
-            <GoalTracker />
-            <span className="opacity-50"><TextCounter /></span>
+            <GoalTracker note={note} />
+            <span className="opacity-50">
+              <TextCounter note={note} />
+            </span>
             <Clickable lite onClick={handleFocus}>
               {focusMode ? "relax" : "focus"}
             </Clickable>
