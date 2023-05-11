@@ -82,11 +82,12 @@ const Home = () => {
         <div>
           <Clickable
             className="text-lg"
-            lite
+            lite={false}
             onClick={handleAddToGoogleCalendar}
           >
             Add reminder &rarr;
           </Clickable>
+          <div className="text-sm opacity-50">Adjust the timing accordingly</div>
         </div>
         <Streak />
         <Goal />
