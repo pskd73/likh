@@ -52,7 +52,7 @@ def login_required(f):
                     created_at=to_millis(datetime.now())
                 )
                 note.save()
-                # send_welcome_mail(user.email)
+                send_welcome_mail(user.email)
         except DecodeError:
             return '', 401
         return f(user, *args, **kwargs)
