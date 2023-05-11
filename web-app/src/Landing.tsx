@@ -1,16 +1,15 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Clickable from "./components/Clickable";
 import { supabase, useSupabase } from "./components/supabase";
 import { Paper } from "./comps/Layout";
 import { Input } from "./comps/Form";
-import { useAppContext } from "./components/AppContext";
 import { useNavigate } from "react-router-dom";
 import classNames from "classnames";
 
 const steps = [
   "Add topics you are interested in",
   "Add the daily calendar event",
-  "Pick a Retro Notensuggested topic to write about. Repeat it daily!",
+  "Pick a Retro Note suggested topic to write about. Repeat it daily!",
 ];
 
 const Landing = () => {
@@ -46,9 +45,9 @@ const Landing = () => {
     <div className="font-Inter min-h-[100vh] w-full bg-base">
       <Paper>
         <div className="p-4 min-h-[100vh] flex justify-center items-center">
-          <div className="max-w-[900px] space-y-10">
+          <div className="max-w-[900px] space-y-6">
             <div>
-              <h1 className="text-5xl mb-4">Build writing habits</h1>
+              <h1 className="text-6xl mb-4 font-CourierPrime">Build writing habits!</h1>
               <p className="leading-normal">
                 Writing is a way to{" "}
                 <span className="underline">articulate thoughts</span>. Don't
@@ -59,11 +58,11 @@ const Landing = () => {
               </p>
             </div>
             <div>
-              <p className="mb-2">Just follow below steps</p>
+              <p className="mb-2">Sing up now and start building writing habit by</p>
               <ul>
                 {steps.map((step, i) => (
                   <li key={i} className="flex">
-                    <div className="mr-2">{i + 1}.</div>
+                    <div className="w-6">{i + 1}.</div>
                     <div>{step}</div>
                   </li>
                 ))}
@@ -83,7 +82,7 @@ const Landing = () => {
                   disabled={loading}
                 />
                 <Clickable onClick={handleSubmit} disabled={loading}>
-                  login &rarr;
+                  Go &rarr;
                 </Clickable>
               </div>
               {
