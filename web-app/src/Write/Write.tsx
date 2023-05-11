@@ -9,13 +9,18 @@ import TextCounter from "./TextCounter";
 import GoalTracker from "./GoalTracker";
 import Clickable from "../components/Clickable";
 import MEditor from "../comps/MEditor";
+import { FullLoader } from "../comps/Loading";
 
 const Write = () => {
   const noteApi = useFetch<Note>();
   const saveFetch = useFetch();
-  const { user, note, setNote, focusMode, setFocusMode } =
-    useContext(AppContext);
+  const { user, focusMode, setFocusMode } = useContext(AppContext);
+  const [note, setNote] = useState<Note>();
   const { noteId } = useParams();
+
+  useEffect(() => {
+    return () => setFocusMode(false);
+  }, []);
 
   useEffect(() => {
     if (noteApi.response) {
@@ -57,17 +62,24 @@ const Write = () => {
     setFocusMode((f) => !f);
   };
 
+  if (noteApi.loading) {
+    return <FullLoader />;
+  }
+
   return (
     <div className="h-full">
       {note && (
         <>
-          {/* <Editor note={note} onChange={handleNoteChange} /> */}
-          <MEditor />
-          <div className="fixed bottom-0 right-0 p-2 flex space-x-4">
-            <GoalTracker />
-            <span className="opacity-50">
-              <TextCounter />
-            </span>
+          <Editor note={note} onChange={handleNoteChange} />
+          <div className="fixed bottom-0 right-0 px-4 py-2 flex space-x-4">
+            {!focusMode && (
+              <>
+                <GoalTracker note={note} />
+                <span className="opacity-50 w-14 text-center">
+                  <TextCounter note={note} />
+                </span>
+              </>
+            )}
             <Clickable lite onClick={handleFocus}>
               {focusMode ? "relax" : "focus"}
             </Clickable>

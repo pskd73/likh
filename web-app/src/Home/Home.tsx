@@ -9,6 +9,7 @@ import { Note } from "../type";
 import { useContext, useEffect } from "react";
 import { API_HOST } from "../config";
 import { AppContext } from "../components/AppContext";
+import { FullLoader } from "../comps/Loading";
 
 const pad = (num: number) => {
   return num < 10 ? "0" + num : num;
@@ -73,6 +74,10 @@ const Home = () => {
     );
   };
 
+  if (homeApi.loading) {
+    return <FullLoader />;
+  }
+
   return (
     <div className="flex space-x-6">
       <div className="w-9/12 space-y-6">
@@ -82,11 +87,14 @@ const Home = () => {
         <div>
           <Clickable
             className="text-lg"
-            lite
+            lite={false}
             onClick={handleAddToGoogleCalendar}
           >
             Add reminder &rarr;
           </Clickable>
+          <div className="text-sm opacity-50">
+            Adjust the timing accordingly
+          </div>
         </div>
         <Streak />
         <Goal />

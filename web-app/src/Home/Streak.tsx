@@ -1,19 +1,27 @@
-import { useContext, useMemo } from "react";
+import { useContext, useMemo, useState } from "react";
 import { getNWords } from "../util";
 import { AppContext } from "../components/AppContext";
 import { NoteCollection } from "../components/localStorage";
 import { Header } from "../comps/Typo";
+import moment from "moment";
 
-const getOpacity = (num: number, max: number) => {
-  let op = num / max;
-  if (Number.isNaN(op)) {
-    op = 0;
+const smooth = (min: number, max: number, num: number) => {
+  let pct = num / max;
+  if (Number.isNaN(pct)) {
+    pct = 0;
   }
-  return Math.max(0.2, op);
+  return min + (max - min) * pct;
 };
 
-const dtToStr = (dt: Date) =>
-  `${dt.getFullYear()}-${dt.getMonth()}-${dt.getDate()}`;
+const getOpacity = (num: number, max: number) => {
+  const smoothen = smooth(0.2, 1, num / max);
+  if (smoothen < 0.25) return 0.25;
+  if (smoothen < 0.5) return 0.5;
+  if (smoothen < 0.75) return 0.75;
+  return smoothen;
+};
+
+const dtToStr = (dt: Date) => moment(dt).format("MMM Do YY");
 
 const getStreakCounts = (notes: NoteCollection, n: number) => {
   const countsMap: Record<string, number> = {};
@@ -30,7 +38,7 @@ const getStreakCounts = (notes: NoteCollection, n: number) => {
       countsMap[dtStr] += getNWords(note.text);
     }
   }
-  return Object.values(countsMap);
+  return countsMap;
 };
 
 const StreakBox = ({ opacity }: { opacity: number }) => {
@@ -44,18 +52,35 @@ const StreakBox = ({ opacity }: { opacity: number }) => {
 const Streak = () => {
   const { notes } = useContext(AppContext);
   const counts = useMemo(() => getStreakCounts(notes, 7), [notes]);
+  const [hovered, setHovered] = useState<{ dt: string; count: number }>();
 
   return (
     <div>
       <Header>My streak</Header>
       <div>
         <ul className="flex space-x-1 text-sm">
-          {counts.map((count, i) => (
-            <li key={i}>
-              <StreakBox opacity={getOpacity(count, Math.max(...counts))} />
+          {Object.keys(counts).map((dt, i) => (
+            <li
+              key={i}
+              onMouseEnter={() => setHovered({ dt, count: counts[dt] })}
+            >
+              <StreakBox
+                opacity={getOpacity(
+                  counts[dt],
+                  Math.max(...Object.values(counts))
+                )}
+              />
             </li>
           ))}
         </ul>
+        <div className="pt-1 text-sm">
+          {!hovered && <span className="opacity-50">Hover for info!</span>}
+          {hovered && (
+            <span>
+              {hovered.dt} - {hovered.count} words!
+            </span>
+          )}
+        </div>
       </div>
     </div>
   );

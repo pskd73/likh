@@ -17,9 +17,7 @@ export type TextMetricType = "words" | "readTime";
 
 export type AppContextType = {
   notes: NoteCollection;
-  note?: Note;
   setNotes: (notes: NoteCollection) => void;
-  setNote: (note: Note) => void;
 
   focusMode: boolean;
   setFocusMode: (focusMode: boolean | ((old: boolean) => boolean)) => void;
@@ -44,7 +42,9 @@ export type AppContextType = {
   saveSettings: (settings: Settings) => void;
 
   user?: User | null;
-  setUser: (user?: User | null) => void;
+  setUser: (
+    user?: User | null | ((old?: User | null) => User | null | undefined)
+  ) => void;
 };
 
 export const AppContext = createContext<AppContextType>({} as AppContextType);
@@ -61,9 +61,8 @@ export const useAppContext = (): AppContextType => {
     storageGetSuggestions()
   );
   const [settings, setSettings] = useState<Settings>(getSettings());
-  const [user, setUser] = useState<User|null>();
+  const [user, setUser] = useState<User | null>();
   const [notes, setNotes] = useState<NoteCollection>({});
-  const [note, setNote] = useState<Note>();
 
   const toggleTextMetricType = () => {
     if (textMetricType === "readTime") {
@@ -122,8 +121,5 @@ export const useAppContext = (): AppContextType => {
 
     notes,
     setNotes,
-
-    note,
-    setNote,
   };
 };

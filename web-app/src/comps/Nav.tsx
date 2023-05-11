@@ -77,7 +77,7 @@ export const Footer = () => {
 
   return (
     <Paper>
-      <div className="flex flex-col justify-center text-center opacity-30 text-sm mb-10">
+      <div className="flex flex-col justify-center text-center opacity-40 text-sm mb-10">
         {user && (
           <p>
             Logged in as {user.email} [
@@ -85,7 +85,10 @@ export const Footer = () => {
           </p>
         )}
         <p>
-          Built with &lt;3 by&nbsp;
+          <Clickable>
+            <a href="/">Retro Note</a>
+          </Clickable>
+          &nbsp;•&nbsp;Built with &lt;3 by&nbsp;
           <Clickable>
             <a
               href="https://twitter.com/@pramodk73"

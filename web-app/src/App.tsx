@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { AppContext, useAppContext } from "./components/AppContext";
 import { useSupabase } from "./components/supabase";
 import { Paper } from "./comps/Layout";
@@ -9,7 +8,12 @@ const App = ({ nav = true }: { nav?: boolean }) => {
   const appContext = useAppContext();
 
   useSupabase({
-    setUser: appContext.setUser,
+    setUser: (user) => {
+      appContext.setUser((u) => {
+        if (u?.token === user?.token) return u;
+        return user;
+      });
+    },
   });
 
   return (
