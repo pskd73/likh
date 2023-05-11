@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import TextCounter from "./TextCounter";
 import GoalTracker from "./GoalTracker";
 import Clickable from "../components/Clickable";
+import { FullLoader } from "../comps/Loading";
 
 const Write = () => {
   const noteApi = useFetch<Note>();
@@ -59,6 +60,10 @@ const Write = () => {
   const handleFocus = () => {
     setFocusMode((f) => !f);
   };
+
+  if (noteApi.loading) {
+    return <FullLoader />;
+  }
 
   return (
     <div className="h-full">

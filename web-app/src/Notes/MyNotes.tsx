@@ -7,6 +7,7 @@ import { Note } from "../type";
 import moment from "moment";
 import { Select } from "../comps/Form";
 import { Link } from "react-router-dom";
+import { FullLoader } from "../comps/Loading";
 
 function copy(text: string) {
   var input = document.createElement("textarea");
@@ -113,6 +114,10 @@ const MyNotes = () => {
   const handleCopy = (noteId: string) => {
     copy(`${HOST}/note/${noteId}`);
   };
+
+  if (notesApi.loading) {
+    return <FullLoader />;
+  }
 
   return (
     <div>
