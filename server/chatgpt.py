@@ -29,7 +29,7 @@ def parse_response_json(res: dict):
 
 def get_suggestions(topic_names: List[str]):
     prompt = '''
-Act as an API that responds in JSON. Based on an input list of topics, generate a list of {} topics to write a short note on. For each topic in the output list, include a title of the note to write about and a topic that it belongs to.
+Act as an API that responds in JSON. Based on an input list of topics, generate a list of {} topics to write a short note on. For each topic in the output list, include a title of the note to write about and a topic that it belongs to. You should return exactly {} number of topics.
 
 Sample input: ["Python programming", "Philosophy", "Product development", "Social problems", "SaaS", "Build in public"]
 Sample output: {}
@@ -37,7 +37,7 @@ Sample output: {}
 Input: {}
 Output:
 '''.format(
-        5,
+        10, 10,
         json.dumps([
             {
                 "topic": "Python programming",

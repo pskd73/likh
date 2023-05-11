@@ -21,26 +21,26 @@ function copy(text: string) {
 const Divider = () => <span className="opacity-50">&nbsp;•&nbsp;</span>;
 
 const MyNotes = () => {
-  const { notes, setNote, user, setNotes } = useContext(AppContext);
+  const { user } = useContext(AppContext);
+  const [notes, setNotes] = useState<Record<string, Note>>({});
   const deleteFetch = useFetch<Note>();
-  const notesFetch = useFetch<Note[]>();
+  const notesApi = useFetch<Note[]>();
   const visibilityApi = useFetch<Note>();
   const [expandedNotes, setExpandedNotes] = useState<string[]>([]);
 
   useEffect(() => {
-    if (notesFetch.response) {
+    if (notesApi.response) {
       const coll: Record<string, Note> = {};
-      for (const note of notesFetch.response) {
+      for (const note of notesApi.response) {
         coll[note.id] = note;
       }
       setNotes(coll);
-      setNote(notesFetch.response[notesFetch.response.length - 1]);
     }
-  }, [notesFetch.response]);
+  }, [notesApi.response]);
 
   useEffect(() => {
     if (user) {
-      notesFetch.handle(
+      notesApi.handle(
         fetch(`${API_HOST}/notes`, {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -55,13 +55,11 @@ const MyNotes = () => {
       const newNotes = { ...notes };
       delete newNotes[deleteFetch.response.id];
       setNotes(newNotes);
-      setNote(Object.values(newNotes)[Object.keys(newNotes).length - 1]);
     }
   }, [deleteFetch.response]);
 
   useEffect(() => {
     if (visibilityApi.response) {
-      setNote(visibilityApi.response);
       setNotes({
         ...notes,
         [visibilityApi.response.id]: visibilityApi.response,

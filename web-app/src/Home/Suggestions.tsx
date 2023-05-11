@@ -42,11 +42,20 @@ const Suggestions = () => {
   const handleRefresh = async () => {
     if (topicCollection) {
       setLoading(true);
-      const topicNames = Object.values(topicCollection).map(
+      let topicNames = Object.values(topicCollection).map(
         (topic) => topic.title
       );
+      if (!topicNames.length) {
+        topicNames = [
+          "Writing",
+          "Humanity",
+          "Space exploration",
+          "Personality development",
+          "Global warming",
+        ];
+      }
       const res = await fetch(
-        `https://api.retronote.app/suggestions?topics=${topicNames.join(",")}`
+        `${API_HOST}/suggestions?topics=${topicNames.join(",")}`
       );
       const suggestions: Suggestion[] = await res.json();
       setSuggestions(suggestions);
