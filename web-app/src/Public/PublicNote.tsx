@@ -27,13 +27,13 @@ const PublicNote = () => {
           {noteApi.response && (
             <div className="font-CourierPrime">
               <div className="mb-4">
-                <h1 className="text-3xl">{noteApi.response.note.title}</h1>
+                <h1 className="text-4xl">{noteApi.response.note.title}</h1>
                 <span className="opacity-50">
                   By {noteApi.response.user.email} @{" "}
                   {new Date(noteApi.response.note.created_at).toDateString()}
                 </span>
               </div>
-              <p className="whitespace-pre-wrap">
+              <p className="whitespace-pre-wrap text-[20px]">
                 {noteApi.response.note.text}
               </p>
             </div>

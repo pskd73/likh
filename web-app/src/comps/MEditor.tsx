@@ -59,12 +59,13 @@ const Leaf = ({ attributes, children, leaf }: any) => {
         "text-4xl": leaf.title && leaf.titleLevel === 1,
         "text-3xl": leaf.title && leaf.titleLevel === 2,
         "text-2xl": leaf.title && leaf.titleLevel === 3,
-        "opacity-30": leaf.punctuation,
-        "-ml-[29px]": leaf.title && leaf.punctuation && leaf.titleLevel === 1,
+        "opacity-30": leaf.punctuation || leaf.list,
+        "-ml-[30px]": leaf.title && leaf.punctuation && leaf.titleLevel === 1,
         "-ml-[44px]": leaf.title && leaf.punctuation && leaf.titleLevel === 2,
-        "-ml-[65px]": leaf.title && leaf.punctuation && leaf.titleLevel === 3,
+        "-ml-[52px]": leaf.title && leaf.punctuation && leaf.titleLevel === 3,
         "pr-2": leaf.title && leaf.punctuation,
         "line-through": leaf.strike && !leaf.punctuation,
+        "inline-block w-[30px]": leaf.list,
       })}
     >
       {children}
