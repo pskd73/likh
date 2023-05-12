@@ -34,7 +34,7 @@ const PublicNote = () => {
                   {new Date(noteApi.response.note.created_at).toDateString()}
                 </span>
               </div>
-              <article className="prose max-w-none">
+              <article className="prose max-w-none lg:prose-xl prose-headings:mb-0 prose-li:my-0 prose-ol:my-6">
                 <ReactMarkdown>{noteApi.response.note.text}</ReactMarkdown>
               </article>
             </div>
