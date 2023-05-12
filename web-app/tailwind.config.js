@@ -1,15 +1,15 @@
-/** @type {import('tailwindcss').Config} */
+/** @type {import("tailwindcss").Config} */
 module.exports = {
   darkMode: "class",
   content: [
-    './src/**/*.{js,jsx,ts,tsx}',
+    "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
     extend: {
       fontFamily: {
-        SpecialElite: ['Special Elite', 'cursive'],
-        CourierPrime: ['Courier Prime', 'monospace'],
-        Inter: ['Inter', 'sans-serif']
+        SpecialElite: ["Special Elite", "cursive"],
+        CourierPrime: ["Courier Prime", "monospace"],
+        Inter: ["Inter", "sans-serif"]
       },
       colors: {
         "primary-700": "#6C6327",
@@ -17,8 +17,19 @@ module.exports = {
         "primary-400": "#E9E3C2",
         "base": "#FFFEF8"
       },
+      typography: (theme) => ({
+        DEFAULT: {
+          css: {
+            "*": {
+              color: theme("colors.primary-700")
+            }
+          }
+        }
+      })
     }
   },
-  plugins: [],
+  plugins: [
+    require("@tailwindcss/typography")
+  ],
 }
 
