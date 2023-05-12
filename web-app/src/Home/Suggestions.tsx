@@ -32,8 +32,8 @@ const Suggestions = () => {
           Authorization: `Bearer ${user!.token}`,
         },
         body: JSON.stringify({
-          title: suggestion.title,
-          text: `This is an article from ${suggestion.topic} topic.`,
+          title: "",
+          text: `# ${suggestion.title}\nThis is an article from ${suggestion.topic} topic.`,
         }),
       })
     );
