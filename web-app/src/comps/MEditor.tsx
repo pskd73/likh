@@ -48,7 +48,6 @@ const defaultValue = [
 ];
 
 const Leaf = ({ attributes, children, leaf }: any) => {
-  console.log(leaf);
   return (
     <span
       {...attributes}
@@ -60,9 +59,9 @@ const Leaf = ({ attributes, children, leaf }: any) => {
         "text-3xl": leaf.title && leaf.titleLevel === 2,
         "text-2xl": leaf.title && leaf.titleLevel === 3,
         "opacity-30": leaf.punctuation || leaf.list,
-        "-ml-[30px]": leaf.title && leaf.punctuation && leaf.titleLevel === 1,
-        "-ml-[44px]": leaf.title && leaf.punctuation && leaf.titleLevel === 2,
-        "-ml-[52px]": leaf.title && leaf.punctuation && leaf.titleLevel === 3,
+        "-ml-[52px]": leaf.title && leaf.punctuation && leaf.titleLevel === 1,
+        "-ml-[62px]": leaf.title && leaf.punctuation && leaf.titleLevel === 2,
+        "-ml-[66px]": leaf.title && leaf.punctuation && leaf.titleLevel === 3,
         "pr-2": leaf.title && leaf.punctuation,
         "line-through": leaf.strike && !leaf.punctuation,
         "inline-block w-[30px]": leaf.list,
@@ -108,7 +107,10 @@ const MEditor = ({
       }
     };
 
-    const tokens = Prism.tokenize(node.text, Prism.languages.markdown);
+    const markdown = Prism.languages.markdown as any;
+    markdown.title[1].pattern = /(^\s*)#{1,3} .+/m
+
+    const tokens = Prism.tokenize(node.text, markdown);
     let start = 0;
 
     for (const token of tokens) {
