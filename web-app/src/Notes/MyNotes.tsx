@@ -115,6 +115,16 @@ const MyNotes = () => {
     copy(`${HOST}/note/${noteId}`);
   };
 
+  const getNoteTitle = (note: Note) => {
+    if (note.text) {
+      return (
+        note.text.replaceAll("\n", " ").substring(0, 50) +
+        (note.text.length > 50 ? "..." : "")
+      );
+    }
+    return note.title;
+  };
+
   if (notesApi.loading) {
     return <FullLoader />;
   }
@@ -130,7 +140,9 @@ const MyNotes = () => {
                 <div className="mr-2">{i + 1}.</div>
                 <div className="w-full">
                   <Clickable>
-                    <Link to={`/app/write/${note.id}`}>{note.title}</Link>
+                    <Link to={`/app/write/${note.id}`}>
+                      {getNoteTitle(note)}
+                    </Link>
                   </Clickable>
 
                   <div className="text-sm mb-4">
