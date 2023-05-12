@@ -116,6 +116,9 @@ const MyNotes = () => {
   };
 
   const getNoteTitle = (note: Note) => {
+    if (note.title) {
+      return note.title;
+    }
     if (note.text) {
       return (
         note.text.replaceAll("\n", " ").substring(0, 50) +
