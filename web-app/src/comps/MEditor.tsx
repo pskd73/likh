@@ -54,11 +54,15 @@ const Leaf = ({ attributes, children, leaf }: any) => {
       className={classNames({
         "font-semibold": leaf.bold,
         italic: leaf.italic,
-        "inline-block mt-6 mb-2": leaf.title,
-        "text-2xl": leaf.title && leaf.titleLevel === 1,
+        "inline-block mb-2": leaf.title,
+        "text-4xl": leaf.title && leaf.titleLevel === 1,
         "text-3xl": leaf.title && leaf.titleLevel === 2,
-        "text-4xl": leaf.title && leaf.titleLevel === 3,
+        "text-2xl": leaf.title && leaf.titleLevel === 3,
         "opacity-30": leaf.punctuation,
+        "-ml-[29px]": leaf.title && leaf.punctuation && leaf.titleLevel === 1,
+        "-ml-[44px]": leaf.title && leaf.punctuation && leaf.titleLevel === 2,
+        "-ml-[65px]": leaf.title && leaf.punctuation && leaf.titleLevel === 3,
+        "pr-2": leaf.title && leaf.punctuation
       })}
     >
       {children}
