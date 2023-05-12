@@ -120,7 +120,6 @@ const MEditor = ({
     let start = 0;
 
     for (const token of tokens) {
-      console.log(token)
       const length = getLength(token);
       const end = start + length;
 

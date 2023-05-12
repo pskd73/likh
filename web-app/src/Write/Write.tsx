@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AppContext } from "../components/AppContext";
 import Editor from "../components/Write/Editor";
 import { Note } from "../type";
@@ -11,12 +11,51 @@ import Clickable from "../components/Clickable";
 import MEditor from "../comps/MEditor";
 import { FullLoader } from "../comps/Loading";
 
+const useTimer = <T extends unknown>(callback: (state: T | null) => void) => {
+  const ref = useRef<NodeJS.Timeout | null>(null);
+  const state = useRef<T | null>(null);
+
+  const update = (_state: T) => {
+    state.current = _state;
+    if (!ref.current) {
+      ref.current = setTimeout(() => {
+        callback(state.current);
+        ref.current = null;
+      }, 1000);
+    }
+  };
+
+  return {
+    update,
+  };
+};
+
 const Write = () => {
   const noteApi = useFetch<Note>();
   const saveFetch = useFetch();
   const { user, focusMode, setFocusMode } = useContext(AppContext);
   const [note, setNote] = useState<Note>();
   const { noteId } = useParams();
+
+  const timer = useTimer<Note>((_note) => {
+    if (_note) {
+      saveFetch.handle(
+        fetch(`${API_HOST}/note`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user!.token}`,
+          },
+          body: JSON.stringify({
+            id: _note.id,
+            title: _note.title,
+            text: _note.text,
+            slate_value: _note.slate_value,
+          }),
+        })
+      );
+    }
+  });
 
   useEffect(() => {
     setFocusMode(true);
@@ -41,27 +80,9 @@ const Write = () => {
     }
   }, [noteId, user]);
 
-  const updateNote = (newNote: Note) => {
-    setNote(newNote);
-    saveFetch.handle(
-      fetch(`${API_HOST}/note`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user!.token}`,
-        },
-        body: JSON.stringify({
-          id: newNote.id,
-          title: newNote.title,
-          text: newNote.text,
-          slate_value: newNote.slate_value,
-        }),
-      })
-    );
-  };
-
   const handleNoteChange = (newNote: Note) => {
-    updateNote(newNote);
+    timer.update(newNote);
+    setNote(newNote);
   };
 
   const handleFocus = () => {
@@ -70,7 +91,9 @@ const Write = () => {
 
   const handleMChange = (serialized: string, text: string) => {
     if (note) {
-      updateNote({ ...note, text, slate_value: serialized });
+      const newNote = { ...note, text, slate_value: serialized };
+      timer.update(newNote);
+      setNote(newNote);
     }
   };
 
