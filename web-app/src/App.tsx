@@ -23,7 +23,7 @@ const App = ({ nav = true }: { nav?: boolean }) => {
         <Paper className="py-8 min-h-[100vh]">
           <Outlet />
         </Paper>
-        <Footer />
+        {!appContext.focusMode && <Footer />}
       </div>
     </AppContext.Provider>
   );

@@ -26,8 +26,8 @@ const New = () => {
             Authorization: `Bearer ${user.token}`,
           },
           body: JSON.stringify({
-            title: `My note - ${new Date().toLocaleString()}`,
-            text: "Write here ...",
+            title: "",
+            text: `My note - ${new Date().toLocaleString()}`,
           }),
         })
       );

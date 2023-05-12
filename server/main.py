@@ -96,6 +96,8 @@ def handle_new_note(user: User):
         note = get_note_by_id(note_id)
         note.title = title
         note.text = text
+        if request.json.get('slate_value'):
+            note.slate_value = request.json['slate_value']
     note.save()
     return m_to_d(note), 200
 

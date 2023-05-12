@@ -8,6 +8,7 @@ class Note(Document):
     created_at = IntField(requests=True)
     title = StringField()
     text = StringField()
+    slate_value = StringField()
     visibility = StringField(default='private')
 
 

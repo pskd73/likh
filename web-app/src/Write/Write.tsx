@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import TextCounter from "./TextCounter";
 import GoalTracker from "./GoalTracker";
 import Clickable from "../components/Clickable";
+import MEditor from "../comps/MEditor";
 import { FullLoader } from "../comps/Loading";
 
 const Write = () => {
@@ -18,6 +19,7 @@ const Write = () => {
   const { noteId } = useParams();
 
   useEffect(() => {
+    setFocusMode(true);
     return () => setFocusMode(false);
   }, []);
 
@@ -39,7 +41,7 @@ const Write = () => {
     }
   }, [noteId, user]);
 
-  const handleNoteChange = (newNote: Note) => {
+  const updateNote = (newNote: Note) => {
     setNote(newNote);
     saveFetch.handle(
       fetch(`${API_HOST}/note`, {
@@ -52,13 +54,24 @@ const Write = () => {
           id: newNote.id,
           title: newNote.title,
           text: newNote.text,
+          slate_value: newNote.slate_value,
         }),
       })
     );
   };
 
+  const handleNoteChange = (newNote: Note) => {
+    updateNote(newNote);
+  };
+
   const handleFocus = () => {
     setFocusMode((f) => !f);
+  };
+
+  const handleMChange = (serialized: string, text: string) => {
+    if (note) {
+      updateNote({ ...note, text, slate_value: serialized });
+    }
   };
 
   if (noteApi.loading) {
@@ -69,7 +82,12 @@ const Write = () => {
     <div className="h-full">
       {note && (
         <>
-          <Editor note={note} onChange={handleNoteChange} />
+          {/* <Editor note={note} onChange={handleNoteChange} /> */}
+          <MEditor
+            onChange={({ serialized, text }) => handleMChange(serialized, text)}
+            initValue={note.slate_value}
+            initText={note.text}
+          />
           <div className="fixed bottom-0 right-0 px-4 py-2 flex space-x-4">
             {!focusMode && (
               <>

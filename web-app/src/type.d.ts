@@ -4,6 +4,7 @@ export type Note = {
   text: string;
   created_at: number;
   visibility: "private" | "public";
+  slate_value?: string;
 };
 
 export type NewNote = Omit<Note, "id">;
