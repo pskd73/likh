@@ -14,7 +14,8 @@ const smooth = (min: number, max: number, num: number) => {
 };
 
 const getOpacity = (num: number, max: number) => {
-  const smoothen = smooth(0.2, 1, num / max);
+  const smoothen = smooth(0, 1, num / max);
+  if (smoothen === 0) return 0;
   if (smoothen < 0.25) return 0.25;
   if (smoothen < 0.5) return 0.5;
   if (smoothen < 0.75) return 0.75;
