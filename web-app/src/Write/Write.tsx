@@ -19,6 +19,7 @@ const Write = () => {
   const { noteId } = useParams();
 
   useEffect(() => {
+    setFocusMode(true);
     return () => setFocusMode(false);
   }, []);
 
