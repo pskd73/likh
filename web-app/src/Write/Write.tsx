@@ -61,21 +61,6 @@ const Write = () => {
 
   const handleNoteChange = (newNote: Note) => {
     updateNote(newNote);
-    // setNote(newNote);
-    // saveFetch.handle(
-    //   fetch(`${API_HOST}/note`, {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization: `Bearer ${user!.token}`,
-    //     },
-    //     body: JSON.stringify({
-    //       id: newNote.id,
-    //       title: newNote.title,
-    //       text: newNote.text,
-    //     }),
-    //   })
-    // );
   };
 
   const handleFocus = () => {
@@ -85,21 +70,6 @@ const Write = () => {
   const handleMChange = (serialized: string, text: string) => {
     if (note) {
       updateNote({ ...note, text, slate_value: serialized });
-      // saveFetch.handle(
-      //   fetch(`${API_HOST}/note`, {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       Authorization: `Bearer ${user!.token}`,
-      //     },
-      //     body: JSON.stringify({
-      //       id: note.id,
-      //       title: note.title,
-      //       text,
-      //       slate_value: serialized,
-      //     }),
-      //   })
-      // );
     }
   };
 

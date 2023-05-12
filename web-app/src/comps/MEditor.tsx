@@ -48,6 +48,7 @@ const defaultValue = [
 ];
 
 const Leaf = ({ attributes, children, leaf }: any) => {
+  console.log(leaf);
   return (
     <span
       {...attributes}
@@ -62,7 +63,8 @@ const Leaf = ({ attributes, children, leaf }: any) => {
         "-ml-[29px]": leaf.title && leaf.punctuation && leaf.titleLevel === 1,
         "-ml-[44px]": leaf.title && leaf.punctuation && leaf.titleLevel === 2,
         "-ml-[65px]": leaf.title && leaf.punctuation && leaf.titleLevel === 3,
-        "pr-2": leaf.title && leaf.punctuation
+        "pr-2": leaf.title && leaf.punctuation,
+        "line-through": leaf.strike && !leaf.punctuation,
       })}
     >
       {children}
