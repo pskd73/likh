@@ -54,14 +54,14 @@ const Leaf = ({ attributes, children, leaf }: any) => {
       className={classNames({
         "font-semibold": leaf.bold,
         italic: leaf.italic,
-        "inline-block mb-2 mt-4 font-bold": leaf.title,
-        "text-6xl": leaf.title && leaf.titleLevel === 1,
-        "text-5xl": leaf.title && leaf.titleLevel === 2,
-        "text-4xl": leaf.title && leaf.titleLevel === 3,
+        "inline-block mt-10 font-bold": leaf.title,
+        "text-6xl mb-6": leaf.title && leaf.titleLevel === 2,
+        "text-5xl mb-1": leaf.title && leaf.titleLevel === 3,
+        "text-4xl": leaf.title && leaf.titleLevel === 4,
         "opacity-30": leaf.punctuation || leaf.list,
-        "-ml-[82px]": leaf.title && leaf.punctuation && leaf.titleLevel === 1,
-        "-ml-[94px]": leaf.title && leaf.punctuation && leaf.titleLevel === 2,
-        "-ml-[96px]": leaf.title && leaf.punctuation && leaf.titleLevel === 3,
+        "-ml-[82.8px]": leaf.title && leaf.punctuation && leaf.titleLevel === 2,
+        "-ml-[96.6px]": leaf.title && leaf.punctuation && leaf.titleLevel === 3,
+        "-ml-[93.2px]": leaf.title && leaf.punctuation && leaf.titleLevel === 4,
         "pr-2": leaf.title && leaf.punctuation,
         "line-through": leaf.strike && !leaf.punctuation,
         "inline-block w-[30px]": leaf.list,
@@ -107,13 +107,19 @@ const MEditor = ({
       }
     };
 
-    const markdown = Prism.languages.markdown as any;
-    markdown.title[1].pattern = /(^\s*)#{1,3} .+/m
-
-    const tokens = Prism.tokenize(node.text, markdown);
+    const tokens = Prism.tokenize(node.text, {
+      ...Prism.languages.markdown,
+      title: {
+        pattern: /(^\s*)#{1,3} .+$/m,
+        inside: {
+          punctuation: /^#{1,3} /m,
+        }
+      }
+    });
     let start = 0;
 
     for (const token of tokens) {
+      console.log(token)
       const length = getLength(token);
       const end = start + length;
 
