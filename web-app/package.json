@@ -21,6 +21,7 @@
     "react-markdown": "^8.0.7",
     "react-router-dom": "^6.11.0",
     "react-scripts": "5.0.1",
+    "remark-gfm": "^3.0.1",
     "slate": "^0.94.1",
     "slate-react": "^0.94.0",
     "tailwind-merge": "^1.12.0",

@@ -54,7 +54,7 @@ const Leaf = ({ attributes, children, leaf }: any) => {
       className={classNames({
         "font-semibold": leaf.bold,
         italic: leaf.italic,
-        "inline-block font-bold": leaf.title,
+        "block font-bold": leaf.title,
         "text-5xl mb-6": leaf.title && leaf.titleLevel === 2,
         "text-4xl mb-2": leaf.title && leaf.titleLevel === 3,
         "text-3xl mb-1": leaf.title && leaf.titleLevel === 4,
