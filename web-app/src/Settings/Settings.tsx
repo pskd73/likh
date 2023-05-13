@@ -2,6 +2,7 @@ import { PropsWithChildren, useContext } from "react";
 import { Select } from "../comps/Form";
 import PlainSelect from "../components/Select";
 import { AppContext } from "../components/AppContext";
+import { Helmet } from "react-helmet";
 
 const Item = ({ children }: PropsWithChildren) => {
   return <div className="flex">{children}</div>;
@@ -28,6 +29,9 @@ const Settings = () => {
 
   return (
     <div className="space-y-4">
+      <Helmet>
+        <title>Settings - Retro Note</title>
+      </Helmet>
       <Item>
         <Label>App font</Label>
         <Value>

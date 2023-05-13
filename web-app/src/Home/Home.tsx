@@ -10,6 +10,7 @@ import { useContext, useEffect } from "react";
 import { API_HOST } from "../config";
 import { AppContext } from "../components/AppContext";
 import { FullLoader } from "../comps/Loading";
+import { Helmet } from "react-helmet";
 
 const pad = (num: number) => {
   return num < 10 ? "0" + num : num;
@@ -80,6 +81,9 @@ const Home = () => {
 
   return (
     <div className="flex space-x-6">
+      <Helmet>
+        <title>Home - Retro Note</title>
+      </Helmet>
       <div className="w-9/12 space-y-6">
         <Suggestions />
       </div>

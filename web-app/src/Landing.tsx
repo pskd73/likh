@@ -4,6 +4,7 @@ import { supabase, useSupabase } from "./components/supabase";
 import { Paper } from "./comps/Layout";
 import { Input } from "./comps/Form";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import classNames from "classnames";
 
 const steps = [
@@ -43,6 +44,9 @@ const Landing = () => {
 
   return (
     <div className="font-Inter min-h-[100vh] w-full bg-base">
+      <Helmet>
+        <title>Retro Note - Build daily writing habit</title>
+      </Helmet>
       <Paper>
         <div className="p-4 md:py-6 space-y-20">
           <div className="space-y-6">
