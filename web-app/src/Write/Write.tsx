@@ -10,6 +10,8 @@ import GoalTracker from "./GoalTracker";
 import Clickable from "../components/Clickable";
 import MEditor from "../comps/MEditor";
 import { FullLoader } from "../comps/Loading";
+import { Helmet } from "react-helmet";
+import { getNoteTitle } from "../Note";
 
 const useTimer = <T extends unknown>(callback: (state: T | null) => void) => {
   const ref = useRef<NodeJS.Timeout | null>(null);
@@ -105,6 +107,9 @@ const Write = () => {
     <div className="h-full">
       {note && (
         <>
+          <Helmet>
+            <title>{getNoteTitle(note)} - Retro Note</title>
+          </Helmet>
           {/* <Editor note={note} onChange={handleNoteChange} /> */}
           <MEditor
             onChange={({ serialized, text }) => handleMChange(serialized, text)}

@@ -3,10 +3,12 @@ import useFetch from "../useFetch";
 import { Note } from "../type.d";
 import { useEffect } from "react";
 import { API_HOST } from "../config";
+import { Helmet } from "react-helmet";
 import Clickable from "../components/Clickable";
 import Event from "../components/Event";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { getNoteTitle } from "../Note";
 
 const PublicNote = () => {
   const { noteId } = useParams();
@@ -28,6 +30,9 @@ const PublicNote = () => {
           )}
           {noteApi.response && (
             <div className="font-CourierPrime">
+              <Helmet>
+                <title>{getNoteTitle(noteApi.response.note)}</title>
+              </Helmet>
               <div className="mb-4">
                 {!noteApi.response.note.slate_value && (
                   <h1 className="text-4xl">{noteApi.response.note.title}</h1>

@@ -8,6 +8,8 @@ import moment from "moment";
 import { Select } from "../comps/Form";
 import { Link } from "react-router-dom";
 import { FullLoader } from "../comps/Loading";
+import { Helmet } from "react-helmet";
+import { getNoteTitle } from "../Note";
 
 function copy(text: string) {
   var input = document.createElement("textarea");
@@ -115,25 +117,15 @@ const MyNotes = () => {
     copy(`${HOST}/note/${noteId}`);
   };
 
-  const getNoteTitle = (note: Note) => {
-    if (note.title) {
-      return note.title;
-    }
-    if (note.text) {
-      return (
-        note.text.replaceAll("\n", " ").substring(0, 50) +
-        (note.text.length > 50 ? "..." : "")
-      );
-    }
-    return note.title;
-  };
-
   if (notesApi.loading) {
     return <FullLoader />;
   }
 
   return (
     <div>
+      <Helmet>
+        <title>My notes - Retro Note</title>
+      </Helmet>
       {notes && (
         <ul className="space-y-2">
           {Object.values(notes)
