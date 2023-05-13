@@ -44,10 +44,12 @@ const Landing = () => {
   return (
     <div className="font-Inter min-h-[100vh] w-full bg-base">
       <Paper>
-        <div className="p-4 min-h-[100vh] flex justify-center items-center">
-          <div className="max-w-[900px] space-y-6">
+        <div className="p-4 md:py-6 space-y-20">
+          <div className="space-y-6">
             <div>
-              <h1 className="text-6xl mb-4 font-CourierPrime">Build writing habits!</h1>
+              <h1 className="text-6xl mb-4 font-CourierPrime">
+                Build writing habits!
+              </h1>
               <p className="leading-normal">
                 Writing is a way to{" "}
                 <span className="underline">articulate thoughts</span>. Don't
@@ -58,7 +60,9 @@ const Landing = () => {
               </p>
             </div>
             <div>
-              <p className="mb-2">Sing up now and start building writing habit by</p>
+              <p className="mb-2">
+                Sing up now and start building writing habit by
+              </p>
               <ul>
                 {steps.map((step, i) => (
                   <li key={i} className="flex">
@@ -85,12 +89,42 @@ const Landing = () => {
                   Go &rarr;
                 </Clickable>
               </div>
-              {
-                <div className={classNames("mt-1", { invisible: !mailSent })}>
+              <div className="mt-1 text-sm">
+                <span
+                  className={classNames("opacity-50", { hidden: mailSent })}
+                >
+                  No, we don't spam!
+                </span>
+                <span className={classNames({ hidden: !mailSent })}>
                   Sent! Check your inbox
-                </div>
-              }
+                </span>
+              </div>
             </div>
+          </div>
+          <div>
+            <h2 className="text-4xl font-CourierPrime mb-4">How it works?</h2>
+            <video width="900px" controls>
+              <source
+                src="https://gfbrmxfdddmpwlqtvwsh.supabase.co/storage/v1/object/sign/public/Start%20building%20writing%20habits%20with%20Retro%20Note.mp4?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJwdWJsaWMvU3RhcnQgYnVpbGRpbmcgd3JpdGluZyBoYWJpdHMgd2l0aCBSZXRybyBOb3RlLm1wNCIsImlhdCI6MTY4Mzk2NDMzOSwiZXhwIjoxNzE1NTAwMzM5fQ.xt3-zNNkob4xk0YyPzgwSRxRjYnXk4r6vlAipWzQR44&t=2023-05-13T07%3A52%3A21.952Z"
+                type="video/mp4"
+              />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+          <div>
+            <span className="opacity-50">
+              Built from the &lt;3 of writing by{" "}
+            </span>
+            <Clickable lite>
+              <a
+                href="https://twitter.com/@pramodk73"
+                className="hover:underline"
+                target="_blank"
+                rel="noreferrer"
+              >
+                @pramodk73
+              </a>
+            </Clickable>
           </div>
         </div>
       </Paper>
