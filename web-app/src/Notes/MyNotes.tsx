@@ -140,7 +140,7 @@ const MyNotes = () => {
             .sort((a, b) => b.created_at - a.created_at)
             .map((note, i) => (
               <li key={i} className="flex">
-                <div className="mr-2">{i + 1}.</div>
+                <div className="w-8">{i + 1}.</div>
                 <div className="w-full">
                   <Clickable>
                     <Link to={`/app/write/${note.id}`}>
