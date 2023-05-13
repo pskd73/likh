@@ -68,7 +68,7 @@ export default async function Note({ params }: { params: { slug: string } }) {
   return (
     <main className="bg-base text-primary-700">
       <div className="flex justify-center">
-        <div className="w-full max-w-[860px] py-10">
+        <div className="w-full max-w-[860px] py-10 px-6 md:px-0">
           <div className={classNames(inter.className, "space-y-10")}>
             <article className="prose max-w-none lg:prose-xl prose-headings:mb-0 prose-li:my-0 prose-ol:my-6 min-h-[60vh]">
               {publicNote && (
@@ -99,7 +99,7 @@ export default async function Note({ params }: { params: { slug: string } }) {
             </article>
             <footer>
               <div className="text-center opacity-50">•••</div>
-              <div className="flex justify-center">
+              <div className="text-center">
                 <a
                   href="/"
                   className="opacity-50 hover:opacity-100 hover:underline"
