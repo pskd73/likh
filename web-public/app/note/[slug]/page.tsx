@@ -24,7 +24,7 @@ async function fetchNote(noteId: string): Promise<PublicNote> {
   return await res.json();
 }
 
-export const getNoteTitle = (note: Note) => {
+const getNoteTitle = (note: Note) => {
   if (note.title) {
     return note.title;
   }
