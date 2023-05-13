@@ -1,17 +1,17 @@
 import classNames from "classnames";
 import Prism from "prismjs";
 import "prismjs/components/prism-markdown";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo } from "react";
 import {
   createEditor,
   BaseEditor,
   NodeEntry,
-  BaseRange,
   Range,
   Text,
   Descendant,
   Node,
 } from "slate";
+import {withHistory} from "slate-history"
 import { Slate, Editable, withReact, ReactEditor } from "slate-react";
 
 type CustomElement = { type: "paragraph"; children: CustomText[] };
@@ -58,7 +58,7 @@ const Leaf = ({ attributes, children, leaf }: any) => {
         "text-5xl mb-6": leaf.title && leaf.titleLevel === 2,
         "text-4xl mb-2": leaf.title && leaf.titleLevel === 3,
         "text-3xl mb-1": leaf.title && leaf.titleLevel === 4,
-        "opacity-30": leaf.punctuation || leaf.list,
+        "opacity-30": leaf.punctuation || leaf.list || leaf.blockquote,
         "mt-10": leaf.title && leaf.punctuation,
         // "-ml-[82.8px]": leaf.title && leaf.punctuation && leaf.titleLevel === 2,
         // "-ml-[96.6px]": leaf.title && leaf.punctuation && leaf.titleLevel === 3,
@@ -66,6 +66,7 @@ const Leaf = ({ attributes, children, leaf }: any) => {
         // "pr-2": leaf.title && leaf.punctuation,
         "line-through": leaf.strike && !leaf.punctuation,
         "inline-block w-[30px]": leaf.list,
+        "border-l-4 border-primary-700 mx-4 pl-4 inline-block": leaf.blockquote
       })}
     >
       {children}
@@ -86,7 +87,7 @@ const MEditor = ({
   initValue?: string;
   initText?: string;
 }) => {
-  const [editor] = useState(() => withReact(createEditor()));
+  const editor = useMemo(() => withHistory(withReact(createEditor())), [])
   const renderLeaf = useCallback((props: any) => <Leaf {...props} />, []);
   const decorate = useCallback(([node, path]: NodeEntry) => {
     const ranges: Range[] = [];

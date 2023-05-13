@@ -23,6 +23,7 @@
     "react-scripts": "5.0.1",
     "remark-gfm": "^3.0.1",
     "slate": "^0.94.1",
+    "slate-history": "^0.93.0",
     "slate-react": "^0.94.0",
     "tailwind-merge": "^1.12.0",
     "typescript": "^4.9.5",
