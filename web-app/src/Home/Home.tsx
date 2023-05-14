@@ -86,7 +86,9 @@ const Home = () => {
         <title>Home - Retro Note</title>
       </Helmet>
       <div className="w-9/12 space-y-6">
-        <Hashtags hashtags={homeApi.response?.hashtags || []} />
+        {homeApi.response?.hashtags && homeApi.response.hashtags.length > 0 && (
+          <Hashtags hashtags={homeApi.response.hashtags} />
+        )}
         <Suggestions />
       </div>
       <div className="w-3/12 space-y-6">
