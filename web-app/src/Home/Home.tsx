@@ -11,6 +11,7 @@ import { API_HOST } from "../config";
 import { AppContext } from "../components/AppContext";
 import { FullLoader } from "../comps/Loading";
 import { Helmet } from "react-helmet";
+import Hashtags from "./Hashtags";
 
 const pad = (num: number) => {
   return num < 10 ? "0" + num : num;
@@ -29,7 +30,7 @@ const formatDate = (dateTime: Date) => {
 
 const Home = () => {
   const { user, setNotes } = useContext(AppContext);
-  const homeApi = useFetch<{ notes: Note[] }>();
+  const homeApi = useFetch<{ notes: Note[]; hashtags: string[] }>();
 
   useEffect(() => {
     if (homeApi.response) {
@@ -85,6 +86,9 @@ const Home = () => {
         <title>Home - Retro Note</title>
       </Helmet>
       <div className="w-9/12 space-y-6">
+        {homeApi.response?.hashtags && homeApi.response.hashtags.length > 0 && (
+          <Hashtags hashtags={homeApi.response.hashtags} />
+        )}
         <Suggestions />
       </div>
       <div className="w-3/12 space-y-6">

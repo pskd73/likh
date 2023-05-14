@@ -1,3 +1,6 @@
+import re
+from typing import List
+
 import env
 import os
 from datetime import datetime
@@ -27,6 +30,17 @@ def m_to_d(obj: Document):
     d['_id'] = str(obj.id)
     d['id'] = str(obj.id)
     return d
+
+
+def get_hashtags(notes: List[Note]):
+    hashtags = []
+    for note in notes:
+        hashtags += re.findall(r"\B(#[a-zA-Z_]+\b)(?!;)", note.text)
+    return list(set(hashtags))
+
+
+def hashtag_in_note(note: Note, hashtag: str):
+    return hashtag in note.text
 
 
 def login_required(f):
@@ -114,7 +128,10 @@ def handle_get_note(user: User):
 @app.route('/notes')
 @login_required
 def handle_get_notes(user: User):
-    return [m_to_d(n) for n in get_user_notes(str(user.id))], 200
+    notes = get_user_notes(str(user.id))
+    if request.args.get('hashtag'):
+        notes = [n for n in notes if hashtag_in_note(n, '#'+request.args['hashtag'])]
+    return [m_to_d(n) for n in notes]
 
 
 @app.route('/delete-note', methods=['DELETE'])
@@ -159,5 +176,6 @@ def handle_get_public_note():
 def handle_get_user_home(user: User):
     notes = get_user_notes(str(user.id))
     return {
-        'notes': [m_to_d(n) for n in notes]
+        'notes': [m_to_d(n) for n in notes],
+        'hashtags': get_hashtags(notes)
     }
