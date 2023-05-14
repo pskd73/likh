@@ -24,6 +24,7 @@ const Suggestions = () => {
   }, [newFetch.response]);
 
   const handleWrite = async (suggestion: Suggestion) => {
+    const topicHashtag = suggestion.topic.toLowerCase().replaceAll(" ", "_");
     newFetch.handle(
       fetch(`${API_HOST}/note`, {
         method: "POST",
@@ -33,7 +34,7 @@ const Suggestions = () => {
         },
         body: JSON.stringify({
           title: "",
-          text: `# ${suggestion.title}\nThis is an article from ${suggestion.topic} topic.`,
+          text: `# ${suggestion.title}\nThis is an article from ${suggestion.topic} topic.\n\n#${topicHashtag}`,
         }),
       })
     );

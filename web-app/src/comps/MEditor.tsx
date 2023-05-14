@@ -60,13 +60,10 @@ const Leaf = ({ attributes, children, leaf }: any) => {
         "text-3xl mb-1": leaf.title && leaf.titleLevel === 4,
         "opacity-30": leaf.punctuation || leaf.list || leaf.blockquote,
         "mt-10": leaf.title && leaf.punctuation,
-        // "-ml-[82.8px]": leaf.title && leaf.punctuation && leaf.titleLevel === 2,
-        // "-ml-[96.6px]": leaf.title && leaf.punctuation && leaf.titleLevel === 3,
-        // "-ml-[93.2px]": leaf.title && leaf.punctuation && leaf.titleLevel === 4,
-        // "pr-2": leaf.title && leaf.punctuation,
         "line-through": leaf.strike && !leaf.punctuation,
         "inline-block w-[30px]": leaf.list,
-        "border-l-4 border-primary-700 mx-4 pl-4 inline-block": leaf.blockquote
+        "border-l-4 border-primary-700 mx-4 pl-4 inline-block": leaf.blockquote,
+        "bg-primary-700 bg-opacity-20 p-1 px-3 rounded-full": leaf.hashtag
       })}
     >
       {children}
@@ -116,6 +113,9 @@ const MEditor = ({
         inside: {
           punctuation: /^#{1,3} /m,
         }
+      },
+      hashtag: {
+        pattern: /\B(#[a-zA-Z_]+\b)(?!;)/
       }
     });
     let start = 0;

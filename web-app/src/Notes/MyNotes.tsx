@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { AppContext } from "../components/AppContext";
 import Clickable from "../components/Clickable";
 import useFetch from "../useFetch";
@@ -6,10 +6,11 @@ import { API_HOST, PUBLIC_HOST } from "../config";
 import { Note } from "../type";
 import moment from "moment";
 import { Select } from "../comps/Form";
-import { Link } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { FullLoader } from "../comps/Loading";
 import { Helmet } from "react-helmet";
 import { getNoteTitle } from "../Note";
+import { Hashtag } from "../Home/Hashtags";
 
 function copy(text: string) {
   var input = document.createElement("textarea");
@@ -30,6 +31,8 @@ const MyNotes = () => {
   const notesApi = useFetch<Note[]>();
   const visibilityApi = useFetch<Note>();
   const [expandedNotes, setExpandedNotes] = useState<string[]>([]);
+  const [params] = useSearchParams();
+  const hashtag = useMemo(() => params.get("hashtag"), [params]);
 
   useEffect(() => {
     if (notesApi.response) {
@@ -43,15 +46,19 @@ const MyNotes = () => {
 
   useEffect(() => {
     if (user) {
+      let url = `${API_HOST}/notes?`;
+      if (hashtag) {
+        url += `hashtag=${hashtag}&`;
+      }
       notesApi.handle(
-        fetch(`${API_HOST}/notes`, {
+        fetch(url, {
           headers: {
             Authorization: `Bearer ${user.token}`,
           },
         })
       );
     }
-  }, [user]);
+  }, [user, hashtag]);
 
   useEffect(() => {
     if (deleteFetch.response) {
@@ -122,10 +129,15 @@ const MyNotes = () => {
   }
 
   return (
-    <div>
+    <div className="space-y-6">
       <Helmet>
         <title>My notes - Retro Note</title>
       </Helmet>
+      {hashtag && (
+        <div>
+          <Hashtag hashtag={`#${hashtag}`} />
+        </div>
+      )}
       {notes && (
         <ul className="space-y-2">
           {Object.values(notes)
