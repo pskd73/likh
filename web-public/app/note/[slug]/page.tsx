@@ -32,7 +32,7 @@ const getNoteTitle = (note: Note) => {
     let cleaned = note.text;
     const titleMatch = cleaned.match(/^\n*#{1,3} (.*)\n*.*/);
     if (titleMatch) {
-      cleaned = titleMatch[1];
+      return titleMatch[1];
     }
     return (
       cleaned.replaceAll("\n", " ").substring(0, 50) +
@@ -47,10 +47,23 @@ export async function generateMetadata({
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
+  const OG_IMG_URL =
+    "https://gfbrmxfdddmpwlqtvwsh.supabase.co/storage/v1/object/sign/public/Read%20it%20on%20Retro%20Note-min.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJwdWJsaWMvUmVhZCBpdCBvbiBSZXRybyBOb3RlLW1pbi5wbmciLCJpYXQiOjE2ODQwMzcxOTcsImV4cCI6MTcxNTU3MzE5N30.5jA5GmDGs-XdzJL4TM17GkdPvw08jLxhFccz5Ahpux4&t=2023-05-14T04%3A06%3A40.249Z";
   try {
     const publicNote = await fetchNote(params.slug);
+    const title = `${getNoteTitle(publicNote.note)} - Retro Note`;
     return {
-      title: `${getNoteTitle(publicNote.note)} - Retro Note`,
+      title,
+      openGraph: {
+        title,
+        type: "article",
+        images: OG_IMG_URL,
+      },
+      twitter: {
+        title,
+        card: "summary_large_image",
+        images: OG_IMG_URL,
+      },
     };
   } catch {}
   return {
