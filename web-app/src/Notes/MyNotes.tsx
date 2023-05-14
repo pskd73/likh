@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../components/AppContext";
 import Clickable from "../components/Clickable";
 import useFetch from "../useFetch";
-import { API_HOST, HOST } from "../config";
+import { API_HOST, PUBLIC_HOST } from "../config";
 import { Note } from "../type";
 import moment from "moment";
 import { Select } from "../comps/Form";
@@ -114,7 +114,7 @@ const MyNotes = () => {
   };
 
   const handleCopy = (noteId: string) => {
-    copy(`${HOST}/note/${noteId}`);
+    copy(`${PUBLIC_HOST}/note/${noteId}`);
   };
 
   if (notesApi.loading) {
