@@ -12,6 +12,9 @@ import MEditor from "../comps/MEditor";
 import { FullLoader } from "../comps/Loading";
 import { Helmet } from "react-helmet";
 import { getNoteTitle } from "../Note";
+import { BiCool, BiCrosshair, BiTimeFive } from "react-icons/bi";
+import { VscWholeWord } from "react-icons/vsc";
+import Button from "../comps/Button";
 
 const useTimer = <T extends unknown>(callback: (state: T | null) => void) => {
   const ref = useRef<NodeJS.Timeout | null>(null);
@@ -35,7 +38,8 @@ const useTimer = <T extends unknown>(callback: (state: T | null) => void) => {
 const Write = () => {
   const noteApi = useFetch<Note>();
   const saveFetch = useFetch();
-  const { user, focusMode, setFocusMode } = useContext(AppContext);
+  const { user, focusMode, setFocusMode, setTextMetricType, textMetricType } =
+    useContext(AppContext);
   const [note, setNote] = useState<Note>();
   const { noteId } = useParams();
 
@@ -116,18 +120,25 @@ const Write = () => {
             initValue={note.slate_value}
             initText={note.text}
           />
-          <div className="fixed bottom-0 right-0 px-4 py-2 flex space-x-4">
-            {!focusMode && (
-              <>
-                <GoalTracker note={note} />
-                <span className="opacity-50 w-14 text-center">
-                  <TextCounter note={note} />
-                </span>
-              </>
-            )}
-            <Clickable lite onClick={handleFocus}>
-              {focusMode ? "relax" : "focus"}
-            </Clickable>
+          <div className="fixed bottom-0 right-0 px-4 py-2 flex space-x-2">
+            <GoalTracker note={note} />
+            <Button
+              lite
+              className="flex items-center space-x-2 w-16 justify-center"
+              onClick={() =>
+                setTextMetricType((old) =>
+                  old === "words" ? "readTime" : "words"
+                )
+              }
+            >
+              {textMetricType === "words" ? <VscWholeWord /> : <BiTimeFive />}{" "}
+              <span className="text-sm">
+                <TextCounter note={note} />
+              </span>
+            </Button>
+            <Button lite onClick={handleFocus}>
+              {focusMode ? <BiCool /> : <BiCrosshair />}
+            </Button>
           </div>
         </>
       )}
