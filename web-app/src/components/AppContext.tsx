@@ -23,7 +23,9 @@ export type AppContextType = {
   setFocusMode: (focusMode: boolean | ((old: boolean) => boolean)) => void;
 
   textMetricType: TextMetricType;
-  setTextMetricType: (type: TextMetricType) => void;
+  setTextMetricType: (
+    type: TextMetricType | ((old: TextMetricType) => TextMetricType)
+  ) => void;
   toggleTextMetricType: () => void;
 
   trayOpen: boolean;

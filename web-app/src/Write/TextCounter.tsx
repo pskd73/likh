@@ -15,7 +15,7 @@ const TextCounter = ({note}: {note: Note}) => {
   };
 
   if (textMetricType === "words") {
-    return <span>{words}w</span>;
+    return <span>{words}</span>;
   }
   if (textMetricType === "readTime") {
     return (
