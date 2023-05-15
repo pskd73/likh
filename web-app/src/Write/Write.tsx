@@ -15,6 +15,7 @@ import { getNoteTitle } from "../Note";
 import { BiCool, BiCrosshair, BiTimeFive } from "react-icons/bi";
 import { VscWholeWord } from "react-icons/vsc";
 import Button from "../comps/Button";
+import classNames from "classnames";
 
 const useTimer = <T extends unknown>(callback: (state: T | null) => void) => {
   const ref = useRef<NodeJS.Timeout | null>(null);
@@ -124,7 +125,13 @@ const Write = () => {
             <GoalTracker note={note} />
             <Button
               lite
-              className="flex items-center space-x-2 w-16 justify-center"
+              className={classNames(
+                "flex items-center space-x-2 justify-center",
+                {
+                  "w-16": textMetricType === "words",
+                  "w-20": textMetricType === "readTime",
+                }
+              )}
               onClick={() =>
                 setTextMetricType((old) =>
                   old === "words" ? "readTime" : "words"
