@@ -1,0 +1,118 @@
+export const link = {
+  pattern:
+    /((https?:\/\/)|(www\.))[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/m,
+};
+
+export const strikethrough = {
+  pattern: /~~.+~~/m,
+  greedy: true,
+  inside: {
+    punctuation: [
+      {
+        pattern: /^~~/m,
+        greedy: true,
+      },
+      {
+        pattern: /~~$/m,
+        greedy: true,
+      },
+    ],
+  },
+};
+
+export const italic = {
+  pattern: /[_*][^_*]+[_*]/m,
+  greedy: true,
+  inside: {
+    punctuation: [
+      {
+        pattern: /^[_*]/m,
+        greedy: true,
+      },
+      {
+        pattern: /[_*]$/m,
+        greedy: true,
+      },
+    ],
+    link,
+  },
+};
+
+export const bold = {
+  pattern: /[_*]{2}.+[_*]{2}/m,
+  greedy: true,
+  inside: {
+    punctuation: [
+      {
+        pattern: /^[_*]{2}/m,
+        greedy: true,
+      },
+      {
+        pattern: /[_*]{2}$/m,
+        greedy: true,
+      },
+    ],
+    italic,
+    link,
+  },
+};
+
+export const title1 = {
+  pattern: /^# .+$/m,
+  inside: {
+    punctuation: /^# /m,
+    italic,
+    bold,
+    link,
+  },
+};
+
+export const title2 = {
+  pattern: /^## .+$/m,
+  inside: {
+    punctuation: /^## /m,
+    italic,
+    bold,
+    link,
+  },
+};
+
+export const title3 = {
+  pattern: /^### .+$/m,
+  inside: {
+    punctuation: /^### /m,
+    italic,
+    bold,
+    link,
+  },
+};
+
+export const listRegex = /^(([-*])|([0-9]+.)) .+$/m;
+export const list = {
+  pattern: listRegex,
+  inside: {
+    bullet: /^([-*])|([0-9]+.) /,
+    italic,
+    bold,
+    strikethrough,
+    link,
+  },
+  greedy: true,
+};
+
+export const quoteRegex = /^\> .*$/m;
+export const quote = {
+  pattern: /^\> .*$/m,
+  inside: {
+    punctuation: /^> /m,
+    italic,
+    bold,
+    strikethrough,
+    link,
+  },
+};
+
+export const hashtag = {
+  pattern: /\B(#[a-zA-Z_]+\b)(?!;)/m,
+  greedy: true,
+};
