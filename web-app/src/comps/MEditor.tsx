@@ -10,9 +10,11 @@ import {
   Text,
   Descendant,
   Node,
+  Path,
 } from "slate";
-import {withHistory} from "slate-history"
+import { withHistory } from "slate-history";
 import { Slate, Editable, withReact, ReactEditor } from "slate-react";
+import * as grammer from "./grammer";
 
 type CustomElement = { type: "paragraph"; children: CustomText[] };
 type CustomText = { text: string };
@@ -39,36 +41,140 @@ const deserialize = (str: string) => {
 const defaultValue = [
   {
     type: "paragraph",
-    children: [{ text: "**Hello!** How are you? *go*!" }],
-  },
-  {
-    type: "paragraph",
-    children: [{ text: "## This is title" }],
+    children: [{ text: "New note" }],
   },
 ];
 
 const Leaf = ({ attributes, children, leaf }: any) => {
+  const title = leaf.title1 || leaf.title2 || leaf.title3;
+
+  const className = classNames({
+    // decor
+    "font-semibold": leaf.bold,
+    italic: leaf.italic,
+    "line-through": leaf.strikethrough,
+
+    // generic punctuation
+    "opacity-30": leaf.punctuation || leaf.blockquote,
+
+    // title
+    "font-bold": title,
+    block: title && leaf.punctuation,
+    "text-5xl": leaf.title1,
+    "text-4xl": leaf.title2,
+    "text-3xl": leaf.title3,
+    "mb-6": leaf.title1 && !leaf.punctuation,
+    "mb-2": leaf.title2 && !leaf.punctuation,
+    "mb-1": leaf.title3 && !leaf.punctuation,
+
+    // list
+    "-ml-[24px] opacity-30": leaf.bullet,
+
+    // link
+    "underline cursor-pointer": leaf.link,
+
+    // hashtag
+    "bg-primary-700 bg-opacity-20 p-1 px-3 rounded-full": leaf.hashtag,
+  });
+
+  if (leaf.link) {
+    return (
+      <a
+        href={leaf.text}
+        {...attributes}
+        className={className}
+        onClick={() => {
+          window.open(leaf.text, "_blank");
+        }}
+      >
+        {children}
+      </a>
+    );
+  }
+
   return (
-    <span
-      {...attributes}
-      className={classNames({
-        "font-semibold": leaf.bold,
-        italic: leaf.italic,
-        "block font-bold": leaf.title,
-        "text-5xl mb-6": leaf.title && leaf.titleLevel === 2,
-        "text-4xl mb-2": leaf.title && leaf.titleLevel === 3,
-        "text-3xl mb-1": leaf.title && leaf.titleLevel === 4,
-        "opacity-30": leaf.punctuation || leaf.list || leaf.blockquote,
-        "mt-10": leaf.title && leaf.punctuation,
-        "line-through": leaf.strike && !leaf.punctuation,
-        "inline-block w-[30px]": leaf.list,
-        "border-l-4 border-primary-700 mx-4 pl-4 inline-block": leaf.blockquote,
-        "bg-primary-700 bg-opacity-20 p-1 px-3 rounded-full": leaf.hashtag
-      })}
-    >
+    <span {...attributes} className={className}>
       {children}
     </span>
   );
+};
+
+type CustomRange = Range;
+
+const getTokenLength = (token: string | Prism.Token) => {
+  if (typeof token === "string") {
+    return token.length;
+  } else if (typeof token.content === "string") {
+    return token.content.length;
+  } else {
+    return (token.content as any).reduce(
+      (l: any, t: any) => l + getTokenLength(t),
+      0
+    );
+  }
+};
+
+const getTokenRanges = (
+  path: Path,
+  token: string | Prism.Token,
+  start: number,
+  parentTokens: Array<Prism.Token>
+): CustomRange[] => {
+  if (typeof token === "string") {
+    const range: any = {
+      anchor: { path, offset: start },
+      focus: { path, offset: start + getTokenLength(token) },
+    };
+    for (const pt of parentTokens) {
+      range[pt.type as string] = true;
+    }
+    return [range];
+  }
+
+  if (Array.isArray(token.content)) {
+    return getTokensRanges(path, token.content, start, [
+      ...parentTokens,
+      token,
+    ]);
+  }
+
+  const range = {
+    [token.type]: true,
+    anchor: { path, offset: start },
+    focus: { path, offset: start + getTokenLength(token) },
+  };
+
+  for (const pt of parentTokens) {
+    range[pt.type] = true;
+  }
+
+  return [range];
+};
+
+const getTokensRanges = (
+  path: Path,
+  tokens: Array<string | Prism.Token>,
+  start: number,
+  parentTokens: Prism.Token[]
+) => {
+  let ranges: CustomRange[] = [];
+  for (const _token of tokens) {
+    const _parentTokens = [...parentTokens];
+    if (typeof _token !== "string") {
+      _parentTokens.push(_token);
+    }
+    const newRanges = getTokenRanges(path, _token, start, _parentTokens);
+    ranges = [...ranges, ...newRanges];
+    start = getRangesEnd(newRanges, start);
+  }
+  return ranges;
+};
+
+const getRangesEnd = (ranges: Range[], start: number) => {
+  if (ranges.length > 0) {
+    return ranges[ranges.length - 1].focus.offset;
+  }
+  return start;
 };
 
 const MEditor = ({
@@ -84,87 +190,52 @@ const MEditor = ({
   initValue?: string;
   initText?: string;
 }) => {
-  const editor = useMemo(() => withHistory(withReact(createEditor())), [])
+  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
   const renderLeaf = useCallback((props: any) => <Leaf {...props} />, []);
   const decorate = useCallback(([node, path]: NodeEntry) => {
-    const ranges: Range[] = [];
+    let ranges: Range[] = [];
 
     if (!Text.isText(node)) {
       return ranges;
     }
 
-    const getLength = (token: string | Prism.Token) => {
-      if (typeof token === "string") {
-        return token.length;
-      } else if (typeof token.content === "string") {
-        return token.content.length;
-      } else {
-        return (token.content as any).reduce(
-          (l: any, t: any) => l + getLength(t),
-          0
-        );
-      }
-    };
-
     const tokens = Prism.tokenize(node.text, {
-      ...Prism.languages.markdown,
-      title: {
-        pattern: /(^\s*)#{1,3} .+$/m,
-        inside: {
-          punctuation: /^#{1,3} /m,
-        }
-      },
-      hashtag: {
-        pattern: /\B(#[a-zA-Z_]+\b)(?!;)/
-      }
+      strikethrough: grammer.strikethrough,
+      italic: grammer.italic,
+      bold: grammer.bold,
+      title1: grammer.title1,
+      title2: grammer.title2,
+      title3: grammer.title3,
+      list: grammer.list,
+      link: grammer.link,
+      quote: grammer.quote,
+      hashtag: grammer.hashtag,
     });
-    let start = 0;
 
-    for (const token of tokens) {
-      const length = getLength(token);
-      const end = start + length;
-
-      if (typeof token !== "string") {
-        if (Array.isArray(token.content)) {
-          let _start = start;
-          let titleLevel = token.type === "title" ? undefined : null;
-
-          for (const item of token.content) {
-            const _length = getLength(item);
-            const _end = _start + _length;
-
-            if (
-              token.type === "title" &&
-              (item as any).type === "punctuation" &&
-              titleLevel === undefined
-            ) {
-              titleLevel = _length;
-            }
-
-            ranges.push({
-              [token.type]: true,
-              [(item as any).type]: true,
-              titleLevel,
-              anchor: { path, offset: _start },
-              focus: { path, offset: _end },
-            } as any);
-
-            _start = _end;
-          }
-        } else {
-          ranges.push({
-            [token.type]: true,
-            anchor: { path, offset: start },
-            focus: { path, offset: end },
-          });
-        }
-      }
-
-      start = end;
-    }
-
-    return ranges;
+    return getTokensRanges(path, tokens, 0, []);
   }, []);
+
+  const renderElement = useCallback(
+    ({ attributes, children, element }: any) => {
+      let text = "";
+      for (const child of element.children) {
+        text += child.text;
+      }
+      return (
+        <p
+          {...attributes}
+          className={classNames({
+            "pl-[48px]": text.match(grammer.listRegex),
+            "p-[24px] py bg-primary-700 bg-opacity-10 italic rounded my-6":
+              text.match(grammer.quoteRegex),
+          })}
+        >
+          {children}
+        </p>
+      );
+    },
+    []
+  );
 
   const handleChange = (value: Descendant[]) => {
     onChange({
@@ -191,7 +262,11 @@ const MEditor = ({
         value={getInitValue() as any}
         onChange={handleChange}
       >
-        <Editable decorate={decorate} renderLeaf={renderLeaf} />
+        <Editable
+          decorate={decorate}
+          renderLeaf={renderLeaf}
+          renderElement={renderElement}
+        />
       </Slate>
     </div>
   );
