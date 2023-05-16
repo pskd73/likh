@@ -114,7 +114,7 @@ export default async function Note({ params }: { params: { slug: string } }) {
               <div className="text-center opacity-50">•••</div>
               <div className="text-center">
                 <a
-                  href="/"
+                  href="https://retronote.app"
                   className="opacity-50 hover:opacity-100 hover:underline"
                 >
                   Retro Note
