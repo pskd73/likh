@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Clickable from "./components/Clickable";
 import { supabase, useSupabase } from "./components/supabase";
 import { Paper } from "./comps/Layout";
@@ -6,6 +6,7 @@ import { Input } from "./comps/Form";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import classNames from "classnames";
+import Event from "./components/Event";
 
 const steps = [
   "Add topics you are interested in",
@@ -26,6 +27,10 @@ const Landing = () => {
       }
     },
   });
+
+  useEffect(() => {
+    Event.track("landing_page");
+  }, []);
 
   const handleSubmit = async () => {
     if (email) {
