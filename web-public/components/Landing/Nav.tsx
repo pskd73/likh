@@ -4,7 +4,7 @@ import { Highlight } from "./Hero";
 
 export default function Nav() {
   return (
-    <div className="flex justify-end py-10 md:px-16">
+    <div className="flex justify-end py-10 px-4 md:px-16">
       <ul className="flex space-x-6 text-lg">
         {["Features", "Pricing"].map((text, i) => (
           <li key={i}>
