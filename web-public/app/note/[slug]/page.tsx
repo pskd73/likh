@@ -3,8 +3,7 @@ import remarkGfm from "remark-gfm";
 import { Courier_Prime } from "next/font/google";
 import classNames from "classnames";
 import { Metadata } from "next";
-
-const inter = Courier_Prime({ weight: ["400", "700"], subsets: ["latin"] });
+import { Courier } from "@/components/font";
 
 export type Note = {
   id: string;
@@ -82,7 +81,7 @@ export default async function Note({ params }: { params: { slug: string } }) {
     <main className="bg-base text-primary-700">
       <div className="flex justify-center">
         <div className="w-full max-w-[860px] py-10 px-6 md:px-0">
-          <div className={classNames(inter.className, "space-y-10")}>
+          <div className={classNames(Courier.className, "space-y-10")}>
             <article className="prose max-w-none lg:prose-xl prose-headings:mb-0 prose-li:my-0 prose-ol:my-6 min-h-[60vh]">
               {publicNote && (
                 <>
