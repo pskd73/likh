@@ -1,3 +1,4 @@
+import Auth from "@/components/Landing/Auth";
 import Feature from "@/components/Landing/Feature";
 import Hero, { Highlight } from "@/components/Landing/Hero";
 import Join from "@/components/Landing/Join";
@@ -6,6 +7,7 @@ import Nav, { Footer } from "@/components/Landing/Nav";
 export default function Landing() {
   return (
     <div className="bg-base text-primary-700">
+      <Auth />
       <div className="hidden bg-opacity-10" />
       <div className="relative bg-[url('/hero_bg.png')] bg-center px-2 md:px-0 pb-14">
         <Nav />

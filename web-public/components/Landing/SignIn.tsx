@@ -1,7 +1,21 @@
+"use client";
 import classNames from "classnames";
 import { Courier } from "../font";
+import { useState } from "react";
+import { supabase } from "./Auth";
 
 export default function SginIn() {
+  const [email, setEmail] = useState("");
+
+  const handleSubmit = async () => {
+    await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        emailRedirectTo: "https://retronote.app",
+      },
+    });
+  };
+
   return (
     <div className="flex flex-col items-center space-y-2">
       <div
@@ -15,9 +29,16 @@ export default function SginIn() {
             type="text"
             className="italic outline-none"
             placeholder="Enter email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
-        <button className="text-white italic px-2 md:px-6">write &rarr;</button>
+        <button
+          className="text-white italic px-2 md:px-6"
+          onClick={() => handleSubmit()}
+        >
+          write &rarr;
+        </button>
       </div>
       <a
         href="#"
