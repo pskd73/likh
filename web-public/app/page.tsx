@@ -2,10 +2,6 @@ import Feature from "@/components/Landing/Feature";
 import Hero, { Highlight } from "@/components/Landing/Hero";
 import Join from "@/components/Landing/Join";
 import Nav, { Footer } from "@/components/Landing/Nav";
-import SginIn from "@/components/Landing/SignIn";
-import { Courier } from "@/components/font";
-import classNames from "classnames";
-import { PropsWithChildren, useMemo } from "react";
 
 export default function Landing() {
   return (
@@ -33,7 +29,12 @@ export default function Landing() {
             </Feature.List>
           </Feature.Content>
           <Feature.Demo>
-            <Feature.DummyGif />
+            <Feature.DemoImg>
+              <img
+                src="/Quick Start Retro Note.png"
+                alt="Quick start - Retro Note"
+              />
+            </Feature.DemoImg>
           </Feature.Demo>
         </Feature>
 
@@ -56,7 +57,12 @@ export default function Landing() {
             </Feature.List>
           </Feature.Content>
           <Feature.Demo>
-            <Feature.DummyGif />
+            <Feature.DemoImg>
+              <img
+                src="/Write Retro Note.png"
+                alt="Focused Writing - Retro Note"
+              />
+            </Feature.DemoImg>
           </Feature.Demo>
         </Feature>
 
@@ -77,7 +83,9 @@ export default function Landing() {
             </Feature.List>
           </Feature.Content>
           <Feature.Demo>
-            <Feature.DummyGif />
+            <Feature.DemoImg>
+              <img src="/Share Retro Note.png" alt="Share - Retro Note" />
+            </Feature.DemoImg>
           </Feature.Demo>
         </Feature>
       </div>
