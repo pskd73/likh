@@ -24,20 +24,12 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/",
-    element: (
-      <NoMobile>
-        <Landing />
-      </NoMobile>
-    ),
-  },
-  {
     path: "/note",
     element: <App nav={false} />,
     children: [{ path: ":noteId", element: <PublicNote /> }],
   },
   {
-    path: "/app",
+    path: "/",
     element: (
       <NoMobile>
         <Private>

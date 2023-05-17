@@ -14,7 +14,7 @@ export default function SginIn() {
     await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: "https://app.retronote.app",
+        emailRedirectTo: process.env.NEXT_PUBLIC_AUTH_REDIRECT,
       },
     });
     setMailSent(true);

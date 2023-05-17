@@ -2,6 +2,7 @@ import { ComponentProps, PropsWithChildren, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { useSupabase } from "../components/supabase";
 import { useNavigate } from "react-router-dom";
+import { PUBLIC_HOST } from "../config";
 
 export const Paper = ({
   children,
@@ -31,12 +32,11 @@ export const NoMobile = ({ children }: PropsWithChildren) => {
 
 export const Private = ({ children }: PropsWithChildren) => {
   const [loggedIn, setLoggedIn] = useState(false);
-  const navigate = useNavigate();
 
   useSupabase({
     setUser: (user) => {
       if (!user) {
-        navigate("/");
+        window.location.href = PUBLIC_HOST;
       } else {
         setLoggedIn(true);
       }
