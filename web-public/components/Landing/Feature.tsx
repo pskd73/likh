@@ -24,7 +24,9 @@ function Content({ children }: PropsWithChildren) {
 }
 
 function Demo({ children }: PropsWithChildren) {
-  return <div className="flex justify-center py-10 lg:py-0 lg:pr-10">{children}</div>;
+  return (
+    <div className="flex justify-center py-10 lg:py-0 lg:pr-10">{children}</div>
+  );
 }
 
 function Title({ children }: PropsWithChildren) {
@@ -45,8 +47,8 @@ function List({ children }: PropsWithChildren) {
 
 function DemoImg({ children }: PropsWithChildren) {
   return (
-    <div className="w-[400px] h-[400px] flex justify-center items-center">
-      <div className="max-w-[400px] max-h-[400px] rounded-md shadow-xl overflow-hidden">
+    <div className="w-[280px] h-[280px] md:w-[400px] md:h-[400px] flex justify-center items-center">
+      <div className="max-w-[280px] max-h-[280px] md:max-w-[400px] md:max-h-[400px] rounded-md shadow-xl overflow-hidden">
         {children}
       </div>
     </div>
