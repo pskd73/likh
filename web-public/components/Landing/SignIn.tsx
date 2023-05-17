@@ -11,7 +11,7 @@ export default function SginIn() {
     await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: "https://retronote.app",
+        emailRedirectTo: "https://app.retronote.app",
       },
     });
   };
