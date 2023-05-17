@@ -52,11 +52,11 @@ export const Nav = () => {
                   my notes
                 </MenuLink>
               </li>
-              <li>
+              {/* <li>
                 <MenuLink to="/settings" active={activeLink === "settings"}>
                   settings
                 </MenuLink>
-              </li>
+              </li> */}
             </ul>
           </div>
         </div>
