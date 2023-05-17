@@ -12,7 +12,7 @@ const New = () => {
 
   useEffect(() => {
     if (api.response) {
-      navigate(`/app/write/${api.response.id}`, { replace: true });
+      navigate(`/write/${api.response.id}`, { replace: true });
     }
   }, [api.response]);
 

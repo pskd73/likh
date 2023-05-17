@@ -19,7 +19,7 @@ const Suggestions = () => {
   useEffect(() => {
     if (newFetch.response) {
       Event.track("new_note");
-      navigate(`/app/write/${newFetch.response.id}`);
+      navigate(`/write/${newFetch.response.id}`);
     }
   }, [newFetch.response]);
 

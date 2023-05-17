@@ -147,7 +147,7 @@ const MyNotes = () => {
                 <div className="w-8">{i + 1}.</div>
                 <div className="w-full">
                   <Clickable>
-                    <Link to={`/app/write/${note.id}`}>
+                    <Link to={`/write/${note.id}`}>
                       {getNoteTitle(note)}
                     </Link>
                   </Clickable>
