@@ -13,7 +13,7 @@ export default function Landing() {
         <Nav />
         <Hero />
       </div>
-      <div className="space-y-6">
+      <div className="space-y-6" id="features">
         <Feature bg>
           <Feature.Content>
             <Feature.Title>Quick start</Feature.Title>

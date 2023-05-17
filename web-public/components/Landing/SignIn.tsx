@@ -6,14 +6,20 @@ import { supabase } from "./Auth";
 
 export default function SginIn() {
   const [email, setEmail] = useState("");
+  const [mailSent, setMailSent] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
+    setLoading(true);
     await supabase.auth.signInWithOtp({
       email,
       options: {
         emailRedirectTo: "https://app.retronote.app",
       },
     });
+    setMailSent(true);
+    setEmail("");
+    setLoading(false);
   };
 
   return (
@@ -31,17 +37,26 @@ export default function SginIn() {
             placeholder="Enter email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            disabled={loading}
           />
         </div>
         <button
-          className="text-white italic px-2 md:px-6"
+          className={classNames("text-white italic px-2 md:px-6", {
+            "text-primary-700 text-opacity-80": loading,
+          })}
           onClick={() => handleSubmit()}
+          disabled={loading}
         >
           write &rarr;
         </button>
       </div>
+      {mailSent && (
+        <span className="opacity-50">
+          Login link sent. Please check your inbox!
+        </span>
+      )}
       <a
-        href="#"
+        href={process.env.NEXT_PUBLIC_WRITE_URL}
         className={classNames(
           Courier.className,
           "italic md:text-xl opacity-50 underline"

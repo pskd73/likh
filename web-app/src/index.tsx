@@ -12,8 +12,17 @@ import Write from "./Write/Write";
 import New from "./Write/New";
 import Landing from "./Landing";
 import { NoMobile, Private } from "./comps/Layout";
+import OpenWrite from "./OpenWrite";
 
 const router = createBrowserRouter([
+  {
+    path: "/open-write",
+    element: (
+      <NoMobile>
+        <OpenWrite />
+      </NoMobile>
+    ),
+  },
   {
     path: "/",
     element: (

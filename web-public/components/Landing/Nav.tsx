@@ -1,16 +1,20 @@
 import classNames from "classnames";
 import { Courier } from "../font";
 import { Highlight } from "./Hero";
+import Link from "next/link";
 
 export default function Nav() {
   return (
     <div className="flex justify-end py-10 px-4 md:px-16">
       <ul className="flex space-x-6 text-lg">
-        {["Features", "Pricing"].map((text, i) => (
+        {[
+          { label: "Features", link: "#features" },
+          { label: "Pricing", link: "#pricing" },
+        ].map((item, i) => (
           <li key={i}>
-            <a href="#" className="underline">
-              {text}
-            </a>
+            <Link href={item.link} className="underline">
+              {item.label}
+            </Link>
           </li>
         ))}
       </ul>
@@ -26,7 +30,12 @@ export function Footer() {
         "text-center text-xl opacity-50 py-10"
       )}
     >
-      Built with &#9829; by <Highlight>@pramodk73</Highlight>
+      Built with &#9829; by{" "}
+      <Highlight>
+        <a href="https://twitter.com/@pramodk73" target="_blank">
+          @pramodk73
+        </a>
+      </Highlight>
     </div>
   );
 }
