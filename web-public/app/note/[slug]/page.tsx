@@ -4,15 +4,7 @@ import Event from "@/components/Event";
 import classNames from "classnames";
 import { Metadata } from "next";
 import { Courier } from "@/components/font";
-
-export type Note = {
-  id: string;
-  title: string;
-  text: string;
-  created_at: number;
-  visibility: "private" | "public";
-  slate_value?: string;
-};
+import { Note } from "@/components/Note";
 
 type PublicNote = { note: Note; user: { email: string } };
 

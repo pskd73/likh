@@ -22,3 +22,7 @@ def get_user_notes(user_id: str) -> List[Note]:
 
 def delete_note(note_id: str):
     Note.objects(id=note_id).delete()
+
+
+def get_all_public_notes():
+    return Note.objects(visibility='public').only('id', 'user_id', 'created_at', 'title', 'text')

@@ -17,7 +17,7 @@ from chatgpt import get_suggestions
 from constant import SAMPLE_TEXT
 from date import to_millis
 from mail import send_welcome_mail
-from note import Note, get_note_by_id, get_user_notes, delete_note
+from note import Note, get_note_by_id, get_user_notes, delete_note, get_all_public_notes
 from user import get_user_by_email, User, get_user_by_id
 
 connect(host=os.environ['MONGO_CONN_STR'])
@@ -168,6 +168,14 @@ def handle_get_public_note():
         'user': {
             'email': user.email
         }
+    }
+
+
+@app.route('/public/notes')
+def handle_get_public_notes():
+    notes = [m_to_d(n) for n in get_all_public_notes()]
+    return {
+        'notes': [m_to_d(n) for n in get_all_public_notes()]
     }
 
 
