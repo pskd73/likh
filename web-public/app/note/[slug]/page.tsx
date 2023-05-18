@@ -1,6 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Courier_Prime } from "next/font/google";
+import Event from "@/components/Event";
 import classNames from "classnames";
 import { Metadata } from "next";
 import { Courier } from "@/components/font";
@@ -79,6 +79,7 @@ export default async function Note({ params }: { params: { slug: string } }) {
 
   return (
     <main className="bg-base text-primary-700">
+      <Event name="public_note" props={{ note_id: params.slug }} />
       <div className="flex justify-center">
         <div className="w-full max-w-[860px] py-10 px-6 md:px-0">
           <div className={classNames(Courier.className, "space-y-10")}>
