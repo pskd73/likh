@@ -5,6 +5,7 @@ import Clickable from "../components/Clickable";
 import { Link, To, useLocation, useNavigate } from "react-router-dom";
 import { AppContext } from "../components/AppContext";
 import { supabase } from "../components/supabase";
+import { BiGridAlt, BiPlus } from "react-icons/bi";
 
 const MenuLink = ({
   children,
@@ -29,7 +30,7 @@ export const Nav = () => {
   const [activeLink, setActiveLink] = useState("");
 
   useEffect(() => {
-    const page = location.pathname.split("/")[2];
+    const page = location.pathname.split("/")[1];
     if (page !== undefined) {
       setActiveLink(page);
     }
@@ -43,13 +44,15 @@ export const Nav = () => {
             <Link to="/">Retro Note</Link>
           </h1>
           <div>
-            <ul className="flex space-x-6">
-              <li>
-                <MenuLink to="/write/new">new</MenuLink>
+            <ul className="flex space-x-6 text-xl">
+              <li className="flex items-center">
+                <MenuLink to="/write/new">
+                  <BiPlus />
+                </MenuLink>
               </li>
               <li>
                 <MenuLink to="/notes" active={activeLink === "notes"}>
-                  my notes
+                  <BiGridAlt />
                 </MenuLink>
               </li>
               {/* <li>

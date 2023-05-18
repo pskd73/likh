@@ -19,6 +19,7 @@ import {
 } from "react-icons/bi";
 import { MdPublic, MdPublicOff } from "react-icons/md";
 import Button from "../comps/Button";
+import { Header } from "../comps/Typo";
 
 function copy(text: string) {
   var input = document.createElement("textarea");
@@ -151,17 +152,17 @@ const MyNotes = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div>
       <Helmet>
         <title>My notes - Retro Note</title>
       </Helmet>
-      {hashtag && (
-        <div>
-          <Hashtag hashtag={`#${hashtag}`} />
-        </div>
-      )}
+      <div className="mb-2 flex items-center space-x-2">
+        <Header>My notes</Header>
+        {hashtag && <Hashtag hashtag={`#${hashtag}`} />}
+      </div>
+
       {notes && (
-        <ul className="space-y-2">
+        <ul>
           {Object.values(notes)
             .sort((a, b) => b.created_at - a.created_at)
             .map((note, i) => (
