@@ -17,11 +17,7 @@ import OpenWrite from "./OpenWrite";
 const router = createBrowserRouter([
   {
     path: "/open-write",
-    element: (
-      <NoMobile>
-        <OpenWrite />
-      </NoMobile>
-    ),
+    element: <OpenWrite />,
   },
   {
     path: "/note",

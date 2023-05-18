@@ -16,7 +16,7 @@ const Button = ({
           "px-2 py-1 rounded bg-primary-700 transition-all",
           {
             "opacity-50 hover:opacity-100 hover:bg-opacity-10 bg-opacity-0 active:bg-opacity-20": lite,
-            "bg-opacity-20 hover:bg-opacity-30 active:bg-opacity-40": !lite,
+            "bg-opacity-10 hover:bg-opacity-20 active:bg-opacity-30": !lite,
           }
         )
       )}

@@ -11,6 +11,15 @@ import { FullLoader } from "../comps/Loading";
 import { Helmet } from "react-helmet";
 import { getNoteTitle } from "../Note";
 import { Hashtag } from "../Home/Hashtags";
+import {
+  BiCaretDownCircle,
+  BiCaretUpCircle,
+  BiLink,
+  BiTrash,
+} from "react-icons/bi";
+import { MdPublic, MdPublicOff } from "react-icons/md";
+import Button from "../comps/Button";
+import { Header } from "../comps/Typo";
 
 function copy(text: string) {
   var input = document.createElement("textarea");
@@ -24,13 +33,39 @@ function copy(text: string) {
 
 const Divider = () => <span className="opacity-50">&nbsp;•&nbsp;</span>;
 
+const Delete = ({ onConfirm }: { onConfirm: () => void }) => {
+  const [confirm, setConfirm] = useState(false);
+
+  const handleDelete = () => {
+    setConfirm(true);
+  };
+
+  const handleConfirm = (confirm: boolean) => {
+    if (confirm) {
+      onConfirm();
+    }
+    setConfirm(false);
+  };
+
+  return !confirm ? (
+    <Button lite onClick={handleDelete}>
+      <BiTrash />
+    </Button>
+  ) : (
+    <span className="space-x-2 text-xs px-2">
+      <span className="opacity-50">Are you sure?</span>
+      <Button onClick={() => handleConfirm(true)}>Yes</Button>
+      <Button onClick={() => handleConfirm(false)}>No</Button>
+    </span>
+  );
+};
+
 const MyNotes = () => {
   const { user } = useContext(AppContext);
   const [notes, setNotes] = useState<Record<string, Note>>({});
   const deleteFetch = useFetch<Note>();
   const notesApi = useFetch<Note[]>();
   const visibilityApi = useFetch<Note>();
-  const [expandedNotes, setExpandedNotes] = useState<string[]>([]);
   const [params] = useSearchParams();
   const hashtag = useMemo(() => params.get("hashtag"), [params]);
 
@@ -92,18 +127,6 @@ const MyNotes = () => {
     );
   };
 
-  const handleMore = (noteId: string) => {
-    setExpandedNotes((notes) => {
-      const _notes = [...notes];
-      if (notes.includes(noteId)) {
-        _notes.splice(notes.indexOf(noteId), 1);
-      } else {
-        _notes.push(noteId);
-      }
-      return _notes;
-    });
-  };
-
   const handleVisibilityChange = (noteId: string, visibility: string) => {
     visibilityApi.handle(
       fetch(`${API_HOST}/note/visibility`, {
@@ -129,17 +152,17 @@ const MyNotes = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div>
       <Helmet>
         <title>My notes - Retro Note</title>
       </Helmet>
-      {hashtag && (
-        <div>
-          <Hashtag hashtag={`#${hashtag}`} />
-        </div>
-      )}
+      <div className="mb-2 flex items-center space-x-2">
+        <Header>My notes</Header>
+        {hashtag && <Hashtag hashtag={`#${hashtag}`} />}
+      </div>
+
       {notes && (
-        <ul className="space-y-2">
+        <ul>
           {Object.values(notes)
             .sort((a, b) => b.created_at - a.created_at)
             .map((note, i) => (
@@ -147,55 +170,36 @@ const MyNotes = () => {
                 <div className="w-8">{i + 1}.</div>
                 <div className="w-full">
                   <Clickable>
-                    <Link to={`/write/${note.id}`}>
-                      {getNoteTitle(note)}
-                    </Link>
+                    <Link to={`/write/${note.id}`}>{getNoteTitle(note)}</Link>
                   </Clickable>
-
-                  <div className="text-sm mb-4">
-                    <span className="opacity-50">
+                  <div>
+                    <span className="opacity-50 text-sm">
                       Created {moment(new Date(note.created_at)).fromNow()}
                     </span>
-                    <Divider />
-                    <span className="opacity-50">
-                      {note.visibility || "private"}
-                    </span>
-                    <Divider />
-                    <Clickable
-                      className="opacity-100"
-                      lite
-                      onClick={() => handleDeleteNote(note.id)}
-                    >
-                      delete
-                    </Clickable>
-                    <Divider />
-                    <Clickable lite onClick={() => handleMore(note.id)}>
-                      {expandedNotes.includes(note.id) ? "less" : "more"}
-                    </Clickable>
                   </div>
 
-                  {expandedNotes.includes(note.id) && (
-                    <div className="flex items-center mb-4">
-                      <div className="mr-2">visibility</div>
-                      <div className="space-x-2">
-                        <Select
-                          className="h-9 px-2 rounded bg-primary-700 bg-opacity-30"
-                          value={note.visibility || "private"}
-                          onChange={(e) =>
-                            handleVisibilityChange(note.id, e.target.value)
-                          }
-                        >
-                          <option value={"private"}>private</option>
-                          <option value={"public"}>public</option>
-                        </Select>
-                        {note.visibility === "public" && (
-                          <Clickable lite onClick={() => handleCopy(note.id)}>
-                            copy link
-                          </Clickable>
-                        )}
-                      </div>
-                    </div>
-                  )}
+                  <div className="text-sm mb-4 flex items-center space-x-1">
+                    <Button
+                      onClick={() =>
+                        handleVisibilityChange(
+                          note.id,
+                          note.visibility === "private" ? "public" : "private"
+                        )
+                      }
+                    >
+                      {note.visibility === "private" ? (
+                        <MdPublic />
+                      ) : (
+                        <MdPublicOff />
+                      )}
+                    </Button>
+                    <Delete onConfirm={() => handleDeleteNote(note.id)} />
+                    {note.visibility === "public" && (
+                      <Button lite onClick={() => handleCopy(note.id)}>
+                        <BiLink />
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </li>
             ))}
