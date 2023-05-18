@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { Paper } from "./comps/Layout";
 import MEditor from "./comps/MEditor";
 import { randomInt } from "./util";
+import Event from "./components/Event";
 
 const SAMPLE_NOTES = [
   `# Kevin the Clumsy Kangaroo: From Trips to Triumphs!
@@ -32,10 +34,13 @@ One sunny afternoon, the village held a grand performance, showcasing Gary's new
 From that day forward, __Gary__ became the beloved entertainment of the village, bringing joy and laughter wherever he went. And as for his eating habits, well, let's just say he developed a newfound appreciation for lettuce and carrots, leaving the clothes and tin cans behind.
 
 #funny_story
-  `
-]
+  `,
+];
 
 const OpenWrite = () => {
+  useEffect(() => {
+    Event.track("open_write");
+  }, []);
   return (
     <div className="min-h-[100vh] bg-base text-primary-700 py-10">
       <Paper>
