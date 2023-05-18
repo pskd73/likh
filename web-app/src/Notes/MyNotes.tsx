@@ -20,6 +20,7 @@ import {
 import { MdPublic, MdPublicOff } from "react-icons/md";
 import Button from "../comps/Button";
 import { Header } from "../comps/Typo";
+import Calendar from "../comps/Calendar";
 
 function copy(text: string) {
   var input = document.createElement("textarea");
@@ -156,6 +157,7 @@ const MyNotes = () => {
       <Helmet>
         <title>My notes - Retro Note</title>
       </Helmet>
+      {notes && <Calendar notes={Object.values(notes)} />}
       <div className="mb-2 flex items-center space-x-2">
         <Header>My notes</Header>
         {hashtag && <Hashtag hashtag={`#${hashtag}`} />}

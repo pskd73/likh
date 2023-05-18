@@ -12,6 +12,7 @@ import { AppContext } from "../components/AppContext";
 import { FullLoader } from "../comps/Loading";
 import { Helmet } from "react-helmet";
 import Hashtags from "./Hashtags";
+import Calendar from "../comps/Calendar";
 
 const pad = (num: number) => {
   return num < 10 ? "0" + num : num;
