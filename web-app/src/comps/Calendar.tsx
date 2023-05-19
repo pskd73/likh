@@ -23,7 +23,7 @@ const Calendar = ({ notes }: { notes: Note[] }) => {
     const today = new Date();
 
     const rows: Array<CalenderDay[]> = [];
-    for (let i in [...Array(5)]) {
+    for (let i in [...Array(6)]) {
       const cells: CalenderDay[] = [];
       for (let j in [...Array(7)]) {
         const date = new Date(year, month, Number(i) * 7 + Number(j) + 1);
