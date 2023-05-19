@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import Prism from "prismjs";
 import "prismjs/components/prism-markdown";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import {
   createEditor,
   BaseEditor,
@@ -11,6 +11,8 @@ import {
   Descendant,
   Node,
   Path,
+  Editor,
+  Transforms,
 } from "slate";
 import { withHistory } from "slate-history";
 import { Slate, Editable, withReact, ReactEditor } from "slate-react";
@@ -181,6 +183,7 @@ const MEditor = ({
   onChange,
   initValue,
   initText,
+  typeWriter,
 }: {
   onChange: (val: {
     value: Descendant[];
@@ -189,6 +192,7 @@ const MEditor = ({
   }) => void;
   initValue?: string;
   initText?: string;
+  typeWriter?: boolean;
 }) => {
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
   const renderLeaf = useCallback((props: any) => <Leaf {...props} />, []);
@@ -236,6 +240,34 @@ const MEditor = ({
     },
     []
   );
+  const height = useMemo(() => window.innerHeight, []);
+
+  useEffect(() => {
+    tryScrollTop(true);
+  }, [editor, typeWriter]);
+
+  const isCursorAtEnd = () => {
+    const { selection } = editor;
+
+    let end = false;
+    if (selection?.anchor) {
+      end = !Editor.after(editor, selection.anchor);
+    }
+    if (selection?.focus) {
+      end = !Editor.after(editor, selection.focus);
+    }
+
+    return end;
+  };
+
+  const tryScrollTop = (initial?: boolean) => {
+    if (typeWriter && (initial || isCursorAtEnd())) {
+      document.body.scrollTo({
+        top: 10000000,
+        behavior: "smooth",
+      });
+    }
+  };
 
   const handleChange = (value: Descendant[]) => {
     onChange({
@@ -243,6 +275,10 @@ const MEditor = ({
       text: serialize(value),
       serialized: JSON.stringify(value),
     });
+  };
+
+  const handleKeyUp = () => {
+    tryScrollTop();
   };
 
   const getInitValue = () => {
@@ -256,7 +292,13 @@ const MEditor = ({
   };
 
   return (
-    <div className="text-[20px] font-CourierPrime leading-8">
+    <div
+      className="text-[20px] font-CourierPrime leading-8"
+      style={{
+        paddingTop: typeWriter ? height / 2 : 0,
+        paddingBottom: typeWriter ? height / 2 : 0,
+      }}
+    >
       <Slate
         editor={editor}
         value={getInitValue() as any}
@@ -266,6 +308,8 @@ const MEditor = ({
           decorate={decorate}
           renderLeaf={renderLeaf}
           renderElement={renderElement}
+          onKeyUp={handleKeyUp}
+          placeholder="Write your mind here ..."
         />
       </Slate>
     </div>
