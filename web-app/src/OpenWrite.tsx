@@ -15,10 +15,7 @@ Weeks passed, and Kevin practiced diligently, determined to become the hopping c
 
 When it was his turn, Kevin took a deep breath and focused. He pushed off the ground with all his might, soaring through the air. The crowd gasped in awe as Kevin gracefully cleared the highest bar, setting a new record.
 
-Everyone cheered for __Kevin__, the once-clumsy _kangaroo_ who had become a hopping superstar. And from that day forward, Kevin's fame spread throughout the kangaroo community, inspiring other clumsy creatures to embrace their imperfections and reach for the stars, or in Kevin's case, the treetops.
-
-#funny_story
-  `,
+Everyone cheered for __Kevin__, the once-clumsy _kangaroo_ who had become a hopping superstar. And from that day forward, Kevin's fame spread throughout the kangaroo community, inspiring other clumsy creatures to embrace their imperfections and reach for the stars, or in Kevin's case, the treetops.`,
   `# The Goat Who Found His Voice... Without Words!
 
 Once upon a time, in a sleepy little village, there was a mischievous goat named Gary. Gary had a peculiar obsession with eating everything in sight, from clothes to tin cans. The villagers were fed up with his antics and decided to hold a town meeting to address the issue.
@@ -31,10 +28,7 @@ Days turned into weeks, and slowly but surely, Gary started mimicking Marcel's m
 
 One sunny afternoon, the village held a grand performance, showcasing Gary's newfound talent. The crowd erupted in laughter as Gary imitated Marcel's classic "trapped in a box" routine flawlessly.
 
-From that day forward, __Gary__ became the beloved entertainment of the village, bringing joy and laughter wherever he went. And as for his eating habits, well, let's just say he developed a newfound appreciation for lettuce and carrots, leaving the clothes and tin cans behind.
-
-#funny_story
-  `,
+From that day forward, __Gary__ became the beloved entertainment of the village, bringing joy and laughter wherever he went. And as for his eating habits, well, let's just say he developed a newfound appreciation for lettuce and carrots, leaving the clothes and tin cans behind.`,
 ];
 
 const OpenWrite = () => {
@@ -44,7 +38,11 @@ const OpenWrite = () => {
   return (
     <div className="min-h-[100vh] bg-base text-primary-700 py-10">
       <Paper>
-        <MEditor onChange={() => {}} initText={SAMPLE_NOTES[randomInt(0, 1)]} />
+        <MEditor
+          onChange={() => {}}
+          initText={SAMPLE_NOTES[randomInt(0, 1)]}
+          typeWriter
+        />
       </Paper>
     </div>
   );

@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import Prism from "prismjs";
 import "prismjs/components/prism-markdown";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   createEditor,
   BaseEditor,
@@ -11,10 +11,12 @@ import {
   Descendant,
   Node,
   Path,
+  Editor,
 } from "slate";
 import { withHistory } from "slate-history";
 import { Slate, Editable, withReact, ReactEditor } from "slate-react";
 import * as grammer from "./grammer";
+import { randomInt } from "../util";
 
 type CustomElement = { type: "paragraph"; children: CustomText[] };
 type CustomText = { text: string };
@@ -43,6 +45,14 @@ const defaultValue = [
     type: "paragraph",
     children: [{ text: "New note" }],
   },
+];
+
+const keySounds = [
+  new Audio("/key_sounds/sound_1.mp3"),
+  new Audio("/key_sounds/sound_2.mp3"),
+  new Audio("/key_sounds/sound_3.mp3"),
+  new Audio("/key_sounds/sound_4.mp3"),
+  new Audio("/key_sounds/sound_5.mp3"),
 ];
 
 const Leaf = ({ attributes, children, leaf }: any) => {
@@ -177,10 +187,16 @@ const getRangesEnd = (ranges: Range[], start: number) => {
   return start;
 };
 
+const playType = () => {
+  const aud = keySounds[randomInt(0, 4)].cloneNode() as HTMLAudioElement;
+  aud.play();
+};
+
 const MEditor = ({
   onChange,
   initValue,
   initText,
+  typeWriter,
 }: {
   onChange: (val: {
     value: Descendant[];
@@ -189,7 +205,9 @@ const MEditor = ({
   }) => void;
   initValue?: string;
   initText?: string;
+  typeWriter?: boolean;
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
   const renderLeaf = useCallback((props: any) => <Leaf {...props} />, []);
   const decorate = useCallback(([node, path]: NodeEntry) => {
@@ -236,6 +254,44 @@ const MEditor = ({
     },
     []
   );
+  const height = useMemo(() => window.innerHeight, []);
+  const [paddingTop, setPaddingTop] = useState(height / 2);
+
+  useEffect(() => {
+    tryScrollTop(true);
+    tryUpdatePaddingTop();
+  }, [editor, typeWriter]);
+
+  const isCursorAtEnd = () => {
+    const { selection } = editor;
+
+    let end = false;
+    if (selection?.anchor) {
+      end = !Editor.after(editor, selection.anchor);
+    }
+    if (selection?.focus) {
+      end = !Editor.after(editor, selection.focus);
+    }
+
+    return end;
+  };
+
+  const tryScrollTop = (initial?: boolean) => {
+    if (typeWriter && (initial || isCursorAtEnd())) {
+      document.body.scrollTo({
+        top: 10000000,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const tryUpdatePaddingTop = () => {
+    if (containerRef.current) {
+      setPaddingTop(
+        Math.max(0, height / 2 - containerRef.current.clientHeight)
+      );
+    }
+  };
 
   const handleChange = (value: Descendant[]) => {
     onChange({
@@ -243,6 +299,14 @@ const MEditor = ({
       text: serialize(value),
       serialized: JSON.stringify(value),
     });
+    if (typeWriter) {
+      playType();
+      tryUpdatePaddingTop();
+    }
+  };
+
+  const handleKeyUp = () => {
+    tryScrollTop();
   };
 
   const getInitValue = () => {
@@ -256,18 +320,28 @@ const MEditor = ({
   };
 
   return (
-    <div className="text-[20px] font-CourierPrime leading-8">
-      <Slate
-        editor={editor}
-        value={getInitValue() as any}
-        onChange={handleChange}
-      >
-        <Editable
-          decorate={decorate}
-          renderLeaf={renderLeaf}
-          renderElement={renderElement}
-        />
-      </Slate>
+    <div
+      className="text-[20px] font-CourierPrime leading-8"
+      style={{
+        paddingTop: typeWriter ? paddingTop : 0,
+        paddingBottom: typeWriter ? height / 2 : 0,
+      }}
+    >
+      <div ref={containerRef}>
+        <Slate
+          editor={editor}
+          value={getInitValue() as any}
+          onChange={handleChange}
+        >
+          <Editable
+            decorate={decorate}
+            renderLeaf={renderLeaf}
+            renderElement={renderElement}
+            onKeyUp={handleKeyUp}
+            placeholder="Write your mind here ..."
+          />
+        </Slate>
+      </div>
     </div>
   );
 };

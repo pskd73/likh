@@ -12,7 +12,13 @@ import MEditor from "../comps/MEditor";
 import { FullLoader } from "../comps/Loading";
 import { Helmet } from "react-helmet";
 import { getNoteTitle } from "../Note";
-import { BiCool, BiCrosshair, BiTimeFive } from "react-icons/bi";
+import {
+  BiCool,
+  BiCrosshair,
+  BiTimeFive,
+  BiVerticalCenter,
+  BiVerticalTop,
+} from "react-icons/bi";
 import { VscWholeWord } from "react-icons/vsc";
 import Button from "../comps/Button";
 import classNames from "classnames";
@@ -63,6 +69,7 @@ const Write = () => {
       );
     }
   });
+  const [typeWriter, setTypeWriter] = useState(true);
 
   useEffect(() => {
     setFocusMode(true);
@@ -87,11 +94,6 @@ const Write = () => {
     }
   }, [noteId, user]);
 
-  const handleNoteChange = (newNote: Note) => {
-    timer.update(newNote);
-    setNote(newNote);
-  };
-
   const handleFocus = () => {
     setFocusMode((f) => !f);
   };
@@ -115,13 +117,20 @@ const Write = () => {
           <Helmet>
             <title>{getNoteTitle(note)} - Retro Note</title>
           </Helmet>
-          {/* <Editor note={note} onChange={handleNoteChange} /> */}
           <MEditor
             onChange={({ serialized, text }) => handleMChange(serialized, text)}
             initValue={note.slate_value}
             initText={note.text}
+            typeWriter={typeWriter}
           />
           <div className="fixed bottom-0 right-0 px-4 py-2 flex space-x-2">
+            <Button
+              onClick={() => setTypeWriter((t) => !t)}
+              className="text-sm"
+              lite
+            >
+              {typeWriter ? <BiVerticalTop /> : <BiVerticalCenter />}
+            </Button>
             <GoalTracker note={note} />
             <Button
               lite
