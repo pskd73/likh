@@ -12,27 +12,33 @@ import classNames from "classnames";
 import { withHistory } from "slate-history";
 import { withReact } from "slate-react";
 import { createEditor } from "slate";
+import { CustomEditor } from "../comps/MEditor";
+
+const getEditor = () => withHistory(withReact(createEditor()));
+
+type NoteState = {
+  note: Note;
+  editor: CustomEditor;
+};
 
 const Roll = () => {
   const { setFocusMode, user } = useContext(AppContext);
   const notesApi = useFetch<Note[]>();
-  const [notes, setNotes] = useState<Note[]>([]);
+  const [noteStates, setNotes] = useState<NoteState[]>([]);
   const [params] = useSearchParams();
   const hashtag = useMemo(() => params.get("hashtag"), [params]);
   const containerRef = useRef<HTMLDivElement>(null);
-  const lastEditor = useMemo(
-    () => withHistory(withReact(createEditor())),
-    [notes]
-  );
   const newApi = useFetch<Note>();
-  const scroll = useMiddle(containerRef, [notes], {
+  const scroll = useMiddle(containerRef, [noteStates], {
     active: true,
-    editor: lastEditor,
+    editor: noteStates.length
+      ? noteStates[noteStates.length - 1].editor
+      : undefined,
   });
 
   useEffect(() => {
     if (newApi.response) {
-      addNotes([newApi.response]);
+      addNotes([{ note: newApi.response, editor: getEditor() }]);
     }
   }, [newApi.response]);
 
@@ -63,7 +69,9 @@ const Roll = () => {
 
   useEffect(() => {
     if (notesApi.response) {
-      addNotes(notesApi.response);
+      addNotes(
+        notesApi.response.map((note) => ({ note, editor: getEditor() }))
+      );
     }
   }, [notesApi.response]);
 
@@ -74,7 +82,7 @@ const Roll = () => {
     }
   };
 
-  const addNotes = (newNotes: Note[]) => {
+  const addNotes = (newNotes: NoteState[]) => {
     if (document.body.scrollTop === 0) {
       document.body.scrollTo({
         top: 1,
@@ -82,7 +90,7 @@ const Roll = () => {
     }
     setNotes((_notes) => {
       const allNotes = [..._notes, ...newNotes];
-      allNotes.sort((a, b) => a.created_at - b.created_at);
+      allNotes.sort((a, b) => a.note.created_at - b.note.created_at);
       return allNotes;
     });
   };
@@ -116,26 +124,26 @@ const Roll = () => {
   return (
     <div style={{ ...scroll.style }}>
       <div ref={containerRef}>
-        {notes.map((note, i) => (
+        {noteStates.map((noteState, i) => (
           <div key={i} className="mb-10 group">
             <div className="flex justify-end text-xs font-CourierPrime italic opacity-50">
-              {moment(new Date(note.created_at)).format("MMM Do YY")}
+              {moment(new Date(noteState.note.created_at)).format("MMM Do YY")}
             </div>
             <NoteWriter
               key={i}
-              note={note}
+              note={noteState.note}
               typeWriter={false}
               onNoteChange={
-                i === notes.length - 1 ? handleLastNoteChange : undefined
+                i === noteStates.length - 1 ? handleLastNoteChange : undefined
               }
-              editor={i === notes.length - 1 ? lastEditor : undefined}
+              editor={noteState.editor}
             />
             {
               <div
                 className={classNames(
                   "opacity-10 invisible group-hover:visible",
                   {
-                    hidden: i === notes.length - 1,
+                    hidden: i === noteStates.length - 1,
                   }
                 )}
               >
