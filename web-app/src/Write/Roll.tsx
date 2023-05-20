@@ -15,6 +15,7 @@ import { createEditor } from "slate";
 import { CustomEditor } from "../comps/MEditor";
 import Button from "../comps/Button";
 import { TbExternalLink } from "react-icons/tb";
+import { BiPlus } from "react-icons/bi";
 
 const getEditor = () => withHistory(withReact(createEditor()));
 
@@ -159,6 +160,11 @@ const Roll = () => {
                 >
                   <TbExternalLink />
                 </Button>
+                {i === noteStates.length - 1 && (
+                  <Button lite onClick={handleNew}>
+                    <BiPlus />
+                  </Button>
+                )}
               </div>
             }
           </div>
