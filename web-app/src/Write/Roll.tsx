@@ -13,6 +13,8 @@ import { withHistory } from "slate-history";
 import { withReact } from "slate-react";
 import { createEditor } from "slate";
 import { CustomEditor } from "../comps/MEditor";
+import Button from "../comps/Button";
+import { TbExternalLink } from "react-icons/tb";
 
 const getEditor = () => withHistory(withReact(createEditor()));
 
@@ -126,7 +128,11 @@ const Roll = () => {
       <div ref={containerRef}>
         {noteStates.map((noteState, i) => (
           <div key={i} className="mb-10 group">
-            <div className="flex justify-end text-xs font-CourierPrime italic opacity-50">
+            <div
+              className={classNames(
+                "flex justify-end text-xs font-CourierPrime italic opacity-20 group-hover:opacity-50"
+              )}
+            >
               {moment(new Date(noteState.note.created_at)).format("MMM Do YY")}
             </div>
             <NoteWriter
@@ -141,13 +147,18 @@ const Roll = () => {
             {
               <div
                 className={classNames(
-                  "opacity-10 invisible group-hover:visible",
-                  {
-                    hidden: i === noteStates.length - 1,
-                  }
+                  "invisible group-hover:visible flex items-center space-x-2"
                 )}
               >
-                •••
+                <span className="opacity-10 ">•••</span>
+                <Button
+                  href={`/write/${noteState.note.id}`}
+                  target="_blank"
+                  lite
+                  link
+                >
+                  <TbExternalLink />
+                </Button>
               </div>
             }
           </div>
