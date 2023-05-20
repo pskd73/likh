@@ -7,7 +7,7 @@ export const Header = ({
   ...restProps
 }: ComponentProps<"h3">) => {
   return (
-    <h3 className={twMerge(className, "text-lg font-bold mb-1")} {...restProps}>
+    <h3 className={twMerge("text-lg font-bold mb-1", className)} {...restProps}>
       {children}
     </h3>
   );
