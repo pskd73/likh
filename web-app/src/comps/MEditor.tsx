@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import Prism from "prismjs";
 import "prismjs/components/prism-markdown";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import {
   createEditor,
   BaseEditor,
@@ -11,13 +11,14 @@ import {
   Descendant,
   Node,
   Path,
-  Editor,
 } from "slate";
-import { withHistory } from "slate-history";
+import { HistoryEditor, withHistory } from "slate-history";
 import { Slate, Editable, withReact, ReactEditor } from "slate-react";
 import * as grammer from "./grammer";
 import { randomInt } from "../util";
+import { useMiddle } from "./useMiddle";
 
+export type CustomEditor = BaseEditor & ReactEditor & HistoryEditor;
 type CustomElement = { type: "paragraph"; children: CustomText[] };
 type CustomText = { text: string };
 declare module "slate" {
@@ -197,6 +198,7 @@ const MEditor = ({
   initValue,
   initText,
   typeWriter,
+  editor: passedEditor,
 }: {
   onChange: (val: {
     value: Descendant[];
@@ -206,9 +208,13 @@ const MEditor = ({
   initValue?: string;
   initText?: string;
   typeWriter?: boolean;
+  editor?: CustomEditor;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+  const editor = useMemo(
+    () => passedEditor || withHistory(withReact(createEditor())),
+    [passedEditor]
+  );
   const renderLeaf = useCallback((props: any) => <Leaf {...props} />, []);
   const decorate = useCallback(([node, path]: NodeEntry) => {
     let ranges: Range[] = [];
@@ -254,44 +260,10 @@ const MEditor = ({
     },
     []
   );
-  const height = useMemo(() => window.innerHeight, []);
-  const [paddingTop, setPaddingTop] = useState(height / 2);
-
-  useEffect(() => {
-    tryScrollTop(true);
-    tryUpdatePaddingTop();
-  }, [editor, typeWriter]);
-
-  const isCursorAtEnd = () => {
-    const { selection } = editor;
-
-    let end = false;
-    if (selection?.anchor) {
-      end = !Editor.after(editor, selection.anchor);
-    }
-    if (selection?.focus) {
-      end = !Editor.after(editor, selection.focus);
-    }
-
-    return end;
-  };
-
-  const tryScrollTop = (initial?: boolean) => {
-    if (typeWriter && (initial || isCursorAtEnd())) {
-      document.body.scrollTo({
-        top: 10000000,
-        behavior: "smooth",
-      });
-    }
-  };
-
-  const tryUpdatePaddingTop = () => {
-    if (containerRef.current) {
-      setPaddingTop(
-        Math.max(0, height / 2 - containerRef.current.clientHeight)
-      );
-    }
-  };
+  const scroll = useMiddle(containerRef, [], {
+    active: typeWriter,
+    editor,
+  });
 
   const handleChange = (value: Descendant[]) => {
     onChange({
@@ -300,13 +272,12 @@ const MEditor = ({
       serialized: JSON.stringify(value),
     });
     if (typeWriter) {
-      // playType();
-      tryUpdatePaddingTop();
+      scroll.update();
     }
   };
 
   const handleKeyUp = () => {
-    tryScrollTop();
+    scroll.scroll();
   };
 
   const getInitValue = () => {
@@ -316,16 +287,13 @@ const MEditor = ({
     if (initText) {
       return deserialize(initText);
     }
-    return JSON.stringify(defaultValue);
+    return defaultValue;
   };
 
   return (
     <div
       className="text-[20px] font-CourierPrime leading-8"
-      style={{
-        paddingTop: typeWriter ? paddingTop : 0,
-        paddingBottom: typeWriter ? height / 2 : 0,
-      }}
+      style={{ ...scroll.style }}
     >
       <div ref={containerRef}>
         <Slate

@@ -13,6 +13,7 @@ import New from "./Write/New";
 import Landing from "./Landing";
 import { NoMobile, Private } from "./comps/Layout";
 import OpenWrite from "./OpenWrite";
+import Roll from "./Write/Roll";
 
 const router = createBrowserRouter([
   {
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
       {
         path: "write/new",
         element: <New />,
+      },
+      {
+        path: "roll",
+        element: <Roll />,
       },
     ],
   },

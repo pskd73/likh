@@ -5,7 +5,7 @@ import Clickable from "../components/Clickable";
 import { Link, To, useLocation, useNavigate } from "react-router-dom";
 import { AppContext } from "../components/AppContext";
 import { supabase } from "../components/supabase";
-import { BiGridAlt, BiPlus } from "react-icons/bi";
+import { BiFilm, BiGridAlt, BiPlus } from "react-icons/bi";
 
 const MenuLink = ({
   children,
@@ -45,6 +45,11 @@ export const Nav = () => {
           </h1>
           <div>
             <ul className="flex space-x-6 text-xl">
+              <li className="flex items-center">
+                <MenuLink to="/roll">
+                  <BiFilm />
+                </MenuLink>
+              </li>
               <li className="flex items-center">
                 <MenuLink to="/write/new">
                   <BiPlus />
