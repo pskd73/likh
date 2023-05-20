@@ -38,11 +38,11 @@ const Roll = () => {
 
   useEffect(() => {
     setFocusMode(true);
-    window.addEventListener("keydown", handleKeyDown)
+    window.addEventListener("keydown", handleKeyDown);
     return () => {
       setFocusMode(false);
-      window.removeEventListener("keydown", handleKeyDown)
-    }
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, [user]);
 
   useEffect(() => {
@@ -72,7 +72,7 @@ const Roll = () => {
       handleNew();
       e.preventDefault();
     }
-  }
+  };
 
   const addNotes = (newNotes: Note[]) => {
     if (document.body.scrollTop === 0) {
@@ -93,6 +93,10 @@ const Roll = () => {
 
   const handleNew = () => {
     if (user) {
+      let text = `My note - ${new Date().toLocaleString()}`;
+      if (hashtag) {
+        text = `#${hashtag}\n\n` + text;
+      }
       newApi.handle(
         fetch(`${API_HOST}/note`, {
           method: "POST",
@@ -102,7 +106,7 @@ const Roll = () => {
           },
           body: JSON.stringify({
             title: "",
-            text: `My note - ${new Date().toLocaleString()}`,
+            text,
           }),
         })
       );
