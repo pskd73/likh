@@ -9,9 +9,11 @@ import { useSearchParams } from "react-router-dom";
 import moment from "moment";
 import { useMiddle } from "../comps/useMiddle";
 import classNames from "classnames";
-import { createEditor } from "slate";
-import { withReact } from "slate-react";
+import Button from "../comps/Button";
+import { BiPlus } from "react-icons/bi";
 import { withHistory } from "slate-history";
+import { withReact } from "slate-react";
+import { createEditor } from "slate";
 
 const Roll = () => {
   const { setFocusMode, user } = useContext(AppContext);
@@ -20,13 +22,26 @@ const Roll = () => {
   const [params] = useSearchParams();
   const hashtag = useMemo(() => params.get("hashtag"), [params]);
   const containerRef = useRef<HTMLDivElement>(null);
-  const lastEditor = useMemo(() => withHistory(withReact(createEditor())), []);
-  const scroll = useMiddle(containerRef, [notes], { active: true, editor: lastEditor });
+  const lastEditor = useMemo(
+    () => withHistory(withReact(createEditor())),
+    [notes]
+  );
+  const newApi = useFetch<Note>();
+  const scroll = useMiddle(containerRef, [notes], {
+    active: true,
+    editor: lastEditor,
+  });
+
+  useEffect(() => {
+    if (newApi.response) {
+      addNotes([newApi.response]);
+    }
+  }, [newApi.response]);
 
   useEffect(() => {
     setFocusMode(true);
     return () => setFocusMode(false);
-  });
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -47,32 +62,8 @@ const Roll = () => {
   useEffect(() => {
     if (notesApi.response) {
       addNotes(notesApi.response);
-      setTimeout(() => {
-        document.body.scrollTo({
-          top: 10000000,
-        });
-      }, 10);
     }
-
-    document.body.addEventListener("scroll", handleScroll);
-    return () => {
-      document.removeEventListener("scroll", handleScroll);
-    };
   }, [notesApi.response]);
-
-  const handleScroll = () => {
-    if (document.body.scrollTop < 500) {
-      // const newEditors = [];
-      // for (let i = 0; i < 100; i++) {
-      //   newEditors.push({
-      //     noteId: editors.length + i,
-      //     editor: withHistory(withReact(createEditor())),
-      //   });
-      // }
-      // handleAdd(newEditors);
-      // fetch more here
-    }
-  };
 
   const addNotes = (newNotes: Note[]) => {
     if (document.body.scrollTop === 0) {
@@ -82,7 +73,7 @@ const Roll = () => {
     }
     setNotes((_notes) => {
       const allNotes = [..._notes, ...newNotes];
-      allNotes.sort((a, b) => b.created_at - a.created_at);
+      allNotes.sort((a, b) => a.created_at - b.created_at);
       return allNotes;
     });
   };
@@ -91,9 +82,27 @@ const Roll = () => {
     scroll.scroll();
   };
 
+  const handleNew = () => {
+    if (user) {
+      newApi.handle(
+        fetch(`${API_HOST}/note`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+          body: JSON.stringify({
+            title: "",
+            text: `My note - ${new Date().toLocaleString()}`,
+          }),
+        })
+      );
+    }
+  };
+
   return (
     <div style={{ ...scroll.style }}>
-      <div ref={containerRef} className="flex flex-col-reverse">
+      <div ref={containerRef}>
         {notes.map((note, i) => (
           <div key={i} className="mb-10 group">
             <div className="flex justify-end text-xs font-CourierPrime italic opacity-50">
@@ -103,16 +112,25 @@ const Roll = () => {
               key={i}
               note={note}
               typeWriter={false}
-              onNoteChange={i === 0 ? handleLastNoteChange : undefined}
-              editor={i === 0 ? lastEditor : undefined}
+              onNoteChange={
+                i === notes.length - 1 ? handleLastNoteChange : undefined
+              }
+              editor={i === notes.length - 1 ? lastEditor : undefined}
             />
             <div
               className={classNames("opacity-10 invisible", {
-                "group-hover:visible": i !== 0,
+                "group-hover:visible": i !== notes.length - 1,
               })}
             >
               •••
             </div>
+            {i === notes.length - 1 && (
+              <div className="flex justify-end">
+                <Button lite onClick={handleNew}>
+                  <BiPlus />
+                </Button>
+              </div>
+            )}
           </div>
         ))}
       </div>
