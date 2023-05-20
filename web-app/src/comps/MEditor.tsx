@@ -11,7 +11,6 @@ import {
   Descendant,
   Node,
   Path,
-  Editor,
 } from "slate";
 import { HistoryEditor, withHistory } from "slate-history";
 import { Slate, Editable, withReact, ReactEditor } from "slate-react";
@@ -261,21 +260,10 @@ const MEditor = ({
     },
     []
   );
-  const scroll = useMiddle(containerRef, [editor, typeWriter]);
-
-  const isCursorAtEnd = () => {
-    const { selection } = editor;
-
-    let end = false;
-    if (selection?.anchor) {
-      end = !Editor.after(editor, selection.anchor);
-    }
-    if (selection?.focus) {
-      end = !Editor.after(editor, selection.focus);
-    }
-
-    return end;
-  };
+  const scroll = useMiddle(containerRef, [], {
+    active: typeWriter,
+    editor,
+  });
 
   const handleChange = (value: Descendant[]) => {
     onChange({
@@ -289,9 +277,7 @@ const MEditor = ({
   };
 
   const handleKeyUp = () => {
-    if (typeWriter && isCursorAtEnd()) {
-      scroll.scroll();
-    }
+    scroll.scroll();
   };
 
   const getInitValue = () => {

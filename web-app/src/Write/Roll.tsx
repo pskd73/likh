@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo } from "react";
+import { useContext, useEffect, useMemo, useRef } from "react";
 import { AppContext } from "../components/AppContext";
 import { useState } from "react";
 import { API_HOST } from "../config";
@@ -7,6 +7,7 @@ import useFetch from "../useFetch";
 import NoteWriter from "./NoteWriter";
 import { useSearchParams } from "react-router-dom";
 import moment from "moment";
+import { useMiddle } from "../comps/useMiddle";
 
 const Roll = () => {
   const { setFocusMode, user } = useContext(AppContext);
@@ -14,6 +15,8 @@ const Roll = () => {
   const [notes, setNotes] = useState<Note[]>([]);
   const [params] = useSearchParams();
   const hashtag = useMemo(() => params.get("hashtag"), [params]);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const scroll = useMiddle(containerRef, []);
 
   useEffect(() => {
     setFocusMode(true);
@@ -80,16 +83,18 @@ const Roll = () => {
   };
 
   return (
-    <div className="flex flex-col-reverse">
-      {notes.map((note, i) => (
-        <div key={i} className="mb-10 group">
-          <div className="flex justify-end text-xs font-CourierPrime italic opacity-50">
-            {moment(new Date(note.created_at)).format("MMM Do YY")}
+    <div style={{ ...scroll.style }}>
+      <div ref={containerRef} className="flex flex-col-reverse">
+        {notes.map((note, i) => (
+          <div key={i} className="mb-10 group">
+            <div className="flex justify-end text-xs font-CourierPrime italic opacity-50">
+              {moment(new Date(note.created_at)).format("MMM Do YY")}
+            </div>
+            <NoteWriter key={i} note={note} typeWriter={false} />
+            <div className="opacity-10 invisible group-hover:visible">•••</div>
           </div>
-          <NoteWriter key={i} note={note} typeWriter={false} />
-          <div className="opacity-10 invisible group-hover:visible">•••</div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };
