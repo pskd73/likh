@@ -300,7 +300,7 @@ const MEditor = ({
       serialized: JSON.stringify(value),
     });
     if (typeWriter) {
-      playType();
+      // playType();
       tryUpdatePaddingTop();
     }
   };
