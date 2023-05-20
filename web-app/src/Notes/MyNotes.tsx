@@ -5,18 +5,12 @@ import useFetch from "../useFetch";
 import { API_HOST, PUBLIC_HOST } from "../config";
 import { Note } from "../type";
 import moment from "moment";
-import { Select } from "../comps/Form";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { FullLoader } from "../comps/Loading";
 import { Helmet } from "react-helmet";
 import { getNoteTitle } from "../Note";
 import { Hashtag } from "../Home/Hashtags";
-import {
-  BiCaretDownCircle,
-  BiCaretUpCircle,
-  BiLink,
-  BiTrash,
-} from "react-icons/bi";
+import { BiLink, BiTrash } from "react-icons/bi";
 import { MdPublic, MdPublicOff } from "react-icons/md";
 import Button from "../comps/Button";
 import { Header } from "../comps/Typo";
@@ -31,8 +25,6 @@ function copy(text: string) {
   document.body.removeChild(input);
   return result;
 }
-
-const Divider = () => <span className="opacity-50">&nbsp;•&nbsp;</span>;
 
 const Delete = ({ onConfirm }: { onConfirm: () => void }) => {
   const [confirm, setConfirm] = useState(false);
@@ -63,22 +55,25 @@ const Delete = ({ onConfirm }: { onConfirm: () => void }) => {
 
 const MyNotes = () => {
   const { user } = useContext(AppContext);
-  const [notes, setNotes] = useState<Record<string, Note>>({});
+  const [notes, setNotes] = useState<Note[]>([]);
   const deleteFetch = useFetch<Note>();
   const notesApi = useFetch<Note[]>();
   const visibilityApi = useFetch<Note>();
   const [params] = useSearchParams();
   const hashtag = useMemo(() => params.get("hashtag"), [params]);
+  const [date, setDate] = useState<Date>();
 
   useEffect(() => {
     if (notesApi.response) {
-      const coll: Record<string, Note> = {};
-      for (const note of notesApi.response) {
-        coll[note.id] = note;
+      let _notes = notesApi.response;
+      if (date) {
+        _notes = _notes.filter((note) =>
+          moment(new Date(note.created_at)).isSame(date, "day")
+        );
       }
-      setNotes(coll);
+      setNotes(_notes);
     }
-  }, [notesApi.response]);
+  }, [notesApi.response, date]);
 
   useEffect(() => {
     if (user) {
@@ -98,8 +93,9 @@ const MyNotes = () => {
 
   useEffect(() => {
     if (deleteFetch.response) {
-      const newNotes = { ...notes };
-      delete newNotes[deleteFetch.response.id];
+      const newNotes = [...notes];
+      const idx = newNotes.findIndex((n) => n.id === deleteFetch.response!.id);
+      newNotes.splice(idx, 1);
       setNotes(newNotes);
     }
   }, [deleteFetch.response]);
@@ -157,15 +153,28 @@ const MyNotes = () => {
       <Helmet>
         <title>My notes - Retro Note</title>
       </Helmet>
-      {notes && <Calendar notes={Object.values(notes)} />}
+      {notesApi.response && (
+        <Calendar
+          notes={notesApi.response}
+          onCellClick={(day) =>
+            setDate((_dt) => (_dt === day.dt ? undefined : day.dt))
+          }
+          active={date}
+        />
+      )}
       <div className="mb-2 flex items-center space-x-2">
-        <Header>My notes</Header>
+        <Header className="">My notes</Header>
         {hashtag && <Hashtag hashtag={`#${hashtag}`} />}
+        {date && <Header> - {moment(date).format("MMM Do YY")}</Header>}
       </div>
+
+      {notes.length === 0 && (
+        <div className="text-sm opacity-50">You have not written anything!</div>
+      )}
 
       {notes && (
         <ul>
-          {Object.values(notes)
+          {notes
             .sort((a, b) => b.created_at - a.created_at)
             .map((note, i) => (
               <li key={i} className="flex">

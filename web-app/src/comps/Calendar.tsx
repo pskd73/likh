@@ -14,7 +14,15 @@ type CalenderDay = {
 
 const now = new Date();
 
-const Calendar = ({ notes }: { notes: Note[] }) => {
+const Calendar = ({
+  notes,
+  onCellClick,
+  active,
+}: {
+  notes: Note[];
+  onCellClick: (day: CalenderDay) => void;
+  active?: Date;
+}) => {
   const [year, setYear] = useState(now.getFullYear());
   const [month, setMonth] = useState(now.getMonth());
   const days = useMemo<Array<CalenderDay[]>>(() => {
@@ -84,12 +92,15 @@ const Calendar = ({ notes }: { notes: Note[] }) => {
                 key={j}
                 style={{ width: `${100 / 7}%` }}
                 className={classNames(
-                  "bg-primary-700 bg-opacity-10 rounded-md p-2 hover:shadow-md cursor-pointer",
+                  "bg-primary-700 bg-opacity-10 rounded-md p-2 hover:shadow-md cursor-pointer border-2 border-primary-700",
                   {
                     "opacity-40": cell.otherMonth,
-                    "border-2 border-opacity-30 border-primary-700": cell.today,
+                    "border-opacity-0": !cell.today && active !== cell.dt,
+                    "border-opacity-30": cell.today,
+                    "border-opacity-80": active === cell.dt,
                   }
                 )}
+                onClick={() => onCellClick(cell)}
               >
                 <div className="flex justify-end font-CourierPrime text-lg italic">
                   <span
