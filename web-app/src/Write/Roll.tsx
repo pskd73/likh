@@ -8,6 +8,10 @@ import NoteWriter from "./NoteWriter";
 import { useSearchParams } from "react-router-dom";
 import moment from "moment";
 import { useMiddle } from "../comps/useMiddle";
+import classNames from "classnames";
+import { createEditor } from "slate";
+import { withReact } from "slate-react";
+import { withHistory } from "slate-history";
 
 const Roll = () => {
   const { setFocusMode, user } = useContext(AppContext);
@@ -16,7 +20,8 @@ const Roll = () => {
   const [params] = useSearchParams();
   const hashtag = useMemo(() => params.get("hashtag"), [params]);
   const containerRef = useRef<HTMLDivElement>(null);
-  const scroll = useMiddle(containerRef, []);
+  const lastEditor = useMemo(() => withHistory(withReact(createEditor())), []);
+  const scroll = useMiddle(containerRef, [notes], { active: true, editor: lastEditor });
 
   useEffect(() => {
     setFocusMode(true);
@@ -82,6 +87,10 @@ const Roll = () => {
     });
   };
 
+  const handleLastNoteChange = () => {
+    scroll.scroll();
+  };
+
   return (
     <div style={{ ...scroll.style }}>
       <div ref={containerRef} className="flex flex-col-reverse">
@@ -90,8 +99,20 @@ const Roll = () => {
             <div className="flex justify-end text-xs font-CourierPrime italic opacity-50">
               {moment(new Date(note.created_at)).format("MMM Do YY")}
             </div>
-            <NoteWriter key={i} note={note} typeWriter={false} />
-            <div className="opacity-10 invisible group-hover:visible">•••</div>
+            <NoteWriter
+              key={i}
+              note={note}
+              typeWriter={false}
+              onNoteChange={i === 0 ? handleLastNoteChange : undefined}
+              editor={i === 0 ? lastEditor : undefined}
+            />
+            <div
+              className={classNames("opacity-10 invisible", {
+                "group-hover:visible": i !== 0,
+              })}
+            >
+              •••
+            </div>
           </div>
         ))}
       </div>

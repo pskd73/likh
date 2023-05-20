@@ -42,6 +42,9 @@ export const useMiddle = (
   };
 
   const scroll = (force?: boolean) => {
+    if (!options?.active) {
+      return
+    }
     if (
       force ||
       !options?.editor ||

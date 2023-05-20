@@ -69,7 +69,7 @@ const Write = () => {
           </Helmet>
           <NoteWriter
             note={note}
-            handleNoteChange={(note) => setNote(note)}
+            onNoteChange={(note) => setNote(note)}
             typeWriter={typeWriter}
           />
           <div className="fixed bottom-0 right-0 px-4 py-2 flex space-x-2">

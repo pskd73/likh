@@ -3,7 +3,7 @@ import { Note } from "../type";
 import { AppContext } from "../components/AppContext";
 import { API_HOST } from "../config";
 import useFetch from "../useFetch";
-import MEditor from "../comps/MEditor";
+import MEditor, { CustomEditor } from "../comps/MEditor";
 
 const useTimer = <T extends unknown>(callback: (state: T | null) => void) => {
   const ref = useRef<NodeJS.Timeout | null>(null);
@@ -26,12 +26,14 @@ const useTimer = <T extends unknown>(callback: (state: T | null) => void) => {
 
 const NoteWriter = ({
   note,
-  handleNoteChange,
+  onNoteChange,
   typeWriter,
+  editor
 }: {
   note: Note;
   typeWriter: boolean;
-  handleNoteChange?: (note: Note) => void;
+  onNoteChange?: (note: Note) => void;
+  editor?: CustomEditor;
 }) => {
   const saveFetch = useFetch();
   const { user } = useContext(AppContext);
@@ -60,8 +62,8 @@ const NoteWriter = ({
     if (note) {
       const newNote = { ...note, text, slate_value: serialized };
       timer.update(newNote);
-      if (handleNoteChange) {
-        handleNoteChange(newNote);
+      if (onNoteChange) {
+        onNoteChange(newNote);
       }
     }
   };
@@ -72,6 +74,7 @@ const NoteWriter = ({
       initValue={note.slate_value}
       initText={note.text}
       typeWriter={typeWriter}
+      editor={editor}
     />
   );
 };
