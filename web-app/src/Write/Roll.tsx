@@ -9,8 +9,6 @@ import { useSearchParams } from "react-router-dom";
 import moment from "moment";
 import { useMiddle } from "../comps/useMiddle";
 import classNames from "classnames";
-import Button from "../comps/Button";
-import { BiPlus } from "react-icons/bi";
 import { withHistory } from "slate-history";
 import { withReact } from "slate-react";
 import { createEditor } from "slate";
@@ -40,8 +38,12 @@ const Roll = () => {
 
   useEffect(() => {
     setFocusMode(true);
-    return () => setFocusMode(false);
-  }, []);
+    window.addEventListener("keydown", handleKeyDown)
+    return () => {
+      setFocusMode(false);
+      window.removeEventListener("keydown", handleKeyDown)
+    }
+  }, [user]);
 
   useEffect(() => {
     if (user) {
@@ -64,6 +66,13 @@ const Roll = () => {
       addNotes(notesApi.response);
     }
   }, [notesApi.response]);
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.metaKey && e.shiftKey && e.key === "n") {
+      handleNew();
+      e.preventDefault();
+    }
+  }
 
   const addNotes = (newNotes: Note[]) => {
     if (document.body.scrollTop === 0) {
@@ -117,20 +126,18 @@ const Roll = () => {
               }
               editor={i === notes.length - 1 ? lastEditor : undefined}
             />
-            <div
-              className={classNames("opacity-10 invisible", {
-                "group-hover:visible": i !== notes.length - 1,
-              })}
-            >
-              •••
-            </div>
-            {i === notes.length - 1 && (
-              <div className="flex justify-end">
-                <Button lite onClick={handleNew}>
-                  <BiPlus />
-                </Button>
+            {
+              <div
+                className={classNames(
+                  "opacity-10 invisible group-hover:visible",
+                  {
+                    hidden: i === notes.length - 1,
+                  }
+                )}
+              >
+                •••
               </div>
-            )}
+            }
           </div>
         ))}
       </div>
