@@ -28,11 +28,9 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <NoMobile>
-        <Private>
-          <App />
-        </Private>
-      </NoMobile>
+      <Private>
+        <App />
+      </Private>
     ),
     children: [
       {

@@ -153,15 +153,17 @@ const MyNotes = () => {
       <Helmet>
         <title>My notes - Retro Note</title>
       </Helmet>
-      {notesApi.response && (
-        <Calendar
-          notes={notesApi.response}
-          onCellClick={(day) =>
-            setDate((_dt) => (_dt === day.dt ? undefined : day.dt))
-          }
-          active={date}
-        />
-      )}
+      <div className="hidden md:block">
+        {notesApi.response && (
+          <Calendar
+            notes={notesApi.response}
+            onCellClick={(day) =>
+              setDate((_dt) => (_dt === day.dt ? undefined : day.dt))
+            }
+            active={date}
+          />
+        )}
+      </div>
       <div className="mb-2 flex items-center space-x-2">
         <Header className="">My notes</Header>
         {hashtag && <Hashtag hashtag={`#${hashtag}`} />}

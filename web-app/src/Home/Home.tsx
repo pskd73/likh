@@ -81,17 +81,17 @@ const Home = () => {
   }
 
   return (
-    <div className="flex space-x-6">
+    <div className="flex flex-col-reverse lg:flex-row lg:space-x-6">
       <Helmet>
         <title>Home - Retro Note</title>
       </Helmet>
-      <div className="w-9/12 space-y-6">
+      <div className="lg:w-9/12 space-y-6">
         {homeApi.response?.hashtags && homeApi.response.hashtags.length > 0 && (
           <Hashtags hashtags={homeApi.response.hashtags} />
         )}
         <Suggestions />
       </div>
-      <div className="w-3/12 space-y-6">
+      <div className="lg:w-3/12 space-y-6 mb-6">
         <div>
           <Clickable
             className="text-lg"
