@@ -62,7 +62,7 @@ export default function SginIn() {
           "italic md:text-xl opacity-50 underline"
         )}
       >
-        try writing
+        write without login
       </a>
     </div>
   );
