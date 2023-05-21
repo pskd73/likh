@@ -40,19 +40,19 @@ export const Nav = () => {
     <div className="bg-primary-400 border-b-4 border-primary-500 sticky top-0 z-10">
       <Paper>
         <div className="h-[46px] flex justify-between items-center">
-          <h1 className="text-lg font-extrabold">
+          <h1 className="text-2xl font-CourierPrime italic">
             <Link to="/">Retro Note</Link>
           </h1>
           <div>
             <ul className="flex space-x-6 text-xl">
               <li className="flex items-center">
-                <MenuLink to="/roll">
-                  <BiFilm />
+                <MenuLink to="/write/new">
+                  <BiPlus />
                 </MenuLink>
               </li>
               <li className="flex items-center">
-                <MenuLink to="/write/new">
-                  <BiPlus />
+                <MenuLink to="/roll">
+                  <BiFilm />
                 </MenuLink>
               </li>
               <li>
