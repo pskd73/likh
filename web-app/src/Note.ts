@@ -12,6 +12,7 @@ export const getNoteTitle = (note: Note) => {
     if (titleMatch) {
       cleaned = titleMatch[1];
     }
+    cleaned = cleaned.replaceAll(/\B(#[a-zA-Z_]+\b)(?!;)/g, "");
     return (
       cleaned.replaceAll("\n", " ").substring(0, MAX_LENGTH) +
       (cleaned.length > MAX_LENGTH ? "..." : "")

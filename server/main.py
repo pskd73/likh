@@ -10,7 +10,7 @@ import jwt
 from flask import Flask, request, make_response
 from flask_cors import CORS
 from jwt import DecodeError
-from mongoengine import connect, Document
+from mongoengine import connect
 
 from cal import get_event
 from chatgpt import get_suggestions
@@ -23,13 +23,6 @@ from user import get_user_by_email, User, get_user_by_id
 connect(host=os.environ['MONGO_CONN_STR'])
 app = Flask(__name__)
 CORS(app)
-
-
-def m_to_d(obj: Document):
-    d = obj.to_mongo().to_dict()
-    d['_id'] = str(obj.id)
-    d['id'] = str(obj.id)
-    return d
 
 
 def get_hashtags(notes: List[Note]):
@@ -113,7 +106,7 @@ def handle_new_note(user: User):
         if request.json.get('slate_value'):
             note.slate_value = request.json['slate_value']
     note.save()
-    return m_to_d(note), 200
+    return note.to_dict(), 200
 
 
 @app.route('/note')
@@ -122,7 +115,7 @@ def handle_get_note(user: User):
     note = get_note_by_id(request.args['note_id'])
     if note.user_id != str(user.id):
         return '', 401
-    return m_to_d(note)
+    return note.to_dict()
 
 
 @app.route('/notes')
@@ -131,7 +124,7 @@ def handle_get_notes(user: User):
     notes = get_user_notes(str(user.id))
     if request.args.get('hashtag'):
         notes = [n for n in notes if hashtag_in_note(n, '#'+request.args['hashtag'])]
-    return [m_to_d(n) for n in notes]
+    return [n.to_dict() for n in notes]
 
 
 @app.route('/delete-note', methods=['DELETE'])
@@ -141,7 +134,7 @@ def handle_delete_note(user: User):
     if note.user_id != str(user.id):
         return '', 401
     delete_note(str(note.id))
-    return m_to_d(note)
+    return note.to_dict()
 
 
 @app.route('/note/visibility', methods=['POST'])
@@ -154,7 +147,7 @@ def handle_update_note_visibility(user: User):
     assert visibility in ['public', 'private']
     note.visibility = visibility
     note.save()
-    return m_to_d(note)
+    return note.to_dict()
 
 
 @app.route('/public/note')
@@ -164,7 +157,7 @@ def handle_get_public_note():
         return '', 401
     user = get_user_by_id(note.user_id)
     return {
-        'note': m_to_d(note),
+        'note': note.to_dict(),
         'user': {
             'email': user.email
         }
@@ -173,9 +166,9 @@ def handle_get_public_note():
 
 @app.route('/public/notes')
 def handle_get_public_notes():
-    notes = [m_to_d(n) for n in get_all_public_notes()]
+    notes = [n.to_dict() for n in get_all_public_notes()]
     return {
-        'notes': [m_to_d(n) for n in get_all_public_notes()]
+        'notes': notes
     }
 
 
@@ -184,6 +177,6 @@ def handle_get_public_notes():
 def handle_get_user_home(user: User):
     notes = get_user_notes(str(user.id))
     return {
-        'notes': [m_to_d(n) for n in notes],
+        'notes': [n.to_dict() for n in notes],
         'hashtags': get_hashtags(notes)
     }

@@ -1,6 +1,8 @@
 from typing import List
-
 from mongoengine import Document, StringField, IntField
+
+from md import unmark
+from mongo import m_to_d
 
 
 class Note(Document):
@@ -10,6 +12,11 @@ class Note(Document):
     text = StringField()
     slate_value = StringField()
     visibility = StringField(default='private')
+
+    def to_dict(self):
+        result = m_to_d(self)
+        result['plain_text'] = unmark(self.text)
+        return result
 
 
 def get_note_by_id(note_id: str) -> Note:
