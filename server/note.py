@@ -70,7 +70,7 @@ def assign_slug(note: Note):
                 slug += f'-{i}'
             note.slug = slug
             note.save()
-            break
+            return
         except NotUniqueError:
             i += 1
     raise ValueError(f'Unable to assign slug for note id {str(note.id)}')
