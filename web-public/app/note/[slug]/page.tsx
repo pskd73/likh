@@ -5,6 +5,7 @@ import classNames from "classnames";
 import { Metadata } from "next";
 import { Courier } from "@/components/font";
 import { Note } from "@/components/Note";
+import { BasePage, Footer, Paper } from "@/components/Layout";
 
 type PublicNote = { note: Note; user: { email: string } };
 
@@ -70,63 +71,40 @@ export default async function Note({ params }: { params: { slug: string } }) {
   } catch {}
 
   return (
-    <main className="bg-base text-primary-700">
+    <BasePage>
       <Event name="public_note" props={{ note_id: params.slug }} />
-      <div className="flex justify-center">
-        <div className="w-full max-w-[860px] py-10 px-6 md:px-0">
-          <div className={classNames(Courier.className, "space-y-10")}>
-            <article className="prose max-w-none lg:prose-xl prose-headings:mb-0 prose-li:my-0 prose-ol:my-6 min-h-[60vh]">
-              {publicNote && (
-                <>
-                  <div className="mb-4">
-                    {!publicNote.note.slate_value && (
-                      <h1 className="text-4xl">{publicNote.note.title}</h1>
-                    )}
-                    <span className="opacity-50">
-                      By {publicNote.user.email} @{" "}
-                      {new Date(publicNote.note.created_at).toDateString()}
-                    </span>
-                  </div>
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                    {publicNote.note.text}
-                  </ReactMarkdown>
-                </>
-              )}
-              {!publicNote && (
-                <div>
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                    {
-                      "### Note does not exist!\n [Start writing here &rarr;](https://retronote.app)"
-                    }
-                  </ReactMarkdown>
+      <Paper>
+        <div className={classNames(Courier.className, "space-y-10")}>
+          <article className="prose max-w-none lg:prose-xl prose-headings:mb-0 prose-li:my-0 prose-ol:my-6 min-h-[60vh]">
+            {publicNote && (
+              <>
+                <div className="mb-4">
+                  {!publicNote.note.slate_value && (
+                    <h1 className="text-4xl">{publicNote.note.title}</h1>
+                  )}
+                  <span className="opacity-50">
+                    By {publicNote.user.email} @{" "}
+                    {new Date(publicNote.note.created_at).toDateString()}
+                  </span>
                 </div>
-              )}
-            </article>
-            <footer>
-              <div className="text-center opacity-50">•••</div>
-              <div className="text-center">
-                <a
-                  href="https://retronote.app"
-                  className="opacity-50 hover:opacity-100 hover:underline"
-                >
-                  Retro Note
-                </a>
-                <span className="opacity-50">
-                  &nbsp;•&nbsp;Built with &lt;3 by&nbsp;
-                </span>
-                <a
-                  className="opacity-50 hover:opacity-100 hover:underline"
-                  href="https://twitter.com/@pramodk73"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  @pramodk73
-                </a>
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {publicNote.note.text}
+                </ReactMarkdown>
+              </>
+            )}
+            {!publicNote && (
+              <div>
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {
+                    "### Note does not exist!\n [Start writing here &rarr;](https://retronote.app)"
+                  }
+                </ReactMarkdown>
               </div>
-            </footer>
-          </div>
+            )}
+          </article>
+          <Footer />
         </div>
-      </div>
-    </main>
+      </Paper>
+    </BasePage>
   );
 }
