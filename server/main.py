@@ -178,6 +178,7 @@ def handle_get_public_user():
     if user is None:
         return '', 400
     notes = get_user_public_notes(str(user.id))
+    notes = sorted(notes, key=lambda note: note.created_at, reverse=True)
     return {
         'user': {
             'email': user.email

@@ -3,19 +3,40 @@ import { Note } from "@/components/Note";
 import { Courier } from "@/components/font";
 import classNames from "classnames";
 import moment from "moment";
+import { Metadata } from "next";
 
 type PublicUser = { user: { email: string }; notes: Note[] };
 
 async function fetchPulicUser(username: string): Promise<PublicUser> {
   const res = await fetch(
     `${process.env.API_HOST}/public/user?username=${username}`,
-    { next: { revalidate: 0 } }
+    { next: { revalidate: 10 } }
   );
   return await res.json();
 }
 
-function clip(text: string, size: number = 100) {
-  return text.substring(0, size) + (text.length > size ? "..." : "");
+export async function generateMetadata({
+  params,
+}: {
+  params: { username: string };
+}): Promise<Metadata> {
+  try {
+    const title = `@${params.username}'s notes - Retro Note`;
+    return {
+      title,
+      openGraph: {
+        title,
+        type: "article",
+      },
+      twitter: {
+        title,
+        card: "summary_large_image",
+      },
+    };
+  } catch {}
+  return {
+    title: "Retro Note",
+  };
 }
 
 export default async function UserPage({
