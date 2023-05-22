@@ -116,3 +116,16 @@ export const hashtag = {
   pattern: /\B(#[a-zA-Z_]+\b)(?!;)/m,
   greedy: true,
 };
+
+export const imageRegex = /^\!\[.+\]\(.+ ".+"\)$/m;
+export const image = {
+  pattern: imageRegex,
+  greedy: true,
+  inside: {
+    link,
+    alt: {
+      pattern: /^\[.*\]/m,
+      greedy: true,
+    },
+  },
+};

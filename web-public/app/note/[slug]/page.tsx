@@ -87,7 +87,21 @@ export default async function Note({ params }: { params: { slug: string } }) {
                     {new Date(publicNote.note.created_at).toDateString()}
                   </span>
                 </div>
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    img({ node, className, children, ...props }) {
+                      return (
+                        <span className="flex justify-center">
+                          <img
+                            {...props}
+                            className={className + " text-center"}
+                          />
+                        </span>
+                      );
+                    },
+                  }}
+                >
                   {publicNote.note.text}
                 </ReactMarkdown>
               </>

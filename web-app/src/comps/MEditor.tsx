@@ -234,6 +234,7 @@ const MEditor = ({
       link: grammer.link,
       quote: grammer.quote,
       hashtag: grammer.hashtag,
+      image: grammer.image,
     });
 
     return getTokensRanges(path, tokens, 0, []);
@@ -245,6 +246,10 @@ const MEditor = ({
       for (const child of element.children) {
         text += child.text;
       }
+      const imgMatch = text.match(grammer.imageRegex)
+        ? text.match(grammer.link.pattern)
+        : null;
+      const imgUrl = imgMatch ? imgMatch[0] : null;
       return (
         <p
           {...attributes}
@@ -252,9 +257,17 @@ const MEditor = ({
             "pl-[48px]": text.match(grammer.listRegex),
             "p-[24px] py bg-primary-700 bg-opacity-10 italic rounded my-6":
               text.match(grammer.quoteRegex),
+            "flex flex-col items-center": imgUrl,
           })}
         >
-          {children}
+          {imgUrl && <img src={imgUrl} />}
+          <span
+            className={classNames({
+              "py-2 text-center text-sm block opacity-50": imgUrl,
+            })}
+          >
+            {children}
+          </span>
         </p>
       );
     },
