@@ -6,15 +6,14 @@ const HOST = "https://retronote.app";
 function generateSiteMap(notes: Note[]) {
   return `<?xml version="1.0" encoding="UTF-8"?>
    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-     <!--We manually set the two URLs we know already-->
      <url>
        <loc>https://retronote.app</loc>
      </url>
      ${notes
-       .map(({ id }) => {
+       .map(({ id, slug }) => {
          return `
        <url>
-           <loc>${`${HOST}/note/${id}`}</loc>
+           <loc>${`${HOST}/note/${slug || id}`}</loc>
        </url>
      `;
        })
@@ -28,7 +27,7 @@ function SiteMap() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  const request = await fetch(`${process.env.API_HOST}/public/notes`);
+  const request = await fetch(`${process.env.API_HOST}/public/notes`, {next: {revalidate: 5}});
   const json = await request.json();
   const sitemap = generateSiteMap(json.notes);
 

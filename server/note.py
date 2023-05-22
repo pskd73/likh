@@ -40,7 +40,7 @@ def delete_note(note_id: str):
 
 
 def get_all_public_notes():
-    return Note.objects(visibility='public').only('id', 'user_id', 'created_at', 'title', 'text')
+    return Note.objects(visibility='public')
 
 
 def get_user_public_notes(user_id: str):
