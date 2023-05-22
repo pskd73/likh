@@ -17,8 +17,8 @@ from chatgpt import get_suggestions
 from constant import SAMPLE_TEXT
 from date import to_millis
 from mail import send_welcome_mail
-from note import Note, get_note_by_id, get_user_notes, delete_note, get_all_public_notes
-from user import get_user_by_email, User, get_user_by_id
+from note import Note, get_note_by_id, get_user_notes, delete_note, get_all_public_notes, get_user_public_notes
+from user import get_user_by_email, User, get_user_by_id, get_user_by_username
 
 connect(host=os.environ['MONGO_CONN_STR'])
 app = Flask(__name__)
@@ -169,6 +169,20 @@ def handle_get_public_notes():
     notes = [n.to_dict() for n in get_all_public_notes()]
     return {
         'notes': notes
+    }
+
+
+@app.route('/public/user')
+def handle_get_public_user():
+    user = get_user_by_username(request.args['username'])
+    if user is None:
+        return '', 400
+    notes = get_user_public_notes(str(user.id))
+    return {
+        'user': {
+            'email': user.email
+        },
+        'notes': [n.to_dict() for n in notes]
     }
 
 

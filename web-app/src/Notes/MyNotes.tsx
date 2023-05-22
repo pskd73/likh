@@ -102,10 +102,12 @@ const MyNotes = () => {
 
   useEffect(() => {
     if (visibilityApi.response) {
-      setNotes({
-        ...notes,
-        [visibilityApi.response.id]: visibilityApi.response,
-      });
+      const newNotes = [...notes];
+      const idx = newNotes.findIndex(
+        (n) => n.id === visibilityApi.response!.id
+      );
+      newNotes[idx] = visibilityApi.response;
+      setNotes(newNotes);
     }
   }, [visibilityApi.response]);
 
