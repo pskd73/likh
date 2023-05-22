@@ -112,7 +112,7 @@ export default async function Note({ params }: { params: { slug: string } }) {
                 {publicNote.user.username && (
                   <div className="text-center italic py-10">
                     <a
-                      href="/pramodk73"
+                      href={`/${publicNote.user.username}`}
                       className="hover:underline opacity-50 hover:opacity-100"
                     >
                       &larr; Read my other notes
