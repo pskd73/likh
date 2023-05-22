@@ -169,7 +169,8 @@ def handle_get_public_note():
     return {
         'note': note.to_dict(),
         'user': {
-            'email': user.email
+            'email': user.email,
+            'username': user.username
         }
     }
 
@@ -191,7 +192,8 @@ def handle_get_public_user():
     notes = sorted(notes, key=lambda note: note.created_at, reverse=True)
     return {
         'user': {
-            'email': user.email
+            'email': user.email,
+            'username': user.username
         },
         'notes': [n.to_dict() for n in notes]
     }

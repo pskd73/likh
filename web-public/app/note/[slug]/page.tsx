@@ -6,8 +6,9 @@ import { Metadata } from "next";
 import { Courier } from "@/components/font";
 import { Note } from "@/components/Note";
 import { BasePage, Footer, Paper } from "@/components/Layout";
+import moment from "moment";
 
-type PublicNote = { note: Note; user: { email: string } };
+type PublicNote = { note: Note; user: { email: string; username?: string } };
 
 async function fetchNote(noteId: string): Promise<PublicNote> {
   const res = await fetch(
@@ -70,6 +71,10 @@ export default async function Note({ params }: { params: { slug: string } }) {
     publicNote = await fetchNote(params.slug);
   } catch {}
 
+  const author = publicNote?.user.username
+    ? "@" + publicNote.user.username
+    : publicNote?.user.email;
+
   return (
     <BasePage>
       <Event name="public_note" props={{ note_id: params.slug }} />
@@ -83,8 +88,8 @@ export default async function Note({ params }: { params: { slug: string } }) {
                     <h1 className="text-4xl">{publicNote.note.title}</h1>
                   )}
                   <span className="opacity-50">
-                    By {publicNote.user.email} @{" "}
-                    {new Date(publicNote.note.created_at).toDateString()}
+                    Written by {author},{" "}
+                    {moment(new Date(publicNote.note.created_at)).fromNow()}
                   </span>
                 </div>
                 <ReactMarkdown
@@ -104,6 +109,16 @@ export default async function Note({ params }: { params: { slug: string } }) {
                 >
                   {publicNote.note.text}
                 </ReactMarkdown>
+                {publicNote.user.username && (
+                  <div className="text-center italic py-10">
+                    <a
+                      href="/pramodk73"
+                      className="hover:underline opacity-50 hover:opacity-100"
+                    >
+                      &larr; Read my other notes
+                    </a>
+                  </div>
+                )}
               </>
             )}
             {!publicNote && (
