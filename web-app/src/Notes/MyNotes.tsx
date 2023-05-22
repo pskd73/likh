@@ -142,10 +142,6 @@ const MyNotes = () => {
     );
   };
 
-  const handleCopy = (noteId: string) => {
-    copy(`${PUBLIC_HOST}/note/${noteId}`);
-  };
-
   if (notesApi.loading) {
     return <FullLoader />;
   }
@@ -210,7 +206,12 @@ const MyNotes = () => {
                     </Button>
                     <Delete onConfirm={() => handleDeleteNote(note.id)} />
                     {note.visibility === "public" && (
-                      <Button lite onClick={() => handleCopy(note.id)}>
+                      <Button
+                        link
+                        lite
+                        href={`${PUBLIC_HOST}/note/${note.slug || note.id}`}
+                        target="_blank"
+                      >
                         <BiLink />
                       </Button>
                     )}

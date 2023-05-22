@@ -13,6 +13,7 @@ class Note(Document):
     text = StringField()
     slate_value = StringField()
     visibility = StringField(default='private')
+    slug = StringField()
 
     def to_dict(self):
         result = m_to_d(self)
@@ -21,8 +22,13 @@ class Note(Document):
         return result
 
 
-def get_note_by_id(note_id: str) -> Note:
-    return Note.objects.get(id=note_id)
+def get_note(note_id: str = None, slug: str = None):
+    query = {}
+    if note_id:
+        query['id'] = note_id
+    if slug:
+        query['slug'] = slug
+    return Note.objects.get(**query)
 
 
 def get_user_notes(user_id: str) -> List[Note]:
