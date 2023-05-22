@@ -1,8 +1,6 @@
 import re
 from typing import List
-
 import bson
-from slugify import slugify
 
 import env
 import os
@@ -13,7 +11,7 @@ import jwt
 from flask import Flask, request, make_response
 from flask_cors import CORS
 from jwt import DecodeError
-from mongoengine import connect, NotUniqueError
+from mongoengine import connect
 
 from cal import get_event
 from chatgpt import get_suggestions
@@ -21,7 +19,7 @@ from constant import SAMPLE_TEXT
 from date import to_millis
 from mail import send_welcome_mail
 from note import Note, get_user_notes, delete_note, get_all_public_notes, get_user_public_notes, \
-    get_note_title, get_note
+    get_note, assign_slug
 from user import get_user_by_email, User, get_user_by_id, get_user_by_username
 
 connect(host=os.environ['MONGO_CONN_STR'])
@@ -151,20 +149,8 @@ def handle_update_note_visibility(user: User):
     assert visibility in ['public', 'private']
     note.visibility = visibility
     note.save()
-
     if visibility == 'public' and note.slug is None:
-        i = 0
-        while i < 10:
-            try:
-                slug = slugify(get_note_title(note))
-                if i != 0:
-                    slug += f'-{i}'
-                note.slug = slug
-                note.save()
-                break
-            except NotUniqueError:
-                i += 1
-
+        assign_slug(note)
     return note.to_dict()
 
 

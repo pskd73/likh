@@ -1,6 +1,7 @@
 import re
 from typing import List
-from mongoengine import Document, StringField, IntField
+from mongoengine import Document, StringField, IntField, NotUniqueError
+from slugify import slugify
 
 from md import unmark
 from mongo import m_to_d
@@ -58,3 +59,18 @@ def get_note_title(note: Note):
     text = text.strip()
     text = text.replace('\n', '. ')
     return text[:100] + ("..." if len(text) > 100 else '')
+
+
+def assign_slug(note: Note):
+    i = 0
+    while i < 10:
+        try:
+            slug = slugify(get_note_title(note))
+            if i != 0:
+                slug += f'-{i}'
+            note.slug = slug
+            note.save()
+            break
+        except NotUniqueError:
+            i += 1
+    raise ValueError(f'Unable to assign slug for note id {str(note.id)}')
