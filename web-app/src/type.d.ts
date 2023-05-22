@@ -6,6 +6,7 @@ export type Note = {
   visibility: "private" | "public";
   slate_value?: string;
   plain_text?: string;
+  plain_title: string;
 };
 
 export type NewNote = Omit<Note, "id">;
