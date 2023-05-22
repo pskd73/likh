@@ -1,5 +1,6 @@
 import re
 from typing import List
+import bson
 
 import env
 import os
@@ -17,7 +18,8 @@ from chatgpt import get_suggestions
 from constant import SAMPLE_TEXT
 from date import to_millis
 from mail import send_welcome_mail
-from note import Note, get_note_by_id, get_user_notes, delete_note, get_all_public_notes, get_user_public_notes
+from note import Note, get_user_notes, delete_note, get_all_public_notes, get_user_public_notes, \
+    get_note, assign_slug
 from user import get_user_by_email, User, get_user_by_id, get_user_by_username
 
 connect(host=os.environ['MONGO_CONN_STR'])
@@ -100,7 +102,7 @@ def handle_new_note(user: User):
             text=text
         )
     else:
-        note = get_note_by_id(note_id)
+        note = get_note(note_id=note_id)
         note.title = title
         note.text = text
         if request.json.get('slate_value'):
@@ -112,7 +114,7 @@ def handle_new_note(user: User):
 @app.route('/note')
 @login_required
 def handle_get_note(user: User):
-    note = get_note_by_id(request.args['note_id'])
+    note = get_note(note_id=request.args['note_id'])
     if note.user_id != str(user.id):
         return '', 401
     return note.to_dict()
@@ -130,7 +132,7 @@ def handle_get_notes(user: User):
 @app.route('/delete-note', methods=['DELETE'])
 @login_required
 def handle_delete_note(user: User):
-    note = get_note_by_id(request.json['note_id'])
+    note = get_note(note_id=request.json['note_id'])
     if note.user_id != str(user.id):
         return '', 401
     delete_note(str(note.id))
@@ -140,19 +142,27 @@ def handle_delete_note(user: User):
 @app.route('/note/visibility', methods=['POST'])
 @login_required
 def handle_update_note_visibility(user: User):
-    note = get_note_by_id(request.json['note_id'])
+    note = get_note(note_id=request.json['note_id'])
     if note.user_id != str(user.id):
         return '', 401
     visibility = request.json['visibility']
     assert visibility in ['public', 'private']
     note.visibility = visibility
     note.save()
+    if visibility == 'public' and note.slug is None:
+        assign_slug(note)
     return note.to_dict()
 
 
 @app.route('/public/note')
 def handle_get_public_note():
-    note = get_note_by_id(request.args['note_id'])
+    note: Note = None
+    if bson.objectid.ObjectId.is_valid(request.args['note_id']):
+        note = get_note(note_id=request.args['note_id'])
+    if note is None:
+        note = get_note(slug=request.args['note_id'])
+    if note is None:
+        return '', 401
     if note.visibility != 'public':
         return '', 401
     user = get_user_by_id(note.user_id)

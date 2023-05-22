@@ -1,6 +1,7 @@
 import re
 from typing import List
-from mongoengine import Document, StringField, IntField
+from mongoengine import Document, StringField, IntField, NotUniqueError
+from slugify import slugify
 
 from md import unmark
 from mongo import m_to_d
@@ -13,6 +14,7 @@ class Note(Document):
     text = StringField()
     slate_value = StringField()
     visibility = StringField(default='private')
+    slug = StringField()
 
     def to_dict(self):
         result = m_to_d(self)
@@ -21,8 +23,13 @@ class Note(Document):
         return result
 
 
-def get_note_by_id(note_id: str) -> Note:
-    return Note.objects.get(id=note_id)
+def get_note(note_id: str = None, slug: str = None):
+    query = {}
+    if note_id:
+        query['id'] = note_id
+    if slug:
+        query['slug'] = slug
+    return Note.objects.get(**query)
 
 
 def get_user_notes(user_id: str) -> List[Note]:
@@ -34,7 +41,7 @@ def delete_note(note_id: str):
 
 
 def get_all_public_notes():
-    return Note.objects(visibility='public').only('id', 'user_id', 'created_at', 'title', 'text')
+    return Note.objects(visibility='public')
 
 
 def get_user_public_notes(user_id: str):
@@ -52,3 +59,18 @@ def get_note_title(note: Note):
     text = text.strip()
     text = text.replace('\n', '. ')
     return text[:100] + ("..." if len(text) > 100 else '')
+
+
+def assign_slug(note: Note):
+    i = 0
+    while i < 10:
+        try:
+            slug = slugify(get_note_title(note))
+            if i != 0:
+                slug += f'-{i}'
+            note.slug = slug
+            note.save()
+            break
+        except NotUniqueError:
+            i += 1
+    raise ValueError(f'Unable to assign slug for note id {str(note.id)}')

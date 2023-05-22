@@ -66,7 +66,7 @@ export default async function UserPage({
                   key={i}
                   className="border-l-4 border-primary-700 border-opacity-30 pl-6 hover:border-opacity-50"
                 >
-                  <a href={`/note/${note.id}`} className="hover:underline">
+                  <a href={`/note/${note.slug || note.id}`} className="hover:underline">
                     <h3
                       className={classNames(
                         Courier.className,
