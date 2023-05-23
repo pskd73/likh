@@ -18,9 +18,10 @@ from chatgpt import get_suggestions
 from constant import SAMPLE_TEXT
 from date import to_millis
 from mail import send_welcome_mail
+from mongo import m_to_d
 from note import Note, get_user_notes, delete_note, get_all_public_notes, get_user_public_notes, \
     get_note, assign_slug
-from user import get_user_by_email, User, get_user_by_id, get_user_by_username, get_blog_users
+from user import get_user_by_email, User, get_user_by_id, get_user_by_username, get_blog_users, Setting
 
 connect(host=os.environ['MONGO_CONN_STR'])
 app = Flask(__name__)
@@ -154,6 +155,22 @@ def handle_update_note_visibility(user: User):
     return note.to_dict()
 
 
+@app.route('/setting', methods=['POST'])
+@login_required
+def handle_update_setting(user: User):
+    if user.setting is None:
+        user.setting = Setting()
+    if request.json.get('write_font'):
+        assert request.json['write_font'] in ['CourierPrime', 'PTSerif']
+        user.setting.write_font = request.json['write_font']
+    if request.json.get('blog_font'):
+        assert request.json['blog_font'] in ['CourierPrime', 'PTSerif']
+        user.setting.blog_font = request.json['blog_font']
+    user.save()
+    print(user.setting.blog_font)
+    return m_to_d(user)
+
+
 @app.route('/public/note')
 def handle_get_public_note():
     note: Note = None
@@ -168,10 +185,7 @@ def handle_get_public_note():
     user = get_user_by_id(note.user_id)
     return {
         'note': note.to_dict(),
-        'user': {
-            'email': user.email,
-            'username': user.username
-        }
+        'user': user.get_public_dict()
     }
 
 
@@ -192,10 +206,7 @@ def handle_get_public_user():
     notes = get_user_public_notes(str(user.id))
     notes = sorted(notes, key=lambda note: note.created_at, reverse=True)
     return {
-        'user': {
-            'email': user.email,
-            'username': user.username
-        },
+        'user': user.get_public_dict(),
         'notes': [n.to_dict() for n in notes]
     }
 
@@ -205,6 +216,7 @@ def handle_get_public_user():
 def handle_get_user_home(user: User):
     notes = get_user_notes(str(user.id))
     return {
+        'user': m_to_d(user),
         'notes': [n.to_dict() for n in notes],
         'hashtags': get_hashtags(notes)
     }

@@ -3,12 +3,12 @@ import remarkGfm from "remark-gfm";
 import Event from "@/components/Event";
 import classNames from "classnames";
 import { Metadata } from "next";
-import { Courier } from "@/components/font";
+import { Courier, PTSerif, getUserBlogFont } from "@/components/font";
 import { Note } from "@/components/Note";
 import { BasePage, Footer, Paper } from "@/components/Layout";
 import moment from "moment";
 
-type PublicNote = { note: Note; user: { email: string; username?: string } };
+type PublicNote = { note: Note; user: User };
 
 async function fetchNote(noteId: string): Promise<PublicNote> {
   const res = await fetch(
@@ -79,7 +79,7 @@ export default async function Note({ params }: { params: { slug: string } }) {
     <BasePage>
       <Event name="public_note" props={{ note_id: params.slug }} />
       <Paper>
-        <div className={classNames(Courier.className, "space-y-10")}>
+        <div className={classNames("space-y-10")}>
           <article className="prose max-w-none lg:prose-xl prose-headings:mb-0 prose-li:my-0 prose-ol:my-6 min-h-[60vh]">
             {publicNote && (
               <>
@@ -92,25 +92,27 @@ export default async function Note({ params }: { params: { slug: string } }) {
                     {moment(new Date(publicNote.note.created_at)).fromNow()}
                   </span>
                 </div>
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
-                  components={{
-                    img({ node, className, children, ...props }) {
-                      return (
-                        <span className="flex justify-center">
-                          <img
-                            {...props}
-                            className={className + " text-center"}
-                          />
-                        </span>
-                      );
-                    },
-                  }}
-                >
-                  {publicNote.note.text}
-                </ReactMarkdown>
+                <div className={getUserBlogFont(publicNote.user).className}>
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
+                    components={{
+                      img({ node, className, children, ...props }) {
+                        return (
+                          <span className="flex justify-center">
+                            <img
+                              {...props}
+                              className={className + " text-center"}
+                            />
+                          </span>
+                        );
+                      },
+                    }}
+                  >
+                    {publicNote.note.text}
+                  </ReactMarkdown>
+                </div>
                 {publicNote.user.username && (
-                  <div className="text-center italic py-10">
+                  <div className="text-center py-10">
                     <a
                       href={`/${publicNote.user.username}`}
                       className="hover:underline opacity-50 hover:opacity-100"

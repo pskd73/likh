@@ -1,12 +1,12 @@
 import { BasePage, Footer, Paper } from "@/components/Layout";
 import { Note } from "@/components/Note";
-import { Courier } from "@/components/font";
+import { Courier, getUserBlogFont } from "@/components/font";
 import classNames from "classnames";
 import moment from "moment";
 import { Metadata } from "next";
 import Event from "@/components/Event";
 
-type PublicUser = { user: { email: string }; notes: Note[] };
+type PublicUser = { user: User; notes: Note[] };
 
 async function fetchPulicUser(username: string): Promise<PublicUser> {
   const res = await fetch(
@@ -74,7 +74,7 @@ export default async function UserPage({
                   >
                     <h3
                       className={classNames(
-                        Courier.className,
+                        getUserBlogFont(publicUser!.user).className,
                         "text-lg italic"
                       )}
                     >

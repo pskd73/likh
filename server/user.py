@@ -1,6 +1,11 @@
 from typing import Optional
 
-from mongoengine import Document, StringField, IntField, DoesNotExist
+from mongoengine import Document, StringField, IntField, DoesNotExist, EmbeddedDocument, EmbeddedDocumentField
+
+
+class Setting(EmbeddedDocument):
+    write_font = StringField()
+    blog_font = StringField()
 
 
 class User(Document):
@@ -9,10 +14,20 @@ class User(Document):
     first_name = StringField()
     last_name = StringField()
     username = StringField()
+    setting = EmbeddedDocumentField(Setting)
 
     meta = {
         'collection': 'users'
     }
+
+    def get_public_dict(self):
+        return {
+            'email': self.email,
+            'username': self.username,
+            'setting': {
+                'blog_font': self.setting.blog_font if self.setting else 'CourierPrime'
+            }
+        }
 
 
 def get_user_by_email(email: str) -> Optional[User]:
