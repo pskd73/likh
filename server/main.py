@@ -167,7 +167,6 @@ def handle_update_setting(user: User):
         assert request.json['blog_font'] in ['CourierPrime', 'PTSerif']
         user.setting.blog_font = request.json['blog_font']
     user.save()
-    print(user.setting.blog_font)
     return m_to_d(user)
 
 
