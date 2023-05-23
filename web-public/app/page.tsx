@@ -72,10 +72,10 @@ export default function Landing() {
 
         <Feature bg>
           <Feature.Content>
-            <Feature.Title>Share</Feature.Title>
+            <Feature.Title>Blog</Feature.Title>
             <Feature.List>
               <Feature.Item>
-                Share your <Highlight>notes with public quickly</Highlight>{" "}
+                Build a <Highlight>blog quickly out of your notes</Highlight>{" "}
                 without leaving the app
               </Feature.Item>
               <Feature.Item>

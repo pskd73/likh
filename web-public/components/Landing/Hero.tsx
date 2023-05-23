@@ -35,7 +35,7 @@ export default function Hero() {
       >
         lets you write in a <Highlight>distraction free</Highlight> environment,
         build <Highlight>daily writing habits</Highlight>, and{" "}
-        <Highlight>share</Highlight> your writings quickly!
+        <Highlight>build a blog</Highlight> quickly!
       </div>
       <SginIn />
     </div>
