@@ -1,7 +1,7 @@
 import { Note } from "@/components/Note";
 import { GetServerSideProps } from "next";
 
-const HOST = "https://retronote.app";
+const HOST = "https://www.retronote.app";
 
 function generateSiteMap(notes: Note[], users: Array<{username: string}>) {
   return `<?xml version="1.0" encoding="UTF-8"?>
