@@ -75,7 +75,7 @@ export default async function UserPage({
                     <h3
                       className={classNames(
                         getUserBlogFont(publicUser!.user).className,
-                        "text-lg italic"
+                        "text-lg"
                       )}
                     >
                       {note.plain_title}
