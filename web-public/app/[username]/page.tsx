@@ -4,6 +4,7 @@ import { Courier } from "@/components/font";
 import classNames from "classnames";
 import moment from "moment";
 import { Metadata } from "next";
+import Event from "@/components/Event";
 
 type PublicUser = { user: { email: string }; notes: Note[] };
 
@@ -58,6 +59,7 @@ export default async function UserPage({
         )}
         {publicUser && (
           <div>
+            <Event name="blog" props={{ username: params.username }} />
             <h1 className="text-4xl font-bold mb-10">@{params.username}</h1>
             <h2 className="text-3xl mb-6">My notes</h2>
             <ul className="space-y-8 mb-10">
@@ -66,7 +68,10 @@ export default async function UserPage({
                   key={i}
                   className="border-l-4 border-primary-700 border-opacity-30 pl-6 hover:border-opacity-50"
                 >
-                  <a href={`/note/${note.slug || note.id}`} className="hover:underline">
+                  <a
+                    href={`/note/${note.slug || note.id}`}
+                    className="hover:underline"
+                  >
                     <h3
                       className={classNames(
                         Courier.className,

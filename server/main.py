@@ -20,7 +20,7 @@ from date import to_millis
 from mail import send_welcome_mail
 from note import Note, get_user_notes, delete_note, get_all_public_notes, get_user_public_notes, \
     get_note, assign_slug
-from user import get_user_by_email, User, get_user_by_id, get_user_by_username
+from user import get_user_by_email, User, get_user_by_id, get_user_by_username, get_blog_users
 
 connect(host=os.environ['MONGO_CONN_STR'])
 app = Flask(__name__)
@@ -179,7 +179,8 @@ def handle_get_public_note():
 def handle_get_public_notes():
     notes = [n.to_dict() for n in get_all_public_notes()]
     return {
-        'notes': notes
+        'notes': notes,
+        'users': [{'username': u.username} for u in get_blog_users()]
     }
 
 

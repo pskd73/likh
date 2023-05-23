@@ -34,3 +34,7 @@ def get_user_by_username(username: str) -> Optional[User]:
         return User.objects.get(username=username)
     except DoesNotExist:
         return None
+
+
+def get_blog_users():
+    return User.objects(username__exists=True)
