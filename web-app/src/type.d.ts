@@ -39,4 +39,9 @@ export type Settings = {
 export type User = {
   email: string;
   token: string;
+  username?: string;
+  setting?: {
+    write_font?: string;
+    blog_font?: string;
+  }
 };

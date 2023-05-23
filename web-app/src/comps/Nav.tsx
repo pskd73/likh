@@ -5,7 +5,7 @@ import Clickable from "../components/Clickable";
 import { Link, To, useLocation, useNavigate } from "react-router-dom";
 import { AppContext } from "../components/AppContext";
 import { supabase } from "../components/supabase";
-import { BiFilm, BiGridAlt, BiPlus } from "react-icons/bi";
+import { BiCog, BiFilm, BiGridAlt, BiPlus } from "react-icons/bi";
 
 const MenuLink = ({
   children,
@@ -60,11 +60,11 @@ export const Nav = () => {
                   <BiGridAlt />
                 </MenuLink>
               </li>
-              {/* <li>
+              <li>
                 <MenuLink to="/settings" active={activeLink === "settings"}>
-                  settings
+                  <BiCog />
                 </MenuLink>
-              </li> */}
+              </li>
             </ul>
           </div>
         </div>

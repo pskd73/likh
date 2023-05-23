@@ -1,8 +1,11 @@
-import { PropsWithChildren, useContext } from "react";
+import { PropsWithChildren, useContext, useEffect } from "react";
 import { Select } from "../comps/Form";
-import PlainSelect from "../components/Select";
 import { AppContext } from "../components/AppContext";
 import { Helmet } from "react-helmet";
+import useFetch from "../useFetch";
+import { User } from "../type";
+import { API_HOST } from "../config";
+import { FullLoader } from "../comps/Loading";
 
 const Item = ({ children }: PropsWithChildren) => {
   return <div className="flex">{children}</div>;
@@ -17,15 +20,35 @@ const Value = ({ children }: PropsWithChildren) => {
 };
 
 const Settings = () => {
-  const { settings, saveSettings } = useContext(AppContext);
+  const { user, setUser } = useContext(AppContext);
+  const api = useFetch<User>();
 
-  const handleFontChange = (font: string) => {
-    saveSettings({ ...settings, font });
+  useEffect(() => {
+    if (api.response) {
+      setUser({ ...api.response, token: user!.token });
+    }
+  }, [api.response]);
+
+  const handleChange = (key: string, value: any) => {
+    if (user) {
+      api.handle(
+        fetch(`${API_HOST}/setting`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user!.token}`,
+          },
+          body: JSON.stringify({
+            [key]: value,
+          }),
+        })
+      );
+    }
   };
 
-  const handleTypeSoundsChange = (onOff: string) => {
-    saveSettings({ ...settings, typeSounds: onOff === "on" });
-  };
+  if (!user) {
+    return <FullLoader />;
+  }
 
   return (
     <div className="space-y-4">
@@ -33,26 +56,15 @@ const Settings = () => {
         <title>Settings - Retro Note</title>
       </Helmet>
       <Item>
-        <Label>App font</Label>
+        <Label>Blog font</Label>
         <Value>
           <Select
-            value={settings.font || "SpecialElite"}
-            onChange={(e) => handleFontChange(e.target.value)}
+            defaultValue={user.setting?.blog_font || "CourierPrime"}
+            onChange={(e) => handleChange("blog_font", e.target.value)}
           >
-            <option>Special Elite</option>
+            <option value={"CourierPrime"}>Courier Prime</option>
+            <option value={"PTSerif"}>PT Serif</option>
           </Select>
-        </Value>
-      </Item>
-      <Item>
-        <Label>Typing sounds</Label>
-        <Value>
-          <PlainSelect
-            value={settings.typeSounds ? "on" : "off"}
-            onValueChange={(val) => handleTypeSoundsChange(val)}
-          >
-            <PlainSelect.Option value={"on"}>on</PlainSelect.Option>
-            <PlainSelect.Option value={"off"}>off</PlainSelect.Option>
-          </PlainSelect>
         </Value>
       </Item>
     </div>
