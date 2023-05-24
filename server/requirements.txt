@@ -7,3 +7,4 @@ mongoengine==0.27.0
 python-dotenv==1.0.0
 Markdown==3.4.3
 python-slugify==8.0.1
+resend==0.4.0
