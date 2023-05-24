@@ -256,7 +256,7 @@ const MEditor = ({
             "pl-[48px]": text.match(grammer.listRegex),
             "p-[24px] py bg-primary-700 bg-opacity-10 italic rounded my-6":
               text.match(grammer.quoteRegex),
-            "flex flex-col items-center": imgUrl,
+            "flex flex-col items-center py-10": imgUrl,
           })}
         >
           {imgUrl && <img src={imgUrl} />}
