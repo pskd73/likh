@@ -1,29 +1,25 @@
-import http.client
-import json
 import os
+import resend
+import env
 
 
-SIDEMAIL_API_KEY = os.environ['SIDEMAIL_API_KEY']
+RESEND_FROM_EMAIL = 'Retro Note <notify@notification.retronote.app>'
+resend.api_key = os.environ['RESEND_API_KEY']
 
 
 def send_welcome_mail(to_mail: str):
-    connection = http.client.HTTPSConnection('api.sidemail.io')
+    with open('welcome-email.html', 'r') as f:
+        send_email(to_mail, 'Welcome to Retro Note!', f.read())
 
-    payload = {
-        'fromName': 'Retro Note',
-        'fromAddress': 'retronote@j9hjv.via.sidemail.net',
-        'toAddress': to_mail,
-        'templateName': 'Welcome',
-        'templateProps': {
-            'my_name': 'Pramod',
-            'project_name': 'Retro Note'
-        }
-    }
-    headers = {
-        'content-type': 'application/json',
-        'Authorization': 'Bearer ' + SIDEMAIL_API_KEY
-    }
 
-    connection.request('POST', '/v1/email/send', json.dumps(payload), headers)
-    # response = connection.getresponse()
-    # data = json.loads(response.read().decode("utf-8"))
+def send_email(to: str, subject: str, html: str):
+    res = resend.Emails.send({
+        'from': RESEND_FROM_EMAIL,
+        'to': to,
+        'subject': subject,
+        'html': html
+    })
+
+
+if __name__ == '__main__':
+    send_welcome_mail('pramodkumar.damam73@gmail.com')
