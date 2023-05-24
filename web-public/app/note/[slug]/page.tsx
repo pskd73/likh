@@ -80,7 +80,7 @@ export default async function Note({ params }: { params: { slug: string } }) {
       <Event name="public_note" props={{ note_id: params.slug }} />
       <Paper>
         <div className={classNames("space-y-10")}>
-          <article className="prose max-w-none lg:prose-xl prose-headings:mb-0 prose-li:my-0 prose-ol:my-6 min-h-[60vh]">
+          <article className="prose max-w-none lg:prose-xl prose-li:my-0 prose-ol:my-6 min-h-[60vh]">
             {publicNote && (
               <>
                 <div className="mb-4">

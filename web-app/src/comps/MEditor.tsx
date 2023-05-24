@@ -69,14 +69,13 @@ const Leaf = ({ attributes, children, leaf }: any) => {
     "opacity-30": leaf.punctuation || leaf.blockquote,
 
     // title
-    "font-bold": title,
-    block: title && leaf.punctuation,
+    "font-bold block": title,
     "text-5xl": leaf.title1,
     "text-4xl": leaf.title2,
     "text-3xl": leaf.title3,
-    "mb-6": leaf.title1 && !leaf.punctuation,
-    "mb-2": leaf.title2 && !leaf.punctuation,
-    "mb-1": leaf.title3 && !leaf.punctuation,
+    "mb-8": leaf.title1 && !leaf.punctuation,
+    "mb-4": leaf.title2 && !leaf.punctuation,
+    "mb-2": leaf.title3 && !leaf.punctuation,
 
     // list
     "-ml-[24px] opacity-30": leaf.bullet,
