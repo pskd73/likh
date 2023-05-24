@@ -76,7 +76,7 @@ const Home = () => {
     );
   };
 
-  if (homeApi.loading) {
+  if (!homeApi.response) {
     return <FullLoader />;
   }
 

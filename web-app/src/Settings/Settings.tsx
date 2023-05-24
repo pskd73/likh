@@ -12,7 +12,11 @@ const Item = ({ children }: PropsWithChildren) => {
 };
 
 const Label = ({ children }: PropsWithChildren) => {
-  return <div className="w-1/4">{children}</div>;
+  return (
+    <div className="w-auto pr-4 md:pr-0 md:w-1/4 flex items-center">
+      {children}
+    </div>
+  );
 };
 
 const Value = ({ children }: PropsWithChildren) => {

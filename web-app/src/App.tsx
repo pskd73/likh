@@ -26,7 +26,7 @@ const App = ({ nav = true }: { nav?: boolean }) => {
   }, [sbUser]);
 
   useSupabase({
-    setUser: async (user) => {
+    setUser: (user) => {
       setSbUser((u) => {
         if (u?.token === user?.token) return u;
         return user;
