@@ -6,6 +6,7 @@ import { Link, To, useLocation, useNavigate } from "react-router-dom";
 import { AppContext } from "../components/AppContext";
 import { supabase } from "../components/supabase";
 import { BiCog, BiFilm, BiGridAlt, BiPlus } from "react-icons/bi";
+import Logo from "./Logo";
 
 const MenuLink = ({
   children,
@@ -41,7 +42,15 @@ export const Nav = () => {
       <Paper>
         <div className="h-[46px] flex justify-between items-center">
           <h1 className="text-2xl font-CourierPrime italic">
-            <Link to="/">Retro Note</Link>
+            <Link
+              to="/"
+              className="flex items-center space-x-2 opacity-100"
+            >
+              <div className="fill-primary-700 w-8 max-h-full">
+                <Logo />
+              </div>
+              {/* <span className="block -mb-2">Retro Note</span> */}
+            </Link>
           </h1>
           <div>
             <ul className="flex space-x-6 text-xl">
