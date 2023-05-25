@@ -43,5 +43,6 @@ export type User = {
   setting?: {
     write_font?: string;
     blog_font?: string;
+    weekly_notification?: boolean;
   }
 };

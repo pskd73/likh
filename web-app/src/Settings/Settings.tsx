@@ -50,6 +50,13 @@ const Settings = () => {
     }
   };
 
+  const boolToOnOff = (bool: boolean | undefined, def: string) => {
+    if (bool === undefined) {
+      return def;
+    }
+    return bool ? "on" : "off";
+  };
+
   if (!user) {
     return <FullLoader />;
   }
@@ -59,18 +66,37 @@ const Settings = () => {
       <Helmet>
         <title>Settings - Retro Note</title>
       </Helmet>
-      <Item>
-        <Label>Blog font</Label>
-        <Value>
-          <Select
-            defaultValue={user.setting?.blog_font || "CourierPrime"}
-            onChange={(e) => handleChange("blog_font", e.target.value)}
-          >
-            <option value={"CourierPrime"}>Courier Prime</option>
-            <option value={"PTSerif"}>PT Serif</option>
-          </Select>
-        </Value>
-      </Item>
+      <div className="space-y-6">
+        <Item>
+          <Label>Blog font</Label>
+          <Value>
+            <Select
+              defaultValue={user.setting?.blog_font || "CourierPrime"}
+              onChange={(e) => handleChange("blog_font", e.target.value)}
+            >
+              <option value={"CourierPrime"}>Courier Prime</option>
+              <option value={"PTSerif"}>PT Serif</option>
+            </Select>
+          </Value>
+        </Item>
+        <Item>
+          <Label>Weekly notification</Label>
+          <Value>
+            <Select
+              defaultValue={boolToOnOff(
+                user.setting?.weekly_notification,
+                "on"
+              )}
+              onChange={(e) =>
+                handleChange("weekly_notification", e.target.value === "on")
+              }
+            >
+              <option value={"on"}>On</option>
+              <option value={"off"}>Off</option>
+            </Select>
+          </Value>
+        </Item>
+      </div>
     </div>
   );
 };

@@ -1,11 +1,13 @@
 from typing import Optional
 
-from mongoengine import Document, StringField, IntField, DoesNotExist, EmbeddedDocument, EmbeddedDocumentField
+from mongoengine import Document, StringField, IntField, DoesNotExist, EmbeddedDocument, EmbeddedDocumentField, \
+    BooleanField
 
 
 class Setting(EmbeddedDocument):
     write_font = StringField()
     blog_font = StringField()
+    weekly_notification = BooleanField()
 
 
 class User(Document):

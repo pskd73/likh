@@ -166,6 +166,8 @@ def handle_update_setting(user: User):
     if request.json.get('blog_font'):
         assert request.json['blog_font'] in ['CourierPrime', 'PTSerif']
         user.setting.blog_font = request.json['blog_font']
+    if request.json.get('weekly_notification') is not None:
+        user.setting.weekly_notification = request.json['weekly_notification']
     user.save()
     return m_to_d(user)
 
@@ -219,3 +221,8 @@ def handle_get_user_home(user: User):
         'notes': [n.to_dict() for n in notes],
         'hashtags': get_hashtags(notes)
     }
+
+
+@app.route('/admin/weekly-notification')
+def handle_send_weekly_notification():
+    pass
