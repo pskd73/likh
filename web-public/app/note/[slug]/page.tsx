@@ -40,11 +40,16 @@ export async function generateMetadata({
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
-  const OG_IMG_URL =
-    "https://gfbrmxfdddmpwlqtvwsh.supabase.co/storage/v1/object/sign/public/Read%20it%20on%20Retro%20Note-min.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJwdWJsaWMvUmVhZCBpdCBvbiBSZXRybyBOb3RlLW1pbi5wbmciLCJpYXQiOjE2ODQwMzcxOTcsImV4cCI6MTcxNTU3MzE5N30.5jA5GmDGs-XdzJL4TM17GkdPvw08jLxhFccz5Ahpux4&t=2023-05-14T04%3A06%3A40.249Z";
   try {
     const publicNote = await fetchNote(params.slug);
     const title = `${getNoteTitle(publicNote.note)} - Retro Note`;
+
+    const author = publicNote.user.username
+      ? `@${publicNote.user.username}`
+      : publicNote.user.email;
+
+    const OG_IMG_URL = `https://retronote.app/og?title=${publicNote.note.plain_title}&author=${author}`;
+
     return {
       title,
       openGraph: {
