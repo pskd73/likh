@@ -167,7 +167,7 @@ const getTokenRanges = (
   return [range];
 };
 
-const hidable = ["italic", "bold", "title1", "title2", "title3"];
+const hidable: string[] = ["italic", "bold", "title1", "title2", "title3"];
 
 const getTokensRanges = (
   editor: BaseEditor,
