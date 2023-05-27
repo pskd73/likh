@@ -321,7 +321,7 @@ const MEditor = ({
         e.preventDefault();
         console.log(match);
         if (match[5]) {
-          let prefix = "- ";
+          let prefix = `${match[2]} `;
           if (match[4]) {
             prefix = `${Number(match[4]) + 1}. `;
           }
