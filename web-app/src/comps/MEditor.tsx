@@ -13,6 +13,7 @@ import {
   Path,
   Editor,
   Transforms,
+  Location,
 } from "slate";
 import { HistoryEditor, withHistory } from "slate-history";
 import { Slate, Editable, withReact, ReactEditor } from "slate-react";
@@ -66,6 +67,7 @@ const Leaf = ({ attributes, children, leaf }: any) => {
     "font-semibold": leaf.bold,
     italic: leaf.italic,
     "line-through": leaf.strikethrough,
+    hidden: leaf.punctuation && leaf.hidable && !leaf.focused,
 
     // generic punctuation
     "opacity-30": leaf.punctuation || leaf.blockquote,
@@ -128,6 +130,7 @@ const getTokenLength = (token: string | Prism.Token) => {
 };
 
 const getTokenRanges = (
+  editor: BaseEditor,
   path: Path,
   token: string | Prism.Token,
   start: number,
@@ -145,7 +148,7 @@ const getTokenRanges = (
   }
 
   if (Array.isArray(token.content)) {
-    return getTokensRanges(path, token.content, start, [
+    return getTokensRanges(editor, path, token.content, start, [
       ...parentTokens,
       token,
     ]);
@@ -164,7 +167,10 @@ const getTokenRanges = (
   return [range];
 };
 
+const hidable = ["italic", "bold", "title1", "title2", "title3"];
+
 const getTokensRanges = (
+  editor: BaseEditor,
   path: Path,
   tokens: Array<string | Prism.Token>,
   start: number,
@@ -174,9 +180,26 @@ const getTokensRanges = (
   for (const _token of tokens) {
     const _parentTokens = [...parentTokens];
     if (typeof _token !== "string") {
+      if (hidable.includes(_token.type)) {
+        _parentTokens.push({ type: "hidable" } as any);
+        const focused = isPointFocused(editor, {
+          path,
+          start,
+          end: start + _token.length,
+        });
+        if (focused) {
+          _parentTokens.push({ type: "focused" } as any);
+        }
+      }
       _parentTokens.push(_token);
     }
-    const newRanges = getTokenRanges(path, _token, start, _parentTokens);
+    const newRanges = getTokenRanges(
+      editor,
+      path,
+      _token,
+      start,
+      _parentTokens
+    );
     ranges = [...ranges, ...newRanges];
     start = getRangesEnd(newRanges, start);
   }
@@ -188,6 +211,52 @@ const getRangesEnd = (ranges: Range[], start: number) => {
     return ranges[ranges.length - 1].focus.offset;
   }
   return start;
+};
+
+const isPointFocused = (
+  editor: BaseEditor,
+  point: { path: number[]; start: number; end: number }
+) => {
+  if (!editor.selection) return false;
+  const startPath =
+    JSON.stringify(editor.selection.anchor.path) === JSON.stringify(point.path);
+  const endPath =
+    JSON.stringify(editor.selection?.focus.path) === JSON.stringify(point.path);
+
+  if (startPath) {
+    if (
+      point.start <= editor.selection.anchor.offset &&
+      point.end >= editor.selection.anchor.offset
+    ) {
+      return true;
+    }
+  }
+
+  if (endPath) {
+    if (
+      point.start <= editor.selection.focus.offset &&
+      point.end >= editor.selection.focus.offset
+    ) {
+      return true;
+    }
+  }
+
+  if (startPath && endPath) {
+    if (
+      point.start >= editor.selection.anchor.offset &&
+      point.end <= editor.selection.focus.offset
+    ) {
+      return true;
+    }
+    if (
+      point.start >= editor.selection.focus.offset &&
+      point.end <= editor.selection.anchor.offset
+    ) {
+      return true;
+    }
+  }
+
+  return false;
 };
 
 const playType = () => {
@@ -235,10 +304,8 @@ const MEditor = ({
   );
   const renderLeaf = useCallback((props: any) => <Leaf {...props} />, []);
   const decorate = useCallback(([node, path]: NodeEntry) => {
-    let ranges: Range[] = [];
-
     if (!Text.isText(node)) {
-      return ranges;
+      return [];
     }
 
     const tokens = Prism.tokenize(node.text, {
@@ -255,7 +322,8 @@ const MEditor = ({
       image: grammer.image,
     });
 
-    return getTokensRanges(path, tokens, 0, []);
+    const ranges = getTokensRanges(editor, path, tokens, 0, []);
+    return ranges;
   }, []);
 
   const renderElement = useCallback(
@@ -319,7 +387,6 @@ const MEditor = ({
       const match = text.match(grammer.listRegex);
       if (match) {
         e.preventDefault();
-        console.log(match);
         if (match[5]) {
           let prefix = `${match[2]} `;
           if (match[4]) {
