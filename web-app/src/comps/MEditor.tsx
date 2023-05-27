@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import Prism from "prismjs";
 import "prismjs/components/prism-markdown";
-import { useCallback, useMemo, useRef } from "react";
+import { KeyboardEventHandler, useCallback, useMemo, useRef } from "react";
 import {
   createEditor,
   BaseEditor,
@@ -11,6 +11,8 @@ import {
   Descendant,
   Node,
   Path,
+  Editor,
+  Transforms,
 } from "slate";
 import { HistoryEditor, withHistory } from "slate-history";
 import { Slate, Editable, withReact, ReactEditor } from "slate-react";
@@ -78,7 +80,8 @@ const Leaf = ({ attributes, children, leaf }: any) => {
     "mb-2": leaf.title3 && !leaf.punctuation,
 
     // list
-    "-ml-[24px] opacity-30": leaf.bullet,
+    "inline-flex w-[50px] -ml-[50px] opacity-30 justify-end pr-[6px]":
+      leaf.bullet,
 
     // link
     "underline cursor-pointer": leaf.link,
@@ -192,6 +195,22 @@ const playType = () => {
   aud.play();
 };
 
+const getNodeText = (element: any) => {
+  let text = "";
+  if (typeof element === "string") {
+    text += element;
+  }
+  if (element.text) {
+    text += element.text;
+  }
+  if (element.children) {
+    for (const child of element.children) {
+      text += getNodeText(child);
+    }
+  }
+  return text;
+};
+
 const MEditor = ({
   onChange,
   initValue,
@@ -288,8 +307,36 @@ const MEditor = ({
     }
   };
 
-  const handleKeyUp = () => {
+  const handleKeyUp: KeyboardEventHandler<HTMLDivElement> = (e) => {
     scroll.scroll();
+  };
+
+  const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = (e) => {
+    if (e.key === "Enter") {
+      const point = Editor.before(editor, editor.selection!.anchor);
+      const node = Editor.first(editor, point!);
+      const text = getNodeText(node[0]);
+      const match = text.match(grammer.listRegex);
+      if (match) {
+        e.preventDefault();
+        console.log(match);
+        if (match[5]) {
+          let prefix = "- ";
+          if (match[4]) {
+            prefix = `${Number(match[4]) + 1}. `;
+          }
+          Transforms.insertNodes(editor, [
+            { type: "paragraph", children: [{ text: "" }] },
+          ]);
+          Transforms.insertText(editor, prefix);
+        } else {
+          Transforms.removeNodes(editor);
+          Transforms.insertNodes(editor, [
+            { type: "paragraph", children: [{ text: "" }] },
+          ]);
+        }
+      }
+    }
   };
 
   const getInitValue = () => {
@@ -318,6 +365,7 @@ const MEditor = ({
             renderLeaf={renderLeaf}
             renderElement={renderElement}
             onKeyUp={handleKeyUp}
+            onKeyDown={handleKeyDown}
             placeholder="Write your mind here ..."
           />
         </Slate>
