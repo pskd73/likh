@@ -1,6 +1,7 @@
 import { createContext, useState } from "react";
 
 type StateSetter<T> = React.Dispatch<React.SetStateAction<T>>;
+type CountStatType = "words" | "readTime";
 
 export type EditorContextType = {
   sideBar: boolean;
@@ -15,6 +16,9 @@ export type EditorContextType = {
 
   typewriterMode: boolean;
   setTypewriterMode: StateSetter<boolean>;
+
+  countStatType: CountStatType;
+  setCountStatType: StateSetter<CountStatType>;
 };
 
 export const EditorContext = createContext<EditorContextType>(
@@ -26,6 +30,7 @@ export const useEditor = () => {
   const [activeSideMenus, setActiveSideMenus] = useState<string[]>(["notes"]);
   const [showStats, setShowStats] = useState(false);
   const [typewriterMode, setTypewriterMode] = useState(false);
+  const [countStatType, setCountStatType] = useState<CountStatType>("words");
 
   const toggleSideBar = () => setSideBar((b) => !b);
 
@@ -54,6 +59,9 @@ export const useEditor = () => {
     showStats,
     setShowStats,
     typewriterMode,
-    setTypewriterMode
+    setTypewriterMode,
+
+    countStatType,
+    setCountStatType,
   };
 };
