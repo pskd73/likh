@@ -30,9 +30,9 @@ const SidePanel = () => {
         }
       )}
     >
-      <div className="absolute top-0 -right-[20px]">
+      <div className="absolute top-1 -right-[26px]">
         <button
-          className="curosr-pointer opacity-30 hover:opacity-100"
+          className="curosr-pointer opacity-30 hover:opacity-100 text-xl"
           onClick={toggleSideBar}
         >
           <BiSidebar />
