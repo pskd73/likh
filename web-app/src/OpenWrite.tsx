@@ -54,17 +54,17 @@ const OpenWrite = () => {
   };
 
   return (
-    <div className="min-h-[100vh] bg-base text-primary-700">
+    <div className="min-h-[100vh] bg-base text-primary-700 flex">
       <div
         className={classNames(
-          "fixed transition-all bg-white z-10 top-0 w-[300px] h-[100vh] border-primary-700 border-opacity-30",
+          "transition-all relative bg-white shadow-xl z-10 h-[100vh] border-primary-700 border-opacity-30",
           {
-            "left-0 border-r-2": sideBar,
-            "-left-[274px]": !sideBar,
+            "w-[0px]": !sideBar,
+            "w-[300px]": sideBar,
           }
         )}
       >
-        <div className="flex justify-end p-1">
+        <div className="absolute top-0 -right-[20px]">
           <button
             className="curosr-pointer opacity-50 hover:opacity-100"
             onClick={() => setSideBar((b) => !b)}
@@ -72,13 +72,12 @@ const OpenWrite = () => {
             <BiSidebar />
           </button>
         </div>
-        <div className="p-2">Left</div>
+        <div className="max-w-full overflow-hidden text-white">Left</div>
       </div>
-      <div>
-        <MEditor onChange={handleChange} initValue={initalValue!} />
-      </div>
-      <div className="flex-1 hidden lg:block h-[100vh] bg-white border-l-2 border-primary-700 border-opacity-30">
-        Right
+      <div className="w-full p-4 py=8 flex justify-center">
+        <div className="max-w-[860px]">
+          <MEditor onChange={handleChange} initValue={initalValue!} />
+        </div>
       </div>
     </div>
   );
