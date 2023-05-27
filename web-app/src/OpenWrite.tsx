@@ -6,6 +6,7 @@ import { Descendant } from "slate";
 import Button from "./comps/Button";
 import { BiSidebar } from "react-icons/bi";
 import classNames from "classnames";
+import EditorWindow from "./comps/Editor/Window";
 
 const newNote = JSON.stringify([
   { type: "paragraph", children: [{ text: "# Welcome!" }] },
@@ -39,7 +40,6 @@ const newNote = JSON.stringify([
 ]);
 
 const OpenWrite = () => {
-  const [sideBar, setSideBar] = useState(false);
   const initalValue = useMemo(() => {
     const storedNote = localStorage.getItem("open_note");
     return storedNote ? storedNote : newNote;
@@ -53,34 +53,7 @@ const OpenWrite = () => {
     localStorage.setItem("open_note", JSON.stringify(value));
   };
 
-  return (
-    <div className="min-h-[100vh] bg-base text-primary-700 flex">
-      <div
-        className={classNames(
-          "transition-all relative bg-white shadow-xl z-10 h-[100vh] border-primary-700 border-opacity-30",
-          {
-            "w-[0px]": !sideBar,
-            "w-[300px]": sideBar,
-          }
-        )}
-      >
-        <div className="absolute top-0 -right-[20px]">
-          <button
-            className="curosr-pointer opacity-50 hover:opacity-100"
-            onClick={() => setSideBar((b) => !b)}
-          >
-            <BiSidebar />
-          </button>
-        </div>
-        <div className="max-w-full overflow-hidden text-white">Left</div>
-      </div>
-      <div className="w-full p-4 py=8 flex justify-center">
-        <div className="max-w-[860px]">
-          <MEditor onChange={handleChange} initValue={initalValue!} />
-        </div>
-      </div>
-    </div>
-  );
+  return <EditorWindow onChange={handleChange} initialValue={initalValue} />;
 };
 
 export default OpenWrite;
