@@ -35,7 +35,7 @@ const SidePanel = ({
         "sticky top-0",
         {
           "w-[0px]": !sideBar,
-          "w-[300px]": sideBar,
+          "w-[400px]": sideBar,
         }
       )}
     >

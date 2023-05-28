@@ -39,7 +39,7 @@ export const italic = {
 };
 
 export const bold = {
-  pattern: /[_*]{2}.+[_*]{2}/m,
+  pattern: /[_*]{2}[^_*]+[_*]{2}/m,
   greedy: true,
   inside: {
     punctuation: [
