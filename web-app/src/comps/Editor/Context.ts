@@ -1,9 +1,13 @@
 import { createContext, useState } from "react";
+import { Storage } from "./useStorage";
+import { SavedNote } from "./type";
 
 type StateSetter<T> = React.Dispatch<React.SetStateAction<T>>;
 type CountStatType = "words" | "readTime";
 
 export type EditorContextType = {
+  storage: Storage;
+
   sideBar: boolean;
   toggleSideBar: () => void;
 
@@ -19,18 +23,29 @@ export type EditorContextType = {
 
   countStatType: CountStatType;
   setCountStatType: StateSetter<CountStatType>;
+
+  note: SavedNote;
+  updateNote: (note: SavedNote) => void;
 };
 
 export const EditorContext = createContext<EditorContextType>(
   {} as EditorContextType
 );
 
-export const useEditor = () => {
-  const [sideBar, setSideBar] = useState(false);
-  const [activeSideMenus, setActiveSideMenus] = useState<string[]>(["notes", "settings"]);
+export const useEditor = ({
+  storage,
+}: {
+  storage: Storage;
+}): EditorContextType => {
+  const [sideBar, setSideBar] = useState(true);
+  const [activeSideMenus, setActiveSideMenus] = useState<string[]>([
+    "notes",
+    "settings",
+  ]);
   const [showStats, setShowStats] = useState(true);
   const [typewriterMode, setTypewriterMode] = useState(false);
   const [countStatType, setCountStatType] = useState<CountStatType>("words");
+  const [note, setNote] = useState<SavedNote>(storage.getRecentNote());
 
   const toggleSideBar = () => setSideBar((b) => !b);
 
@@ -48,7 +63,14 @@ export const useEditor = () => {
 
   const isSideMenuActive = (key: string) => activeSideMenus.includes(key);
 
+  const updateNote = (note: SavedNote) => {
+    storage.saveNote(note);
+    setNote(note);
+  };
+
   return {
+    storage,
+
     sideBar,
     toggleSideBar,
 
@@ -63,5 +85,8 @@ export const useEditor = () => {
 
     countStatType,
     setCountStatType,
+
+    note,
+    updateNote,
   };
 };

@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { ComponentProps, PropsWithChildren } from "react";
 
 const List = ({ children }: PropsWithChildren) => {
-  return <ul className="max-h-[400px] overflow-y-scroll">{children}</ul>;
+  return <ul className="max-h-[400px] overflow-y-auto">{children}</ul>;
 };
 
 const Item = ({ children, className, ...restProps }: ComponentProps<"li">) => {

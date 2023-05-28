@@ -1,14 +1,20 @@
 import classNames from "classnames";
 import { useContext } from "react";
 import { EditorContext } from "../Context";
-import { BiSidebar } from "react-icons/bi";
+import { BiPlus, BiSidebar } from "react-icons/bi";
 import Collapsible from "../Collapsible";
 import List from "../List";
 import Toggle from "../../Toggle";
 import SearchInput from "./SearchInput";
+import { SavedNote } from "../type";
 
-const SidePanel = () => {
+const SidePanel = ({
+  onNoteSelect,
+}: {
+  onNoteSelect: (note: SavedNote) => void;
+}) => {
   const {
+    storage,
     sideBar,
     toggleSideBar,
     isSideMenuActive,
@@ -40,7 +46,20 @@ const SidePanel = () => {
         </button>
       </div>
       <div className="max-w-full overflow-hidden">
+        <List>
+          <List.Item
+            className="flex justify-between items-center"
+            onClick={() => storage.newNote("New note")}
+          >
+            <span>New</span>
+            <span>
+              <BiPlus />
+            </span>
+          </List.Item>
+        </List>
+
         <SearchInput />
+
         <Collapsible>
           <Collapsible.Item
             title="Notes"
@@ -49,11 +68,18 @@ const SidePanel = () => {
           >
             <div>
               <List>
-                <List.Item>Note 1</List.Item>
-                <List.Item>Note 2</List.Item>
-                {[...Array(100)].map((_, i) => (
-                  <List.Item key={i}>Note 2</List.Item>
-                ))}
+                {storage.notes.map((noteMeta, i) => {
+                  const note = storage.getNote(noteMeta.id);
+                  return note ? (
+                    <List.Item
+                      key={i}
+                      className="text-sm"
+                      onClick={() => onNoteSelect(note)}
+                    >
+                      {note.text}
+                    </List.Item>
+                  ) : null;
+                })}
               </List>
             </div>
           </Collapsible.Item>
