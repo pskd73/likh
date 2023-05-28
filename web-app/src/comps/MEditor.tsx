@@ -353,7 +353,7 @@ const MEditor = ({
         <p
           {...attributes}
           className={classNames({
-            "pl-[48px]": text.match(grammer.listRegex),
+            "pl-[34px]": text.match(grammer.listRegex),
             "p-[24px] py bg-primary-700 bg-opacity-10 italic rounded my-6":
               text.match(grammer.quoteRegex),
             "flex flex-col items-center py-10": imgUrl,
