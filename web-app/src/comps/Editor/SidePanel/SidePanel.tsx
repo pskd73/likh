@@ -7,6 +7,7 @@ import List from "../List";
 import Toggle from "../../Toggle";
 import SearchInput from "./SearchInput";
 import { SavedNote } from "../type";
+import { textToTitle } from "../../../Note";
 
 const SidePanel = ({
   onNoteSelect,
@@ -76,7 +77,7 @@ const SidePanel = ({
                       className="text-sm"
                       onClick={() => onNoteSelect(note)}
                     >
-                      {note.text}
+                      {textToTitle(note.text)}
                     </List.Item>
                   ) : null;
                 })}
