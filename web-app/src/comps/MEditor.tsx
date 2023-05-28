@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import Prism from "prismjs";
 import "prismjs/components/prism-markdown";
-import { useCallback, useMemo, useRef } from "react";
+import { KeyboardEventHandler, useCallback, useMemo, useRef } from "react";
 import {
   createEditor,
   BaseEditor,
@@ -11,6 +11,9 @@ import {
   Descendant,
   Node,
   Path,
+  Editor,
+  Transforms,
+  Location,
 } from "slate";
 import { HistoryEditor, withHistory } from "slate-history";
 import { Slate, Editable, withReact, ReactEditor } from "slate-react";
@@ -64,6 +67,7 @@ const Leaf = ({ attributes, children, leaf }: any) => {
     "font-semibold": leaf.bold,
     italic: leaf.italic,
     "line-through": leaf.strikethrough,
+    hidden: leaf.punctuation && leaf.hidable && !leaf.focused,
 
     // generic punctuation
     "opacity-30": leaf.punctuation || leaf.blockquote,
@@ -78,7 +82,8 @@ const Leaf = ({ attributes, children, leaf }: any) => {
     "mb-2": leaf.title3 && !leaf.punctuation,
 
     // list
-    "-ml-[24px] opacity-30": leaf.bullet,
+    "inline-flex w-[50px] -ml-[50px] opacity-30 justify-end pr-[6px]":
+      leaf.bullet,
 
     // link
     "underline cursor-pointer": leaf.link,
@@ -125,6 +130,7 @@ const getTokenLength = (token: string | Prism.Token) => {
 };
 
 const getTokenRanges = (
+  editor: BaseEditor,
   path: Path,
   token: string | Prism.Token,
   start: number,
@@ -142,7 +148,7 @@ const getTokenRanges = (
   }
 
   if (Array.isArray(token.content)) {
-    return getTokensRanges(path, token.content, start, [
+    return getTokensRanges(editor, path, token.content, start, [
       ...parentTokens,
       token,
     ]);
@@ -161,7 +167,10 @@ const getTokenRanges = (
   return [range];
 };
 
+const hidable: string[] = ["italic", "bold", "title1", "title2", "title3"];
+
 const getTokensRanges = (
+  editor: BaseEditor,
   path: Path,
   tokens: Array<string | Prism.Token>,
   start: number,
@@ -171,9 +180,26 @@ const getTokensRanges = (
   for (const _token of tokens) {
     const _parentTokens = [...parentTokens];
     if (typeof _token !== "string") {
+      if (hidable.includes(_token.type)) {
+        _parentTokens.push({ type: "hidable" } as any);
+        const focused = isPointFocused(editor, {
+          path,
+          start,
+          end: start + _token.length,
+        });
+        if (focused) {
+          _parentTokens.push({ type: "focused" } as any);
+        }
+      }
       _parentTokens.push(_token);
     }
-    const newRanges = getTokenRanges(path, _token, start, _parentTokens);
+    const newRanges = getTokenRanges(
+      editor,
+      path,
+      _token,
+      start,
+      _parentTokens
+    );
     ranges = [...ranges, ...newRanges];
     start = getRangesEnd(newRanges, start);
   }
@@ -187,9 +213,71 @@ const getRangesEnd = (ranges: Range[], start: number) => {
   return start;
 };
 
+const isPointFocused = (
+  editor: BaseEditor,
+  point: { path: number[]; start: number; end: number }
+) => {
+  if (!editor.selection) return false;
+  const startPath =
+    JSON.stringify(editor.selection.anchor.path) === JSON.stringify(point.path);
+  const endPath =
+    JSON.stringify(editor.selection?.focus.path) === JSON.stringify(point.path);
+
+  if (startPath) {
+    if (
+      point.start <= editor.selection.anchor.offset &&
+      point.end >= editor.selection.anchor.offset
+    ) {
+      return true;
+    }
+  }
+
+  if (endPath) {
+    if (
+      point.start <= editor.selection.focus.offset &&
+      point.end >= editor.selection.focus.offset
+    ) {
+      return true;
+    }
+  }
+
+  if (startPath && endPath) {
+    if (
+      point.start >= editor.selection.anchor.offset &&
+      point.end <= editor.selection.focus.offset
+    ) {
+      return true;
+    }
+    if (
+      point.start >= editor.selection.focus.offset &&
+      point.end <= editor.selection.anchor.offset
+    ) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
 const playType = () => {
   const aud = keySounds[randomInt(0, 4)].cloneNode() as HTMLAudioElement;
   aud.play();
+};
+
+const getNodeText = (element: any) => {
+  let text = "";
+  if (typeof element === "string") {
+    text += element;
+  }
+  if (element.text) {
+    text += element.text;
+  }
+  if (element.children) {
+    for (const child of element.children) {
+      text += getNodeText(child);
+    }
+  }
+  return text;
 };
 
 const MEditor = ({
@@ -216,10 +304,8 @@ const MEditor = ({
   );
   const renderLeaf = useCallback((props: any) => <Leaf {...props} />, []);
   const decorate = useCallback(([node, path]: NodeEntry) => {
-    let ranges: Range[] = [];
-
     if (!Text.isText(node)) {
-      return ranges;
+      return [];
     }
 
     const tokens = Prism.tokenize(node.text, {
@@ -236,7 +322,8 @@ const MEditor = ({
       image: grammer.image,
     });
 
-    return getTokensRanges(path, tokens, 0, []);
+    const ranges = getTokensRanges(editor, path, tokens, 0, []);
+    return ranges;
   }, []);
 
   const renderElement = useCallback(
@@ -288,8 +375,35 @@ const MEditor = ({
     }
   };
 
-  const handleKeyUp = () => {
+  const handleKeyUp: KeyboardEventHandler<HTMLDivElement> = (e) => {
     scroll.scroll();
+  };
+
+  const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = (e) => {
+    if (e.key === "Enter") {
+      const point = Editor.before(editor, editor.selection!.anchor);
+      const node = Editor.first(editor, point!);
+      const text = getNodeText(node[0]);
+      const match = text.match(grammer.listRegex);
+      if (match) {
+        e.preventDefault();
+        if (match[5]) {
+          let prefix = `${match[2]} `;
+          if (match[4]) {
+            prefix = `${Number(match[4]) + 1}. `;
+          }
+          Transforms.insertNodes(editor, [
+            { type: "paragraph", children: [{ text: "" }] },
+          ]);
+          Transforms.insertText(editor, prefix);
+        } else {
+          Transforms.removeNodes(editor);
+          Transforms.insertNodes(editor, [
+            { type: "paragraph", children: [{ text: "" }] },
+          ]);
+        }
+      }
+    }
   };
 
   const getInitValue = () => {
@@ -318,6 +432,7 @@ const MEditor = ({
             renderLeaf={renderLeaf}
             renderElement={renderElement}
             onKeyUp={handleKeyUp}
+            onKeyDown={handleKeyDown}
             placeholder="Write your mind here ..."
           />
         </Slate>

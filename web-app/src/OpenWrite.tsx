@@ -37,12 +37,13 @@ const newNote = JSON.stringify([
 ]);
 
 const OpenWrite = () => {
-  useEffect(() => {
-    Event.track("open_write");
-  }, []);
   const initalValue = useMemo(() => {
     const storedNote = localStorage.getItem("open_note");
     return storedNote ? storedNote : newNote;
+  }, []);
+
+  useEffect(() => {
+    Event.track("open_write");
   }, []);
 
   const handleChange = ({ value }: { value: Descendant[] }) => {

@@ -39,7 +39,7 @@ export const italic = {
 };
 
 export const bold = {
-  pattern: /[_*]{2}.+[_*]{2}/m,
+  pattern: /[_*]{2}[^_*]+[_*]{2}/m,
   greedy: true,
   inside: {
     punctuation: [
@@ -87,11 +87,11 @@ export const title3 = {
   },
 };
 
-export const listRegex = /^(([-*])|([0-9]+.)) .+$/m;
+export const listRegex = /^(([-*\+])|(([0-9]+).)) (.*)$/m;
 export const list = {
   pattern: listRegex,
   inside: {
-    bullet: /^([-*])|([0-9]+.) /,
+    bullet: /^(([-*\+])|([0-9]+.)) /,
     italic,
     bold,
     strikethrough,
