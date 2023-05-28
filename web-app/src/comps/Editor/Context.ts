@@ -43,7 +43,7 @@ export const useEditor = ({
 }: {
   storage: Storage;
 }): EditorContextType => {
-  const [sideBar, setSideBar] = useState(true);
+  const [sideBar, setSideBar] = useState(false);
   const [activeSideMenus, setActiveSideMenus] = useState<string[]>([
     "notes",
     "settings",
