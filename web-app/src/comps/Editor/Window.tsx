@@ -52,7 +52,7 @@ const EditorWindow = ({
       <div className="min-h-[100vh] bg-base text-primary-700 flex">
         <SidePanel onNoteSelect={handleNoteSelect} />
         <StatusBar text={editorState.note.text} />
-        <div className="w-full p-4 py-8 flex justify-center">
+        <div className="flex-1 p-4 py-8 flex justify-center">
           <div>
             <div className="max-w-[860px] md:w-[860px]">
               <MEditor

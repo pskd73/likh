@@ -29,89 +29,97 @@ const SidePanel = ({
   } = useContext(EditorContext);
 
   return (
-    <div
-      className={classNames(
-        "transition-all relative shadow-xl z-10 h-[100vh]",
-        "bg-white border-r border-primary-700 border-opacity-20",
-        "sticky top-0",
-        {
+    <>
+      <div
+        className={classNames({
           "w-[0px]": !sideBar,
-          "w-[400px]": sideBar,
-        }
-      )}
-    >
-      <div className="absolute top-1 -right-[26px]">
-        <button
-          className="curosr-pointer opacity-30 hover:opacity-100 text-xl"
-          onClick={toggleSideBar}
-        >
-          <BiSidebar />
-        </button>
-      </div>
-      <div className="max-w-full overflow-hidden">
-        <List>
-          <List.Item
-            className="flex justify-between items-center"
-            onClick={() => newNote({ text: "New note" })}
+          "w-[300px]": sideBar,
+        })}
+      />
+      <div
+        className={classNames(
+          "transition-all shadow-xl z-10 h-[100vh]",
+          "bg-white border-r border-primary-700 border-opacity-20",
+          "fixed top-0",
+          {
+            "w-[0px]": !sideBar,
+            "w-[300px]": sideBar,
+          }
+        )}
+      >
+        <div className="absolute top-1 -right-[26px]">
+          <button
+            className="curosr-pointer opacity-30 hover:opacity-100 text-xl"
+            onClick={toggleSideBar}
           >
-            <span>New</span>
-            <span>
-              <BiPlus />
-            </span>
-          </List.Item>
-        </List>
+            <BiSidebar />
+          </button>
+        </div>
+        <div className="max-w-full overflow-hidden">
+          <List>
+            <List.Item
+              className="flex justify-between items-center"
+              onClick={() => newNote({ text: "New note" })}
+            >
+              <span>New</span>
+              <span>
+                <BiPlus />
+              </span>
+            </List.Item>
+          </List>
 
-        <SearchInput />
+          <SearchInput />
 
-        <Collapsible>
-          <Collapsible.Item
-            title="Notes"
-            active={isSideMenuActive("notes")}
-            onToggle={() => toggleSideMenu("notes")}
-          >
-            <div>
-              <List>
-                {notesToShow.map((note, i) => (
-                  <List.Item
-                    key={i}
-                    className="text-sm"
-                    onClick={() => onNoteSelect(note)}
-                  >
-                    {textToTitle(note.text, 20)}
+          <Collapsible>
+            <Collapsible.Item
+              title="Notes"
+              active={isSideMenuActive("notes")}
+              onToggle={() => toggleSideMenu("notes")}
+            >
+              <div>
+                <List>
+                  {notesToShow.map((note, i) => (
+                    <List.Item
+                      key={i}
+                      className="text-sm"
+                      onClick={() => onNoteSelect(note)}
+                    >
+                      {textToTitle(note.text, 20)}
+                    </List.Item>
+                  ))}
+                </List>
+              </div>
+            </Collapsible.Item>
+            <Collapsible.Item
+              title="Settings"
+              active={isSideMenuActive("settings")}
+              onToggle={() => toggleSideMenu("settings")}
+            >
+              <div>
+                <List>
+                  <List.Item className="flex justify-between items-center">
+                    <span>Stats</span>
+                    <Toggle
+                      id="stats"
+                      checked={showStats}
+                      onChange={(e) => setShowStats(e.target.checked)}
+                    />
                   </List.Item>
-                ))}
-              </List>
-            </div>
-          </Collapsible.Item>
-          <Collapsible.Item
-            title="Settings"
-            active={isSideMenuActive("settings")}
-            onToggle={() => toggleSideMenu("settings")}
-          >
-            <div>
-              <List>
-                <List.Item className="flex justify-between items-center">
-                  <span>Stats</span>
-                  <Toggle
-                    id="stats"
-                    checked={showStats}
-                    onChange={(e) => setShowStats(e.target.checked)}
-                  />
-                </List.Item>
-                <List.Item className="flex justify-between items-center">
-                  <span>Typewriter mode</span>
-                  <Toggle
-                    id="typewriterMode"
-                    checked={typewriterMode}
-                    onChange={(e) => setTypewriterMode(e.target.checked)}
-                  />
-                </List.Item>
-              </List>
-            </div>
-          </Collapsible.Item>
-        </Collapsible>
+                  <List.Item className="flex justify-between items-center">
+                    <span>Typewriter mode</span>
+                    <Toggle
+                      id="typewriterMode"
+                      checked={typewriterMode}
+                      onChange={(e) => setTypewriterMode(e.target.checked)}
+                    />
+                  </List.Item>
+                </List>
+              </div>
+            </Collapsible.Item>
+          </Collapsible>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
