@@ -1,7 +1,7 @@
 import { Descendant } from "slate";
 import MEditor from "../MEditor";
 import { EditorContext, useEditor } from "./Context";
-import SidePanel from "./SidePanel";
+import SidePanel from "./SidePanel/SidePanel";
 import StatusBar from "./StatusBar";
 
 const EditorWindow = ({

@@ -1,10 +1,11 @@
 import classNames from "classnames";
 import { useContext } from "react";
-import { EditorContext } from "./Context";
+import { EditorContext } from "../Context";
 import { BiSidebar } from "react-icons/bi";
-import Collapsible from "./Collapsible";
-import List from "./List";
-import Toggle from "../Toggle";
+import Collapsible from "../Collapsible";
+import List from "../List";
+import Toggle from "../../Toggle";
+import SearchInput from "./SearchInput";
 
 const SidePanel = () => {
   const {
@@ -39,6 +40,7 @@ const SidePanel = () => {
         </button>
       </div>
       <div className="max-w-full overflow-hidden">
+        <SearchInput />
         <Collapsible>
           <Collapsible.Item
             title="Notes"
