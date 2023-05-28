@@ -1,20 +1,13 @@
-import { Descendant, createEditor } from "slate";
+import { Descendant } from "slate";
 import MEditor from "../MEditor";
 import { EditorContext, useEditor } from "./Context";
 import SidePanel from "./SidePanel/SidePanel";
 import StatusBar from "./StatusBar";
 import useStorage from "./useStorage";
-import { serialize } from "v8";
 import { useState } from "react";
 import { SavedNote } from "./type";
-import { withHistory } from "slate-history";
-import { withReact } from "slate-react";
-
-const getNewEditor = () => withHistory(withReact(createEditor()));
 
 const EditorWindow = ({
-  onChange,
-  initialValue,
   text,
 }: {
   onChange: (val: {
@@ -27,7 +20,7 @@ const EditorWindow = ({
 }) => {
   const storage = useStorage();
   const editorState = useEditor({ storage });
-  const [editor, setEditor] = useState(getNewEditor());
+  const [editorKey, setEditorKey] = useState<number>(new Date().getTime());
 
   const handleChange = ({
     text,
@@ -45,7 +38,7 @@ const EditorWindow = ({
 
   const handleNoteSelect = (note: SavedNote) => {
     editorState.updateNote(note);
-    setEditor(getNewEditor());
+    setEditorKey(new Date().getTime());
   };
 
   return (
@@ -57,11 +50,11 @@ const EditorWindow = ({
           <div>
             <div className="max-w-[860px] md:w-[860px]">
               <MEditor
+                key={editorKey}
                 onChange={handleChange}
                 initValue={editorState.note.serialized}
                 initText={editorState.note.text}
                 typeWriter={editorState.typewriterMode}
-                editor={editor}
               />
             </div>
           </div>
