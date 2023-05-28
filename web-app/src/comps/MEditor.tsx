@@ -90,7 +90,18 @@ const Leaf = ({ attributes, children, leaf }: any) => {
 
     // hashtag
     "bg-primary-700 bg-opacity-20 p-1 px-3 rounded-full": leaf.hashtag,
+
+    // notelink
+    "underline cursor-pointer ": leaf.notelink && !leaf.punctuation,
   });
+
+  if (leaf.notelink) {
+    return (
+      <span {...attributes} className={className} onClick={console.log}>
+        {children}
+      </span>
+    );
+  }
 
   if (leaf.link) {
     return (
@@ -180,7 +191,14 @@ const getTokenRanges = (
   return [range];
 };
 
-const hidable: string[] = ["italic", "bold", "title1", "title2", "title3"];
+const hidable: string[] = [
+  "italic",
+  "bold",
+  "title1",
+  "title2",
+  "title3",
+  "notelink",
+];
 
 const getTokensRanges = (
   editor: BaseEditor,
@@ -333,6 +351,7 @@ const MEditor = ({
       quote: grammer.quote,
       hashtag: grammer.hashtag,
       image: grammer.image,
+      notelink: grammer.notelink,
     });
 
     const ranges = getTokensRanges(editor, path, tokens, 0, []);
