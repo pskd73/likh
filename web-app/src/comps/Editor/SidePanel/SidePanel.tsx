@@ -1,8 +1,27 @@
 import classNames from "classnames";
-import { useContext } from "react";
+import { ComponentProps, PropsWithChildren, useContext } from "react";
 import { EditorContext } from "../Context";
-import { BiSidebar } from "react-icons/bi";
+import { BiListUl, BiMenu, BiSidebar, BiSpreadsheet } from "react-icons/bi";
 import Explorer from "./Explorer";
+import Outline from "./Outline";
+
+const PullButton = ({
+  children,
+  active,
+  ...restProps
+}: ComponentProps<"button"> & { active: boolean }) => {
+  return (
+    <button
+      className={classNames("curosr-pointer hover:opacity-100 text-xl", {
+        "opacity-100": active,
+        "opacity-30": !active,
+      })}
+      {...restProps}
+    >
+      {children}
+    </button>
+  );
+};
 
 const SidePanel = () => {
   const { sideBar, setSideBar } = useContext(EditorContext);
@@ -26,16 +45,27 @@ const SidePanel = () => {
           }
         )}
       >
-        <div className="absolute top-[12px] -right-[34px]">
-          <button
-            className="curosr-pointer opacity-30 hover:opacity-100 text-xl"
-            onClick={() => setSideBar((b) => (b ? undefined : "explorer"))}
+        <div className="absolute top-[12px] -right-[34px] flex flex-col space-y-4">
+          <PullButton
+            onClick={() =>
+              setSideBar((b) => (b === "explorer" ? undefined : "explorer"))
+            }
+            active={sideBar === "explorer"}
           >
-            <BiSidebar />
-          </button>
+            <BiMenu />
+          </PullButton>
+          <PullButton
+            onClick={() =>
+              setSideBar((b) => (b === "outline" ? undefined : "outline"))
+            }
+            active={sideBar === "outline"}
+          >
+            <BiSpreadsheet />
+          </PullButton>
         </div>
         <div className="max-w-full overflow-hidden">
-          <Explorer />
+          {sideBar === "explorer" && <Explorer />}
+          {sideBar === "outline" && <Outline />}
         </div>
       </div>
     </>
