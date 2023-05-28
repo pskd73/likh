@@ -6,7 +6,10 @@ const isWindowShortcut = (e: KeyboardEvent) => {
 };
 
 const shortcuts: Record<string, (editor: EditorContextType) => void> = {
-  l: (editor) => editor.setSideBar(b => b ? undefined : "explorer"),
+  l: (editor) =>
+    editor.setSideBar((b) => (b === "explorer" ? undefined : "explorer")),
+  o: (editor) =>
+    editor.setSideBar((b) => (b === "outline" ? undefined : "outline")),
   n: (editor) => editor.newNote({ text: "New note" }),
   ArrowLeft: (editor) => {
     const { storage } = editor;
