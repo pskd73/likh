@@ -1,32 +1,11 @@
 import classNames from "classnames";
 import { useContext } from "react";
 import { EditorContext } from "../Context";
-import { BiPlus, BiSidebar } from "react-icons/bi";
-import Collapsible from "../Collapsible";
-import List from "../List";
-import Toggle from "../../Toggle";
-import SearchInput from "./SearchInput";
-import { SavedNote } from "../type";
-import { textToTitle } from "../../../Note";
+import { BiSidebar } from "react-icons/bi";
 import Explorer from "./Explorer";
 
-const SidePanel = ({
-  onNoteSelect,
-}: {
-  onNoteSelect: (note: SavedNote) => void;
-}) => {
-  const {
-    sideBar,
-    toggleSideBar,
-    isSideMenuActive,
-    toggleSideMenu,
-    showStats,
-    setShowStats,
-    typewriterMode,
-    setTypewriterMode,
-    notesToShow,
-    newNote,
-  } = useContext(EditorContext);
+const SidePanel = () => {
+  const { sideBar, setSideBar } = useContext(EditorContext);
 
   return (
     <>
@@ -50,7 +29,7 @@ const SidePanel = ({
         <div className="absolute top-[12px] -right-[34px]">
           <button
             className="curosr-pointer opacity-30 hover:opacity-100 text-xl"
-            onClick={toggleSideBar}
+            onClick={() => setSideBar((b) => (b ? undefined : "explorer"))}
           >
             <BiSidebar />
           </button>

@@ -5,7 +5,6 @@ import SidePanel from "./SidePanel/SidePanel";
 import StatusBar from "./StatusBar";
 import useStorage from "./useStorage";
 import { useEffect, useState } from "react";
-import { SavedNote } from "./type";
 import useShortcuts from "./useShortcuts";
 import classNames from "classnames";
 
@@ -34,21 +33,13 @@ const EditorWindow = () => {
     setEditorKey(new Date().getTime());
   }, [editorState.note.id]);
 
-  const handleNoteSelect = (note: SavedNote) => {
-    editorState.updateNote(note);
-  };
-
   return (
     <EditorContext.Provider value={editorState}>
       <div className="min-h-[100vh] bg-base text-primary-700 flex">
-        <SidePanel onNoteSelect={handleNoteSelect} />
+        <SidePanel />
         <StatusBar text={editorState.note.text} />
         <div className="flex-1 p-4 py-8 flex justify-center">
-          <div
-            className={classNames(
-              "w-full max-w-[860px] md:w-[860px]",
-            )}
-          >
+          <div className={classNames("w-full max-w-[860px] md:w-[860px]")}>
             <MEditor
               key={editorKey}
               onChange={handleChange}

@@ -8,8 +8,8 @@ type CountStatType = "words" | "readTime";
 export type EditorContextType = {
   storage: Storage;
 
-  sideBar: boolean;
-  toggleSideBar: () => void;
+  sideBar: string | undefined;
+  setSideBar: StateSetter<string | undefined>;
 
   activeSideMenus: string[];
   toggleSideMenu: (key: string) => void;
@@ -43,7 +43,7 @@ export const useEditor = ({
 }: {
   storage: Storage;
 }): EditorContextType => {
-  const [sideBar, setSideBar] = useState(false);
+  const [sideBar, setSideBar] = useState<string | undefined>();
   const [activeSideMenus, setActiveSideMenus] = useState<string[]>([
     "notes",
     "settings",
@@ -62,8 +62,6 @@ export const useEditor = ({
       .map((nm) => storage.getNote(nm.id))
       .filter((n) => !!n) as SavedNote[];
   }, [storage.notes, searchTerm, note]);
-
-  const toggleSideBar = () => setSideBar((b) => !b);
 
   const toggleSideMenu = (key: string) => {
     setActiveSideMenus((items) => {
@@ -93,7 +91,7 @@ export const useEditor = ({
     storage,
 
     sideBar,
-    toggleSideBar,
+    setSideBar,
 
     activeSideMenus,
     toggleSideMenu,
