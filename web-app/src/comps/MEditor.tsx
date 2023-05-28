@@ -77,12 +77,9 @@ const Leaf = ({ attributes, children, leaf }: any) => {
 
     // title
     "font-bold block": title,
-    "text-5xl": leaf.title1,
-    "text-4xl": leaf.title2,
-    "text-3xl": leaf.title3,
-    "mb-8": leaf.title1 && !leaf.punctuation,
-    "mb-4": leaf.title2 && !leaf.punctuation,
-    "mb-2": leaf.title3 && !leaf.punctuation,
+    "mb-6 text-4xl": leaf.title1 && !leaf.punctuation,
+    "mb-4 text-3xl": leaf.title2 && !leaf.punctuation,
+    "mb-2 text-2xl": leaf.title3 && !leaf.punctuation,
 
     // list
     "inline-flex w-[50px] -ml-[50px] opacity-30 justify-end pr-[6px]":

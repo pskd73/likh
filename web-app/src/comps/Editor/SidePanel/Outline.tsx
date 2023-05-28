@@ -107,7 +107,7 @@ const Outline = () => {
   const titles = useMemo(() => {
     const titles = generate();
     return nested(titles, 0).children;
-  }, [note.text]);
+  }, [note]);
 
   return (
     <div className="p-4">
