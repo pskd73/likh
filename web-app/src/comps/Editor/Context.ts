@@ -60,7 +60,7 @@ export const useEditor = ({
     return storage.notes
       .map((nm) => storage.getNote(nm.id))
       .filter((n) => !!n) as SavedNote[];
-  }, [storage.notes, searchTerm]);
+  }, [storage.notes, searchTerm, note]);
 
   const toggleSideBar = () => setSideBar((b) => !b);
 
