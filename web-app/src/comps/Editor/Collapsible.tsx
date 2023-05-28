@@ -3,7 +3,7 @@ import { PropsWithChildren } from "react";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 
 const Collapsible = ({ children }: PropsWithChildren) => {
-  return <div>{children}</div>;
+  return <div className="">{children}</div>;
 };
 
 const Item = ({
@@ -22,7 +22,7 @@ const Item = ({
         className={classNames(
           "bg-primary-700 bg-opacity-10 p-2",
           "flex justify-between items-center",
-          "border-b border-primary-700 border-opacity-20",
+          "border-y border-primary-700 border-opacity-20",
           "shadow-md cursor-pointer"
         )}
         onClick={onToggle}

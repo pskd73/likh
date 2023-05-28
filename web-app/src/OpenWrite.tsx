@@ -44,16 +44,30 @@ const OpenWrite = () => {
     const storedNote = localStorage.getItem("open_note");
     return storedNote ? storedNote : newNote;
   }, []);
+  const [text, setText] = useState<string>(initalValue);
 
   useEffect(() => {
     Event.track("open_write");
   }, []);
 
-  const handleChange = ({ value }: { value: Descendant[] }) => {
+  const handleChange = ({
+    value,
+    text,
+  }: {
+    value: Descendant[];
+    text: string;
+  }) => {
     localStorage.setItem("open_note", JSON.stringify(value));
+    setText(text);
   };
 
-  return <EditorWindow onChange={handleChange} initialValue={initalValue} />;
+  return (
+    <EditorWindow
+      onChange={handleChange}
+      initialValue={initalValue}
+      text={text}
+    />
+  );
 };
 
 export default OpenWrite;

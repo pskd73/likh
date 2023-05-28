@@ -49,6 +49,9 @@ const SidePanel = () => {
               <List>
                 <List.Item>Note 1</List.Item>
                 <List.Item>Note 2</List.Item>
+                {[...Array(100)].map((_, i) => (
+                  <List.Item key={i}>Note 2</List.Item>
+                ))}
               </List>
             </div>
           </Collapsible.Item>

@@ -27,8 +27,8 @@ export const EditorContext = createContext<EditorContextType>(
 
 export const useEditor = () => {
   const [sideBar, setSideBar] = useState(false);
-  const [activeSideMenus, setActiveSideMenus] = useState<string[]>(["notes"]);
-  const [showStats, setShowStats] = useState(false);
+  const [activeSideMenus, setActiveSideMenus] = useState<string[]>(["notes", "settings"]);
+  const [showStats, setShowStats] = useState(true);
   const [typewriterMode, setTypewriterMode] = useState(false);
   const [countStatType, setCountStatType] = useState<CountStatType>("words");
 

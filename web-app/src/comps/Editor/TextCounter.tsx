@@ -37,8 +37,8 @@ const TextCounter = ({ text }: { text: string }) => {
     <Button
       lite
       className={classNames("flex items-center space-x-2 justify-center", {
-        "w-16": countStatType === "words",
-        "w-20": countStatType === "readTime",
+        // "w-16": countStatType === "words",
+        // "w-20": countStatType === "readTime",
       })}
       onClick={() =>
         setCountStatType((old) => (old === "words" ? "readTime" : "words"))
