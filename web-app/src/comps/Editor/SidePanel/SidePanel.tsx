@@ -8,6 +8,7 @@ import Toggle from "../../Toggle";
 import SearchInput from "./SearchInput";
 import { SavedNote } from "../type";
 import { textToTitle } from "../../../Note";
+import Explorer from "./Explorer";
 
 const SidePanel = ({
   onNoteSelect,
@@ -55,67 +56,7 @@ const SidePanel = ({
           </button>
         </div>
         <div className="max-w-full overflow-hidden">
-          <List>
-            <List.Item
-              className="flex justify-between items-center"
-              onClick={() => newNote({ text: "New note" })}
-            >
-              <span>New</span>
-              <span>
-                <BiPlus />
-              </span>
-            </List.Item>
-          </List>
-
-          <SearchInput />
-
-          <Collapsible>
-            <Collapsible.Item
-              title="Notes"
-              active={isSideMenuActive("notes")}
-              onToggle={() => toggleSideMenu("notes")}
-            >
-              <div>
-                <List>
-                  {notesToShow.map((note, i) => (
-                    <List.Item
-                      key={i}
-                      className="text-sm"
-                      onClick={() => onNoteSelect(note)}
-                    >
-                      {textToTitle(note.text, 20)}
-                    </List.Item>
-                  ))}
-                </List>
-              </div>
-            </Collapsible.Item>
-            <Collapsible.Item
-              title="Settings"
-              active={isSideMenuActive("settings")}
-              onToggle={() => toggleSideMenu("settings")}
-            >
-              <div>
-                <List>
-                  <List.Item className="flex justify-between items-center">
-                    <span>Stats</span>
-                    <Toggle
-                      id="stats"
-                      checked={showStats}
-                      onChange={(e) => setShowStats(e.target.checked)}
-                    />
-                  </List.Item>
-                  <List.Item className="flex justify-between items-center">
-                    <span>Typewriter mode</span>
-                    <Toggle
-                      id="typewriterMode"
-                      checked={typewriterMode}
-                      onChange={(e) => setTypewriterMode(e.target.checked)}
-                    />
-                  </List.Item>
-                </List>
-              </div>
-            </Collapsible.Item>
-          </Collapsible>
+          <Explorer />
         </div>
       </div>
     </>
