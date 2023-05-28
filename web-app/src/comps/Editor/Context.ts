@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useMemo, useState } from "react";
 import { Storage } from "./useStorage";
 import { SavedNote } from "./type";
 
@@ -26,6 +26,11 @@ export type EditorContextType = {
 
   note: SavedNote;
   updateNote: (note: SavedNote) => void;
+
+  searchTerm: string;
+  setSearchTerm: StateSetter<string>;
+
+  notesToShow: SavedNote[];
 };
 
 export const EditorContext = createContext<EditorContextType>(
@@ -46,6 +51,16 @@ export const useEditor = ({
   const [typewriterMode, setTypewriterMode] = useState(false);
   const [countStatType, setCountStatType] = useState<CountStatType>("words");
   const [note, setNote] = useState<SavedNote>(storage.getRecentNote());
+  const [searchTerm, setSearchTerm] = useState<string>("");
+
+  const notesToShow = useMemo<SavedNote[]>(() => {
+    if (searchTerm) {
+      return storage.search(searchTerm);
+    }
+    return storage.notes
+      .map((nm) => storage.getNote(nm.id))
+      .filter((n) => !!n) as SavedNote[];
+  }, [storage.notes, searchTerm]);
 
   const toggleSideBar = () => setSideBar((b) => !b);
 
@@ -88,5 +103,9 @@ export const useEditor = ({
 
     note,
     updateNote,
+
+    searchTerm,
+    setSearchTerm,
+    notesToShow,
   };
 };

@@ -27,6 +27,7 @@ export type Storage = {
   getNote: (id: string) => SavedNote | undefined;
   getRecentNote: () => SavedNote;
   saveNote: (note: SavedNote) => void;
+  search: (text: string) => SavedNote[];
 };
 
 const useStorage = (): Storage => {
@@ -58,12 +59,22 @@ const useStorage = (): Storage => {
     return newNote("New note");
   };
 
+  const search = (text: string) => {
+    const notes = getNoteMetas()
+      .map((nm) => getNote(nm.id))
+      .filter((n) => !!n) as SavedNote[];
+    return notes.filter((note) => {
+      return note.text.includes(text);
+    });
+  };
+
   return {
     notes,
     newNote,
     getNote,
     getRecentNote,
     saveNote,
+    search,
   };
 };
 

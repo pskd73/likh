@@ -24,6 +24,7 @@ const SidePanel = ({
     setShowStats,
     typewriterMode,
     setTypewriterMode,
+    notesToShow,
   } = useContext(EditorContext);
 
   return (
@@ -69,18 +70,15 @@ const SidePanel = ({
           >
             <div>
               <List>
-                {storage.notes.map((noteMeta, i) => {
-                  const note = storage.getNote(noteMeta.id);
-                  return note ? (
-                    <List.Item
-                      key={i}
-                      className="text-sm"
-                      onClick={() => onNoteSelect(note)}
-                    >
-                      {textToTitle(note.text)}
-                    </List.Item>
-                  ) : null;
-                })}
+                {notesToShow.map((note, i) => (
+                  <List.Item
+                    key={i}
+                    className="text-sm"
+                    onClick={() => onNoteSelect(note)}
+                  >
+                    {textToTitle(note.text)}
+                  </List.Item>
+                ))}
               </List>
             </div>
           </Collapsible.Item>
