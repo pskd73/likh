@@ -1,12 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { Paper } from "./comps/Layout";
 import MEditor from "./comps/MEditor";
 import Event from "./components/Event";
 import { Descendant } from "slate";
 import Button from "./comps/Button";
-import { BiSidebar } from "react-icons/bi";
-import classNames from "classnames";
-import EditorWindow from "./comps/Editor/Window";
 
 const newNote = JSON.stringify([
   { type: "paragraph", children: [{ text: "# Welcome!" }] },
@@ -44,29 +41,26 @@ const OpenWrite = () => {
     const storedNote = localStorage.getItem("open_note");
     return storedNote ? storedNote : newNote;
   }, []);
-  const [text, setText] = useState<string>(initalValue);
 
   useEffect(() => {
     Event.track("open_write");
   }, []);
 
-  const handleChange = ({
-    value,
-    text,
-  }: {
-    value: Descendant[];
-    text: string;
-  }) => {
+  const handleChange = ({ value }: { value: Descendant[] }) => {
     localStorage.setItem("open_note", JSON.stringify(value));
-    setText(text);
   };
 
   return (
-    <EditorWindow
-      onChange={handleChange}
-      initialValue={initalValue}
-      text={text}
-    />
+    <div className="min-h-[100vh] bg-base text-primary-700 py-10">
+      <Paper>
+        <div className="fixed bottom-0 right-0 p-2">
+          <Button link href="https://retronote.app">
+            Sign in for more &rarr;
+          </Button>
+        </div>
+        <MEditor onChange={handleChange} initValue={initalValue!} typeWriter />
+      </Paper>
+    </div>
   );
 };
 

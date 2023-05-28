@@ -8,17 +8,7 @@ import { useEffect, useState } from "react";
 import { SavedNote } from "./type";
 import useShortcuts from "./useShortcuts";
 
-const EditorWindow = ({
-  text,
-}: {
-  onChange: (val: {
-    value: Descendant[];
-    text: string;
-    serialized: string;
-  }) => void;
-  initialValue: string;
-  text: string;
-}) => {
+const EditorWindow = () => {
   const storage = useStorage();
   const editorState = useEditor({ storage });
   const [editorKey, setEditorKey] = useState<number>(new Date().getTime());
