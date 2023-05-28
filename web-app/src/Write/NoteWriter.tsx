@@ -28,7 +28,7 @@ const NoteWriter = ({
   note,
   onNoteChange,
   typeWriter,
-  editor
+  editor,
 }: {
   note: Note;
   typeWriter: boolean;
@@ -69,13 +69,15 @@ const NoteWriter = ({
   };
 
   return (
-    <MEditor
-      onChange={({ serialized, text }) => handleChange(serialized, text)}
-      initValue={note.slate_value}
-      initText={note.text}
-      typeWriter={typeWriter}
-      editor={editor}
-    />
+    <div className="text-[20px] font-CourierPrime leading-8">
+      <MEditor
+        onChange={({ serialized, text }) => handleChange(serialized, text)}
+        initValue={note.slate_value}
+        initText={note.text}
+        typeWriter={typeWriter}
+        editor={editor}
+      />
+    </div>
   );
 };
 

@@ -58,7 +58,13 @@ const OpenWrite = () => {
             Sign in for more &rarr;
           </Button>
         </div>
-        <MEditor onChange={handleChange} initValue={initalValue!} typeWriter />
+        <div className="text-[20px] font-CourierPrime leading-8">
+          <MEditor
+            onChange={handleChange}
+            initValue={initalValue!}
+            typeWriter
+          />
+        </div>
       </Paper>
     </div>
   );

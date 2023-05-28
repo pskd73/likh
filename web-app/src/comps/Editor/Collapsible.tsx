@@ -25,7 +25,10 @@ const Item = ({
           "border-y border-primary-700 border-opacity-20",
           "shadow-md cursor-pointer"
         )}
-        onClick={onToggle}
+        onClick={() => {
+          console.log("clicked");
+          onToggle();
+        }}
       >
         <span>{title}</span>
         <span className="text-xl">

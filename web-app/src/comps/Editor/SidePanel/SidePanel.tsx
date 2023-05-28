@@ -15,7 +15,6 @@ const SidePanel = ({
   onNoteSelect: (note: SavedNote) => void;
 }) => {
   const {
-    storage,
     sideBar,
     toggleSideBar,
     isSideMenuActive,
@@ -33,7 +32,7 @@ const SidePanel = ({
       <div
         className={classNames({
           "w-[0px]": !sideBar,
-          "w-[300px]": sideBar,
+          "w-[100px] md:w-[300px] transition-all": sideBar,
         })}
       />
       <div

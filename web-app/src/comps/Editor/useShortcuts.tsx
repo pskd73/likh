@@ -2,7 +2,7 @@ import { useCallback, useEffect } from "react";
 import { EditorContextType } from "./Context";
 
 const isWindowShortcut = (e: KeyboardEvent) => {
-  return (e.metaKey || e.ctrlKey) && e.shiftKey;
+  return e.altKey && e.ctrlKey && e.metaKey;
 };
 
 const shortcuts: Record<string, (editor: EditorContextType) => void> = {
@@ -34,9 +34,9 @@ const useShortcuts = (editor: EditorContextType) => {
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (isWindowShortcut(e)) {
-        console.log(e);
         if (shortcuts[e.key]) {
           e.preventDefault();
+          e.stopPropagation();
           shortcuts[e.key](editor);
         }
       }

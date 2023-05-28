@@ -7,6 +7,7 @@ import useStorage from "./useStorage";
 import { useEffect, useState } from "react";
 import { SavedNote } from "./type";
 import useShortcuts from "./useShortcuts";
+import classNames from "classnames";
 
 const EditorWindow = () => {
   const storage = useStorage();
@@ -43,16 +44,18 @@ const EditorWindow = () => {
         <SidePanel onNoteSelect={handleNoteSelect} />
         <StatusBar text={editorState.note.text} />
         <div className="flex-1 p-4 py-8 flex justify-center">
-          <div>
-            <div className="max-w-[860px] md:w-[860px]">
-              <MEditor
-                key={editorKey}
-                onChange={handleChange}
-                initValue={editorState.note.serialized}
-                initText={editorState.note.text}
-                typeWriter={editorState.typewriterMode}
-              />
-            </div>
+          <div
+            className={classNames(
+              "w-full max-w-[860px] md:w-[860px]",
+            )}
+          >
+            <MEditor
+              key={editorKey}
+              onChange={handleChange}
+              initValue={editorState.note.serialized}
+              initText={editorState.note.text}
+              typeWriter={editorState.typewriterMode}
+            />
           </div>
         </div>
       </div>

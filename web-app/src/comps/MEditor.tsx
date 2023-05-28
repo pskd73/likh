@@ -417,10 +417,7 @@ const MEditor = ({
   };
 
   return (
-    <div
-      className="text-[20px] font-CourierPrime leading-8"
-      style={{ ...scroll.style }}
-    >
+    <div style={{ ...scroll.style }}>
       <div ref={containerRef}>
         <Slate
           editor={editor}
