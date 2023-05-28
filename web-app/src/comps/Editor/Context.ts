@@ -68,10 +68,10 @@ export const useEditor = ({
   const toggleSideMenu = (key: string) => {
     setActiveSideMenus((items) => {
       const _items = [...items];
-      if (items.includes(key)) {
-        items.splice(items.indexOf(key), 1);
+      if (_items.includes(key)) {
+        _items.splice(items.indexOf(key), 1);
       } else {
-        items.push(key);
+        _items.push(key);
       }
       return _items;
     });
