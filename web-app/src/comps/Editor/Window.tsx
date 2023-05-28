@@ -4,8 +4,9 @@ import { EditorContext, useEditor } from "./Context";
 import SidePanel from "./SidePanel/SidePanel";
 import StatusBar from "./StatusBar";
 import useStorage from "./useStorage";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SavedNote } from "./type";
+import useShortcuts from "./useShortcuts";
 
 const EditorWindow = ({
   text,
@@ -22,6 +23,8 @@ const EditorWindow = ({
   const editorState = useEditor({ storage });
   const [editorKey, setEditorKey] = useState<number>(new Date().getTime());
 
+  useShortcuts(editorState);
+
   const handleChange = ({
     text,
     serialized,
@@ -36,16 +39,19 @@ const EditorWindow = ({
     editorState.updateNote(updatedNote);
   };
 
+  useEffect(() => {
+    setEditorKey(new Date().getTime());
+  }, [editorState.note.id]);
+
   const handleNoteSelect = (note: SavedNote) => {
     editorState.updateNote(note);
-    setEditorKey(new Date().getTime());
   };
 
   return (
     <EditorContext.Provider value={editorState}>
       <div className="min-h-[100vh] bg-base text-primary-700 flex">
         <SidePanel onNoteSelect={handleNoteSelect} />
-        <StatusBar text={text} />
+        <StatusBar text={editorState.note.text} />
         <div className="w-full p-4 py-8 flex justify-center">
           <div>
             <div className="max-w-[860px] md:w-[860px]">

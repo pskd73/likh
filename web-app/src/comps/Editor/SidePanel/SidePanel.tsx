@@ -25,6 +25,7 @@ const SidePanel = ({
     typewriterMode,
     setTypewriterMode,
     notesToShow,
+    newNote,
   } = useContext(EditorContext);
 
   return (
@@ -51,7 +52,7 @@ const SidePanel = ({
         <List>
           <List.Item
             className="flex justify-between items-center"
-            onClick={() => storage.newNote("New note")}
+            onClick={() => newNote({ text: "New note" })}
           >
             <span>New</span>
             <span>
@@ -76,7 +77,7 @@ const SidePanel = ({
                     className="text-sm"
                     onClick={() => onNoteSelect(note)}
                   >
-                    {textToTitle(note.text)}
+                    {textToTitle(note.text, 20)}
                   </List.Item>
                 ))}
               </List>

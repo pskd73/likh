@@ -1,7 +1,8 @@
 import { Note } from "./type";
 
-export const textToTitle = (text: string) => {
+export const textToTitle = (text: string, max?: number) => {
   const MAX_LENGTH = 100;
+  max = max || MAX_LENGTH;
 
   let cleaned = text;
   const titleMatch = cleaned.match(/^\n*#{1,3} (.*)\n*.*/);
@@ -10,8 +11,8 @@ export const textToTitle = (text: string) => {
   }
   cleaned = cleaned.replaceAll(/\B(#[a-zA-Z_]+\b)(?!;)/g, "");
   return (
-    cleaned.replaceAll("\n", " ").substring(0, MAX_LENGTH) +
-    (cleaned.length > MAX_LENGTH ? "..." : "")
+    cleaned.replaceAll("\n", " ").substring(0, max) +
+    (cleaned.length > max ? "..." : "")
   );
 };
 

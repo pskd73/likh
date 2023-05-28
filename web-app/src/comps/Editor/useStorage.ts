@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { NoteMeta, SavedNote } from "./type";
-import { Note } from "../../type";
 
 const getNoteMetas = (): NoteMeta[] => {
   return JSON.parse(localStorage.getItem("notes") || "[]");
@@ -23,7 +22,7 @@ const getNote = (id: string): SavedNote | undefined => {
 
 export type Storage = {
   notes: NoteMeta[];
-  newNote: (text: string) => void;
+  newNote: (text: string) => SavedNote;
   getNote: (id: string) => SavedNote | undefined;
   getRecentNote: () => SavedNote;
   saveNote: (note: SavedNote) => void;

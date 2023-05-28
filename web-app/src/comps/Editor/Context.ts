@@ -1,6 +1,6 @@
 import { createContext, useMemo, useState } from "react";
 import { Storage } from "./useStorage";
-import { SavedNote } from "./type";
+import { NewNote, SavedNote } from "./type";
 
 type StateSetter<T> = React.Dispatch<React.SetStateAction<T>>;
 type CountStatType = "words" | "readTime";
@@ -31,6 +31,7 @@ export type EditorContextType = {
   setSearchTerm: StateSetter<string>;
 
   notesToShow: SavedNote[];
+  newNote: (note: NewNote) => void;
 };
 
 export const EditorContext = createContext<EditorContextType>(
@@ -83,6 +84,11 @@ export const useEditor = ({
     setNote(note);
   };
 
+  const newNote = (note: NewNote) => {
+    const savedNote = storage.newNote(note.text);
+    setNote(savedNote);
+  };
+
   return {
     storage,
 
@@ -107,5 +113,7 @@ export const useEditor = ({
     searchTerm,
     setSearchTerm,
     notesToShow,
+
+    newNote,
   };
 };

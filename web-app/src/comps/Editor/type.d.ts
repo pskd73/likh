@@ -1,3 +1,7 @@
+export type NewNote = {
+  text: string;
+}
+
 export type NoteMeta = {
   id: string;
 };
