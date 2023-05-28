@@ -1,31 +1,30 @@
 import classNames from "classnames";
-import { useContext } from "react";
+import { ComponentProps, PropsWithChildren, useContext } from "react";
 import { EditorContext } from "../Context";
-import { BiPlus, BiSidebar } from "react-icons/bi";
-import Collapsible from "../Collapsible";
-import List from "../List";
-import Toggle from "../../Toggle";
-import SearchInput from "./SearchInput";
-import { SavedNote } from "../type";
-import { textToTitle } from "../../../Note";
+import { BiListUl, BiMenu, BiSidebar, BiSpreadsheet } from "react-icons/bi";
+import Explorer from "./Explorer";
+import Outline from "./Outline";
 
-const SidePanel = ({
-  onNoteSelect,
-}: {
-  onNoteSelect: (note: SavedNote) => void;
-}) => {
-  const {
-    sideBar,
-    toggleSideBar,
-    isSideMenuActive,
-    toggleSideMenu,
-    showStats,
-    setShowStats,
-    typewriterMode,
-    setTypewriterMode,
-    notesToShow,
-    newNote,
-  } = useContext(EditorContext);
+const PullButton = ({
+  children,
+  active,
+  ...restProps
+}: ComponentProps<"button"> & { active: boolean }) => {
+  return (
+    <button
+      className={classNames("curosr-pointer hover:opacity-100 text-xl", {
+        "opacity-100": active,
+        "opacity-30": !active,
+      })}
+      {...restProps}
+    >
+      {children}
+    </button>
+  );
+};
+
+const SidePanel = () => {
+  const { sideBar, setSideBar } = useContext(EditorContext);
 
   return (
     <>
@@ -46,76 +45,27 @@ const SidePanel = ({
           }
         )}
       >
-        <div className="absolute top-[12px] -right-[34px]">
-          <button
-            className="curosr-pointer opacity-30 hover:opacity-100 text-xl"
-            onClick={toggleSideBar}
+        <div className="absolute top-[12px] -right-[34px] flex flex-col space-y-4">
+          <PullButton
+            onClick={() =>
+              setSideBar((b) => (b === "explorer" ? undefined : "explorer"))
+            }
+            active={sideBar === "explorer"}
           >
-            <BiSidebar />
-          </button>
+            <BiMenu />
+          </PullButton>
+          <PullButton
+            onClick={() =>
+              setSideBar((b) => (b === "outline" ? undefined : "outline"))
+            }
+            active={sideBar === "outline"}
+          >
+            <BiSpreadsheet />
+          </PullButton>
         </div>
         <div className="max-w-full overflow-hidden">
-          <List>
-            <List.Item
-              className="flex justify-between items-center"
-              onClick={() => newNote({ text: "New note" })}
-            >
-              <span>New</span>
-              <span>
-                <BiPlus />
-              </span>
-            </List.Item>
-          </List>
-
-          <SearchInput />
-
-          <Collapsible>
-            <Collapsible.Item
-              title="Notes"
-              active={isSideMenuActive("notes")}
-              onToggle={() => toggleSideMenu("notes")}
-            >
-              <div>
-                <List>
-                  {notesToShow.map((note, i) => (
-                    <List.Item
-                      key={i}
-                      className="text-sm"
-                      onClick={() => onNoteSelect(note)}
-                    >
-                      {textToTitle(note.text, 20)}
-                    </List.Item>
-                  ))}
-                </List>
-              </div>
-            </Collapsible.Item>
-            <Collapsible.Item
-              title="Settings"
-              active={isSideMenuActive("settings")}
-              onToggle={() => toggleSideMenu("settings")}
-            >
-              <div>
-                <List>
-                  <List.Item className="flex justify-between items-center">
-                    <span>Stats</span>
-                    <Toggle
-                      id="stats"
-                      checked={showStats}
-                      onChange={(e) => setShowStats(e.target.checked)}
-                    />
-                  </List.Item>
-                  <List.Item className="flex justify-between items-center">
-                    <span>Typewriter mode</span>
-                    <Toggle
-                      id="typewriterMode"
-                      checked={typewriterMode}
-                      onChange={(e) => setTypewriterMode(e.target.checked)}
-                    />
-                  </List.Item>
-                </List>
-              </div>
-            </Collapsible.Item>
-          </Collapsible>
+          {sideBar === "explorer" && <Explorer />}
+          {sideBar === "outline" && <Outline />}
         </div>
       </div>
     </>

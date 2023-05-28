@@ -13,13 +13,13 @@ import {
   Path,
   Editor,
   Transforms,
-  Location,
 } from "slate";
 import { HistoryEditor, withHistory } from "slate-history";
 import { Slate, Editable, withReact, ReactEditor } from "slate-react";
 import * as grammer from "./grammer";
 import { randomInt } from "../util";
 import { useMiddle } from "./useMiddle";
+import slugify from "slugify";
 
 export type CustomEditor = BaseEditor & ReactEditor & HistoryEditor;
 type CustomElement = { type: "paragraph"; children: CustomText[] };
@@ -63,6 +63,9 @@ const Leaf = ({ attributes, children, leaf }: any) => {
   const title = leaf.title1 || leaf.title2 || leaf.title3;
 
   const className = classNames({
+    // accessors
+    "acc-title": title && !leaf.punctuation,
+
     // decor
     "font-semibold": leaf.bold,
     italic: leaf.italic,
@@ -108,7 +111,20 @@ const Leaf = ({ attributes, children, leaf }: any) => {
   }
 
   return (
-    <span {...attributes} className={className}>
+    <span
+      {...attributes}
+      className={className}
+      id={
+        title && !leaf.punctuation
+          ? slugify(leaf.text, { lower: true })
+          : undefined
+      }
+      data-title-level={classNames({
+        title1: leaf.title1,
+        title2: leaf.title2,
+        title3: leaf.title3,
+      })}
+    >
       {children}
     </span>
   );
