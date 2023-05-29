@@ -59,8 +59,8 @@ export function updateListNode(
   }
 
   Transforms.insertText(editor, updatedText, { at: path });
-  editor.setSelection({ anchor: { path, offset: updatedText.length } });
-  editor.setSelection({ focus: { path, offset: updatedText.length } });
+  // editor.setSelection({ anchor: { path, offset: updatedText.length } });
+  // editor.setSelection({ focus: { path, offset: updatedText.length } });
 }
 
 function getNextElementPath(at: number[]) {

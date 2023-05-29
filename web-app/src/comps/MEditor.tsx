@@ -421,6 +421,9 @@ const MEditor = ({
             { type: "paragraph", children: [{ text: "" }] },
           ]);
           Transforms.insertText(editor, prefix);
+          if (match[5]) {
+            adjustFollowingSerial(editor, editor.selection!.anchor.path)
+          }
         } else {
           Transforms.removeNodes(editor);
           Transforms.insertNodes(editor, [
@@ -464,7 +467,7 @@ const MEditor = ({
 
   const handleMouseUp = () => {
     if (editor.selection) {
-      adjustFollowingSerial(editor, editor.selection.anchor.path);
+      // adjustFollowingSerial(editor, editor.selection.anchor.path);
     }
   };
 
