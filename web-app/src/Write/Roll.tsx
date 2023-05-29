@@ -12,10 +12,10 @@ import classNames from "classnames";
 import { withHistory } from "slate-history";
 import { withReact } from "slate-react";
 import { createEditor } from "slate";
-import { CustomEditor } from "../comps/MEditor";
 import Button from "../comps/Button";
 import { TbExternalLink } from "react-icons/tb";
 import { BiPlus } from "react-icons/bi";
+import { CustomEditor } from "../comps/Editor/Core/Core";
 
 const getEditor = () => withHistory(withReact(createEditor()));
 

@@ -26,17 +26,12 @@ import * as grammer from "./grammer";
 import { randomInt } from "../util";
 import { useMiddle } from "./useMiddle";
 import slugify from "slugify";
+import { CustomEditor, getNodeText } from "./Editor/Core/Core";
+// import { parseListNode } from "./Editor/Core/List";
+import {test} from "./Editor/Core/test";
+import { adjustFollowingSerial, updateListNode } from "./Editor/Core/List";
 
-export type CustomEditor = BaseEditor & ReactEditor & HistoryEditor;
-type CustomElement = { type: "paragraph"; children: CustomText[] };
-type CustomText = { text: string };
-declare module "slate" {
-  interface CustomTypes {
-    Editor: BaseEditor & ReactEditor;
-    Element: CustomElement;
-    Text: CustomText;
-  }
-}
+// test();
 
 const serialize = (value: Descendant[]) => {
   return value.map((n) => Node.string(n)).join("\n");
@@ -301,27 +296,6 @@ const isPointFocused = (
   return false;
 };
 
-const playType = () => {
-  const aud = keySounds[randomInt(0, 4)].cloneNode() as HTMLAudioElement;
-  aud.play();
-};
-
-const getNodeText = (element: any) => {
-  let text = "";
-  if (typeof element === "string") {
-    text += element;
-  }
-  if (element.text) {
-    text += element.text;
-  }
-  if (element.children) {
-    for (const child of element.children) {
-      text += getNodeText(child);
-    }
-  }
-  return text;
-};
-
 const MEditor = ({
   onChange,
   initValue,
@@ -438,7 +412,6 @@ const MEditor = ({
       const match = text.match(grammer.listRegex);
       if (editor.selection?.anchor.offset !== 0 && match) {
         e.preventDefault();
-        console.log(match)
         if (match[6]) {
           let prefix = `${match[1]}${match[3]} `;
           if (match[5]) {
@@ -489,6 +462,12 @@ const MEditor = ({
     return defaultValue;
   };
 
+  const handleMouseUp = () => {
+    if (editor.selection) {
+      adjustFollowingSerial(editor, editor.selection.anchor.path);
+    }
+  };
+
   return (
     <div style={{ ...scroll.style }}>
       <div ref={containerRef}>
@@ -503,6 +482,7 @@ const MEditor = ({
             renderElement={renderElement}
             onKeyUp={handleKeyUp}
             onKeyDown={handleKeyDown}
+            onMouseUp={handleMouseUp}
             placeholder="Write your mind here ..."
           />
         </Slate>
