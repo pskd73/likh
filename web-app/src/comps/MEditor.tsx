@@ -461,7 +461,10 @@ const MEditor = ({
         Transforms.insertText(editor, "    ", {
           at: { path: editor.selection.anchor.path, offset: 0 },
         });
-        updateListNode(editor, editor.selection.anchor.path, { serial: 1 });
+        updateListNode(editor, editor.selection.anchor.path, {
+          serial: 1,
+          cursorToEnd: true,
+        });
       }
     }
   };

@@ -53,7 +53,7 @@ export function parseListNode(editor: CustomEditor, path: number[]) {
 export function updateListNode(
   editor: CustomEditor,
   path: number[],
-  opts: { serial?: number }
+  opts: { serial?: number; cursorToEnd?: boolean }
 ) {
   const parsed = parseListNode(editor, path);
   if (!parsed) return;
@@ -68,8 +68,11 @@ export function updateListNode(
   }
 
   Transforms.insertText(editor, updatedText, { at: path });
-  editor.setSelection({ anchor: { path, offset: updatedText.length } });
-  editor.setSelection({ focus: { path, offset: updatedText.length } });
+
+  if (opts.cursorToEnd) {
+    editor.setSelection({ anchor: { path, offset: updatedText.length } });
+    editor.setSelection({ focus: { path, offset: updatedText.length } });
+  }
 }
 
 function getNextElementPath(at: number[]) {
