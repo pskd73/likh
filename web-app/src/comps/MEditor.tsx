@@ -77,7 +77,7 @@ const Leaf = ({ attributes, children, leaf }: any) => {
 
     // title
     "inline-flex font-bold": title,
-    "-ml-[50px] w-[50px] justify-end": title && leaf.punctuation,
+    "-ml-[50px] w-[50px] justify-end pr-[10px]": title && leaf.punctuation,
     "text-4xl": leaf.title1,
     "text-3xl": leaf.title2,
     "text-2xl": leaf.title3,
