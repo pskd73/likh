@@ -2,9 +2,11 @@ import { Editor, Location, Transforms } from "slate";
 import { CustomEditor, getNodeText } from "./Core";
 
 type ParsedListText = {
+  text: string;
   level: number;
   type: "ordered" | "unordered";
   content: string;
+  paddingText: string;
   serial?: number;
   symbol?: string;
 };
@@ -21,20 +23,31 @@ export function parseListText(text: string): ParsedListText | undefined {
   const serial = type === "ordered" ? Number(match[3]) : undefined;
   const content = match[4];
   const symbol = match[2];
+  const paddingText = match[1];
   return {
+    text,
     level,
     type,
     serial,
     content,
     symbol,
+    paddingText,
   };
 }
 
-export function parseNode(editor: CustomEditor, path: number[]) {
+export function getElementText(editor: CustomEditor, path: number[]) {
+  if (!Editor.hasPath(editor, path)) return;
+
   const element = Editor.first(editor, path);
   if (!element) return;
-  const text = getNodeText(element[0]);
-  return { text };
+
+  return getNodeText(element[0]);
+}
+
+export function parseListNode(editor: CustomEditor, path: number[]) {
+  const text = getElementText(editor, path);
+  if (!text) return;
+  return parseListText(text);
 }
 
 export function updateListNode(
@@ -42,16 +55,12 @@ export function updateListNode(
   path: number[],
   opts: { serial?: number }
 ) {
-  const parsedNode = parseNode(editor, path);
-  if (!parsedNode) return;
-
-  const { text } = parsedNode;
-  const parsed = parseListText(text);
+  const parsed = parseListNode(editor, path);
   if (!parsed) return;
 
   Transforms.removeNodes(editor, { at: path });
 
-  let updatedText = text;
+  let updatedText = parsed.text;
   if (opts.serial) {
     if (parsed.type === "ordered") {
       updatedText = updatedText.replace(/^( *)([0-9]+)\./, `$1${opts.serial}.`);
@@ -69,7 +78,7 @@ function getNextElementPath(at: number[]) {
 }
 
 export function adjustFollowingSerial(editor: CustomEditor, path: number[]) {
-  const parsedNode = parseNode(editor, path);
+  const parsedNode = parseListNode(editor, path);
   if (!parsedNode) return;
 
   let prevParsed = parseListText(parsedNode.text);
@@ -78,7 +87,7 @@ export function adjustFollowingSerial(editor: CustomEditor, path: number[]) {
   path = getNextElementPath(path);
 
   while (true) {
-    const _parsedNode = parseNode(editor, path);
+    const _parsedNode = parseListNode(editor, path);
     if (!_parsedNode) break;
 
     const parsed = parseListText(_parsedNode.text);
@@ -88,7 +97,7 @@ export function adjustFollowingSerial(editor: CustomEditor, path: number[]) {
 
     if (parsed.serial === undefined) break;
 
-    if (parsed.serial > prevParsed.serial) break;
+    if (parsed.serial === prevParsed.serial + 1) break;
 
     parsed.serial = prevParsed.serial + 1;
     updateListNode(editor, path, { serial: parsed.serial });

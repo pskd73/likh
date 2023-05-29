@@ -29,7 +29,7 @@ import slugify from "slugify";
 import { CustomEditor, getNodeText } from "./Editor/Core/Core";
 // import { parseListNode } from "./Editor/Core/List";
 import {test} from "./Editor/Core/test";
-import { adjustFollowingSerial, updateListNode } from "./Editor/Core/List";
+import { adjustFollowingSerial, parseListNode, parseListText, updateListNode } from "./Editor/Core/List";
 
 // test();
 
@@ -409,19 +409,23 @@ const MEditor = ({
       const point = Editor.before(editor, editor.selection!.anchor);
       const node = Editor.first(editor, point!);
       const text = getNodeText(node[0]);
-      const match = text.match(grammer.listRegex);
-      if (editor.selection?.anchor.offset !== 0 && match) {
+      // const match = text.match(grammer.listRegex);
+
+      const parsed = parseListText(text);
+      if (!parsed) return;
+
+      if (editor.selection?.anchor.offset !== 0) {
         e.preventDefault();
-        if (match[6]) {
-          let prefix = `${match[1]}${match[3]} `;
-          if (match[5]) {
-            prefix = `${Number(match[4]) + 1}. `;
+        if (parsed.content) {
+          let prefix = `${parsed.paddingText}${parsed.symbol} `;
+          if (parsed.serial !== undefined) {
+            prefix = `${parsed.serial + 1}. `;
           }
           Transforms.insertNodes(editor, [
             { type: "paragraph", children: [{ text: "" }] },
           ]);
           Transforms.insertText(editor, prefix);
-          if (match[5]) {
+          if (parsed.type === "ordered") {
             adjustFollowingSerial(editor, editor.selection!.anchor.path)
           }
         } else {
