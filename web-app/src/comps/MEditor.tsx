@@ -1,7 +1,13 @@
 import classNames from "classnames";
 import Prism from "prismjs";
 import "prismjs/components/prism-markdown";
-import { KeyboardEventHandler, useCallback, useMemo, useRef } from "react";
+import {
+  CSSProperties,
+  KeyboardEventHandler,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
 import {
   createEditor,
   BaseEditor,
@@ -86,8 +92,9 @@ const Leaf = ({ attributes, children, leaf }: any) => {
     "mb-2": leaf.title3 && !leaf.punctuation,
 
     // list
-    "inline-flex w-[50px] -ml-[50px] opacity-30 justify-end pr-[6px]":
-      leaf.bullet,
+    // "inline-flex w-[50px] -ml-[50px] opacity-30 justify-end pr-[6px]":
+    //   leaf.bullet,
+    "opacity-30 ": leaf.bullet,
 
     // link
     "underline cursor-pointer": leaf.link,
@@ -372,15 +379,23 @@ const MEditor = ({
         ? text.match(grammer.link.pattern)
         : null;
       const imgUrl = imgMatch ? imgMatch[0] : null;
+
+      const style: CSSProperties = {};
+
+      const listMatch = text.match(grammer.listRegex);
+      if (listMatch) {
+        style.marginLeft = 34;
+      }
+
       return (
         <p
           {...attributes}
           className={classNames({
-            "pl-[34px]": text.match(grammer.listRegex),
             "p-[24px] py bg-primary-700 bg-opacity-10 italic rounded my-6":
               text.match(grammer.quoteRegex),
             "flex flex-col items-center py-10": imgUrl,
           })}
+          style={style}
         >
           {imgUrl && <img src={imgUrl} />}
           <span
@@ -421,11 +436,12 @@ const MEditor = ({
       const node = Editor.first(editor, point!);
       const text = getNodeText(node[0]);
       const match = text.match(grammer.listRegex);
-      if (match) {
+      if (editor.selection?.anchor.offset !== 0 && match) {
         e.preventDefault();
-        if (match[5]) {
-          let prefix = `${match[2]} `;
-          if (match[4]) {
+        console.log(match)
+        if (match[6]) {
+          let prefix = `${match[1]}${match[3]} `;
+          if (match[5]) {
             prefix = `${Number(match[4]) + 1}. `;
           }
           Transforms.insertNodes(editor, [
@@ -437,6 +453,27 @@ const MEditor = ({
           Transforms.insertNodes(editor, [
             { type: "paragraph", children: [{ text: "" }] },
           ]);
+        }
+      }
+    } else if (e.key === "Tab") {
+      const point = Editor.before(editor, editor.selection!.anchor);
+      const node = Editor.first(editor, point!);
+      const text = getNodeText(node[0]);
+      const match = text.match(/^( *)[-\*\+] .*$/);
+      if (match && editor.selection) {
+        e.preventDefault();
+        if (e.shiftKey) {
+          Transforms.removeNodes(editor);
+          Transforms.insertNodes(editor, {
+            type: "paragraph",
+            children: [{ text: "" }],
+          });
+          const unTabbedText = text.replace(/^ {1,4}/, "");
+          Transforms.insertText(editor, unTabbedText);
+        } else {
+          Transforms.insertText(editor, "    ", {
+            at: { path: editor.selection.anchor.path, offset: 0 },
+          });
         }
       }
     }
