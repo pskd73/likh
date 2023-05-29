@@ -28,8 +28,13 @@ import { useMiddle } from "./useMiddle";
 import slugify from "slugify";
 import { CustomEditor, getNodeText } from "./Editor/Core/Core";
 // import { parseListNode } from "./Editor/Core/List";
-import {test} from "./Editor/Core/test";
-import { adjustFollowingSerial, parseListNode, parseListText, updateListNode } from "./Editor/Core/List";
+import { test } from "./Editor/Core/test";
+import {
+  adjustFollowingSerial,
+  parseListNode,
+  parseListText,
+  updateListNode,
+} from "./Editor/Core/List";
 
 // test();
 
@@ -405,28 +410,28 @@ const MEditor = ({
   };
 
   const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = (e) => {
+    if (!editor.selection) return;
     if (e.key === "Enter") {
       const point = Editor.before(editor, editor.selection!.anchor);
       const node = Editor.first(editor, point!);
       const text = getNodeText(node[0]);
-      // const match = text.match(grammer.listRegex);
 
       const parsed = parseListText(text);
       if (!parsed) return;
 
-      if (editor.selection?.anchor.offset !== 0) {
+      if (editor.selection.anchor.offset !== 0) {
         e.preventDefault();
         if (parsed.content) {
           let prefix = `${parsed.paddingText}${parsed.symbol} `;
           if (parsed.serial !== undefined) {
-            prefix = `${parsed.serial + 1}. `;
+            prefix = `${parsed.paddingText}${parsed.serial + 1}. `;
           }
           Transforms.insertNodes(editor, [
             { type: "paragraph", children: [{ text: "" }] },
           ]);
           Transforms.insertText(editor, prefix);
           if (parsed.type === "ordered") {
-            adjustFollowingSerial(editor, editor.selection!.anchor.path)
+            adjustFollowingSerial(editor, editor.selection!.anchor.path);
           }
         } else {
           Transforms.removeNodes(editor);
@@ -436,25 +441,27 @@ const MEditor = ({
         }
       }
     } else if (e.key === "Tab") {
+      e.preventDefault();
       const point = Editor.before(editor, editor.selection!.anchor);
       const node = Editor.first(editor, point!);
       const text = getNodeText(node[0]);
-      const match = text.match(/^( *)[-\*\+] .*$/);
-      if (match && editor.selection) {
-        e.preventDefault();
-        if (e.shiftKey) {
-          Transforms.removeNodes(editor);
-          Transforms.insertNodes(editor, {
-            type: "paragraph",
-            children: [{ text: "" }],
-          });
-          const unTabbedText = text.replace(/^ {1,4}/, "");
-          Transforms.insertText(editor, unTabbedText);
-        } else {
-          Transforms.insertText(editor, "    ", {
-            at: { path: editor.selection.anchor.path, offset: 0 },
-          });
-        }
+
+      const parsed = parseListText(text);
+      if (!parsed) return;
+
+      if (e.shiftKey) {
+        Transforms.removeNodes(editor);
+        Transforms.insertNodes(editor, {
+          type: "paragraph",
+          children: [{ text: "" }],
+        });
+        const unTabbedText = text.replace(/^ {1,4}/, "");
+        Transforms.insertText(editor, unTabbedText);
+      } else {
+        Transforms.insertText(editor, "    ", {
+          at: { path: editor.selection.anchor.path, offset: 0 },
+        });
+        updateListNode(editor, editor.selection.anchor.path, { serial: 1 });
       }
     }
   };

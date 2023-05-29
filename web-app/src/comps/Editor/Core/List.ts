@@ -68,8 +68,8 @@ export function updateListNode(
   }
 
   Transforms.insertText(editor, updatedText, { at: path });
-  // editor.setSelection({ anchor: { path, offset: updatedText.length } });
-  // editor.setSelection({ focus: { path, offset: updatedText.length } });
+  editor.setSelection({ anchor: { path, offset: updatedText.length } });
+  editor.setSelection({ focus: { path, offset: updatedText.length } });
 }
 
 function getNextElementPath(at: number[]) {
@@ -97,12 +97,14 @@ export function adjustFollowingSerial(editor: CustomEditor, path: number[]) {
 
     if (parsed.serial === undefined) break;
 
-    if (parsed.serial === prevParsed.serial + 1) break;
+    if (prevParsed.level === parsed.level) {
+      if (parsed.serial === prevParsed.serial + 1) break;
 
-    parsed.serial = prevParsed.serial + 1;
-    updateListNode(editor, path, { serial: parsed.serial });
+      parsed.serial = prevParsed.serial + 1;
+      updateListNode(editor, path, { serial: parsed.serial });
+      prevParsed = parsed;
+    }
 
-    prevParsed = parsed;
     path = getNextElementPath(path);
   }
 }
