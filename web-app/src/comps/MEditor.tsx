@@ -76,10 +76,14 @@ const Leaf = ({ attributes, children, leaf }: any) => {
     "opacity-30": leaf.punctuation || leaf.blockquote,
 
     // title
-    "font-bold block": title,
-    "mb-6 text-4xl": leaf.title1 && !leaf.punctuation,
-    "mb-4 text-3xl": leaf.title2 && !leaf.punctuation,
-    "mb-2 text-2xl": leaf.title3 && !leaf.punctuation,
+    "inline-flex font-bold": title,
+    "-ml-[50px] w-[50px] justify-end pr-[10px]": title && leaf.punctuation,
+    "text-4xl": leaf.title1,
+    "text-3xl": leaf.title2,
+    "text-2xl": leaf.title3,
+    "mb-6": leaf.title1 && !leaf.punctuation,
+    "mb-4": leaf.title2 && !leaf.punctuation,
+    "mb-2": leaf.title3 && !leaf.punctuation,
 
     // list
     "inline-flex w-[50px] -ml-[50px] opacity-30 justify-end pr-[6px]":
@@ -90,7 +94,18 @@ const Leaf = ({ attributes, children, leaf }: any) => {
 
     // hashtag
     "bg-primary-700 bg-opacity-20 p-1 px-3 rounded-full": leaf.hashtag,
+
+    // notelink
+    "underline cursor-pointer ": leaf.notelink && !leaf.punctuation,
   });
+
+  if (leaf.notelink) {
+    return (
+      <span {...attributes} className={className} onClick={console.log}>
+        {children}
+      </span>
+    );
+  }
 
   if (leaf.link) {
     return (
@@ -180,7 +195,14 @@ const getTokenRanges = (
   return [range];
 };
 
-const hidable: string[] = ["italic", "bold", "title1", "title2", "title3"];
+const hidable: string[] = [
+  "italic",
+  "bold",
+  "title1",
+  "title2",
+  "title3",
+  "notelink",
+];
 
 const getTokensRanges = (
   editor: BaseEditor,
@@ -333,6 +355,7 @@ const MEditor = ({
       quote: grammer.quote,
       hashtag: grammer.hashtag,
       image: grammer.image,
+      notelink: grammer.notelink,
     });
 
     const ranges = getTokensRanges(editor, path, tokens, 0, []);

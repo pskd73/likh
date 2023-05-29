@@ -3,6 +3,23 @@ export const link = {
     /((https?:\/\/)|(www\.))[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/m,
 };
 
+export const notelink = {
+  pattern: /\[\[.+\]\]/m,
+  greedy: true,
+  inside: {
+    punctuation: [
+      {
+        pattern: /^\[\[/,
+        greedy: true,
+      },
+      {
+        pattern: /\]\]$/,
+        greedy: true,
+      },
+    ],
+  },
+};
+
 export const strikethrough = {
   pattern: /~~.+~~/m,
   greedy: true,
@@ -96,6 +113,7 @@ export const list = {
     bold,
     strikethrough,
     link,
+    notelink
   },
   greedy: true,
 };
@@ -109,6 +127,7 @@ export const quote = {
     bold,
     strikethrough,
     link,
+    notelink
   },
 };
 
