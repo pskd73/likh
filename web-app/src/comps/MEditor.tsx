@@ -1,7 +1,13 @@
 import classNames from "classnames";
 import Prism from "prismjs";
 import "prismjs/components/prism-markdown";
-import { KeyboardEventHandler, useCallback, useMemo, useRef } from "react";
+import {
+  CSSProperties,
+  KeyboardEventHandler,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
 import {
   createEditor,
   BaseEditor,
@@ -20,17 +26,21 @@ import * as grammer from "./grammer";
 import { randomInt } from "../util";
 import { useMiddle } from "./useMiddle";
 import slugify from "slugify";
+import { CustomEditor, getNodeText } from "./Editor/Core/Core";
+// import { parseListNode } from "./Editor/Core/List";
+import { test } from "./Editor/Core/test";
+import {
+  ParsedListText,
+  adjustFollowingSerial,
+  getBlockStartPath,
+  getListBlock,
+  intend,
+  parseListNode,
+  parseListText,
+  updateListNode,
+} from "./Editor/Core/List";
 
-export type CustomEditor = BaseEditor & ReactEditor & HistoryEditor;
-type CustomElement = { type: "paragraph"; children: CustomText[] };
-type CustomText = { text: string };
-declare module "slate" {
-  interface CustomTypes {
-    Editor: BaseEditor & ReactEditor;
-    Element: CustomElement;
-    Text: CustomText;
-  }
-}
+// test();
 
 const serialize = (value: Descendant[]) => {
   return value.map((n) => Node.string(n)).join("\n");
@@ -62,6 +72,17 @@ const keySounds = [
 const Leaf = ({ attributes, children, leaf }: any) => {
   const title = leaf.title1 || leaf.title2 || leaf.title3;
 
+  let parsed: ParsedListText | undefined = undefined;
+  if (leaf.bullet) {
+    parsed = parseListText(leaf.text + " ");
+  }
+
+  const style: CSSProperties = {};
+  if (parsed) {
+    style.marginLeft = -200;
+    style.width = 200;
+  }
+
   const className = classNames({
     // accessors
     "acc-title": title && !leaf.punctuation,
@@ -86,8 +107,7 @@ const Leaf = ({ attributes, children, leaf }: any) => {
     "mb-2": leaf.title3 && !leaf.punctuation,
 
     // list
-    "inline-flex w-[50px] -ml-[50px] opacity-30 justify-end pr-[6px]":
-      leaf.bullet,
+    "opacity-30 inline-flex justify-end pr-[4px]": leaf.bullet,
 
     // link
     "underline cursor-pointer": leaf.link,
@@ -136,6 +156,7 @@ const Leaf = ({ attributes, children, leaf }: any) => {
         title2: leaf.title2,
         title3: leaf.title3,
       })}
+      style={style}
     >
       {children}
     </span>
@@ -294,27 +315,6 @@ const isPointFocused = (
   return false;
 };
 
-const playType = () => {
-  const aud = keySounds[randomInt(0, 4)].cloneNode() as HTMLAudioElement;
-  aud.play();
-};
-
-const getNodeText = (element: any) => {
-  let text = "";
-  if (typeof element === "string") {
-    text += element;
-  }
-  if (element.text) {
-    text += element.text;
-  }
-  if (element.children) {
-    for (const child of element.children) {
-      text += getNodeText(child);
-    }
-  }
-  return text;
-};
-
 const MEditor = ({
   onChange,
   initValue,
@@ -372,15 +372,22 @@ const MEditor = ({
         ? text.match(grammer.link.pattern)
         : null;
       const imgUrl = imgMatch ? imgMatch[0] : null;
+
+      const style: CSSProperties = {};
+      const parsed = parseListText(text);
+      if (parsed) {
+        style.marginLeft = 50 * (parsed.level + 1);
+      }
+
       return (
         <p
           {...attributes}
-          className={classNames({
-            "pl-[34px]": text.match(grammer.listRegex),
+          className={classNames("mb-2", {
             "p-[24px] py bg-primary-700 bg-opacity-10 italic rounded my-6":
               text.match(grammer.quoteRegex),
             "flex flex-col items-center py-10": imgUrl,
           })}
+          style={style}
         >
           {imgUrl && <img src={imgUrl} />}
           <span
@@ -416,22 +423,30 @@ const MEditor = ({
   };
 
   const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = (e) => {
+    if (!editor.selection) return;
     if (e.key === "Enter") {
       const point = Editor.before(editor, editor.selection!.anchor);
-      const node = Editor.first(editor, point!);
+      if (!point) return;
+      const node = Editor.first(editor, point);
       const text = getNodeText(node[0]);
-      const match = text.match(grammer.listRegex);
-      if (match) {
+
+      const parsed = parseListText(text);
+      if (!parsed) return;
+
+      if (editor.selection.anchor.offset !== 0) {
         e.preventDefault();
-        if (match[5]) {
-          let prefix = `${match[2]} `;
-          if (match[4]) {
-            prefix = `${Number(match[4]) + 1}. `;
+        if (parsed.content) {
+          let prefix = `${parsed.paddingText}${parsed.symbol} `;
+          if (parsed.serial !== undefined) {
+            prefix = `${parsed.paddingText}${parsed.serial + 1}. `;
           }
           Transforms.insertNodes(editor, [
             { type: "paragraph", children: [{ text: "" }] },
           ]);
           Transforms.insertText(editor, prefix);
+          if (parsed.type === "ordered") {
+            adjustFollowingSerial(editor, editor.selection!.anchor.path);
+          }
         } else {
           Transforms.removeNodes(editor);
           Transforms.insertNodes(editor, [
@@ -439,6 +454,9 @@ const MEditor = ({
           ]);
         }
       }
+    } else if (e.key === "Tab") {
+      e.preventDefault();
+      intend(editor, !e.shiftKey);
     }
   };
 
@@ -450,6 +468,22 @@ const MEditor = ({
       return deserialize(initText);
     }
     return defaultValue;
+  };
+
+  const handleMouseUp = () => {
+    if (editor.selection) {
+      const parsed = parseListNode(editor, editor.selection.anchor.path);
+      if (parsed) {
+        const startPath = getBlockStartPath(
+          editor,
+          editor.selection.anchor.path
+        );
+        // console.log(startPath);
+        // if (startPath) {
+        //   console.log(getListBlock(editor, startPath));
+        // }
+      }
+    }
   };
 
   return (
@@ -466,6 +500,7 @@ const MEditor = ({
             renderElement={renderElement}
             onKeyUp={handleKeyUp}
             onKeyDown={handleKeyDown}
+            onMouseUp={handleMouseUp}
             placeholder="Write your mind here ..."
           />
         </Slate>
