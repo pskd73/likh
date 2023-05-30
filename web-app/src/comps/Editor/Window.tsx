@@ -2,7 +2,7 @@ import { Descendant } from "slate";
 import MEditor from "../MEditor";
 import { EditorContext, useEditor } from "./Context";
 import SidePanel from "./SidePanel/SidePanel";
-import StatusBar from "./StatusBar";
+import StatusBar from "./StatusBar/StatusBar";
 import useStorage from "./useStorage";
 import { MouseEventHandler, useEffect, useState } from "react";
 import useShortcuts from "./useShortcuts";

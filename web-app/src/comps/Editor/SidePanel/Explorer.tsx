@@ -1,11 +1,14 @@
 import { useContext } from "react";
 import List from "../List";
 import { EditorContext } from "../Context";
-import { BiPlus } from "react-icons/bi";
 import SearchInput from "./SearchInput";
 import Collapsible from "../Collapsible";
 import { textToTitle } from "../../../Note";
 import Toggle from "../../Toggle";
+import Button from "../../Button";
+import classNames from "classnames";
+import { FiPlus, FiUpload } from "react-icons/fi";
+import { openFile } from "../File";
 
 const Explorer = () => {
   const {
@@ -20,19 +23,26 @@ const Explorer = () => {
     updateNote,
   } = useContext(EditorContext);
 
+  const handleOpen = async () => {
+    const text = (await openFile()) as string;
+    newNote({ text });
+  };
+
   return (
     <>
-      <List>
-        <List.Item
-          className="flex justify-between items-center"
-          onClick={() => newNote({ text: "New note" })}
-        >
-          <span>New</span>
-          <span>
-            <BiPlus />
-          </span>
-        </List.Item>
-      </List>
+      <div
+        className={classNames(
+          "flex justify-end items-center space-x-2",
+          "p-2 border-b border-primary-700 border-opacity-20"
+        )}
+      >
+        <Button onClick={handleOpen}>
+          <FiUpload />
+        </Button>
+        <Button onClick={() => newNote({ text: "New note" })}>
+          <FiPlus />
+        </Button>
+      </div>
 
       <SearchInput />
 
