@@ -1,5 +1,8 @@
 import { useCallback, useEffect } from "react";
 import { EditorContextType } from "./Context";
+import { download } from "../../util";
+import { textToTitle } from "../../Note";
+import { saveNote } from "./File";
 
 const isWindowShortcut = (e: KeyboardEvent) => {
   return e.altKey && e.ctrlKey && e.metaKey;
@@ -31,6 +34,7 @@ const shortcuts: Record<string, (editor: EditorContextType) => void> = {
       editor.updateNote(nextNote);
     }
   },
+  s: (editor) => saveNote(editor.note),
 };
 
 const useShortcuts = (editor: EditorContextType) => {
