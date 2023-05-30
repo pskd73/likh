@@ -1,8 +1,6 @@
 import { useCallback, useEffect } from "react";
 import { EditorContextType } from "./Context";
-import { download } from "../../util";
-import { textToTitle } from "../../Note";
-import { saveNote } from "./File";
+import { openFile, saveNote } from "./File";
 
 const isWindowShortcut = (e: KeyboardEvent) => {
   return e.altKey && e.ctrlKey && e.metaKey;
@@ -11,7 +9,7 @@ const isWindowShortcut = (e: KeyboardEvent) => {
 const shortcuts: Record<string, (editor: EditorContextType) => void> = {
   l: (editor) =>
     editor.setSideBar((b) => (b === "explorer" ? undefined : "explorer")),
-  o: (editor) =>
+  i: (editor) =>
     editor.setSideBar((b) => (b === "outline" ? undefined : "outline")),
   n: (editor) => editor.newNote({ text: "New note" }),
   ArrowLeft: (editor) => {
@@ -35,6 +33,10 @@ const shortcuts: Record<string, (editor: EditorContextType) => void> = {
     }
   },
   s: (editor) => saveNote(editor.note),
+  o: async (editor) => {
+    const text = (await openFile()) as string;
+    editor.newNote({ text });
+  },
 };
 
 const useShortcuts = (editor: EditorContextType) => {
