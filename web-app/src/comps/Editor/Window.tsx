@@ -8,6 +8,10 @@ import { MouseEventHandler, useEffect, useState } from "react";
 import useShortcuts from "./useShortcuts";
 import classNames from "classnames";
 
+const isSlateDOM = (node: any) => {
+  return !!node.attributes["data-slate-node"];
+};
+
 const EditorWindow = () => {
   const storage = useStorage();
   const editorState = useEditor({ storage });
@@ -35,7 +39,11 @@ const EditorWindow = () => {
   }, [editorState.note.id]);
 
   const handleSectionClick: MouseEventHandler<HTMLDivElement> = (e) => {
-    const isEditor = !!(e.target as any).attributes["data-slate-node"];
+    const target = e.target as any;
+    let isEditor =
+      isSlateDOM(target) ||
+      isSlateDOM(target.parentNode) ||
+      isSlateDOM(target.parentNode.parentNode);
     if (!isEditor) {
       setFocus(new Date().getTime());
     }
