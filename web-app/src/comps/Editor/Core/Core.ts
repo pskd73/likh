@@ -32,7 +32,7 @@ export function getNodeText(
   return text;
 }
 
-export function focus(editor: CustomEditor) {
+export function focusEnd(editor: CustomEditor) {
   setTimeout(() => {
     (document.querySelector("#editorContainer > div") as any).focus();
   }, 0);

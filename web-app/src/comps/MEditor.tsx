@@ -26,7 +26,7 @@ import { Slate, Editable, withReact } from "slate-react";
 import * as grammer from "./grammer";
 import { useMiddle } from "./useMiddle";
 import slugify from "slugify";
-import { CustomEditor, getNodeText, focus } from "./Editor/Core/Core";
+import { CustomEditor, getNodeText, focusEnd } from "./Editor/Core/Core";
 import {
   ParsedListText,
   adjustFollowingSerial,
@@ -317,6 +317,7 @@ const MEditor = ({
   initText,
   typeWriter,
   editor: passedEditor,
+  focus,
 }: {
   onChange: (val: {
     value: Descendant[];
@@ -327,6 +328,7 @@ const MEditor = ({
   initText?: string;
   typeWriter?: boolean;
   editor?: CustomEditor;
+  focus?: number;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const editor = useMemo(
@@ -404,8 +406,8 @@ const MEditor = ({
   });
 
   useEffect(() => {
-    focus(editor);
-  }, []);
+    focusEnd(editor);
+  }, [focus]);
 
   const handleChange = (value: Descendant[]) => {
     onChange({
