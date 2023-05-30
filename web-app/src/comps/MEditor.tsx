@@ -32,6 +32,9 @@ import { test } from "./Editor/Core/test";
 import {
   ParsedListText,
   adjustFollowingSerial,
+  getBlockStartPath,
+  getListBlock,
+  intend,
   parseListNode,
   parseListText,
   updateListNode,
@@ -75,7 +78,6 @@ const Leaf = ({ attributes, children, leaf }: any) => {
   }
 
   const style: CSSProperties = {};
-  console.log(leaf.text, parsed);
   if (parsed) {
     style.marginLeft = -200;
     style.width = 200;
@@ -105,8 +107,6 @@ const Leaf = ({ attributes, children, leaf }: any) => {
     "mb-2": leaf.title3 && !leaf.punctuation,
 
     // list
-    // "inline-flex w-[50px] -ml-[50px] opacity-30 justify-end pr-[6px]":
-    //   leaf.bullet,
     "opacity-30 inline-flex justify-end pr-[6x]": leaf.bullet,
 
     // link
@@ -456,30 +456,7 @@ const MEditor = ({
       }
     } else if (e.key === "Tab") {
       e.preventDefault();
-      const point = Editor.before(editor, editor.selection!.anchor);
-      const node = Editor.first(editor, point!);
-      const text = getNodeText(node[0]);
-
-      const parsed = parseListText(text);
-      if (!parsed) return;
-
-      if (e.shiftKey) {
-        Transforms.removeNodes(editor);
-        Transforms.insertNodes(editor, {
-          type: "paragraph",
-          children: [{ text: "" }],
-        });
-        const unTabbedText = text.replace(/^ {1,4}/, "");
-        Transforms.insertText(editor, unTabbedText);
-      } else {
-        Transforms.insertText(editor, "    ", {
-          at: { path: editor.selection.anchor.path, offset: 0 },
-        });
-        updateListNode(editor, editor.selection.anchor.path, {
-          serial: 1,
-          cursorToEnd: true,
-        });
-      }
+      intend(editor, !e.shiftKey);
     }
   };
 
@@ -495,7 +472,17 @@ const MEditor = ({
 
   const handleMouseUp = () => {
     if (editor.selection) {
-      // adjustFollowingSerial(editor, editor.selection.anchor.path);
+      const parsed = parseListNode(editor, editor.selection.anchor.path);
+      if (parsed) {
+        const startPath = getBlockStartPath(
+          editor,
+          editor.selection.anchor.path
+        );
+        // console.log(startPath);
+        if (startPath) {
+          console.log(getListBlock(editor, startPath));
+        }
+      }
     }
   };
 
