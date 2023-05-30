@@ -1,4 +1,5 @@
-import { BaseEditor, Node, NodeEntry } from "slate";
+import { RefObject } from "react";
+import { BaseEditor, Editor, Node, NodeEntry, Transforms } from "slate";
 import { HistoryEditor } from "slate-history";
 import { ReactEditor } from "slate-react";
 
@@ -29,4 +30,23 @@ export function getNodeText(
     }
   }
   return text;
+}
+
+export function focusEnd(editor: CustomEditor) {
+  setTimeout(() => {
+    (document.querySelector("#editorContainer > div") as any).focus();
+  }, 0);
+
+  setTimeout(() => {
+    try {
+      const end = editor.end([]);
+      Transforms.setSelection(editor, {
+        anchor: end,
+        focus: end,
+      });
+      document.body.scrollTo({ top: 100000000, behavior: "smooth" });
+    } catch {
+      console.warn("Unable to focus");
+    }
+  }, 400);
 }

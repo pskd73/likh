@@ -153,7 +153,9 @@ export function getListBlock(
 export function intend(editor: CustomEditor, asc = true) {
   if (editor.selection) {
     const point = Editor.before(editor, editor.selection.anchor);
-    const node = Editor.first(editor, point!);
+    if (!point) return;
+    
+    const node = Editor.first(editor, point);
     const text = getNodeText(node[0]);
 
     const parsed = parseListText(text);

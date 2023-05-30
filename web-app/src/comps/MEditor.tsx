@@ -5,6 +5,7 @@ import {
   CSSProperties,
   KeyboardEventHandler,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
 } from "react";
@@ -20,24 +21,19 @@ import {
   Editor,
   Transforms,
 } from "slate";
-import { HistoryEditor, withHistory } from "slate-history";
-import { Slate, Editable, withReact, ReactEditor } from "slate-react";
+import { withHistory } from "slate-history";
+import { Slate, Editable, withReact } from "slate-react";
 import * as grammer from "./grammer";
-import { randomInt } from "../util";
 import { useMiddle } from "./useMiddle";
 import slugify from "slugify";
-import { CustomEditor, getNodeText } from "./Editor/Core/Core";
-// import { parseListNode } from "./Editor/Core/List";
-import { test } from "./Editor/Core/test";
+import { CustomEditor, getNodeText, focusEnd } from "./Editor/Core/Core";
 import {
   ParsedListText,
   adjustFollowingSerial,
   getBlockStartPath,
-  getListBlock,
   intend,
   parseListNode,
   parseListText,
-  updateListNode,
 } from "./Editor/Core/List";
 
 // test();
@@ -321,6 +317,7 @@ const MEditor = ({
   initText,
   typeWriter,
   editor: passedEditor,
+  focus,
 }: {
   onChange: (val: {
     value: Descendant[];
@@ -331,6 +328,7 @@ const MEditor = ({
   initText?: string;
   typeWriter?: boolean;
   editor?: CustomEditor;
+  focus?: number;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const editor = useMemo(
@@ -406,6 +404,10 @@ const MEditor = ({
     active: typeWriter,
     editor,
   });
+
+  useEffect(() => {
+    focusEnd(editor);
+  }, [focus]);
 
   const handleChange = (value: Descendant[]) => {
     onChange({
@@ -488,7 +490,7 @@ const MEditor = ({
 
   return (
     <div style={{ ...scroll.style }}>
-      <div ref={containerRef}>
+      <div ref={containerRef} id="editorContainer">
         <Slate
           editor={editor}
           value={getInitValue() as any}
