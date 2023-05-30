@@ -71,13 +71,14 @@ const Leaf = ({ attributes, children, leaf }: any) => {
 
   let parsed: ParsedListText | undefined = undefined;
   if (leaf.bullet) {
-    parsed = parseListText(leaf.text);
+    parsed = parseListText(leaf.text + " ");
   }
 
   const style: CSSProperties = {};
+  console.log(leaf.text, parsed);
   if (parsed) {
-    style.marginLeft = parsed.level * 50;
-    style.width = parsed.level * 50;
+    style.marginLeft = -200;
+    style.width = 200;
   }
 
   const className = classNames({
@@ -106,7 +107,7 @@ const Leaf = ({ attributes, children, leaf }: any) => {
     // list
     // "inline-flex w-[50px] -ml-[50px] opacity-30 justify-end pr-[6px]":
     //   leaf.bullet,
-    "opacity-30 ": leaf.bullet,
+    "opacity-30 inline-flex justify-end pr-[6x]": leaf.bullet,
 
     // link
     "underline cursor-pointer": leaf.link,
@@ -135,7 +136,6 @@ const Leaf = ({ attributes, children, leaf }: any) => {
         onClick={() => {
           window.open(leaf.text, "_blank");
         }}
-        style={style}
       >
         {children}
       </a>
@@ -156,6 +156,7 @@ const Leaf = ({ attributes, children, leaf }: any) => {
         title2: leaf.title2,
         title3: leaf.title3,
       })}
+      style={style}
     >
       {children}
     </span>
@@ -373,10 +374,9 @@ const MEditor = ({
       const imgUrl = imgMatch ? imgMatch[0] : null;
 
       const style: CSSProperties = {};
-
-      const listMatch = text.match(grammer.listRegex);
-      if (listMatch) {
-        style.marginLeft = 34;
+      const parsed = parseListText(text);
+      if (parsed) {
+        style.marginLeft = 50 * (parsed.level + 1);
       }
 
       return (
@@ -426,7 +426,8 @@ const MEditor = ({
     if (!editor.selection) return;
     if (e.key === "Enter") {
       const point = Editor.before(editor, editor.selection!.anchor);
-      const node = Editor.first(editor, point!);
+      if (!point) return;
+      const node = Editor.first(editor, point);
       const text = getNodeText(node[0]);
 
       const parsed = parseListText(text);
