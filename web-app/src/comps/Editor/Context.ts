@@ -32,6 +32,8 @@ export type EditorContextType = {
 
   notesToShow: SavedNote[];
   newNote: (note: NewNote) => void;
+
+  deleteNote: (noteId: string) => void;
 };
 
 export const EditorContext = createContext<EditorContextType>(
@@ -87,6 +89,11 @@ export const useEditor = ({
     setNote(savedNote);
   };
 
+  const deleteNote = (noteId: string) => {
+    storage.delete(noteId);
+    setNote(storage.getRecentNote());
+  };
+
   return {
     storage,
 
@@ -113,5 +120,6 @@ export const useEditor = ({
     notesToShow,
 
     newNote,
+    deleteNote,
   };
 };

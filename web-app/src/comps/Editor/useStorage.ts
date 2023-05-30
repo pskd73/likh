@@ -27,6 +27,7 @@ export type Storage = {
   getRecentNote: () => SavedNote;
   saveNote: (note: SavedNote) => void;
   search: (text: string) => SavedNote[];
+  delete: (id: string) => void;
 };
 
 const useStorage = (): Storage => {
@@ -67,6 +68,15 @@ const useStorage = (): Storage => {
     });
   };
 
+  const _delete = (id: string) => {
+    const newNotes = [...notes];
+    const idx = newNotes.findIndex((note) => note.id === id);
+    if (idx === -1) return;
+    newNotes.splice(idx, 1);
+    setNotes(newNotes);
+    setNoteMetas(newNotes);
+  };
+
   return {
     notes,
     newNote,
@@ -74,6 +84,7 @@ const useStorage = (): Storage => {
     getRecentNote,
     saveNote,
     search,
+    delete: _delete,
   };
 };
 

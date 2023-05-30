@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import List from "../List";
 import { EditorContext } from "../Context";
-import { BiPlus } from "react-icons/bi";
 import SearchInput from "./SearchInput";
 import Collapsible from "../Collapsible";
 import { textToTitle } from "../../../Note";
