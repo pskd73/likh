@@ -30,6 +30,7 @@ import { CustomEditor, getNodeText } from "./Editor/Core/Core";
 // import { parseListNode } from "./Editor/Core/List";
 import { test } from "./Editor/Core/test";
 import {
+  ParsedListText,
   adjustFollowingSerial,
   parseListNode,
   parseListText,
@@ -67,6 +68,17 @@ const keySounds = [
 
 const Leaf = ({ attributes, children, leaf }: any) => {
   const title = leaf.title1 || leaf.title2 || leaf.title3;
+
+  let parsed: ParsedListText | undefined = undefined;
+  if (leaf.bullet) {
+    parsed = parseListText(leaf.text);
+  }
+
+  const style: CSSProperties = {};
+  if (parsed) {
+    style.marginLeft = parsed.level * 50;
+    style.width = parsed.level * 50;
+  }
 
   const className = classNames({
     // accessors
@@ -123,6 +135,7 @@ const Leaf = ({ attributes, children, leaf }: any) => {
         onClick={() => {
           window.open(leaf.text, "_blank");
         }}
+        style={style}
       >
         {children}
       </a>

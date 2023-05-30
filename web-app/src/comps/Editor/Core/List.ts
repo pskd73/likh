@@ -1,7 +1,7 @@
-import { Editor, Location, Transforms } from "slate";
+import { Editor, Transforms } from "slate";
 import { CustomEditor, getNodeText } from "./Core";
 
-type ParsedListText = {
+export type ParsedListText = {
   text: string;
   level: number;
   type: "ordered" | "unordered";
