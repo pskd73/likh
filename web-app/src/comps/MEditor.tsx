@@ -107,7 +107,7 @@ const Leaf = ({ attributes, children, leaf }: any) => {
     "mb-2": leaf.title3 && !leaf.punctuation,
 
     // list
-    "opacity-30 inline-flex justify-end pr-[6x]": leaf.bullet,
+    "opacity-30 inline-flex justify-end pr-[4px]": leaf.bullet,
 
     // link
     "underline cursor-pointer": leaf.link,
@@ -382,7 +382,7 @@ const MEditor = ({
       return (
         <p
           {...attributes}
-          className={classNames({
+          className={classNames("mb-2", {
             "p-[24px] py bg-primary-700 bg-opacity-10 italic rounded my-6":
               text.match(grammer.quoteRegex),
             "flex flex-col items-center py-10": imgUrl,
@@ -479,9 +479,9 @@ const MEditor = ({
           editor.selection.anchor.path
         );
         // console.log(startPath);
-        if (startPath) {
-          console.log(getListBlock(editor, startPath));
-        }
+        // if (startPath) {
+        //   console.log(getListBlock(editor, startPath));
+        // }
       }
     }
   };
