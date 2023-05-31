@@ -4,7 +4,10 @@ import { HistoryEditor } from "slate-history";
 import { ReactEditor } from "slate-react";
 
 export type CustomEditor = BaseEditor & ReactEditor & HistoryEditor;
-export type CustomElement = { type: "paragraph"; children: CustomText[] };
+export type CustomElement = {
+  type: "paragraph" | "code-block";
+  children: CustomText[];
+};
 export type CustomText = { text: string };
 declare module "slate" {
   interface CustomTypes {
@@ -49,4 +52,14 @@ export function focusEnd(editor: CustomEditor) {
       console.warn("Unable to focus");
     }
   }, 400);
+}
+
+export function getNextElementPath(at: number[]) {
+  const [a] = at;
+  return [a + 1, 0];
+}
+
+export function getPreviousElementPath(at: number[]) {
+  const [a] = at;
+  return [a - 1, 0];
 }

@@ -20,23 +20,37 @@ import {
   Path,
   Editor,
   Transforms,
+  Element,
 } from "slate";
 import { withHistory } from "slate-history";
 import { Slate, Editable, withReact } from "slate-react";
 import * as grammer from "./grammer";
 import { useMiddle } from "./useMiddle";
 import slugify from "slugify";
-import { CustomEditor, getNodeText, focusEnd } from "./Editor/Core/Core";
+import {
+  CustomEditor,
+  getNodeText,
+  focusEnd,
+  CustomElement,
+} from "./Editor/Core/Core";
 import {
   ParsedListText,
   adjustFollowingSerial,
   getBlockStartPath,
+  handleEnterForList,
   intend,
   parseListNode,
   parseListText,
 } from "./Editor/Core/List";
+import {
+  getCodeBlockRanges,
+  handleBackspaceForCode,
+  handleEnterForCode,
+} from "./Editor/Core/Code";
+import { test, testCode } from "./Editor/Core/test";
 
-// test();
+test();
+testCode();
 
 const serialize = (value: Descendant[]) => {
   return value.map((n) => Node.string(n)).join("\n");
@@ -57,15 +71,7 @@ const defaultValue = [
   },
 ];
 
-const keySounds = [
-  new Audio("/key_sounds/sound_1.mp3"),
-  new Audio("/key_sounds/sound_2.mp3"),
-  new Audio("/key_sounds/sound_3.mp3"),
-  new Audio("/key_sounds/sound_4.mp3"),
-  new Audio("/key_sounds/sound_5.mp3"),
-];
-
-const Leaf = ({ attributes, children, leaf }: any) => {
+const Leaf = ({ attributes, children, leaf, onCodify }: any) => {
   const title = leaf.title1 || leaf.title2 || leaf.title3;
 
   let parsed: ParsedListText | undefined = undefined;
@@ -117,7 +123,7 @@ const Leaf = ({ attributes, children, leaf }: any) => {
 
   if (leaf.notelink) {
     return (
-      <span {...attributes} className={className} onClick={console.log}>
+      <span {...attributes} className={className} onClick={onCodify}>
         {children}
       </span>
     );
@@ -155,6 +161,11 @@ const Leaf = ({ attributes, children, leaf }: any) => {
       style={style}
     >
       {children}
+      {leaf.code && (
+        <button className="ml-4" onClick={onCodify}>
+          (make code)
+        </button>
+      )}
     </span>
   );
 };
@@ -335,7 +346,10 @@ const MEditor = ({
     () => passedEditor || withHistory(withReact(createEditor())),
     [passedEditor]
   );
-  const renderLeaf = useCallback((props: any) => <Leaf {...props} />, []);
+  const renderLeaf = useCallback(
+    (props: any) => <Leaf onCodify={codify} {...props} />,
+    []
+  );
   const decorate = useCallback(([node, path]: NodeEntry) => {
     if (!Text.isText(node)) {
       return [];
@@ -354,6 +368,7 @@ const MEditor = ({
       hashtag: grammer.hashtag,
       image: grammer.image,
       notelink: grammer.notelink,
+      code: grammer.code,
     });
 
     const ranges = getTokensRanges(editor, path, tokens, 0, []);
@@ -361,7 +376,15 @@ const MEditor = ({
   }, []);
 
   const renderElement = useCallback(
-    ({ attributes, children, element }: any) => {
+    ({
+      attributes,
+      children,
+      element,
+    }: {
+      attributes: any;
+      children: any;
+      element: CustomElement;
+    }) => {
       let text = "";
       for (const child of element.children) {
         text += child.text;
@@ -376,6 +399,17 @@ const MEditor = ({
       const parsed = parseListText(text);
       if (parsed) {
         style.marginLeft = 50 * (parsed.level + 1);
+      }
+
+      if (element.type === "code-block") {
+        return (
+          <pre
+            {...attributes}
+            className="bg-primary-700 bg-opacity-20 p-4 mb-4"
+          >
+            {children}
+          </pre>
+        );
       }
 
       return (
@@ -427,40 +461,30 @@ const MEditor = ({
   };
 
   const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = (e) => {
-    if (!editor.selection) return;
     if (e.key === "Enter") {
-      const point = Editor.before(editor, editor.selection!.anchor);
-      if (!point) return;
-      const node = Editor.first(editor, point);
-      const text = getNodeText(node[0]);
-
-      const parsed = parseListText(text);
-      if (!parsed) return;
-
-      if (editor.selection.anchor.offset !== 0) {
-        e.preventDefault();
-        if (parsed.content) {
-          let prefix = `${parsed.paddingText}${parsed.symbol} `;
-          if (parsed.serial !== undefined) {
-            prefix = `${parsed.paddingText}${parsed.serial + 1}. `;
-          }
-          Transforms.insertNodes(editor, [
-            { type: "paragraph", children: [{ text: "" }] },
-          ]);
-          Transforms.insertText(editor, prefix);
-          if (parsed.type === "ordered") {
-            adjustFollowingSerial(editor, editor.selection!.anchor.path);
-          }
-        } else {
-          Transforms.removeNodes(editor);
-          Transforms.insertNodes(editor, [
-            { type: "paragraph", children: [{ text: "" }] },
-          ]);
-        }
-      }
+      handleEnterForCode(editor, e);
+      handleEnterForList(editor, e);
     } else if (e.key === "Tab") {
       e.preventDefault();
       intend(editor, !e.shiftKey);
+    } else if (e.key === "Backspace") {
+      handleBackspaceForCode(editor, e);
+    }
+  };
+
+  const codify = () => {
+    const ranges = getCodeBlockRanges(editor);
+    for (const range of ranges) {
+      Transforms.wrapNodes(
+        editor,
+        { type: "code-block", children: [{ text: "" }] } as any,
+        {
+          at: {
+            anchor: { path: range.start, offset: 0 },
+            focus: { path: range.end, offset: 2 },
+          },
+        }
+      );
     }
   };
 
@@ -476,17 +500,6 @@ const MEditor = ({
 
   const handleMouseUp = () => {
     if (editor.selection) {
-      const parsed = parseListNode(editor, editor.selection.anchor.path);
-      if (parsed) {
-        const startPath = getBlockStartPath(
-          editor,
-          editor.selection.anchor.path
-        );
-        // console.log(startPath);
-        // if (startPath) {
-        //   console.log(getListBlock(editor, startPath));
-        // }
-      }
     }
   };
 

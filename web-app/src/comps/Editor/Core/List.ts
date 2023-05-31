@@ -1,5 +1,10 @@
 import { Editor, Transforms } from "slate";
-import { CustomEditor, getNodeText } from "./Core";
+import {
+  CustomEditor,
+  getNextElementPath,
+  getNodeText,
+  getPreviousElementPath,
+} from "./Core";
 
 export type ParsedListText = {
   text: string;
@@ -76,16 +81,6 @@ export function updateListNode(
   }
 }
 
-function getNextElementPath(at: number[]) {
-  const [a] = at;
-  return [a + 1, 0];
-}
-
-function getPreviousElementPath(at: number[]) {
-  const [a] = at;
-  return [a - 1, 0];
-}
-
 export function adjustFollowingSerial(editor: CustomEditor, path: number[]) {
   const parsedNode = parseListNode(editor, path);
   if (!parsedNode) return;
@@ -154,7 +149,7 @@ export function intend(editor: CustomEditor, asc = true) {
   if (editor.selection) {
     const point = Editor.before(editor, editor.selection.anchor);
     if (!point) return;
-    
+
     const node = Editor.first(editor, point);
     const text = getNodeText(node[0]);
 
@@ -219,5 +214,41 @@ export function correctSerial(editor: CustomEditor, path: number[]) {
     if (parsed.level < level) break;
 
     _path = getNextElementPath(_path);
+  }
+}
+
+export function handleEnterForList(
+  editor: CustomEditor,
+  e: React.KeyboardEvent<HTMLDivElement>
+) {
+  if (!editor.selection) return;
+  const point = Editor.before(editor, editor.selection.anchor);
+  if (!point) return;
+  const node = Editor.first(editor, point);
+  const text = getNodeText(node[0]);
+
+  const parsed = parseListText(text);
+  if (!parsed) return;
+
+  if (editor.selection.anchor.offset !== 0) {
+    e.preventDefault();
+    if (parsed.content) {
+      let prefix = `${parsed.paddingText}${parsed.symbol} `;
+      if (parsed.serial !== undefined) {
+        prefix = `${parsed.paddingText}${parsed.serial + 1}. `;
+      }
+      Transforms.insertNodes(editor, [
+        { type: "paragraph", children: [{ text: "" }] },
+      ]);
+      Transforms.insertText(editor, prefix);
+      if (parsed.type === "ordered") {
+        adjustFollowingSerial(editor, editor.selection!.anchor.path);
+      }
+    } else {
+      Transforms.removeNodes(editor);
+      Transforms.insertNodes(editor, [
+        { type: "paragraph", children: [{ text: "" }] },
+      ]);
+    }
   }
 }

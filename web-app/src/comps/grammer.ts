@@ -148,3 +148,7 @@ export const image = {
     },
   },
 };
+
+export const code = {
+  pattern: /^```[a-zA-Z0-9]+$/m,
+}
