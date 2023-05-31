@@ -150,7 +150,7 @@ export const image = {
 };
 
 export const codeBlock = {
-  pattern: /^```[a-zA-Z0-9]*$/m,
+  pattern: /^``` ?[a-zA-Z0-9]*$/m,
   inside: {
     punctuation: /```/,
     language: /[a-zA-Z0-9]+/

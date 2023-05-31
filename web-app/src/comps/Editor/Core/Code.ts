@@ -43,7 +43,7 @@ export function parseLines(
   const locations: Array<number[]> = [];
   let started = false;
   for (const line of lines) {
-    if (line.text.match(/^```[a-zA-Z0-9]+$/)) {
+    if (line.text.match(/^``` ?[a-zA-Z0-9]+$/)) {
       started = true;
       locations.push([line.idx, line.idx]);
     }
@@ -101,7 +101,7 @@ export function handleEnterForCode(
   }
   if (
     (element as any).type !== "code-block" &&
-    text.match(/^```[a-zA-Z0-9]+$/)
+    text.match(/^``` ?[a-zA-Z0-9]+$/)
   ) {
     codify(editor);
   }
@@ -169,7 +169,7 @@ export function getCodeRanges(editor: CustomEditor, path: number[]) {
     offset: 0,
   }) as [CustomElement, any];
   const initLineText = getNodeText(initLineNode);
-  const match = initLineText.match(/```([a-zA-Z0-9]+)/);
+  const match = initLineText.match(/``` ?([a-zA-Z0-9]+)/);
   const language =
     match && Object.keys(LANGUAGES).includes(match[1]) ? match[1] : undefined;
   if (!language) return [];

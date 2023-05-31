@@ -316,6 +316,10 @@ const MEditor = ({
     }
   };
 
+  const handlePaste = () => {
+    setTimeout(() => codify(editor), 200);
+  };
+
   const getInitValue = () => {
     if (initValue) {
       return JSON.parse(initValue);
@@ -347,6 +351,7 @@ const MEditor = ({
             onKeyDown={handleKeyDown}
             onMouseUp={handleMouseUp}
             placeholder="Write your mind here ..."
+            onPaste={handlePaste}
           />
         </Slate>
       </div>
