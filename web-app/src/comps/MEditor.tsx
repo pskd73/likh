@@ -1,6 +1,8 @@
 import classNames from "classnames";
 import Prism from "prismjs";
 import "prismjs/components/prism-markdown";
+import "prismjs/components/prism-python";
+import "prismjs/components/prism-typescript";
 import {
   CSSProperties,
   KeyboardEventHandler,
@@ -9,45 +11,27 @@ import {
   useMemo,
   useRef,
 } from "react";
-import {
-  createEditor,
-  BaseEditor,
-  NodeEntry,
-  Range,
-  Text,
-  Descendant,
-  Node,
-  Path,
-  Editor,
-  Transforms,
-  Element,
-} from "slate";
+import { createEditor, NodeEntry, Text, Descendant, Node } from "slate";
 import { withHistory } from "slate-history";
 import { Slate, Editable, withReact } from "slate-react";
 import * as grammer from "./grammer";
 import { useMiddle } from "./useMiddle";
 import slugify from "slugify";
-import {
-  CustomEditor,
-  getNodeText,
-  focusEnd,
-  CustomElement,
-} from "./Editor/Core/Core";
+import { CustomEditor, focusEnd, CustomElement } from "./Editor/Core/Core";
 import {
   ParsedListText,
-  adjustFollowingSerial,
-  getBlockStartPath,
   handleEnterForList,
   intend,
-  parseListNode,
   parseListText,
 } from "./Editor/Core/List";
 import {
-  getCodeBlockRanges,
+  codify,
+  getCodeRanges,
   handleBackspaceForCode,
   handleEnterForCode,
 } from "./Editor/Core/Code";
 import { test, testCode } from "./Editor/Core/test";
+import { getTokensRanges } from "./Editor/Core/Range";
 
 test();
 testCode();
@@ -119,7 +103,19 @@ const Leaf = ({ attributes, children, leaf, onCodify }: any) => {
 
     // notelink
     "underline cursor-pointer ": leaf.notelink && !leaf.punctuation,
+
+    // code
+    "opacity-30 mb-2 inline-block": leaf.codeBlock && leaf.language,
   });
+
+  if (leaf.code) {
+    const { text, code, ...rest } = leaf;
+    return (
+      <span {...attributes} className={classNames("token", rest)}>
+        {children}
+      </span>
+    );
+  }
 
   if (leaf.notelink) {
     return (
@@ -161,165 +157,8 @@ const Leaf = ({ attributes, children, leaf, onCodify }: any) => {
       style={style}
     >
       {children}
-      {leaf.code && (
-        <button className="ml-4" onClick={onCodify}>
-          (make code)
-        </button>
-      )}
     </span>
   );
-};
-
-type CustomRange = Range;
-
-const getTokenLength = (token: string | Prism.Token) => {
-  if (typeof token === "string") {
-    return token.length;
-  } else if (typeof token.content === "string") {
-    return token.content.length;
-  } else {
-    return (token.content as any).reduce(
-      (l: any, t: any) => l + getTokenLength(t),
-      0
-    );
-  }
-};
-
-const getTokenRanges = (
-  editor: BaseEditor,
-  path: Path,
-  token: string | Prism.Token,
-  start: number,
-  parentTokens: Array<Prism.Token>
-): CustomRange[] => {
-  if (typeof token === "string") {
-    const range: any = {
-      anchor: { path, offset: start },
-      focus: { path, offset: start + getTokenLength(token) },
-    };
-    for (const pt of parentTokens) {
-      range[pt.type as string] = true;
-    }
-    return [range];
-  }
-
-  if (Array.isArray(token.content)) {
-    return getTokensRanges(editor, path, token.content, start, [
-      ...parentTokens,
-      token,
-    ]);
-  }
-
-  const range = {
-    [token.type]: true,
-    anchor: { path, offset: start },
-    focus: { path, offset: start + getTokenLength(token) },
-  };
-
-  for (const pt of parentTokens) {
-    range[pt.type] = true;
-  }
-
-  return [range];
-};
-
-const hidable: string[] = [
-  "italic",
-  "bold",
-  "title1",
-  "title2",
-  "title3",
-  "notelink",
-];
-
-const getTokensRanges = (
-  editor: BaseEditor,
-  path: Path,
-  tokens: Array<string | Prism.Token>,
-  start: number,
-  parentTokens: Prism.Token[]
-) => {
-  let ranges: CustomRange[] = [];
-  for (const _token of tokens) {
-    const _parentTokens = [...parentTokens];
-    if (typeof _token !== "string") {
-      if (hidable.includes(_token.type)) {
-        _parentTokens.push({ type: "hidable" } as any);
-        const focused = isPointFocused(editor, {
-          path,
-          start,
-          end: start + _token.length,
-        });
-        if (focused) {
-          _parentTokens.push({ type: "focused" } as any);
-        }
-      }
-      _parentTokens.push(_token);
-    }
-    const newRanges = getTokenRanges(
-      editor,
-      path,
-      _token,
-      start,
-      _parentTokens
-    );
-    ranges = [...ranges, ...newRanges];
-    start = getRangesEnd(newRanges, start);
-  }
-  return ranges;
-};
-
-const getRangesEnd = (ranges: Range[], start: number) => {
-  if (ranges.length > 0) {
-    return ranges[ranges.length - 1].focus.offset;
-  }
-  return start;
-};
-
-const isPointFocused = (
-  editor: BaseEditor,
-  point: { path: number[]; start: number; end: number }
-) => {
-  if (!editor.selection) return false;
-  const startPath =
-    JSON.stringify(editor.selection.anchor.path) === JSON.stringify(point.path);
-  const endPath =
-    JSON.stringify(editor.selection?.focus.path) === JSON.stringify(point.path);
-
-  if (startPath) {
-    if (
-      point.start <= editor.selection.anchor.offset &&
-      point.end >= editor.selection.anchor.offset
-    ) {
-      return true;
-    }
-  }
-
-  if (endPath) {
-    if (
-      point.start <= editor.selection.focus.offset &&
-      point.end >= editor.selection.focus.offset
-    ) {
-      return true;
-    }
-  }
-
-  if (startPath && endPath) {
-    if (
-      point.start >= editor.selection.anchor.offset &&
-      point.end <= editor.selection.focus.offset
-    ) {
-      return true;
-    }
-    if (
-      point.start >= editor.selection.focus.offset &&
-      point.end <= editor.selection.anchor.offset
-    ) {
-      return true;
-    }
-  }
-
-  return false;
 };
 
 const MEditor = ({
@@ -347,7 +186,7 @@ const MEditor = ({
     [passedEditor]
   );
   const renderLeaf = useCallback(
-    (props: any) => <Leaf onCodify={codify} {...props} />,
+    (props: any) => <Leaf onCodify={() => codify(editor)} {...props} />,
     []
   );
   const decorate = useCallback(([node, path]: NodeEntry) => {
@@ -368,11 +207,13 @@ const MEditor = ({
       hashtag: grammer.hashtag,
       image: grammer.image,
       notelink: grammer.notelink,
-      code: grammer.code,
+      codeBlock: grammer.codeBlock,
     });
 
+    const codeRanges = getCodeRanges(editor, path);
     const ranges = getTokensRanges(editor, path, tokens, 0, []);
-    return ranges;
+
+    return [...ranges, ...codeRanges];
   }, []);
 
   const renderElement = useCallback(
@@ -403,10 +244,7 @@ const MEditor = ({
 
       if (element.type === "code-block") {
         return (
-          <pre
-            {...attributes}
-            className="bg-primary-700 bg-opacity-20 p-4 mb-4"
-          >
+          <pre {...attributes} className="mb-4" spellCheck={false}>
             {children}
           </pre>
         );
@@ -469,22 +307,6 @@ const MEditor = ({
       intend(editor, !e.shiftKey);
     } else if (e.key === "Backspace") {
       handleBackspaceForCode(editor, e);
-    }
-  };
-
-  const codify = () => {
-    const ranges = getCodeBlockRanges(editor);
-    for (const range of ranges) {
-      Transforms.wrapNodes(
-        editor,
-        { type: "code-block", children: [{ text: "" }] } as any,
-        {
-          at: {
-            anchor: { path: range.start, offset: 0 },
-            focus: { path: range.end, offset: 2 },
-          },
-        }
-      );
     }
   };
 

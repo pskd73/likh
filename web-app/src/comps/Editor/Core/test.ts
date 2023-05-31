@@ -1,4 +1,4 @@
-import { getCodeBlockRanges, parseLines } from "./Code";
+import { parseLines } from "./Code";
 import { parseListText } from "./List";
 
 let assertCount = 1;

@@ -113,7 +113,7 @@ export const list = {
     bold,
     strikethrough,
     link,
-    notelink
+    notelink,
   },
   greedy: true,
 };
@@ -127,7 +127,7 @@ export const quote = {
     bold,
     strikethrough,
     link,
-    notelink
+    notelink,
   },
 };
 
@@ -149,6 +149,11 @@ export const image = {
   },
 };
 
-export const code = {
-  pattern: /^```[a-zA-Z0-9]+$/m,
-}
+export const codeBlock = {
+  pattern: /^```[a-zA-Z0-9]*$/m,
+  inside: {
+    punctuation: /```/,
+    language: /[a-zA-Z0-9]+/
+  },
+
+};
