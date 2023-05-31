@@ -370,6 +370,7 @@ const MEditor = ({
         ? text.match(grammer.link.pattern)
         : null;
       const imgUrl = imgMatch ? imgMatch[0] : null;
+      const quote = text.match(grammer.quoteRegex);
 
       const style: CSSProperties = {};
       const parsed = parseListText(text);
@@ -380,10 +381,11 @@ const MEditor = ({
       return (
         <p
           {...attributes}
-          className={classNames("mb-2", {
-            "p-[24px] py bg-primary-700 bg-opacity-10 italic rounded my-6":
-              text.match(grammer.quoteRegex),
+          className={classNames({
+            "px-6 bg-primary-700 bg-opacity-10 py-2 italic": quote,
+            "border-l-4 border-primary-700 border-opacity-30": quote,
             "flex flex-col items-center py-10": imgUrl,
+            "mb-2": !quote,
           })}
           style={style}
         >
