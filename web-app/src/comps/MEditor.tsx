@@ -1,8 +1,5 @@
 import classNames from "classnames";
 import Prism from "prismjs";
-import "prismjs/components/prism-markdown";
-import "prismjs/components/prism-python";
-import "prismjs/components/prism-typescript";
 import {
   CSSProperties,
   KeyboardEventHandler,

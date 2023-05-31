@@ -1,7 +1,36 @@
-import { BaseRange, Editor, Path, Transforms } from "slate";
+import { Editor, Path, Transforms } from "slate";
+import "prismjs/components/prism-javascript";
+import "prismjs/components/prism-jsx";
+import "prismjs/components/prism-typescript";
+import "prismjs/components/prism-tsx";
+import "prismjs/components/prism-markdown";
+import "prismjs/components/prism-python";
+import "prismjs/components/prism-php";
+import "prismjs/components/prism-sql";
+import "prismjs/components/prism-java";
 import { CustomEditor, CustomElement, getNodeText } from "./Core";
 import Prism from "prismjs";
 import { getTokensRanges } from "./Range";
+
+const LANGUAGES: Record<string, string> = {
+  javascript: "javascript",
+  js: "javascript",
+
+  jsx: "jsx",
+
+  typescript: "typescript",
+  ts: "typescript",
+
+  tsx: "tsx",
+
+  markdown: "markdown",
+  md: "markdown",
+
+  python: "python",
+  php: "php",
+  sql: "sql",
+  java: "java",
+};
 
 type BlockRange = {
   start: Path;
@@ -142,10 +171,10 @@ export function getCodeRanges(editor: CustomEditor, path: number[]) {
   const initLineText = getNodeText(initLineNode);
   const match = initLineText.match(/```([a-zA-Z0-9]+)/);
   const language =
-    match && ["python", "typescript"].includes(match[1]) ? match[1] : undefined;
+    match && Object.keys(LANGUAGES).includes(match[1]) ? match[1] : undefined;
   if (!language) return [];
 
-  const tokens = Prism.tokenize(text, Prism.languages[language]);
+  const tokens = Prism.tokenize(text, Prism.languages[LANGUAGES[language]]);
   return getTokensRanges(editor, path, tokens, 0, []).map((range) => ({
     ...range,
     code: true,
