@@ -37,7 +37,14 @@ test();
 testCode();
 
 const serialize = (value: Descendant[]) => {
-  return value.map((n) => Node.string(n)).join("\n");
+  return value
+    .map((n): string => {
+      if ((n as CustomElement).type === "code-block") {
+        return serialize((n as CustomElement).children);
+      }
+      return Node.string(n);
+    })
+    .join("\n");
 };
 
 const deserialize = (str: string) => {
