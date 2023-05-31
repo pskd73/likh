@@ -107,14 +107,27 @@ export function codify(editor: CustomEditor) {
   }
 }
 
-export function getCodeRanges(editor: CustomEditor, path: number[]) {
+export function getRootCodeNode(
+  editor: CustomEditor,
+  path: number[]
+): [CustomElement | undefined, number[] | undefined] {
   const rootPath = [path[0]];
-  if (!editor.hasPath(path)) return [];
-  const [rootNode] = Editor.node(editor, { path: rootPath, offset: 0 }) as [
-    CustomElement,
-    any
-  ];
-  if (rootNode.type !== "code-block") return [];
+  if (editor.hasPath(path)) {
+    const [rootNode] = Editor.node(editor, { path: rootPath, offset: 0 }) as [
+      CustomElement,
+      any
+    ];
+    if (rootNode.type === "code-block") {
+      return [rootNode, rootPath];
+    }
+  }
+  return [undefined, undefined];
+}
+
+export function getCodeRanges(editor: CustomEditor, path: number[]) {
+  const [rootNode, rootPath] = getRootCodeNode(editor, path);
+  if (!rootNode || !rootPath) return [];
+
   const [node] = Editor.node(editor, { path, offset: 0 }) as [
     CustomElement,
     any
@@ -137,4 +150,19 @@ export function getCodeRanges(editor: CustomEditor, path: number[]) {
     ...range,
     code: true,
   }));
+}
+
+export function handleTabForCode(
+  editor: CustomEditor,
+  e: React.KeyboardEvent<HTMLDivElement>
+) {
+  if (!editor.selection) return;
+
+  const [rootNode] = getRootCodeNode(editor, editor.selection.anchor.path);
+  if (!rootNode) return;
+
+  e.preventDefault();
+  if (!e.shiftKey) {
+    Transforms.insertText(editor, "    ");
+  }
 }

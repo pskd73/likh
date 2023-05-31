@@ -1,5 +1,4 @@
-import { RefObject } from "react";
-import { BaseEditor, Editor, Node, NodeEntry, Transforms } from "slate";
+import { BaseEditor, Node, NodeEntry, Transforms } from "slate";
 import { HistoryEditor } from "slate-history";
 import { ReactEditor } from "slate-react";
 

@@ -29,6 +29,7 @@ import {
   getCodeRanges,
   handleBackspaceForCode,
   handleEnterForCode,
+  handleTabForCode,
 } from "./Editor/Core/Code";
 import { test, testCode } from "./Editor/Core/test";
 import { getTokensRanges } from "./Editor/Core/Range";
@@ -312,6 +313,7 @@ const MEditor = ({
     } else if (e.key === "Tab") {
       e.preventDefault();
       intend(editor, !e.shiftKey);
+      handleTabForCode(editor, e);
     } else if (e.key === "Backspace") {
       handleBackspaceForCode(editor, e);
     }
