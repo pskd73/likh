@@ -7,6 +7,7 @@ import useStorage from "./useStorage";
 import { MouseEventHandler, useEffect, useState } from "react";
 import useShortcuts from "./useShortcuts";
 import classNames from "classnames";
+import "./Core/test";
 
 const isSlateDOM = (node: any) => {
   return !!node.attributes["data-slate-node"];

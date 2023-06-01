@@ -1,10 +1,12 @@
-import { RefObject } from "react";
-import { BaseEditor, Editor, Node, NodeEntry, Transforms } from "slate";
+import { BaseEditor, Descendant, Node, NodeEntry, Transforms } from "slate";
 import { HistoryEditor } from "slate-history";
 import { ReactEditor } from "slate-react";
 
 export type CustomEditor = BaseEditor & ReactEditor & HistoryEditor;
-export type CustomElement = { type: "paragraph"; children: CustomText[] };
+export type CustomElement = {
+  type: "paragraph" | "code-block";
+  children: CustomText[];
+};
 export type CustomText = { text: string };
 declare module "slate" {
   interface CustomTypes {
@@ -50,3 +52,32 @@ export function focusEnd(editor: CustomEditor) {
     }
   }, 400);
 }
+
+export function getNextElementPath(at: number[]) {
+  const [a] = at;
+  return [a + 1, 0];
+}
+
+export function getPreviousElementPath(at: number[]) {
+  const [a] = at;
+  return [a - 1, 0];
+}
+
+export const serialize = (value: Descendant[]) => {
+  return value
+    .map((n): string => {
+      if ((n as CustomElement).type === "code-block") {
+        return serialize((n as CustomElement).children);
+      }
+      return Node.string(n);
+    })
+    .join("\n");
+};
+
+export const deserialize = (str: string) => {
+  return str.split("\n").map((line) => {
+    return {
+      children: [{ text: line }],
+    };
+  });
+};

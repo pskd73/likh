@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
+import "./prism.css";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import App from "./App";
