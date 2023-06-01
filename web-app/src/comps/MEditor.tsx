@@ -249,7 +249,11 @@ const MEditor = ({
 
       if (element.type === "code-block") {
         return (
-          <pre {...attributes} className="mb-4" spellCheck={false}>
+          <pre
+            {...attributes}
+            className="mb-4 bg-primary-700 bg-opacity-5 p-4 rounded-md"
+            spellCheck={false}
+          >
             {children}
           </pre>
         );
