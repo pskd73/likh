@@ -14,7 +14,13 @@ import { Slate, Editable, withReact } from "slate-react";
 import * as grammer from "./grammer";
 import { useMiddle } from "./useMiddle";
 import slugify from "slugify";
-import { CustomEditor, focusEnd, CustomElement } from "./Editor/Core/Core";
+import {
+  CustomEditor,
+  focusEnd,
+  CustomElement,
+  serialize,
+  deserialize,
+} from "./Editor/Core/Core";
 import {
   ParsedListText,
   handleEnterForList,
@@ -28,30 +34,7 @@ import {
   handleEnterForCode,
   handleTabForCode,
 } from "./Editor/Core/Code";
-import { test, testCode } from "./Editor/Core/test";
 import { getTokensRanges } from "./Editor/Core/Range";
-
-test();
-testCode();
-
-const serialize = (value: Descendant[]) => {
-  return value
-    .map((n): string => {
-      if ((n as CustomElement).type === "code-block") {
-        return serialize((n as CustomElement).children);
-      }
-      return Node.string(n);
-    })
-    .join("\n");
-};
-
-const deserialize = (str: string) => {
-  return str.split("\n").map((line) => {
-    return {
-      children: [{ text: line }],
-    };
-  });
-};
 
 const defaultValue = [
   {
@@ -60,7 +43,15 @@ const defaultValue = [
   },
 ];
 
-const Leaf = ({ attributes, children, leaf, onCodify }: any) => {
+const Leaf = ({
+  attributes,
+  children,
+  leaf,
+}: {
+  attributes: any;
+  children: any;
+  leaf: Record<string, any>;
+}) => {
   const title = leaf.title1 || leaf.title2 || leaf.title3;
 
   let parsed: ParsedListText | undefined = undefined;
@@ -124,7 +115,7 @@ const Leaf = ({ attributes, children, leaf, onCodify }: any) => {
 
   if (leaf.notelink) {
     return (
-      <span {...attributes} className={className} onClick={onCodify}>
+      <span {...attributes} className={className}>
         {children}
       </span>
     );
@@ -190,10 +181,7 @@ const MEditor = ({
     () => passedEditor || withHistory(withReact(createEditor())),
     [passedEditor]
   );
-  const renderLeaf = useCallback(
-    (props: any) => <Leaf onCodify={() => codify(editor)} {...props} />,
-    []
-  );
+  const renderLeaf = useCallback((props: any) => <Leaf {...props} />, []);
   const decorate = useCallback(([node, path]: NodeEntry) => {
     if (!Text.isText(node)) {
       return [];
@@ -270,6 +258,7 @@ const MEditor = ({
           })}
           style={style}
         >
+          {/* eslint-disable-next-line jsx-a11y/alt-text */}
           {imgUrl && <img src={imgUrl} />}
           <span
             className={classNames({
@@ -334,11 +323,6 @@ const MEditor = ({
     return defaultValue;
   };
 
-  const handleMouseUp = () => {
-    if (editor.selection) {
-    }
-  };
-
   return (
     <div style={{ ...scroll.style }}>
       <div ref={containerRef} id="editorContainer">
@@ -353,7 +337,6 @@ const MEditor = ({
             renderElement={renderElement}
             onKeyUp={handleKeyUp}
             onKeyDown={handleKeyDown}
-            onMouseUp={handleMouseUp}
             placeholder="Write your mind here ..."
             onPaste={handlePaste}
           />

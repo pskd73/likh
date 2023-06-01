@@ -1,4 +1,4 @@
-import { BaseEditor, Node, NodeEntry, Transforms } from "slate";
+import { BaseEditor, Descendant, Node, NodeEntry, Transforms } from "slate";
 import { HistoryEditor } from "slate-history";
 import { ReactEditor } from "slate-react";
 
@@ -62,3 +62,22 @@ export function getPreviousElementPath(at: number[]) {
   const [a] = at;
   return [a - 1, 0];
 }
+
+export const serialize = (value: Descendant[]) => {
+  return value
+    .map((n): string => {
+      if ((n as CustomElement).type === "code-block") {
+        return serialize((n as CustomElement).children);
+      }
+      return Node.string(n);
+    })
+    .join("\n");
+};
+
+export const deserialize = (str: string) => {
+  return str.split("\n").map((line) => {
+    return {
+      children: [{ text: line }],
+    };
+  });
+};

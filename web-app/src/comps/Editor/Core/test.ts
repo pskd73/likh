@@ -81,6 +81,12 @@ export function testCode() {
     JSON.stringify(ranges[0]) === JSON.stringify({ start: [1, 0], end: [3, 0] })
   );
   assert(
-    JSON.stringify(ranges[1]) === JSON.stringify({ start: [15, 0], end: [17, 0] })
+    JSON.stringify(ranges[1]) ===
+      JSON.stringify({ start: [15, 0], end: [17, 0] })
   );
 }
+
+(window as any).runTests = () => {
+  test();
+  testCode();
+};
