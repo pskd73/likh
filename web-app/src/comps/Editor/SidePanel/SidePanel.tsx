@@ -4,6 +4,7 @@ import { EditorContext } from "../Context";
 import { BiListUl, BiMenu, BiSidebar, BiSpreadsheet } from "react-icons/bi";
 import Explorer from "./Explorer";
 import Outline from "./Outline";
+import Shortcuts from "./Shortcuts";
 
 const PullButton = ({
   children,
@@ -66,6 +67,7 @@ const SidePanel = () => {
         <div className="max-w-full overflow-hidden">
           {sideBar === "explorer" && <Explorer />}
           {sideBar === "outline" && <Outline />}
+          {sideBar === "shortcuts" && <Shortcuts />}
         </div>
       </div>
     </>

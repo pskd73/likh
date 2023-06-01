@@ -8,6 +8,7 @@ import Toggle from "../../Toggle";
 import Button from "../../Button";
 import classNames from "classnames";
 import { FiPlus, FiUpload } from "react-icons/fi";
+import { BsKeyboard } from "react-icons/bs";
 import { openFile } from "../File";
 
 const Explorer = () => {
@@ -21,6 +22,7 @@ const Explorer = () => {
     notesToShow,
     newNote,
     updateNote,
+    setSideBar,
   } = useContext(EditorContext);
 
   const handleOpen = async () => {
@@ -36,6 +38,9 @@ const Explorer = () => {
           "p-2 border-b border-primary-700 border-opacity-20"
         )}
       >
+        <Button onClick={() => setSideBar("shortcuts")}>
+          <BsKeyboard />
+        </Button>
         <Button onClick={handleOpen}>
           <FiUpload />
         </Button>
