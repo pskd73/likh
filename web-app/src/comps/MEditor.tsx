@@ -96,12 +96,14 @@ function Leaf({
     "opacity-30 inline-flex justify-end pr-[4px]": leaf.bullet,
 
     // checkbox
-    "bg-primary-700 bg-opacity-20  w-[26px] h-[26px]":
+    "bg-primary-700 bg-opacity-20  w-[26px] h-[26px] font-bold":
       leaf.checkbox && !leaf.punctuation,
     "inline-flex justify-center items-center mx-1 cursor-pointer":
       leaf.checkbox && !leaf.punctuation,
-    "rounded shadow border border-primary-700 border-opacity-30":
+    "rounded border-primary-700 border-opacity-30":
       leaf.checkbox && !leaf.punctuation,
+    border: leaf.checkbox && !leaf.punctuation && leaf.text === " ",
+    "opacity-50": leaf.checkbox && !leaf.punctuation && leaf.text === "x",
 
     // link
     "underline cursor-pointer": leaf.link,
