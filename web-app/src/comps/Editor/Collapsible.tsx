@@ -26,7 +26,6 @@ const Item = ({
           "shadow-md cursor-pointer"
         )}
         onClick={() => {
-          console.log("clicked");
           onToggle();
         }}
       >
