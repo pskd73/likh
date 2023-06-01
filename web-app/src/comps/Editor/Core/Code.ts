@@ -8,6 +8,8 @@ import "prismjs/components/prism-python";
 import "prismjs/components/prism-php";
 import "prismjs/components/prism-sql";
 import "prismjs/components/prism-java";
+import "prismjs/components/prism-cshtml";
+import "prismjs/components/prism-json";
 import { CustomEditor, CustomElement, getNodeText } from "./Core";
 import Prism from "prismjs";
 import { getTokensRanges } from "./Range";
@@ -30,6 +32,9 @@ const LANGUAGES: Record<string, string> = {
   php: "php",
   sql: "sql",
   java: "java",
+
+  html: "cshtml",
+  json: "json",
 };
 
 type BlockRange = {
