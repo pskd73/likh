@@ -108,7 +108,7 @@ const Leaf = ({
   if (leaf.code) {
     const { text, code, ...rest } = leaf;
     return (
-      <span {...attributes} className={classNames("token", rest, className)}>
+      <span {...attributes} className={classNames("token", rest)}>
         {children}
       </span>
     );
