@@ -252,3 +252,18 @@ export function handleEnterForList(
     }
   }
 }
+
+export function toggleCheckbox(editor: CustomEditor, path: number[]) {
+  const [node] = Editor.node(editor, { path, offset: 0 });
+  const text = getNodeText(node);
+  const pattern = /^( *)([-\+\*]) \[([ x])\](.*)/;
+  const match = text.match(pattern);
+  if (!match) return;
+  const isMarked = match[3] === "x";
+  console.log(match);
+  const selection = { ...editor.selection };
+  const updatedText = text.replace(pattern, `$1$2 [${isMarked ? " " : "x"}]$4`);
+  Transforms.removeNodes(editor, { at: path });
+  Transforms.insertNodes(editor, { text: updatedText }, { at: path });
+  Transforms.setSelection(editor, selection);
+}

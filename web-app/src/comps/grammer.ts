@@ -104,6 +104,13 @@ export const title3 = {
   },
 };
 
+export const checkbox = {
+  pattern: /^\[[ x]\]/,
+  inside: {
+    punctuation: /\[|\]/
+  }
+}
+
 export const listRegex = /^( *)(([-*\+])|(([0-9]+).)) (.*)$/m;
 export const list = {
   pattern: listRegex,
@@ -114,6 +121,7 @@ export const list = {
     strikethrough,
     link,
     notelink,
+    checkbox,
   },
   greedy: true,
 };
