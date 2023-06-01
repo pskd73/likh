@@ -60,6 +60,7 @@ const hidable: string[] = [
   "title2",
   "title3",
   "notelink",
+  "inlineCode",
 ];
 
 export function getTokensRanges(

@@ -101,8 +101,9 @@ const Leaf = ({
     // notelink
     "underline cursor-pointer ": leaf.notelink && !leaf.punctuation,
 
-    // code
-    "opacity-30 mb-2 inline-block": leaf.codeBlock && leaf.language,
+    // inlineCode
+    "font-CourierPrime bg-primary-700 bg-opacity-20 px-1 rounded":
+      leaf.inlineCode && !leaf.punctuation,
   });
 
   if (leaf.code) {
@@ -201,6 +202,7 @@ const MEditor = ({
       hashtag: grammer.hashtag,
       image: grammer.image,
       notelink: grammer.notelink,
+      inlineCode: grammer.inlineCode,
     });
 
     let ranges: BaseRange[] = [];
