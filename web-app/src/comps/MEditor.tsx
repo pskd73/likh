@@ -8,7 +8,7 @@ import {
   useMemo,
   useRef,
 } from "react";
-import { createEditor, NodeEntry, Text, Descendant, Node } from "slate";
+import { createEditor, NodeEntry, Text, Descendant, BaseRange } from "slate";
 import { withHistory } from "slate-history";
 import { Slate, Editable, withReact } from "slate-react";
 import * as grammer from "./grammer";
@@ -30,6 +30,7 @@ import {
 import {
   codify,
   getCodeRanges,
+  getRootCodeNode,
   handleBackspaceForCode,
   handleEnterForCode,
   handleTabForCode,
@@ -203,10 +204,14 @@ const MEditor = ({
       codeBlock: grammer.codeBlock,
     });
 
-    const codeRanges = getCodeRanges(editor, path);
-    const ranges = getTokensRanges(editor, path, tokens, 0, []);
-
-    return [...ranges, ...codeRanges];
+    let ranges: BaseRange[] = [];
+    const [rootCodeNode] = getRootCodeNode(editor, path);
+    if (!rootCodeNode) {
+      ranges = [...ranges, ...getTokensRanges(editor, path, tokens, 0, [])];
+    } else {
+      ranges = [...ranges, ...getCodeRanges(editor, path)];
+    }
+    return ranges;
   }, []);
 
   const renderElement = useCallback(
