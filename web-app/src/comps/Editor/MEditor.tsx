@@ -12,7 +12,7 @@ import { createEditor, NodeEntry, Text, Descendant, BaseRange } from "slate";
 import { withHistory } from "slate-history";
 import { Slate, Editable, withReact } from "slate-react";
 import * as grammer from "./grammer";
-import { useMiddle } from "./useMiddle";
+import { useMiddle } from "../useMiddle";
 import slugify from "slugify";
 import {
   CustomEditor,
@@ -20,14 +20,14 @@ import {
   CustomElement,
   serialize,
   deserialize,
-} from "./Editor/Core/Core";
+} from "./Core/Core";
 import {
   ParsedListText,
   handleEnterForList,
   intend,
   parseListText,
   toggleCheckbox,
-} from "./Editor/Core/List";
+} from "./Core/List";
 import {
   codify,
   getCodeRanges,
@@ -35,8 +35,8 @@ import {
   handleBackspaceForCode,
   handleEnterForCode,
   handleTabForCode,
-} from "./Editor/Core/Code";
-import { getTokensRanges } from "./Editor/Core/Range";
+} from "./Core/Code";
+import { getTokensRanges } from "./Core/Range";
 
 const defaultValue = [
   {

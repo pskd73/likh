@@ -3,7 +3,7 @@ import { Note } from "../type";
 import { AppContext } from "../components/AppContext";
 import { API_HOST } from "../config";
 import useFetch from "../useFetch";
-import MEditor from "../comps/MEditor";
+import MEditor from "../comps/Editor/MEditor";
 import { CustomEditor } from "../comps/Editor/Core/Core";
 
 const useTimer = <T extends unknown>(callback: (state: T | null) => void) => {
