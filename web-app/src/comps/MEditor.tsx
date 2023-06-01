@@ -108,7 +108,7 @@ const Leaf = ({
   if (leaf.code) {
     const { text, code, ...rest } = leaf;
     return (
-      <span {...attributes} className={classNames("token", rest)}>
+      <span {...attributes} className={classNames("token", rest, className)}>
         {children}
       </span>
     );
@@ -201,7 +201,6 @@ const MEditor = ({
       hashtag: grammer.hashtag,
       image: grammer.image,
       notelink: grammer.notelink,
-      codeBlock: grammer.codeBlock,
     });
 
     let ranges: BaseRange[] = [];
