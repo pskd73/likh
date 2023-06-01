@@ -105,6 +105,28 @@ export function handleEnterForCode(
   ) {
     codify(editor);
   }
+  if (
+    (element as any).type === "code-block" &&
+    text.match(/^``` ?[a-zA-Z0-9]+$/)
+  ) {
+    if (editor.selection.anchor.offset === 0) {
+      e.preventDefault();
+      Transforms.insertNodes(
+        editor,
+        {
+          type: "paragraph",
+          children: [{ text: "" }],
+        },
+        {
+          at: [editor.selection.anchor.path[0]],
+        }
+      );
+      Transforms.setSelection(editor, {
+        anchor: { path: [editor.selection.anchor.path[0] - 1, 0], offset: 0 },
+        focus: { path: [editor.selection.anchor.path[0] - 1, 0], offset: 0 },
+      });
+    }
+  }
 }
 
 export function handleBackspaceForCode(
