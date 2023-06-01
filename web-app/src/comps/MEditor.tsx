@@ -26,6 +26,7 @@ import {
   handleEnterForList,
   intend,
   parseListText,
+  toggleCheckbox,
 } from "./Editor/Core/List";
 import {
   codify,
@@ -44,15 +45,17 @@ const defaultValue = [
   },
 ];
 
-const Leaf = ({
+function Leaf({
   attributes,
   children,
   leaf,
+  onCheckboxToggle,
 }: {
   attributes: any;
   children: any;
   leaf: Record<string, any>;
-}) => {
+  onCheckboxToggle(path: number[]): void;
+}) {
   const title = leaf.title1 || leaf.title2 || leaf.title3;
 
   let parsed: ParsedListText | undefined = undefined;
@@ -91,6 +94,16 @@ const Leaf = ({
 
     // list
     "opacity-30 inline-flex justify-end pr-[4px]": leaf.bullet,
+
+    // checkbox
+    "bg-primary-700 bg-opacity-20  w-[26px] h-[26px] font-bold":
+      leaf.checkbox && !leaf.punctuation,
+    "inline-flex justify-center items-center mx-1 cursor-pointer":
+      leaf.checkbox && !leaf.punctuation,
+    "rounded border-primary-700 border-opacity-30":
+      leaf.checkbox && !leaf.punctuation,
+    border: leaf.checkbox && !leaf.punctuation && leaf.text === " ",
+    "opacity-50": leaf.checkbox && !leaf.punctuation && leaf.text === "x",
 
     // link
     "underline cursor-pointer": leaf.link,
@@ -153,11 +166,16 @@ const Leaf = ({
         title3: leaf.title3,
       })}
       style={style}
+      onClick={() => {
+        if (leaf.checkbox) {
+          onCheckboxToggle(leaf.path);
+        }
+      }}
     >
       {children}
     </span>
   );
-};
+}
 
 const MEditor = ({
   onChange,
@@ -183,7 +201,15 @@ const MEditor = ({
     () => passedEditor || withHistory(withReact(createEditor())),
     [passedEditor]
   );
-  const renderLeaf = useCallback((props: any) => <Leaf {...props} />, []);
+  const renderLeaf = useCallback(
+    (props: any) => (
+      <Leaf
+        {...props}
+        onCheckboxToggle={(path) => toggleCheckbox(editor, path)}
+      />
+    ),
+    []
+  );
   const decorate = useCallback(([node, path]: NodeEntry) => {
     if (!Text.isText(node)) {
       return [];
@@ -212,7 +238,7 @@ const MEditor = ({
     } else {
       ranges = [...ranges, ...getCodeRanges(editor, path)];
     }
-    return ranges;
+    return ranges.map((range) => ({ ...range, path }));
   }, []);
 
   const renderElement = useCallback(

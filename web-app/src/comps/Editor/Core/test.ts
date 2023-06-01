@@ -1,5 +1,5 @@
 import { parseLines } from "./Code";
-import { parseListText } from "./List";
+import { parseCheckbox, parseListText } from "./List";
 
 let assertCount = 1;
 
@@ -40,6 +40,10 @@ export function test() {
   assert(parseListText("- Item")?.symbol === "-");
   assert(parseListText("+ Item")?.symbol === "+");
   assert(parseListText("* Item")?.symbol === "*");
+
+  assert(parseListText("- [ ] with checkbox")?.symbol === "*");
+  assert(parseListText("- [ ] with checkbox")?.checkbox === true);
+  assert(parseListText("- [ ] with checkbox")?.text === "with checkbox");
 }
 
 export function testCode() {
@@ -86,7 +90,17 @@ export function testCode() {
   );
 }
 
+function testCheckboxParser() {
+  assert(parseCheckbox("randome").match === null);
+  assert(parseCheckbox("- []").match === null);
+  assert(parseCheckbox("- [ ] some more text [x]").isMarked === false);
+  assert(parseCheckbox("- [x]").isMarked === true);
+  assert(parseCheckbox("+ [x]").isMarked === true);
+  assert(parseCheckbox("* [x]").isMarked === true);
+}
+
 (window as any).runTests = () => {
   test();
   testCode();
+  testCheckboxParser();
 };
