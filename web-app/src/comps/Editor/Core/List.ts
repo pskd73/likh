@@ -14,6 +14,7 @@ export type ParsedListText = {
   paddingText: string;
   serial?: number;
   symbol?: string;
+  checkbox?: boolean;
 };
 
 export type ListBlock = {
@@ -21,7 +22,7 @@ export type ListBlock = {
 };
 
 export function parseListText(text: string): ParsedListText | undefined {
-  const pattern = /^( *)([-\*\+]|([0-9]+)\.) (.*)$/;
+  const pattern = /^( *)([-\*\+]|([0-9]+)\.) (\[[ x]\] )?(.*)$/;
   const match = text.match(pattern);
   if (!match) {
     return undefined;
@@ -29,9 +30,10 @@ export function parseListText(text: string): ParsedListText | undefined {
   const level = Math.floor(match[1].length / 4);
   const type = match[3] === undefined ? "unordered" : "ordered";
   const serial = type === "ordered" ? Number(match[3]) : undefined;
-  const content = match[4];
+  const content = match[5];
   const symbol = match[2];
   const paddingText = match[1];
+  const checkbox = !!match[4];
   return {
     text,
     level,
@@ -40,6 +42,7 @@ export function parseListText(text: string): ParsedListText | undefined {
     content,
     symbol,
     paddingText,
+    checkbox,
   };
 }
 
@@ -237,6 +240,13 @@ export function handleEnterForList(
       if (parsed.serial !== undefined) {
         prefix = `${parsed.paddingText}${parsed.serial + 1}. `;
       }
+
+      // checkbox
+      const { match: checkbox } = parseCheckbox(text);
+      if (checkbox) {
+        prefix += "[ ] ";
+      }
+
       Transforms.insertNodes(editor, [
         { type: "paragraph", children: [{ text: "" }] },
       ]);
@@ -253,16 +263,33 @@ export function handleEnterForList(
   }
 }
 
+const CHECKBOX_PATTERN = /^( *)([-\+\*]) \[([ x])\](.*)/;
+
+export function parseCheckbox(text: string) {
+  const match = text.match(CHECKBOX_PATTERN);
+  if (!match)
+    return {
+      match: null,
+    };
+  const isMarked = match[3] === "x";
+  return {
+    match,
+    isMarked,
+  };
+}
+
 export function toggleCheckbox(editor: CustomEditor, path: number[]) {
   const [node] = Editor.node(editor, { path, offset: 0 });
   const text = getNodeText(node);
-  const pattern = /^( *)([-\+\*]) \[([ x])\](.*)/;
-  const match = text.match(pattern);
+
+  const { match, isMarked } = parseCheckbox(text);
   if (!match) return;
-  const isMarked = match[3] === "x";
-  console.log(match);
+
   const selection = { ...editor.selection };
-  const updatedText = text.replace(pattern, `$1$2 [${isMarked ? " " : "x"}]$4`);
+  const updatedText = text.replace(
+    CHECKBOX_PATTERN,
+    `$1$2 [${isMarked ? " " : "x"}]$4`
+  );
   Transforms.removeNodes(editor, { at: path });
   Transforms.insertNodes(editor, { text: updatedText }, { at: path });
   Transforms.setSelection(editor, selection);
