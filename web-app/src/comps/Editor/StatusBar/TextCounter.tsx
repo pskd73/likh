@@ -44,7 +44,7 @@ const TextCounter = ({ text }: { text: string }) => {
       }
     >
       {countStatType === "words" ? <VscWholeWord /> : <BiTimeFive />}{" "}
-      <span className="text-sm">
+      <span className="text-xs">
         <Count text={text} />
       </span>
     </Button>
