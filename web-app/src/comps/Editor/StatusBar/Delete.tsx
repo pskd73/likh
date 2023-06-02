@@ -15,7 +15,7 @@ const Delete = () => {
 
   if (!prompt) {
     return (
-      <Button lite onClick={() => setPrompt(true)}>
+      <Button className="rounded-none" lite onClick={() => setPrompt(true)}>
         <RiDeleteBinLine />
       </Button>
     );

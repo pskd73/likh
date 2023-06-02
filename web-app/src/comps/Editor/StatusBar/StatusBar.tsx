@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { ComponentProps, useContext } from "react";
 import { EditorContext } from "../Context";
 import TextCounter from "./TextCounter";
 import Button from "../../Button";
@@ -6,9 +6,10 @@ import { BiMenu, BiSave, BiSpreadsheet } from "react-icons/bi";
 import { saveNote } from "../File";
 import Delete from "./Delete";
 import classNames from "classnames";
+import { twMerge } from "tailwind-merge";
 
 const StatusBar = ({ text }: { text: string }) => {
-  const { showStats, note, setSideBar } = useContext(EditorContext);
+  const { showStats, note, sideBar, setSideBar } = useContext(EditorContext);
 
   const handleSave = () => {
     saveNote(note);
@@ -22,29 +23,29 @@ const StatusBar = ({ text }: { text: string }) => {
         "h-[30px]"
       )}
     >
-      <div className="flex justify-start space-x-2">
+      <div className="flex justify-start space-x-2 h-full">
         <Button
-          lite
+          lite={sideBar !== "explorer"}
+          className="rounded-none"
           onClick={() =>
             setSideBar((b) => (b === "explorer" ? undefined : "explorer"))
           }
-          // active={sideBar === "explorer"}
         >
           <BiMenu />
         </Button>
         <Button
-          lite
+          lite={sideBar !== "outline"}
+          className="rounded-none"
           onClick={() =>
             setSideBar((b) => (b === "outline" ? undefined : "outline"))
           }
-          // active={sideBar === "outline"}
         >
           <BiSpreadsheet />
         </Button>
       </div>
-      <div className="flex justify-end space-x-2">
+      <div className="flex justify-end space-x-2 h-full">
         <Delete />
-        <Button lite onClick={handleSave}>
+        <Button className="rounded-none" lite onClick={handleSave}>
           <BiSave />
         </Button>
         {showStats && <TextCounter text={text} />}
