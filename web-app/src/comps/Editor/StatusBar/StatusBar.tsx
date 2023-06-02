@@ -23,7 +23,7 @@ const StatusBar = ({ text }: { text: string }) => {
         "h-[30px]"
       )}
     >
-      <div className="flex justify-start space-x-2 h-full">
+      <div className="flex justify-start h-full">
         <Button
           lite={sideBar !== "explorer"}
           className="rounded-none"
@@ -43,7 +43,7 @@ const StatusBar = ({ text }: { text: string }) => {
           <BiSpreadsheet />
         </Button>
       </div>
-      <div className="flex justify-end space-x-2 h-full">
+      <div className="flex justify-end h-full">
         <Delete />
         <Button className="rounded-none" lite onClick={handleSave}>
           <BiSave />
