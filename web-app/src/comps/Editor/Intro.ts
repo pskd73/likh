@@ -1,6 +1,5 @@
 export const INTRO_TEXT = "" +
-`
-# 💡 Retro Note - Philosophy
+`# 💡 Retro Note - Philosophy
 Writing is not just framing some random words. It is giving shape and structure our vague thoughts. Writing is thinking. Being good at writing makes one good at __articulating thoughts__ which is very fundamental instrument in building human societies. __Retro Note__ is a place where you can write your mind and build better writing habits.
 
 ## ✍️ Build writing habits
@@ -76,5 +75,4 @@ You can add images to your notes with basic __markdown__. All you need is the _U
 
 ![Superb Fairywren](https://cdn.pixabay.com/photo/2023/05/22/11/22/superb-fairywren-8010454_1280.jpg "Superb Fairywren")
 ![Insect Beetle Soft](https://cdn.pixabay.com/photo/2023/05/22/18/17/insect-8011258_1280.jpg "Insect Beetle Soft")
-Here is the syntax for it - https://cdn.pixabay.com/photo/2023/05/22/18/17/insect-8011258_1280.jpg
-`
+Here is the syntax for it - https://cdn.pixabay.com/photo/2023/05/22/18/17/insect-8011258_1280.jpg`
