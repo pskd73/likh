@@ -13,6 +13,8 @@ const isSlateDOM = (node: any) => {
   return !!node.attributes["data-slate-node"];
 };
 
+const isMobile = window.innerWidth < 500;
+
 const EditorWindow = () => {
   const storage = useStorage();
   const editorState = useEditor({ storage });
@@ -52,9 +54,16 @@ const EditorWindow = () => {
 
   return (
     <EditorContext.Provider value={editorState}>
-      <div className="min-h-[100vh] bg-base text-primary-700 flex">
+      <div className="min-h-[100vh] bg-base text-primary-700 flex w-[10000px]">
         <SidePanel />
-        <div className="w-full">
+        <div
+          style={{
+            width:
+              editorState.sideBar && !isMobile
+                ? "calc(100vw - 300px)"
+                : "100vw",
+          }}
+        >
           <div
             id="editor-container"
             className="flex-1 p-4 py-8 flex justify-center overflow-y-scroll"

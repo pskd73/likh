@@ -32,7 +32,7 @@ const SidePanel = () => {
       <div
         className={classNames({
           "w-[0px]": !sideBar,
-          "w-[100px] md:w-[300px] transition-all": sideBar,
+          "w-[300px] md:w-[300px] transition-all": sideBar,
         })}
       />
       <div
@@ -46,7 +46,7 @@ const SidePanel = () => {
           }
         )}
       >
-        <div className="absolute top-[12px] -right-[34px] flex flex-col space-y-4">
+        {/* <div className="absolute top-[12px] -right-[34px] flex flex-col space-y-4">
           <PullButton
             onClick={() =>
               setSideBar((b) => (b === "explorer" ? undefined : "explorer"))
@@ -63,7 +63,7 @@ const SidePanel = () => {
           >
             <BiSpreadsheet />
           </PullButton>
-        </div>
+        </div> */}
         <div className="max-w-full overflow-hidden">
           {sideBar === "explorer" && <Explorer />}
           {sideBar === "outline" && <Outline />}
