@@ -72,7 +72,6 @@ You can take full advantage of checkbox support in __markdown__ and create your 
 
 ## 🖼️ Images
 You can add images to your notes with basic __markdown__. All you need is the _URL_ of the link you want to insert in your notes. Currently, we don't support upload directly to notes which will be coming soon. Here are few examples.
-
 ![Superb Fairywren](https://cdn.pixabay.com/photo/2023/05/22/11/22/superb-fairywren-8010454_1280.jpg "Superb Fairywren")
 ![Insect Beetle Soft](https://cdn.pixabay.com/photo/2023/05/22/18/17/insect-8011258_1280.jpg "Insect Beetle Soft")
 Here is the syntax for it - https://cdn.pixabay.com/photo/2023/05/22/18/17/insect-8011258_1280.jpg`
