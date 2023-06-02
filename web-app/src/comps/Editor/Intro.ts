@@ -55,4 +55,26 @@ __Retro Note__ is a keyboard first app. We embrace the keyboard interaction more
 
 ## 📈 Stats
 You can quickly view the stats of the note right on the screen. You can set a goal for the note, for example, __free style, short, medium, and long forms__. You can see the progress at the bottom of the app so that you adjust your style of writing accordingly. You can even view the __word, paragraph, section__ counts along with the __read time__ of the note.
+
+## ☑️ Checkboxes
+You can take full advantage of checkbox support in __markdown__ and create your own to-do lists. You can control the checkboxes either from mouse clicks or by keyboard. Following is an example
+
+- [x] Research about _Kudremukh Trek_ - https://www.holidify.com/places/kudremukh/kudremukh-trek-sightseeing-2479.html
+- [x] Estimate the cost of travel
+- [ ] Purchase trek gear
+    - [ ] Hiking pack 
+    - [ ] Weather-appropriate clothing (think moisture-wicking and layers)
+    - [ ] Hiking footwear
+    - [ ] Plenty of food
+    - [ ] Navigation tools such as a map and compass
+    - [x] First-aid kit
+    - [x] Knife or multi-tool
+- [ ] Inform friends and family 😍
+
+## 🖼️ Images
+You can add images to your notes with basic __markdown__. All you need is the _URL_ of the link you want to insert in your notes. Currently, we don't support upload directly to notes which will be coming soon. Here are few examples.
+
+![Superb Fairywren](https://cdn.pixabay.com/photo/2023/05/22/11/22/superb-fairywren-8010454_1280.jpg "Superb Fairywren")
+![Insect Beetle Soft](https://cdn.pixabay.com/photo/2023/05/22/18/17/insect-8011258_1280.jpg "Insect Beetle Soft")
+Here is the syntax for it - https://cdn.pixabay.com/photo/2023/05/22/18/17/insect-8011258_1280.jpg
 `
