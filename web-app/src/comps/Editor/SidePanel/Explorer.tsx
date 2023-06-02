@@ -10,6 +10,7 @@ import classNames from "classnames";
 import { FiPlus, FiUpload } from "react-icons/fi";
 import { BsKeyboard } from "react-icons/bs";
 import { openFile } from "../File";
+import { INTRO_TEXT } from "../Intro";
 
 const Explorer = () => {
   const {
@@ -93,6 +94,12 @@ const Explorer = () => {
                   checked={typewriterMode}
                   onChange={(e) => setTypewriterMode(e.target.checked)}
                 />
+              </List.Item>
+              <List.Item
+                className="flex justify-between items-center"
+                onClick={() => newNote({ text: INTRO_TEXT })}
+              >
+                <span>Introduction note</span>
               </List.Item>
             </List>
           </div>

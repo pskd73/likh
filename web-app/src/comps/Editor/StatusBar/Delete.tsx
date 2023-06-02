@@ -22,7 +22,7 @@ const Delete = () => {
   }
   return (
     <div className="text-sm flex items-center space-x-2">
-      <span>Are you sure to delete?</span>
+      <span className="text-xs">Are you sure to delete?</span>
       <div className="space-x-1">
         <Button onClick={handleConfirm}>
           <BiCheck />
