@@ -54,22 +54,24 @@ const EditorWindow = () => {
     <EditorContext.Provider value={editorState}>
       <div className="min-h-[100vh] bg-base text-primary-700 flex">
         <SidePanel />
-        <StatusBar text={editorState.note.text} />
-        <div
-          className="flex-1 p-4 py-8 flex justify-center overflow-y-scroll"
-          onClick={handleSectionClick}
-          style={{maxHeight: "calc(100vh - 37px)"}}
-        >
-          <div className={classNames("w-full max-w-[860px] md:w-[860px]")}>
-            <MEditor
-              key={editorKey}
-              onChange={handleChange}
-              initValue={editorState.note.serialized}
-              initText={editorState.note.text}
-              typeWriter={editorState.typewriterMode}
-              focus={focus}
-            />
+        <div className="w-full">
+          <div
+            className="flex-1 p-4 py-8 flex justify-center overflow-y-scroll"
+            onClick={handleSectionClick}
+            style={{ height: "calc(100vh - 30px)" }}
+          >
+            <div className={classNames("w-full max-w-[860px] md:w-[860px]")}>
+              <MEditor
+                key={editorKey}
+                onChange={handleChange}
+                initValue={editorState.note.serialized}
+                initText={editorState.note.text}
+                typeWriter={editorState.typewriterMode}
+                focus={focus}
+              />
+            </div>
           </div>
+          <StatusBar text={editorState.note.text} />
         </div>
       </div>
     </EditorContext.Provider>

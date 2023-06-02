@@ -17,9 +17,9 @@ const StatusBar = ({ text }: { text: string }) => {
   return (
     <div
       className={classNames(
-        "fixed bottom-0 w-full right-0 z-10 flex justify-end space-x-2",
+        "bottom-0 w-full right-0 z-10 flex justify-end space-x-2",
         "bg-base shadow-2xl border-t border-primary-700 border-opacity-10",
-        "h-[36px]"
+        "h-[30px]"
       )}
     >
       <Delete />
