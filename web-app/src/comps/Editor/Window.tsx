@@ -13,6 +13,8 @@ const isSlateDOM = (node: any) => {
   return !!node.attributes["data-slate-node"];
 };
 
+const isMobile = window.innerWidth < 500;
+
 const EditorWindow = () => {
   const storage = useStorage();
   const editorState = useEditor({ storage });
@@ -52,23 +54,34 @@ const EditorWindow = () => {
 
   return (
     <EditorContext.Provider value={editorState}>
-      <div className="min-h-[100vh] bg-base text-primary-700 flex">
+      <div className="min-h-[100vh] bg-base text-primary-700 flex w-[10000px]">
         <SidePanel />
-        <StatusBar text={editorState.note.text} />
         <div
-          className="flex-1 p-4 py-8 flex justify-center"
-          onClick={handleSectionClick}
+          style={{
+            width:
+              editorState.sideBar && !isMobile
+                ? "calc(100vw - 300px)"
+                : "100vw",
+          }}
         >
-          <div className={classNames("w-full max-w-[860px] md:w-[860px]")}>
-            <MEditor
-              key={editorKey}
-              onChange={handleChange}
-              initValue={editorState.note.serialized}
-              initText={editorState.note.text}
-              typeWriter={editorState.typewriterMode}
-              focus={focus}
-            />
+          <div
+            id="editor-container"
+            className="flex-1 p-4 py-8 flex justify-center overflow-y-scroll"
+            onClick={handleSectionClick}
+            style={{ height: "calc(100vh - 30px)" }}
+          >
+            <div className={classNames("w-full max-w-[860px] md:w-[860px]")}>
+              <MEditor
+                key={editorKey}
+                onChange={handleChange}
+                initValue={editorState.note.serialized}
+                initText={editorState.note.text}
+                typeWriter={editorState.typewriterMode}
+                focus={focus}
+              />
+            </div>
           </div>
+          <StatusBar text={editorState.note.text} />
         </div>
       </div>
     </EditorContext.Provider>

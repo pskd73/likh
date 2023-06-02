@@ -43,14 +43,18 @@ export const useMiddle = (
 
   const scroll = (force?: boolean) => {
     if (!options?.active) {
-      return
+      return;
     }
     if (
       force ||
       !options?.editor ||
       (options.editor && isCursorAtEnd(options.editor))
     ) {
-      document.body.scrollTo({
+      let element = document.getElementById("editor-container");
+      if (!element) {
+        element = document.body;
+      }
+      element.scrollTo({
         top: 10000000,
         behavior: "smooth",
       });
