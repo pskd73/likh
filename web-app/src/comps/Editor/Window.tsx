@@ -56,8 +56,9 @@ const EditorWindow = () => {
         <SidePanel />
         <StatusBar text={editorState.note.text} />
         <div
-          className="flex-1 p-4 py-8 flex justify-center"
+          className="flex-1 p-4 py-8 flex justify-center overflow-y-scroll"
           onClick={handleSectionClick}
+          style={{maxHeight: "calc(100vh - 37px)"}}
         >
           <div className={classNames("w-full max-w-[860px] md:w-[860px]")}>
             <MEditor
