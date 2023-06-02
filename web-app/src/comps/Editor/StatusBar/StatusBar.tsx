@@ -2,7 +2,7 @@ import { ComponentProps, useContext } from "react";
 import { EditorContext } from "../Context";
 import TextCounter from "./TextCounter";
 import Button from "../../Button";
-import { BiMenu, BiSave, BiSpreadsheet } from "react-icons/bi";
+import { BiMenu, BiSave, BiSpreadsheet, BiX } from "react-icons/bi";
 import { saveNote } from "../File";
 import Delete from "./Delete";
 import classNames from "classnames";
@@ -42,6 +42,12 @@ const StatusBar = ({ text }: { text: string }) => {
         >
           <BiSpreadsheet />
         </Button>
+        <div className="hidden md:flex items-center px-1 space-x-1 h-full">
+          <span className="opacity-50 text-xs">Note is auto saved locally!</span>
+          {/* <Button lite className="h-full rounded-none">
+            <BiX />
+          </Button> */}
+        </div>
       </div>
       <div className="flex justify-end h-full">
         <Delete />

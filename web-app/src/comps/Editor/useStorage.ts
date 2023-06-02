@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { NoteMeta, SavedNote } from "./type";
+import { INTRO_TEXT } from "./Intro";
 
 const getNoteMetas = (): NoteMeta[] => {
   return JSON.parse(localStorage.getItem("notes") || "[]");
@@ -56,7 +57,7 @@ const useStorage = (): Storage => {
     if (note) {
       return note;
     }
-    return newNote("New note");
+    return newNote(INTRO_TEXT);
   };
 
   const search = (text: string) => {
