@@ -115,7 +115,7 @@ function Leaf({
     "underline cursor-pointer ": leaf.notelink && !leaf.punctuation,
 
     // inlineCode
-    "font-CourierPrime bg-primary-700 bg-opacity-20 px-1 rounded":
+    "font-CourierPrime bg-primary-700 bg-opacity-20 px-1 rounded inline-flex items-center":
       leaf.inlineCode && !leaf.punctuation,
   });
 

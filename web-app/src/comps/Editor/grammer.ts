@@ -104,6 +104,15 @@ export const title3 = {
   },
 };
 
+export const inlineCode = {
+  pattern: /`+[^`]*`+/,
+  greedy: true,
+  inside: {
+    punctuation: [{ pattern: /^`+/ }, { pattern: /`+$/ }],
+  },
+};
+
+
 export const checkbox = {
   pattern: /^\[[ x]\]/,
   inside: {
@@ -122,6 +131,7 @@ export const list = {
     link,
     notelink,
     checkbox,
+    inlineCode
   },
   greedy: true,
 };
@@ -162,13 +172,5 @@ export const codeBlock = {
   inside: {
     punctuation: /```/,
     language: /[a-zA-Z0-9]+/,
-  },
-};
-
-export const inlineCode = {
-  pattern: /`+[^`]*`+/,
-  greedy: true,
-  inside: {
-    punctuation: [{ pattern: /^`+/ }, { pattern: /`+$/ }],
   },
 };
