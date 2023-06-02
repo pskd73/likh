@@ -56,6 +56,7 @@ const EditorWindow = () => {
         <SidePanel />
         <div className="w-full">
           <div
+            id="editor-container"
             className="flex-1 p-4 py-8 flex justify-center overflow-y-scroll"
             onClick={handleSectionClick}
             style={{ height: "calc(100vh - 30px)" }}
