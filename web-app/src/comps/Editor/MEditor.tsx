@@ -114,7 +114,7 @@ function Leaf({
     "bg-primary-700 bg-opacity-20 p-1 px-3 rounded-full": leaf.hashtag,
 
     // notelink
-    "underline cursor-pointer ": leaf.notelink && !leaf.punctuation,
+    "underline cursor-pointer notelink": leaf.notelink && !leaf.punctuation,
 
     // inlineCode
     "font-CourierPrime bg-primary-700 bg-opacity-20 px-1 rounded inline-flex items-center":
@@ -140,6 +140,7 @@ function Leaf({
             onNoteLinkClick(leaf.text);
           }
         }}
+        id={slugify(leaf.text, { lower: true })}
       >
         {children}
       </span>

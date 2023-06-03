@@ -104,8 +104,7 @@ export const useEditor = ({
       if (note) {
         const match = note.text.match(/^ *#{1,3} (.*)$/m);
         if (match) {
-          const title = match[1];
-          if (title.toLowerCase() === title) {
+          if (match[1].toLowerCase() === title.toLowerCase()) {
             return note;
           }
         }
@@ -153,6 +152,6 @@ export const useEditor = ({
     deleteNote,
 
     getNoteByTitle,
-    setOrNewNote
+    setOrNewNote,
   };
 };
