@@ -105,7 +105,7 @@ const List = ({
 };
 
 const Outline = () => {
-  const { note } = useContext(EditorContext);
+  const { note, setOrNewNote } = useContext(EditorContext);
   const titles = useMemo(() => {
     const titles = generateTitles();
     return nested(titles, 0).children;
@@ -114,8 +114,6 @@ const Outline = () => {
     return generateLinks();
   }, [note]);
 
-  console.log({ links });
-
   return (
     <div>
       <div className="p-4">
@@ -123,25 +121,27 @@ const Outline = () => {
         {titles.length === 0 ? <span>No headings yet!</span> : null}
       </div>
       <Collapsible>
-        <Collapsible.Item title="Links" onToggle={console.log} active>
-          <ListWidget>
-            {links.map((link, i) => (
-              <ListWidget.Item
-                key={i}
-                className="cursor-auto hover:bg-white flex justify-between items-center"
-              >
-                <a href={`#${link.id}`} className="hover:underline">
-                  {link.text}
-                </a>
-                <div>
-                  <Button>
-                    <TbExternalLink />
-                  </Button>
-                </div>
-              </ListWidget.Item>
-            ))}
-          </ListWidget>
-        </Collapsible.Item>
+        {links.length > 0 && (
+          <Collapsible.Item title="Links" onToggle={console.log} active>
+            <ListWidget>
+              {links.map((link, i) => (
+                <ListWidget.Item
+                  key={i}
+                  className="cursor-auto hover:bg-white flex justify-between items-center"
+                >
+                  <a href={`#${link.id}`} className="hover:underline">
+                    {link.text}
+                  </a>
+                  <div>
+                    <Button onClick={() => setOrNewNote(link.text)}>
+                      <TbExternalLink />
+                    </Button>
+                  </div>
+                </ListWidget.Item>
+              ))}
+            </ListWidget>
+          </Collapsible.Item>
+        )}
       </Collapsible>
     </div>
   );
