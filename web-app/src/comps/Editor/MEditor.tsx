@@ -50,11 +50,13 @@ function Leaf({
   children,
   leaf,
   onCheckboxToggle,
+  onNoteLinkClick,
 }: {
   attributes: any;
   children: any;
   leaf: Record<string, any>;
   onCheckboxToggle(path: number[]): void;
+  onNoteLinkClick(title: string): void;
 }) {
   const title = leaf.title1 || leaf.title2 || leaf.title3;
 
@@ -130,7 +132,15 @@ function Leaf({
 
   if (leaf.notelink) {
     return (
-      <span {...attributes} className={className}>
+      <span
+        {...attributes}
+        className={className}
+        onClick={() => {
+          if (!leaf.punctuation) {
+            onNoteLinkClick(leaf.text);
+          }
+        }}
+      >
         {children}
       </span>
     );
@@ -184,6 +194,7 @@ const MEditor = ({
   typeWriter,
   editor: passedEditor,
   focus,
+  onNoteLinkClick,
 }: {
   onChange: (val: {
     value: Descendant[];
@@ -195,6 +206,7 @@ const MEditor = ({
   typeWriter?: boolean;
   editor?: CustomEditor;
   focus?: number;
+  onNoteLinkClick?: (title: string) => void;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const editor = useMemo(
@@ -206,6 +218,7 @@ const MEditor = ({
       <Leaf
         {...props}
         onCheckboxToggle={(path) => toggleCheckbox(editor, path)}
+        onNoteLinkClick={onNoteLinkClick || (() => {})}
       />
     ),
     []

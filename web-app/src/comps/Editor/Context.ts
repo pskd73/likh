@@ -1,6 +1,7 @@
 import { createContext, useMemo, useState } from "react";
 import { Storage } from "./useStorage";
 import { NewNote, SavedNote } from "./type";
+import { getNoteTitle } from "../../Note";
 
 type StateSetter<T> = React.Dispatch<React.SetStateAction<T>>;
 type CountStatType = "words" | "readTime";
@@ -34,6 +35,9 @@ export type EditorContextType = {
   newNote: (note: NewNote) => void;
 
   deleteNote: (noteId: string) => void;
+
+  getNoteByTitle: (title: string) => void;
+  setOrNewNote: (title: string) => void;
 };
 
 export const EditorContext = createContext<EditorContextType>(
@@ -94,6 +98,32 @@ export const useEditor = ({
     setNote(storage.getRecentNote());
   };
 
+  const getNoteByTitle = (title: string) => {
+    for (const noteMeta of storage.notes) {
+      const note = storage.getNote(noteMeta.id);
+      if (note) {
+        const match = note.text.match(/^ *#{1,3} (.*)$/m);
+        if (match) {
+          const title = match[1];
+          if (title.toLowerCase() === title) {
+            return note;
+          }
+        }
+      }
+    }
+  };
+
+  const setOrNewNote = (title: string) => {
+    const note = getNoteByTitle(title);
+    if (!note) {
+      newNote({
+        text: `# ${title}\nWrite more here`,
+      });
+    } else {
+      setNote(note);
+    }
+  };
+
   return {
     storage,
 
@@ -121,5 +151,8 @@ export const useEditor = ({
 
     newNote,
     deleteNote,
+
+    getNoteByTitle,
+    setOrNewNote
   };
 };

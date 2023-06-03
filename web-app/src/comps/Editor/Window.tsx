@@ -79,6 +79,7 @@ const EditorWindow = () => {
                 initText={editorState.note.text}
                 typeWriter={editorState.typewriterMode}
                 focus={focus}
+                onNoteLinkClick={(title) => editorState.setOrNewNote(title)}
               />
             </div>
           </div>
