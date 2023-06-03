@@ -1,12 +1,21 @@
-import { useContext, useEffect, useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { EditorContext } from "../Context";
 import classNames from "classnames";
+import Collapsible from "../Collapsible";
+import ListWidget from "../List";
+import Button from "../../Button";
+import { TbExternalLink } from "react-icons/tb";
 
 type OutlineTitle = {
   text: string | null;
   level: number;
   id: string;
   children: OutlineTitle[];
+};
+
+type NoteLink = {
+  text: string;
+  id: string;
 };
 
 const nested = (
@@ -33,23 +42,7 @@ const nested = (
   return { children: result, nextIdx: i };
 };
 
-// console.log(
-//   nested(
-//     [
-//       { text: "", level: 1, id: "1", children: [] },
-//       { text: "", level: 1, id: "2", children: [] },
-//       { text: "", level: 2, id: "3", children: [] },
-//       { text: "", level: 3, id: "4", children: [] },
-//       { text: "", level: 2, id: "5", children: [] },
-//       { text: "", level: 1, id: "6", children: [] },
-//       { text: "", level: 3, id: "7", children: [] },
-//       { text: "", level: 2, id: "8", children: [] },
-//     ],
-//     0
-//   ).children
-// );
-
-const generate = () => {
+const generateTitles = () => {
   const nodes = document.querySelectorAll(".acc-title");
   const titles: OutlineTitle[] = [];
   nodes.forEach((node) => {
@@ -66,6 +59,15 @@ const generate = () => {
     });
   });
   return titles;
+};
+
+const generateLinks = () => {
+  const nodes = document.querySelectorAll(".notelink");
+  const links: NoteLink[] = [];
+  nodes.forEach((node) => {
+    links.push({ text: node.textContent!, id: node.id });
+  });
+  return links;
 };
 
 const List = ({
@@ -105,14 +107,42 @@ const List = ({
 const Outline = () => {
   const { note } = useContext(EditorContext);
   const titles = useMemo(() => {
-    const titles = generate();
+    const titles = generateTitles();
     return nested(titles, 0).children;
   }, [note]);
+  const links = useMemo(() => {
+    return generateLinks();
+  }, [note]);
+
+  console.log({ links });
 
   return (
-    <div className="p-4">
-      {titles && <List titles={titles} root />}
-      {titles.length === 0 ? <span>No headings yet!</span> : null}
+    <div>
+      <div className="p-4">
+        {titles && <List titles={titles} root />}
+        {titles.length === 0 ? <span>No headings yet!</span> : null}
+      </div>
+      <Collapsible>
+        <Collapsible.Item title="Links" onToggle={console.log} active>
+          <ListWidget>
+            {links.map((link, i) => (
+              <ListWidget.Item
+                key={i}
+                className="cursor-auto hover:bg-white flex justify-between items-center"
+              >
+                <a href={`#${link.id}`} className="hover:underline">
+                  {link.text}
+                </a>
+                <div>
+                  <Button>
+                    <TbExternalLink />
+                  </Button>
+                </div>
+              </ListWidget.Item>
+            ))}
+          </ListWidget>
+        </Collapsible.Item>
+      </Collapsible>
     </div>
   );
 };

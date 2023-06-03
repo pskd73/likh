@@ -50,11 +50,13 @@ function Leaf({
   children,
   leaf,
   onCheckboxToggle,
+  onNoteLinkClick,
 }: {
   attributes: any;
   children: any;
   leaf: Record<string, any>;
   onCheckboxToggle(path: number[]): void;
+  onNoteLinkClick(title: string): void;
 }) {
   const title = leaf.title1 || leaf.title2 || leaf.title3;
 
@@ -112,7 +114,7 @@ function Leaf({
     "bg-primary-700 bg-opacity-20 p-1 px-3 rounded-full": leaf.hashtag,
 
     // notelink
-    "underline cursor-pointer ": leaf.notelink && !leaf.punctuation,
+    "underline cursor-pointer notelink": leaf.notelink && !leaf.punctuation,
 
     // inlineCode
     "font-CourierPrime bg-primary-700 bg-opacity-20 px-1 rounded inline-flex items-center":
@@ -130,7 +132,16 @@ function Leaf({
 
   if (leaf.notelink) {
     return (
-      <span {...attributes} className={className}>
+      <span
+        {...attributes}
+        className={className}
+        onClick={() => {
+          if (!leaf.punctuation) {
+            onNoteLinkClick(leaf.text);
+          }
+        }}
+        id={slugify(leaf.text, { lower: true })}
+      >
         {children}
       </span>
     );
@@ -184,6 +195,7 @@ const MEditor = ({
   typeWriter,
   editor: passedEditor,
   focus,
+  onNoteLinkClick,
 }: {
   onChange: (val: {
     value: Descendant[];
@@ -195,6 +207,7 @@ const MEditor = ({
   typeWriter?: boolean;
   editor?: CustomEditor;
   focus?: number;
+  onNoteLinkClick?: (title: string) => void;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const editor = useMemo(
@@ -206,6 +219,7 @@ const MEditor = ({
       <Leaf
         {...props}
         onCheckboxToggle={(path) => toggleCheckbox(editor, path)}
+        onNoteLinkClick={onNoteLinkClick || (() => {})}
       />
     ),
     []

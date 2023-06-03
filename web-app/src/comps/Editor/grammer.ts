@@ -4,7 +4,7 @@ export const link = {
 };
 
 export const notelink = {
-  pattern: /\[\[.+\]\]/m,
+  pattern: /\[\[[^\[\]]+\]\]/m,
   greedy: true,
   inside: {
     punctuation: [
@@ -52,6 +52,7 @@ export const italic = {
       },
     ],
     link,
+    notelink
   },
 };
 
@@ -71,6 +72,7 @@ export const bold = {
     ],
     italic,
     link,
+    notelink
   },
 };
 
