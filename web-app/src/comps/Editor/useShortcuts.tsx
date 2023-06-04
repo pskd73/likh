@@ -1,6 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { EditorContextType } from "./Context";
 import { openFile, saveNote } from "./File";
+import { toPdf } from "./PDF";
 
 const isWindowShortcut = (e: KeyboardEvent) => {
   return e.altKey && e.ctrlKey && e.metaKey;
@@ -37,6 +38,7 @@ const shortcuts: Record<string, (editor: EditorContextType) => void> = {
     const text = (await openFile()) as string;
     editor.newNote({ text });
   },
+  k: (editor) => toPdf(editor.note),
 };
 
 const useShortcuts = (editor: EditorContextType) => {
