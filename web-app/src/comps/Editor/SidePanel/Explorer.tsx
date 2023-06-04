@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import List from "../List";
 import { EditorContext } from "../Context";
 import SearchInput from "./SearchInput";
@@ -14,6 +14,8 @@ import { INTRO_TEXT } from "../Intro";
 
 const Explorer = () => {
   const {
+    note,
+    storage,
     isSideMenuActive,
     toggleSideMenu,
     showStats,
@@ -24,7 +26,33 @@ const Explorer = () => {
     newNote,
     updateNote,
     setSideBar,
+    getHashtags,
   } = useContext(EditorContext);
+
+  const hashtags = useMemo(() => {
+    const raw = getHashtags();
+    const parsed: Record<string, { id: string; title: string }[]> = {};
+
+    for (const tag of Object.keys(raw)) {
+      const notes = raw[tag];
+      parsed[tag] = [];
+      for (const note of notes) {
+        parsed[tag].push({ id: note.id, title: textToTitle(note.text, 50) });
+      }
+    }
+
+    const flatten: Array<{
+      hashtag: string;
+      notes: { id: string; title: string }[];
+    }> = [];
+    for (const tag of Object.keys(parsed)) {
+      flatten.push({
+        hashtag: tag,
+        notes: parsed[tag],
+      });
+    }
+    return flatten;
+  }, [notesToShow, note]);
 
   const handleOpen = async () => {
     const text = (await openFile()) as string;
@@ -66,11 +94,36 @@ const Explorer = () => {
                   className="text-sm"
                   onClick={() => updateNote(note)}
                 >
-                  {textToTitle(note.text, 20)}
+                  {textToTitle(note.text, 50)}
                 </List.Item>
               ))}
             </List>
           </div>
+          {hashtags.map((hashtag, i) => (
+            <div>
+              <div className="px-2 border-b border-primary-700 border-opacity-20 mt-6 pb-2">
+                <span className="bg-primary-700 bg-opacity-30 text-xs px-1 rounded-full">
+                  {hashtag.hashtag}
+                </span>
+              </div>
+              <List>
+                {hashtag.notes.map((noteMeta, i) => (
+                  <List.Item
+                    key={i}
+                    className="text-sm"
+                    onClick={() => {
+                      const note = storage.getNote(noteMeta.id);
+                      if (note) {
+                        updateNote(note);
+                      }
+                    }}
+                  >
+                    {noteMeta.title}
+                  </List.Item>
+                ))}
+              </List>
+            </div>
+          ))}
         </Collapsible.Item>
         <Collapsible.Item
           title="Settings"

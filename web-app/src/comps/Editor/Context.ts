@@ -38,6 +38,8 @@ export type EditorContextType = {
 
   getNoteByTitle: (title: string) => void;
   setOrNewNote: (title: string) => void;
+
+  getHashtags: () => Record<string, SavedNote[]>;
 };
 
 export const EditorContext = createContext<EditorContextType>(
@@ -123,6 +125,25 @@ export const useEditor = ({
     }
   };
 
+  const getHashtags = () => {
+    const hashtags: Record<string, SavedNote[]> = {};
+    for (const noteMeta of notesToShow) {
+      const note = storage.getNote(noteMeta.id);
+      if (note) {
+        const matches = note.text.match(/\B\#\w\w+\b/g);
+        if (matches) {
+          for (const hashtag of matches) {
+            if (!hashtags[hashtag]) {
+              hashtags[hashtag] = [];
+            }
+            hashtags[hashtag].push(note);
+          }
+        }
+      }
+    }
+    return hashtags;
+  };
+
   return {
     storage,
 
@@ -153,5 +174,7 @@ export const useEditor = ({
 
     getNoteByTitle,
     setOrNewNote,
+
+    getHashtags
   };
 };
