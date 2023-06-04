@@ -156,7 +156,7 @@ export const hashtag = {
   greedy: true,
 };
 
-export const imageRegex = /^\!\[.+\]\(.+ ".+"\)$/m;
+export const imageRegex = /^\!\[.*\]\(.+( ".+")?\)$/m;
 export const image = {
   pattern: imageRegex,
   greedy: true,
