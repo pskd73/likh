@@ -11,6 +11,7 @@ import { FiPlus, FiUpload } from "react-icons/fi";
 import { BsKeyboard } from "react-icons/bs";
 import { openFile } from "../File";
 import { INTRO_TEXT } from "../Intro";
+import { usePWA } from "../PWA";
 
 const Explorer = () => {
   const {
@@ -28,6 +29,7 @@ const Explorer = () => {
     setSideBar,
     getHashtags,
   } = useContext(EditorContext);
+  const { install, installable } = usePWA();
 
   const hashtags = useMemo(() => {
     const raw = getHashtags();
@@ -67,13 +69,21 @@ const Explorer = () => {
           "p-2 border-b border-primary-700 border-opacity-20"
         )}
       >
-        <Button onClick={() => setSideBar("shortcuts")}>
+        {installable && (
+          <Button onClick={install} className="text-xs h-full">
+            Install
+          </Button>
+        )}
+        <Button onClick={() => setSideBar("shortcuts")} className="h-full">
           <BsKeyboard />
         </Button>
-        <Button onClick={handleOpen}>
+        <Button onClick={handleOpen} className="h-full">
           <FiUpload />
         </Button>
-        <Button onClick={() => newNote({ text: "New note" })}>
+        <Button
+          onClick={() => newNote({ text: "New note" })}
+          className="h-full"
+        >
           <FiPlus />
         </Button>
       </div>
