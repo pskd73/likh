@@ -32,17 +32,6 @@ const SidePanel = () => {
           {sideBar === "outline" && <Outline />}
           {sideBar === "shortcuts" && <Shortcuts />}
         </div>
-        <div className="p-2 text-xs">
-          <span className="opacity-40">Built by </span>
-          <a
-            className="opacity-40 hover:opacity-100 hover:underline"
-            href="https://twitter.com/@pramodk73"
-            target="_blank"
-            rel="noreferrer"
-          >
-            @pramodk73
-          </a>
-        </div>
       </div>
     </>
   );
