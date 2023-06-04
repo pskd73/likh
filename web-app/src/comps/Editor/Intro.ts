@@ -1,5 +1,7 @@
 export const INTRO_TEXT = "" +
 `# 💡 Retro Note - Philosophy
+#introduction
+
 Writing is not just framing some random words. It is giving shape and structure our vague thoughts. Writing is thinking. Being good at writing makes one good at __articulating thoughts__ which is very fundamental instrument in building human societies. __Retro Note__ is a place where you can write your mind and build better writing habits.
 
 ## ✍️ Build writing habits
@@ -7,8 +9,8 @@ This is the core purpose of this tool. It helps you in building writing habits a
 1. Add the areas you are interested in. For example
     - Product development
     - Programming
-    - Philosophy
-    - Agriculture
+    - [[Philosophy]]
+    - [[Agriculture]]
 2. __Retro Note__ will start suggesting you __10__ topics from the areas you are interested to build a story.
 3. You can even add __Reminders__ so that you open the app every day, refresh the suggestion, pick one and write your mind!
 
@@ -58,7 +60,7 @@ You can quickly view the stats of the note right on the screen. You can set a go
 ## ☑️ Checkboxes
 You can take full advantage of checkbox support in __markdown__ and create your own to-do lists. You can control the checkboxes either from mouse clicks or by keyboard. Following is an example
 
-- [x] Research about _Kudremukh Trek_ - https://www.holidify.com/places/kudremukh/kudremukh-trek-sightseeing-2479.html
+- [x] Research about _[[Kudremukh Trek]]_ - https://www.holidify.com/places/kudremukh/kudremukh-trek-sightseeing-2479.html
 - [x] Estimate the cost of travel
 - [ ] Purchase trek gear
     - [ ] Hiking pack 
@@ -68,7 +70,7 @@ You can take full advantage of checkbox support in __markdown__ and create your 
     - [ ] Navigation tools such as a map and compass
     - [x] First-aid kit
     - [x] Knife or multi-tool
-- [ ] Inform friends and family 😍
+- [ ] Inform friends and [[family]] 😍
 
 ## 🖼️ Images
 You can add images to your notes with basic __markdown__. All you need is the _URL_ of the link you want to insert in your notes. Currently, we don't support upload directly to notes which will be coming soon. Here are few examples.
