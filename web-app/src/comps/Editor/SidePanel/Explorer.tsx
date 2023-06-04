@@ -12,6 +12,7 @@ import { BsKeyboard } from "react-icons/bs";
 import { openFile } from "../File";
 import { INTRO_TEXT } from "../Intro";
 import { usePWA } from "../PWA";
+import { MdInstallDesktop } from "react-icons/md";
 
 const Explorer = () => {
   const {
@@ -70,8 +71,9 @@ const Explorer = () => {
         )}
       >
         {installable && (
-          <Button onClick={install} className="text-xs h-full">
-            Install
+          <Button onClick={install} className="text-xs h-full flex space-x-1 items-center">
+            <MdInstallDesktop />
+            <span>Install</span>
           </Button>
         )}
         <Button onClick={() => setSideBar("shortcuts")} className="h-full">
