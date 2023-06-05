@@ -42,9 +42,6 @@ export const useMiddle = (
   };
 
   const scroll = (force?: boolean) => {
-    if (!options?.active) {
-      return;
-    }
     if (
       force ||
       !options?.editor ||
@@ -66,7 +63,7 @@ export const useMiddle = (
     scroll,
     style: {
       paddingTop: options.active ? paddingTop : 0,
-      paddingBottom: options.active ? height / 2 : 0,
+      paddingBottom: options.active ? height / 2 : 100,
     },
   };
 };
