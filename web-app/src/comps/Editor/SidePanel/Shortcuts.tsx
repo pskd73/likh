@@ -5,7 +5,6 @@ import {
   MdKeyboardArrowRight,
   MdKeyboardCommandKey,
   MdKeyboardControlKey,
-  MdKeyboardOptionKey,
 } from "react-icons/md";
 import classNames from "classnames";
 import Collapsible from "../Collapsible";
@@ -29,13 +28,10 @@ const DefaultComboKeys = () => {
   return (
     <>
       <Key>
-        <MdKeyboardControlKey />
-      </Key>
-      <Key>
-        <MdKeyboardOptionKey />
-      </Key>
-      <Key>
         <MdKeyboardCommandKey />
+      </Key>
+      <Key>
+        <MdKeyboardControlKey />
       </Key>
     </>
   );
