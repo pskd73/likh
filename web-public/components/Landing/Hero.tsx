@@ -1,7 +1,6 @@
 import classNames from "classnames";
 import { PropsWithChildren } from "react";
 import { Courier } from "../font";
-import SginIn from "./SignIn";
 
 export function Highlight({ children }: PropsWithChildren) {
   return (
@@ -17,9 +16,9 @@ export function Highlight({ children }: PropsWithChildren) {
 export default function Hero() {
   return (
     <div className="flex justify-center flex-col items-center">
-      <div className="text-2xl md:text-3xl">It doesn{"'"}t have to be</div>
-      <div className="text-4xl md:text-8xl md:-mt-2 text-center">
-        crazy to <span className="font-bold">write!</span>
+      <div className="text-lg">
+        A simple, powerful, minimalistic, markdown based note taking app that
+        you all need!
       </div>
       <h1
         className={classNames(
@@ -29,15 +28,19 @@ export default function Hero() {
       >
         Retro Note
       </h1>
-      <div
-        className="text-2xl md:text-3xl text-center md:w-2/4 mb-6"
-        style={{ lineHeight: 1.4 }}
+      <a
+        href="https://app.retronote.app/write"
+        className={classNames(
+          Courier.className,
+          "bg-primary-700 text-white italic px-4 py-2 rounded-full text-3xl"
+        )}
       >
-        lets you write in a <Highlight>distraction free</Highlight> environment,
-        build <Highlight>daily writing habits</Highlight>, and{" "}
-        <Highlight>build a blog</Highlight> quickly!
+        Start writing &rarr;
+      </a>
+
+      <div className="flex flex-col items-center space-y-10 max-w-[900px] mb-16 mt-16">
+        <img src="/one.png" className={"shadow-2xl rounded-lg w-full"} />
       </div>
-      <SginIn />
     </div>
   );
 }

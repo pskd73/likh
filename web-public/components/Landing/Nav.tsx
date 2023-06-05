@@ -9,7 +9,6 @@ export default function Nav() {
       <ul className="flex space-x-6 text-lg">
         {[
           { label: "Features", link: "#features" },
-          { label: "Pricing", link: "#pricing" },
         ].map((item, i) => (
           <li key={i}>
             <Link href={item.link} className="underline">

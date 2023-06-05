@@ -11,24 +11,25 @@ export default function Landing() {
       <Event name="landing_page" />
       <Auth />
       <div className="hidden bg-opacity-10" />
-      <div className="relative bg-[url('/hero_bg.png')] bg-center px-2 md:px-0 pb-14">
+      <div className="relative bg-[url('/hero_bg.png')] bg-center px-2 md:px-0">
         <Nav />
         <Hero />
       </div>
       <div className="space-y-6" id="features">
         <Feature bg>
           <Feature.Content>
-            <Feature.Title>Quick start</Feature.Title>
+            <Feature.Title>Privacy</Feature.Title>
             <Feature.List>
               <Feature.Item>
-                Get <Highlight>suggestions</Highlight> on the topics to write to
-                get started quick
+                All notes are <Highlight>auto saved</Highlight> on your
+                computer!
               </Feature.Item>
               <Feature.Item>
-                Setup daily <Highlight>reminders</Highlight>
+                Download your notes as <Highlight>.md</Highlight> files at any
+                time. <Highlight>No lock in!</Highlight>
               </Feature.Item>
               <Feature.Item>
-                Check the <Highlight>streak</Highlight>
+                <Highlight>Multi device</Highlight> support (coming soon)
               </Feature.Item>
             </Feature.List>
           </Feature.Content>
@@ -93,7 +94,6 @@ export default function Landing() {
           </Feature.Demo>
         </Feature>
       </div>
-      <Join />
       <Footer />
     </div>
   );
