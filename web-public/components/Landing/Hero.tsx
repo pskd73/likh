@@ -32,7 +32,7 @@ export default function Hero() {
         href="https://app.retronote.app/write"
         className={classNames(
           Courier.className,
-          "bg-primary-700 text-white italic px-4 py-2 rounded-full text-3xl"
+          "bg-primary-700 text-white italic px-6 py-2 rounded-full text-3xl"
         )}
       >
         Start writing &rarr;
