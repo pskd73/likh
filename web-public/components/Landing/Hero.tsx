@@ -16,7 +16,7 @@ export function Highlight({ children }: PropsWithChildren) {
 export default function Hero() {
   return (
     <div className="flex justify-center flex-col items-center">
-      <div className="text-lg">
+      <div className="text-lg text-center px-6 md:px-0">
         A simple, powerful, minimalistic, markdown based note taking app that
         you all need!
       </div>
@@ -38,7 +38,7 @@ export default function Hero() {
         Start writing &rarr;
       </a>
 
-      <div className="flex flex-col items-center space-y-10 max-w-[900px] mb-16 mt-16">
+      <div className="flex flex-col items-center space-y-10 max-w-[900px] mb-16 mt-16 px-6 md:px-0">
         <img src="/one.png" className={"shadow-2xl rounded-lg w-full"} />
       </div>
     </div>
