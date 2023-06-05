@@ -3,10 +3,9 @@ import { EditorContextType } from "./Context";
 import { openFile, saveNote } from "./File";
 
 const isWindowShortcut = (e: KeyboardEvent) => {
-  const firefox = e.altKey && e.ctrlKey && e.metaKey;
-  const chrome = e.metaKey && e.shiftKey;
+  const mac = e.metaKey && e.ctrlKey;
 
-  return firefox || chrome;
+  return mac;
 };
 
 const shortcuts: Record<string, (editor: EditorContextType) => void> = {

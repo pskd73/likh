@@ -48,11 +48,11 @@ The other way is also possible where you upload a simple __text__ file or even a
 ## ⌨️ Shortcuts
 __Retro Note__ is a keyboard first app. We embrace the keyboard interaction more than mouse. You can perform all kind of operation right from __keyboard__. Here are few shortcuts
 
-1. New note - ⌘ ⌥ ⌃ + n
-2. Open note - ⌘ ⌥ ⌃ + o
-3. Previous note - ⌘ ⌥ ⌃ + Left arrow
-4. Next note - ⌘ ⌥ ⌃ + Right arrow
-5. Index - ⌘ ⌥ ⌃ + i
+1. New note - ⌘ ⌃ + n
+2. Open note - ⌘ ⌃ + o
+3. Previous note - ⌘ ⌃ + Left arrow
+4. Next note - ⌘ ⌃ + Right arrow
+5. Index - ⌘ ⌃ + i
 
 ## 📈 Stats
 You can quickly view the stats of the note right on the screen. You can set a goal for the note, for example, __free style, short, medium, and long forms__. You can see the progress at the bottom of the app so that you adjust your style of writing accordingly. You can even view the __word, paragraph, section__ counts along with the __read time__ of the note.
