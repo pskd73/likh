@@ -74,9 +74,6 @@ function Leaf({
   }
 
   const className = classNames({
-    // accessors
-    "acc-title": title && !leaf.punctuation,
-
     // decor
     "font-semibold": leaf.bold,
     italic: leaf.italic,
@@ -96,6 +93,7 @@ function Leaf({
     "mb-6": leaf.title1 && !leaf.punctuation,
     "mb-4": leaf.title2 && !leaf.punctuation,
     "mb-2": leaf.title3 && !leaf.punctuation,
+    "acc-title": title && !leaf.hashes,
 
     // list
     "opacity-30 inline-flex justify-end pr-[4px]": leaf.bullet,
