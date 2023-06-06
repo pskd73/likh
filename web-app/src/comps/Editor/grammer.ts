@@ -146,7 +146,7 @@ export const title3: CustomGrammerValue = {
 };
 
 export const inlineCode: CustomGrammerValue = {
-  pattern: /`+[^`]*`+/,
+  pattern: /`+[^`]+`+/,
   greedy: true,
   inside: {
     punctuation: [{ pattern: /^`+/ }, { pattern: /`+$/ }],
