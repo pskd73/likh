@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import Prism from "prismjs";
+import Prism, { TokenObject } from "prismjs";
 import {
   CSSProperties,
   KeyboardEventHandler,
@@ -11,7 +11,7 @@ import {
 import { createEditor, NodeEntry, Text, Descendant, BaseRange } from "slate";
 import { withHistory } from "slate-history";
 import { Slate, Editable, withReact } from "slate-react";
-import * as grammer from "./grammer";
+import grammer, { imageRegex, quoteRegex } from "./grammer";
 import { useMiddle } from "../useMiddle";
 import slugify from "slugify";
 import {
@@ -51,12 +51,14 @@ function Leaf({
   leaf,
   onCheckboxToggle,
   onNoteLinkClick,
+  text,
 }: {
   attributes: any;
   children: any;
   leaf: Record<string, any>;
   onCheckboxToggle(path: number[]): void;
   onNoteLinkClick(title: string): void;
+  text: string;
 }) {
   const title = leaf.title1 || leaf.title2 || leaf.title3;
 
@@ -79,14 +81,15 @@ function Leaf({
     "font-semibold": leaf.bold,
     italic: leaf.italic,
     "line-through": leaf.strikethrough,
-    hidden: leaf.punctuation && leaf.hidable && !leaf.focused,
+    hidden: leaf.hidable && !leaf.focused && (leaf.punctuation || leaf.hashes),
 
     // generic punctuation
     "opacity-30": leaf.punctuation || leaf.blockquote,
 
     // title
     "inline-flex font-bold": title,
-    "-ml-[50px] w-[50px] justify-end pr-[10px]": title && leaf.punctuation,
+    "-ml-[50px] w-[50px] justify-end pr-[10px] opacity-30":
+      title && leaf.hashes,
     "text-4xl": leaf.title1,
     "text-3xl": leaf.title2,
     "text-2xl": leaf.title3,
@@ -119,6 +122,9 @@ function Leaf({
     // inlineCode
     "font-CourierPrime bg-primary-700 bg-opacity-20 px-1 rounded inline-flex items-center":
       leaf.inlineCode && !leaf.punctuation,
+
+    // mdLink
+    "mdLink underline cursor-pointer": leaf.mdLink,
   });
 
   if (leaf.code) {
@@ -147,18 +153,17 @@ function Leaf({
     );
   }
 
-  if (leaf.link) {
+  if (leaf.link || (leaf.mdLink)) {
     return (
-      <a
-        href={leaf.text}
+      <span
         {...attributes}
         className={className}
         onClick={() => {
-          window.open(leaf.text, "_blank");
+          window.open(leaf.payload?.link || leaf.text, "_blank");
         }}
       >
         {children}
-      </a>
+      </span>
     );
   }
 
@@ -229,26 +234,15 @@ const MEditor = ({
       return [];
     }
 
-    const tokens = Prism.tokenize(node.text, {
-      strikethrough: grammer.strikethrough,
-      italic: grammer.italic,
-      bold: grammer.bold,
-      title1: grammer.title1,
-      title2: grammer.title2,
-      title3: grammer.title3,
-      list: grammer.list,
-      link: grammer.link,
-      quote: grammer.quote,
-      hashtag: grammer.hashtag,
-      image: grammer.image,
-      notelink: grammer.notelink,
-      inlineCode: grammer.inlineCode,
-    });
+    const tokens = Prism.tokenize(node.text, grammer);
 
     let ranges: BaseRange[] = [];
     const [rootCodeNode] = getRootCodeNode(editor, path);
     if (!rootCodeNode) {
-      ranges = [...ranges, ...getTokensRanges(editor, path, tokens, 0, [])];
+      ranges = [
+        ...ranges,
+        ...getTokensRanges(editor, path, tokens, 0, [], {}, grammer),
+      ];
     } else {
       ranges = [...ranges, ...getCodeRanges(editor, path)];
     }
@@ -269,11 +263,11 @@ const MEditor = ({
       for (const child of element.children) {
         text += child.text;
       }
-      const imgMatch = text.match(grammer.imageRegex)
-        ? text.match(grammer.link.pattern)
+      const imgMatch = text.match(imageRegex)
+        ? text.match((grammer.link as TokenObject).pattern)
         : null;
       const imgUrl = imgMatch ? imgMatch[0] : null;
-      const quote = text.match(grammer.quoteRegex);
+      const quote = text.match(quoteRegex);
 
       const style: CSSProperties = {};
       const parsed = parseListText(text);
