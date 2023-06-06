@@ -1,6 +1,9 @@
 import { BaseEditor, Path, Range } from "slate";
+import { CustomGrammer } from "../grammer";
 
-type CustomRange = Range;
+type CustomRange = Range & {
+  payload: Record<string, any>;
+} & Record<string, any>;
 
 function getTokenLength(token: string | Prism.Token) {
   if (typeof token === "string") {
@@ -20,12 +23,15 @@ function getTokenRanges(
   path: Path,
   token: string | Prism.Token,
   start: number,
-  parentTokens: Array<Prism.Token>
+  parentTokens: Array<Prism.Token>,
+  parentPayload: Record<string, any>,
+  grammer: CustomGrammer
 ): CustomRange[] {
   if (typeof token === "string") {
-    const range: any = {
+    const range: CustomRange = {
       anchor: { path, offset: start },
       focus: { path, offset: start + getTokenLength(token) },
+      payload: parentPayload,
     };
     for (const pt of parentTokens) {
       range[pt.type as string] = true;
@@ -34,16 +40,22 @@ function getTokenRanges(
   }
 
   if (Array.isArray(token.content)) {
-    return getTokensRanges(editor, path, token.content, start, [
-      ...parentTokens,
-      token,
-    ]);
+    return getTokensRanges(
+      editor,
+      path,
+      token.content,
+      start,
+      [...parentTokens, token],
+      parentPayload,
+      grammer
+    );
   }
 
-  const range = {
+  const range: CustomRange = {
     [token.type]: true,
     anchor: { path, offset: start },
     focus: { path, offset: start + getTokenLength(token) },
+    payload: parentPayload,
   };
 
   for (const pt of parentTokens) {
@@ -61,6 +73,7 @@ const hidable: string[] = [
   "title3",
   "notelink",
   "inlineCode",
+  "mdLink",
 ];
 
 export function getTokensRanges(
@@ -68,12 +81,21 @@ export function getTokensRanges(
   path: Path,
   tokens: Array<string | Prism.Token>,
   start: number,
-  parentTokens: Prism.Token[]
+  parentTokens: Prism.Token[],
+  parentPayload: Record<string, any>,
+  grammer: CustomGrammer
 ) {
   let ranges: CustomRange[] = [];
   for (const _token of tokens) {
+    const _parentPayload: Record<string, any> = { ...parentPayload };
     const _parentTokens = [...parentTokens];
     if (typeof _token !== "string") {
+      if (grammer[_token.type]?.payload) {
+        for (const key of Object.keys(grammer[_token.type].payload)) {
+          _parentPayload[key] = grammer[_token.type].payload[key](_token);
+        }
+      }
+
       if (hidable.includes(_token.type)) {
         _parentTokens.push({ type: "hidable" } as any);
         const focused = isPointFocused(editor, {
@@ -92,7 +114,9 @@ export function getTokensRanges(
       path,
       _token,
       start,
-      _parentTokens
+      _parentTokens,
+      _parentPayload,
+      grammer
     );
     ranges = [...ranges, ...newRanges];
     start = getRangesEnd(newRanges, start);

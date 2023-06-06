@@ -202,7 +202,7 @@ export function getCodeRanges(editor: CustomEditor, path: number[]) {
   if (!language) return [];
 
   const tokens = Prism.tokenize(text, Prism.languages[LANGUAGES[language]]);
-  return getTokensRanges(editor, path, tokens, 0, []).map((range) => ({
+  return getTokensRanges(editor, path, tokens, 0, [], {}, {}).map((range) => ({
     ...range,
     code: true,
   }));
