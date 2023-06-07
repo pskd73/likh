@@ -112,7 +112,7 @@ const Explorer = () => {
             </List>
           </div>
           {hashtags.map((hashtag, i) => (
-            <div>
+            <div key={i}>
               <div className="px-2 border-b border-primary-700 border-opacity-20 mt-6 pb-2">
                 <span className="bg-primary-700 text-base text-xs p-1 px-2 rounded-full">
                   {hashtag.hashtag}

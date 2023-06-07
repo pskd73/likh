@@ -1,6 +1,8 @@
 import { useCallback, useEffect } from "react";
 import { EditorContextType } from "./Context";
 import { openFile, saveNote } from "./File";
+import { zipIt } from "./Backup/Zip";
+import { SavedNote } from "./type";
 
 const isWindowShortcut = (e: KeyboardEvent) => {
   const mac = e.metaKey && e.ctrlKey;
@@ -38,6 +40,17 @@ const shortcuts: Record<string, (editor: EditorContextType) => void> = {
   o: async (editor) => {
     const text = (await openFile()) as string;
     editor.newNote({ text });
+  },
+  b: (editor) => {
+    const notes: Record<string, SavedNote> = {};
+    for (const meta of editor.storage.notes) {
+      const id = meta.id;
+      const savedNote = editor.storage.getNote(id);
+      if (savedNote) {
+        notes[id] = savedNote;
+      }
+    }
+    zipIt(editor.storage.notes, notes);
   },
 };
 
