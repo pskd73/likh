@@ -1,8 +1,14 @@
-import { ComponentProps, useContext } from "react";
+import { ComponentProps, useContext, useState } from "react";
 import { EditorContext } from "../Context";
 import TextCounter from "./TextCounter";
 import Button from "../../Button";
-import { BiMenu, BiSave, BiSpreadsheet, BiX } from "react-icons/bi";
+import {
+  BiFullscreen,
+  BiMenu,
+  BiSave,
+  BiSpreadsheet,
+  BiX,
+} from "react-icons/bi";
 import { saveNote } from "../File";
 import Delete from "./Delete";
 import classNames from "classnames";
@@ -10,9 +16,36 @@ import { twMerge } from "tailwind-merge";
 
 const StatusBar = ({ text }: { text: string }) => {
   const { showStats, note, sideBar, setSideBar } = useContext(EditorContext);
+  const [fullScreen, setFullScreen] = useState(false);
 
   const handleSave = () => {
     saveNote(note);
+  };
+
+  const handleFullScreen = () => {
+    const elem = document.documentElement as any;
+    if (fullScreen) {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if ((document as any).webkitExitFullscreen) {
+        /* Safari */
+        (document as any).webkitExitFullscreen();
+      } else if ((document as any).msExitFullscreen) {
+        /* IE11 */
+        (document as any).msExitFullscreen();
+      }
+    } else {
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) {
+        /* Safari */
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) {
+        /* IE11 */
+        elem.msRequestFullscreen();
+      }
+    }
+    setFullScreen((f) => !f);
   };
 
   return (
@@ -42,8 +75,17 @@ const StatusBar = ({ text }: { text: string }) => {
         >
           <BiSpreadsheet />
         </Button>
+        <Button
+          lite={!fullScreen}
+          className="rounded-none"
+          onClick={handleFullScreen}
+        >
+          <BiFullscreen />
+        </Button>
         <div className="hidden md:flex items-center px-1 space-x-1 h-full">
-          <span className="opacity-50 text-xs">Note is auto saved locally!</span>
+          <span className="opacity-50 text-xs">
+            Note is auto saved locally!
+          </span>
           {/* <Button lite className="h-full rounded-none">
             <BiX />
           </Button> */}
