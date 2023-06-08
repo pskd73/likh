@@ -37,6 +37,7 @@ import {
   handleTabForCode,
 } from "./Core/Code";
 import { getTokensRanges } from "./Core/Range";
+import { useContextMenu } from "./Core/ContextMenu";
 
 const defaultValue = [
   {
@@ -151,7 +152,7 @@ function Leaf({
     );
   }
 
-  if (leaf.link || (leaf.mdLink)) {
+  if (leaf.link || leaf.mdLink) {
     return (
       <span
         {...attributes}
@@ -217,6 +218,8 @@ const MEditor = ({
     () => passedEditor || withHistory(withReact(createEditor())),
     [passedEditor]
   );
+  const contextMenu = useContextMenu(editor, "[[");
+
   const renderLeaf = useCallback(
     (props: any) => (
       <Leaf
@@ -328,6 +331,7 @@ const MEditor = ({
     if (typeWriter) {
       scroll.update();
     }
+    contextMenu.handleChange();
   };
 
   const handleKeyUp: KeyboardEventHandler<HTMLDivElement> = (e) => {
@@ -378,6 +382,15 @@ const MEditor = ({
             placeholder="Write your mind here ..."
             onPaste={handlePaste}
           />
+          {contextMenu.active && (
+            <ul
+              ref={contextMenu.ref}
+              style={{ top: -9999, right: -9999 }}
+              className="bg-primary-700 text-white p-2 absolute w-[200px]"
+            >
+              <li>Context menu</li>
+            </ul>
+          )}
         </Slate>
       </div>
     </div>
