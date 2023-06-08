@@ -1,5 +1,5 @@
 import { BaseEditor, Path, Range } from "slate";
-import { CustomGrammer } from "../grammer";
+import { CustomGrammar } from "../grammer";
 
 type CustomRange = Range & {
   payload: Record<string, any>;
@@ -25,7 +25,7 @@ function getTokenRanges(
   start: number,
   parentTokens: Array<Prism.Token>,
   parentPayload: Record<string, any>,
-  grammer: CustomGrammer
+  grammer: CustomGrammar
 ): CustomRange[] {
   if (typeof token === "string") {
     const range: CustomRange = {
@@ -83,7 +83,7 @@ export function getTokensRanges(
   start: number,
   parentTokens: Prism.Token[],
   parentPayload: Record<string, any>,
-  grammer: CustomGrammer
+  grammer: CustomGrammar
 ) {
   let ranges: CustomRange[] = [];
   for (const _token of tokens) {

@@ -80,7 +80,16 @@ const EditorWindow = () => {
                 initText={editorState.note.text}
                 typeWriter={editorState.typewriterMode}
                 focus={focus}
-                onNoteLinkClick={(title) => editorState.setOrNewNote(title)}
+                onNoteLinkClick={(title, id) => {
+                  if (id) {
+                    const note = editorState.storage.getNote(id);
+                    if (note) {
+                      editorState.updateNote(note);
+                      return;
+                    }
+                  }
+                  editorState.setOrNewNote(title);
+                }}
                 getSuggestions={(term) => {
                   const suggestions: Suggestion[] = [];
                   editorState.storage.notes.forEach((noteMeta) => {
@@ -89,7 +98,7 @@ const EditorWindow = () => {
                     if (note) {
                       const title = textToTitle(note.text, 50);
                       if (title.toLowerCase().includes(term.toLowerCase())) {
-                        suggestions.push({ title });
+                        suggestions.push({ title, id: note.id });
                       }
                     }
                   });

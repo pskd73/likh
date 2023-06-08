@@ -59,6 +59,7 @@ const defaultValue = [
 
 export type Suggestion = {
   title: string;
+  id?: string;
   description?: string;
 };
 
@@ -74,7 +75,7 @@ function Leaf({
   children: any;
   leaf: Record<string, any>;
   onCheckboxToggle(path: number[]): void;
-  onNoteLinkClick(title: string): void;
+  onNoteLinkClick(title: string, id?: string): void;
   text: string;
 }) {
   const title = leaf.title1 || leaf.title2 || leaf.title3;
@@ -95,7 +96,10 @@ function Leaf({
     "font-semibold": leaf.bold,
     italic: leaf.italic,
     "line-through": leaf.strikethrough,
-    hidden: leaf.hidable && !leaf.focused && (leaf.punctuation || leaf.hashes),
+    hidden:
+      leaf.hidable &&
+      !leaf.focused &&
+      (leaf.punctuation || leaf.hashes || leaf.notelinkId),
 
     // generic punctuation
     "opacity-30": leaf.punctuation || leaf.blockquote,
@@ -132,7 +136,9 @@ function Leaf({
     "bg-primary-700 bg-opacity-20 p-1 px-3 rounded-full": leaf.hashtag,
 
     // notelink
-    "underline cursor-pointer notelink": leaf.notelink && !leaf.punctuation,
+    "underline cursor-pointer nl": leaf.notelink && !leaf.punctuation,
+    notelink: leaf.notelink && !leaf.punctuation && !leaf.notelinkId,
+    "opacity-30 nl": leaf.notelink && leaf.notelinkId,
 
     // inlineCode
     "font-CourierPrime bg-primary-700 bg-opacity-20 px-1 rounded inline-flex items-center":
@@ -158,10 +164,14 @@ function Leaf({
         className={className}
         onClick={() => {
           if (!leaf.punctuation) {
-            onNoteLinkClick(leaf.text);
+            onNoteLinkClick(leaf.text, leaf.payload.notelinkId);
           }
         }}
-        id={slugify(leaf.text, { lower: true })}
+        id={
+          !leaf.punctuation && !leaf.notelinkId
+            ? slugify(leaf.text, { lower: true })
+            : undefined
+        }
       >
         {children}
       </span>
@@ -228,7 +238,7 @@ const MEditor = ({
   typeWriter?: boolean;
   editor?: CustomEditor;
   focus?: number;
-  onNoteLinkClick?: (title: string) => void;
+  onNoteLinkClick?: (title: string, id?: string) => void;
   getSuggestions?: (term: string) => Suggestion[];
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -351,7 +361,11 @@ const MEditor = ({
 
   const handleContextMenuSelect = (index: number, target: BaseRange) => {
     Transforms.select(editor, target);
-    Transforms.insertText(editor, `[[${suggestions[index].title}]]`);
+    let text = `[[${suggestions[index].title}]]`;
+    if (suggestions[index].id) {
+      text += `(${suggestions[index].id})`;
+    }
+    Transforms.insertText(editor, text);
   };
 
   const handleChange = (value: Descendant[]) => {
