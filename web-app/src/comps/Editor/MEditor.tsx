@@ -441,7 +441,7 @@ const MEditor = ({
                     key={i}
                     idx={i}
                     hover={contextMenu.index === i}
-                    onClick={(e) => contextMenu.handleItemClick(e, 0)}
+                    onClick={(e) => contextMenu.handleItemClick(e, i)}
                   >
                     {suggestion.title}
                   </ContextMenuList.Item>
