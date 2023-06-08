@@ -23,8 +23,8 @@ const NoteListItem = ({
 }: ComponentProps<"li"> & { note: SavedNote }) => {
   return (
     <List.Item className="text-sm" {...restProps}>
-      <span className="font-semibold flex space-x-1 items-center">
-        <span className="opacity-50">
+      <span className="font-semibold flex space-x-2">
+        <span className="opacity-50 mt-1">
           <BiFile />
         </span>
         <span>{textToTitle(note.text, 50)}</span>
