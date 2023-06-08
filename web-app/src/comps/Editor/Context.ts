@@ -68,7 +68,8 @@ export const useEditor = ({
     }
     return storage.notes
       .map((nm) => storage.getNote(nm.id))
-      .filter((n) => !!n) as SavedNote[];
+      .filter((n) => !!n)
+      .sort((a, b) => a?.created_at || 0 - (b?.created_at || 0)) as SavedNote[];
   }, [storage.notes, searchTerm, note]);
 
   const toggleSideMenu = (key: string) => {
@@ -175,6 +176,6 @@ export const useEditor = ({
     getNoteByTitle,
     setOrNewNote,
 
-    getHashtags
+    getHashtags,
   };
 };

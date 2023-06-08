@@ -1,4 +1,4 @@
-import { useContext, useMemo } from "react";
+import { ComponentProps, useContext, useMemo } from "react";
 import List from "../List";
 import { EditorContext } from "../Context";
 import SearchInput from "./SearchInput";
@@ -13,6 +13,30 @@ import { openFile } from "../File";
 import { INTRO_TEXT } from "../Intro";
 import { usePWA } from "../PWA";
 import { MdInstallDesktop } from "react-icons/md";
+import { SavedNote } from "../type";
+import moment from "moment";
+import { BiFile, BiTimeFive } from "react-icons/bi";
+
+const NoteListItem = ({
+  note,
+  ...restProps
+}: ComponentProps<"li"> & { note: SavedNote }) => {
+  return (
+    <List.Item className="text-sm" {...restProps}>
+      <span className="font-semibold flex space-x-1 items-center">
+        <span className="opacity-50">
+          <BiFile />
+        </span>
+        <span>{textToTitle(note.text, 50)}</span>
+      </span>
+      <div className="py-1 flex items-center space-x-1">
+        <span className="opacity-50">
+          {moment(new Date(note.created_at)).fromNow()}
+        </span>
+      </div>
+    </List.Item>
+  );
+};
 
 const Explorer = () => {
   const {
@@ -71,7 +95,10 @@ const Explorer = () => {
         )}
       >
         {installable && (
-          <Button onClick={install} className="text-xs h-full flex space-x-1 items-center">
+          <Button
+            onClick={install}
+            className="text-xs h-full flex space-x-1 items-center"
+          >
             <MdInstallDesktop />
             <span>Install</span>
           </Button>
@@ -101,13 +128,11 @@ const Explorer = () => {
           <div>
             <List>
               {notesToShow.map((note, i) => (
-                <List.Item
+                <NoteListItem
                   key={i}
-                  className="text-sm"
+                  note={note}
                   onClick={() => updateNote(note)}
-                >
-                  {textToTitle(note.text, 50)}
-                </List.Item>
+                />
               ))}
             </List>
           </div>
@@ -119,20 +144,20 @@ const Explorer = () => {
                 </span>
               </div>
               <List>
-                {hashtag.notes.map((noteMeta, i) => (
-                  <List.Item
-                    key={i}
-                    className="text-sm"
-                    onClick={() => {
-                      const note = storage.getNote(noteMeta.id);
-                      if (note) {
-                        updateNote(note);
-                      }
-                    }}
-                  >
-                    {noteMeta.title}
-                  </List.Item>
-                ))}
+                {hashtag.notes.map((noteMeta, i) => {
+                  const note = storage.getNote(noteMeta.id);
+                  return note ? (
+                    <NoteListItem
+                      key={i}
+                      note={note}
+                      onClick={() => {
+                        if (note) {
+                          updateNote(note);
+                        }
+                      }}
+                    />
+                  ) : null;
+                })}
               </List>
             </div>
           ))}
