@@ -8,7 +8,14 @@ import {
   useMemo,
   useRef,
 } from "react";
-import { createEditor, NodeEntry, Text, Descendant, BaseRange } from "slate";
+import {
+  createEditor,
+  NodeEntry,
+  Text,
+  Descendant,
+  BaseRange,
+  Transforms,
+} from "slate";
 import { withHistory } from "slate-history";
 import { Slate, Editable, withReact } from "slate-react";
 import grammer, { imageRegex, quoteRegex } from "./grammer";
@@ -37,7 +44,11 @@ import {
   handleTabForCode,
 } from "./Core/Code";
 import { getTokensRanges } from "./Core/Range";
-import { useContextMenu } from "./Core/ContextMenu";
+import {
+  ContextMenu,
+  ContextMenuList,
+  useContextMenu,
+} from "./Core/ContextMenu";
 
 const defaultValue = [
   {
@@ -45,6 +56,11 @@ const defaultValue = [
     children: [{ text: "New note" }],
   },
 ];
+
+export type Suggestion = {
+  title: string;
+  description?: string;
+};
 
 function Leaf({
   attributes,
@@ -200,6 +216,7 @@ const MEditor = ({
   editor: passedEditor,
   focus,
   onNoteLinkClick,
+  getSuggestions,
 }: {
   onChange: (val: {
     value: Descendant[];
@@ -212,13 +229,23 @@ const MEditor = ({
   editor?: CustomEditor;
   focus?: number;
   onNoteLinkClick?: (title: string) => void;
+  getSuggestions?: (term: string) => Suggestion[];
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const editor = useMemo(
     () => passedEditor || withHistory(withReact(createEditor())),
     [passedEditor]
   );
-  const contextMenu = useContextMenu(editor, "[[");
+  const contextMenu = useContextMenu(editor, "[[", ({ index, target }) => {
+    handleContextMenuSelect(index, target);
+  });
+  const suggestions: Suggestion[] = useMemo(() => {
+    const _suggestions = getSuggestions
+      ? getSuggestions(contextMenu.search)
+      : [];
+    contextMenu.setCount(_suggestions.length);
+    return _suggestions;
+  }, [contextMenu.search]);
 
   const renderLeaf = useCallback(
     (props: any) => (
@@ -322,6 +349,11 @@ const MEditor = ({
     focusEnd(editor);
   }, [focus]);
 
+  const handleContextMenuSelect = (index: number, target: BaseRange) => {
+    Transforms.select(editor, target);
+    Transforms.insertText(editor, `[[${suggestions[index].title}]]`);
+  };
+
   const handleChange = (value: Descendant[]) => {
     onChange({
       value,
@@ -339,6 +371,7 @@ const MEditor = ({
   };
 
   const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = (e) => {
+    contextMenu.handleKeyDown(e);
     if (e.key === "Enter") {
       handleEnterForCode(editor, e);
       handleEnterForList(editor, e);
@@ -382,14 +415,24 @@ const MEditor = ({
             placeholder="Write your mind here ..."
             onPaste={handlePaste}
           />
-          {contextMenu.active && (
-            <ul
+          {contextMenu.active && suggestions && suggestions.length > 0 && (
+            <ContextMenu
               ref={contextMenu.ref}
               style={{ top: -9999, right: -9999 }}
-              className="bg-primary-700 text-white p-2 absolute w-[200px]"
+              className="text-sm"
             >
-              <li>Context menu</li>
-            </ul>
+              <ContextMenuList>
+                {suggestions.map((suggestion, i) => (
+                  <ContextMenuList.Item
+                    key={i}
+                    hover={contextMenu.index === i}
+                    onClick={(e) => contextMenu.handleItemClick(e, 0)}
+                  >
+                    {suggestion.title}
+                  </ContextMenuList.Item>
+                ))}
+              </ContextMenuList>
+            </ContextMenu>
           )}
         </Slate>
       </div>
