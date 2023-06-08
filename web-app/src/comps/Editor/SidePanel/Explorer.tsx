@@ -15,7 +15,7 @@ import { usePWA } from "../PWA";
 import { MdInstallDesktop } from "react-icons/md";
 import { SavedNote } from "../type";
 import moment from "moment";
-import { BiFile, BiTimeFive } from "react-icons/bi";
+import { BiFile } from "react-icons/bi";
 
 const NoteListItem = ({
   note,

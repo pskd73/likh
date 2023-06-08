@@ -37,7 +37,7 @@ const Item = ({
       <div
         className={classNames("overflow-hidden transition-all", {
           "max-h-0": !active,
-          "max-h-[1000px]": active,
+          "max-h-[10000000px]": active,
         })}
       >
         {children}
