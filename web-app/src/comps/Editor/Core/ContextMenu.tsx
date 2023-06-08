@@ -20,6 +20,9 @@ function escape(str: string) {
   return str.replace(escape.matchOperatorsRe, "\\$&");
 }
 
+const MENU_WIDTH = 300;
+const MENU_HEIGHT = 400;
+
 export function useContextMenu(
   editor: CustomEditor,
   prefix: string,
@@ -49,8 +52,14 @@ export function useContextMenu(
       const domRange = ReactEditor.toDOMRange(editor, target);
       const rect = domRange.getBoundingClientRect();
       if (el) {
+        const rawLeft = rect.left + window.pageXOffset;
+        const menuPad = 20;
+        const left =
+          rawLeft -
+          Math.max(0, rawLeft + MENU_WIDTH + menuPad - window.innerWidth);
+
         el.style.top = `${rect.top + window.pageYOffset + 24}px`;
-        el.style.left = `${rect.left + window.pageXOffset}px`;
+        el.style.left = `${left}px`;
       }
     }
   }, [editor, index, search, target]);
@@ -124,11 +133,13 @@ export function useContextMenu(
             e.preventDefault();
             const prevIndex = index >= count - 1 ? 0 : index + 1;
             setIndex(prevIndex);
+            updateListScroll(prevIndex);
             break;
           case "ArrowUp":
             e.preventDefault();
             const nextIndex = index <= 0 ? count - 1 : index - 1;
             setIndex(nextIndex);
+            updateListScroll(nextIndex);
             break;
           case "Tab":
           case "Enter":
@@ -158,6 +169,21 @@ export function useContextMenu(
     [editor, count, target, index, search]
   );
 
+  const updateListScroll = (idx: number) => {
+    const list = document.getElementById("suggestion-list");
+    const targetLi = document.getElementById(`suggestion-item-${idx}`);
+
+    if (list && targetLi) {
+      console.log(list.scrollTop, targetLi.offsetTop);
+      if (
+        list.scrollTop + MENU_HEIGHT - 20 < targetLi.offsetTop ||
+        list.scrollTop > targetLi.offsetTop
+      ) {
+        list.scrollTop = targetLi.offsetTop;
+      }
+    }
+  };
+
   return {
     handleChange,
     handleKeyDown,
@@ -166,22 +192,23 @@ export function useContextMenu(
     index,
     handleItemClick,
     search,
-    setCount
+    setCount,
   };
 }
 
 export const ContextMenu = forwardRef<HTMLDivElement, ComponentProps<"div">>(
-  ({ children, className, ...restProps }, ref) => {
+  ({ children, className, style, ...restProps }, ref) => {
     return (
       <div
         ref={ref}
         className={twMerge(
           className,
           classNames(
-            "absolute w-[300px] shadow-md rounded-lg overflow-hidden",
+            "absolute shadow-md rounded-lg overflow-hidden",
             "z-10 bg-white"
           )
         )}
+        style={{ width: MENU_WIDTH, ...style }}
         {...restProps}
       >
         {children}
@@ -194,16 +221,26 @@ export const ContextMenu = forwardRef<HTMLDivElement, ComponentProps<"div">>(
 );
 
 export const ContextMenuList = ({ children }: PropsWithChildren) => {
-  return <ul>{children}</ul>;
+  return (
+    <ul
+      id="suggestion-list"
+      className="overflow-y-scroll scrollbar-hide"
+      style={{ maxHeight: MENU_HEIGHT }}
+    >
+      {children}
+    </ul>
+  );
 };
 
 const Item = ({
   children,
   hover,
+  idx,
   ...restProps
-}: ComponentProps<"li"> & { hover?: boolean }) => {
+}: ComponentProps<"li"> & { idx: number; hover?: boolean }) => {
   return (
     <li
+      id={`suggestion-item-${idx}`}
       className={classNames(
         "p-2 hover:bg-primary-700 hover:bg-opacity-5 cursor-pointer active:bg-opacity-10",
         "border-b border-primary-700 border-opacity-10 last:border-b-0",

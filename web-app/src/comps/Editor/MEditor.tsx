@@ -425,6 +425,7 @@ const MEditor = ({
                 {suggestions.map((suggestion, i) => (
                   <ContextMenuList.Item
                     key={i}
+                    idx={i}
                     hover={contextMenu.index === i}
                     onClick={(e) => contextMenu.handleItemClick(e, 0)}
                   >
