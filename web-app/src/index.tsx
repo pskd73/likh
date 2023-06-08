@@ -14,8 +14,13 @@ import New from "./Write/New";
 import { Private } from "./comps/Layout";
 import WriteV2 from "./Write";
 import Roll from "./Write/Roll";
+import Landing from "./Landing";
 
 const router = createBrowserRouter([
+  {
+    path: "/old",
+    element: <Landing />,
+  },
   {
     path: "/open-write",
     element: <WriteV2 />,
