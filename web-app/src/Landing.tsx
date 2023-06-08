@@ -23,7 +23,7 @@ const Landing = () => {
   useSupabase({
     setUser: (user) => {
       if (user) {
-        navigate("/app", { replace: true });
+        navigate("/", { replace: true });
       }
     },
   });
@@ -38,7 +38,7 @@ const Landing = () => {
       await supabase.auth.signInWithOtp({
         email,
         options: {
-          emailRedirectTo: "https://retronote.app",
+          emailRedirectTo: "https://app.retronote.app",
         },
       });
       setEmail("");
