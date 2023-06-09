@@ -61,7 +61,7 @@ const EditorWindow = () => {
       if (note) {
         const title = textToTitle(note.text, 50);
         if (title.toLowerCase().includes(term.toLowerCase())) {
-          suggestions.push({ title, id: note.id });
+          suggestions.push({ title: title.trim(), id: note.id });
         }
       }
     });
