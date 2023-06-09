@@ -224,20 +224,20 @@ const MEditor = ({
   initText,
   typeWriter,
   editor: passedEditor,
-  focus,
   onNoteLinkClick,
   getSuggestions,
+  key,
 }: {
   onChange: (val: {
     value: Descendant[];
     text: string;
     serialized: string;
   }) => void;
+  key: number;
   initValue?: string;
   initText?: string;
   typeWriter?: boolean;
   editor?: CustomEditor;
-  focus?: number;
   onNoteLinkClick?: (title: string, id?: string) => void;
   getSuggestions?: (term: string) => Suggestion[];
 }) => {
@@ -356,8 +356,8 @@ const MEditor = ({
   });
 
   useEffect(() => {
-    focusEnd(editor);
-  }, [focus]);
+    scroll.scrollToTop();
+  }, [key]);
 
   const handleContextMenuSelect = (index: number, target: BaseRange) => {
     Transforms.select(editor, target);

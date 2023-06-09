@@ -60,6 +60,7 @@ const OpenWrite = () => {
         </div>
         <div className="text-[20px] font-CourierPrime leading-8">
           <MEditor
+            key={1}
             onChange={handleChange}
             initValue={initalValue!}
             typeWriter

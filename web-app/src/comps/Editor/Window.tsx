@@ -23,7 +23,6 @@ const EditorWindow = () => {
   const storage = useStorage();
   const editorState = useEditor({ storage });
   const [editorKey, setEditorKey] = useState<number>(new Date().getTime());
-  const [focus, setFocus] = useState<number>(new Date().getTime());
   const statusBarPadding = useMemo(() => (iOS() ? 20 : 0), []);
 
   useShortcuts(editorState);
@@ -110,7 +109,6 @@ const EditorWindow = () => {
                 initValue={editorState.note.serialized}
                 initText={editorState.note.text}
                 typeWriter={editorState.typewriterMode}
-                focus={focus}
                 onNoteLinkClick={handleNoteLinkClick}
                 getSuggestions={getSuggestions}
               />

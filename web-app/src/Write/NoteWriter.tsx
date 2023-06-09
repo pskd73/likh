@@ -73,6 +73,7 @@ const NoteWriter = ({
     <div className="text-[20px] font-CourierPrime leading-8">
       <MEditor
         onChange={({ serialized, text }) => handleChange(serialized, text)}
+        key={0}
         initValue={note.slate_value}
         initText={note.text}
         typeWriter={typeWriter}

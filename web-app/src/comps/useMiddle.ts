@@ -32,7 +32,7 @@ export const useMiddle = (
 
   useEffect(() => {
     update();
-    scroll(true);
+    // scroll(true);
   }, [options.active, options.editor, ...deps]);
 
   const update = () => {
@@ -58,9 +58,21 @@ export const useMiddle = (
     }
   };
 
+  const scrollToTop = () => {
+    let element = document.getElementById("editor-container");
+      if (!element) {
+        element = document.body;
+      }
+      element.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+  }
+
   return {
     update,
     scroll,
+    scrollToTop,
     style: {
       paddingTop: options.active ? paddingTop : 0,
       paddingBottom: options.active ? height / 2 : 100,
