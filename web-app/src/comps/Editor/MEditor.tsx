@@ -59,6 +59,7 @@ const defaultValue = [
 
 export type Suggestion = {
   title: string;
+  replace: string;
   id?: string;
   description?: string;
 };
@@ -239,23 +240,30 @@ const MEditor = ({
   typeWriter?: boolean;
   editor?: CustomEditor;
   onNoteLinkClick?: (title: string, id?: string) => void;
-  getSuggestions?: (term: string) => Suggestion[];
+  getSuggestions?: (prefix: string, term: string) => Suggestion[];
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const editor = useMemo(
     () => passedEditor || withHistory(withReact(createEditor())),
     [passedEditor]
   );
-  const contextMenu = useContextMenu(editor, "[[", ({ index, target }) => {
-    handleContextMenuSelect(index, target);
-  });
+  const contextMenu = useContextMenu(
+    editor,
+    ["[[", "#"],
+    ({ index, target, prefix }) => {
+      handleContextMenuSelect(index, target, prefix);
+    }
+  );
   const suggestions: Suggestion[] = useMemo(() => {
-    const _suggestions = getSuggestions
-      ? getSuggestions(contextMenu.search)
-      : [];
-    contextMenu.setCount(_suggestions.length);
-    return _suggestions;
-  }, [contextMenu.search]);
+    if (contextMenu.activePrefix) {
+      let _suggestions: Suggestion[] = getSuggestions
+        ? getSuggestions(contextMenu.activePrefix, contextMenu.search)
+        : [];
+      contextMenu.setCount(_suggestions.length);
+      return _suggestions;
+    }
+    return [];
+  }, [contextMenu.search, contextMenu.activePrefix]);
 
   const renderLeaf = useCallback(
     (props: any) => (
@@ -359,13 +367,14 @@ const MEditor = ({
     scroll.scrollToTop();
   }, [key]);
 
-  const handleContextMenuSelect = (index: number, target: BaseRange) => {
+  const handleContextMenuSelect = (
+    index: number,
+    target: BaseRange,
+    prefix: string
+  ) => {
     Transforms.select(editor, target);
-    let text = `[[${suggestions[index].title}]]`;
-    if (suggestions[index].id) {
-      text += `(${suggestions[index].id})`;
-    }
-    Transforms.insertText(editor, text);
+    const suggestion = suggestions[index];
+    Transforms.insertText(editor, suggestion.replace);
   };
 
   const handleChange = (value: Descendant[]) => {

@@ -54,18 +54,36 @@ const EditorWindow = () => {
     // }
   };
 
-  const getSuggestions = (term: string) => {
+  const getSuggestions = (prefix: string, term: string) => {
     const suggestions: Suggestion[] = [];
-    editorState.storage.notes.forEach((noteMeta) => {
-      if (noteMeta.id === editorState.note.id) return;
-      const note = editorState.storage.getNote(noteMeta.id);
-      if (note) {
-        const title = textToTitle(note.text, 50);
-        if (title.toLowerCase().includes(term.toLowerCase())) {
-          suggestions.push({ title: title.trim(), id: note.id });
+    if (prefix === "[[") {
+      editorState.storage.notes.forEach((noteMeta, i) => {
+        if (noteMeta.id === editorState.note.id) return;
+        const note = editorState.storage.getNote(noteMeta.id);
+        if (note) {
+          const title = textToTitle(note.text, 50);
+          if (title.toLowerCase().includes(term.toLowerCase())) {
+            const cleanedTitle = title.trim();
+            suggestions.push({
+              title: cleanedTitle,
+              id: note.id,
+              replace: `[[${cleanedTitle}]](${note.id}) `,
+            });
+          }
         }
-      }
-    });
+      });
+    } else if (prefix === "#") {
+      Object.keys(editorState.getHashtags()).forEach((hashtag) => {
+        const tag = hashtag.replace("#", "");
+        if (term === tag) return;
+        if (tag.toLowerCase().includes(term.toLocaleLowerCase())) {
+          suggestions.push({
+            title: `${hashtag}`,
+            replace: `${hashtag} `,
+          });
+        }
+      });
+    }
     return suggestions;
   };
 

@@ -25,14 +25,20 @@ const MENU_HEIGHT = 300;
 
 export function useContextMenu(
   editor: CustomEditor,
-  prefix: string,
-  onEnter: (opts: { index: number; target: Range; search: string }) => void
+  prefixes: string[],
+  onEnter: (opts: {
+    index: number;
+    target: Range;
+    search: string;
+    prefix: string;
+  }) => void
 ) {
   const ref = useRef<HTMLDivElement>(null);
   const [target, setTarget] = useState<Range>();
   const [search, setSearch] = useState("");
   const [index, setIndex] = useState(0);
   const [count, setCount] = useState(0);
+  const [activePrefix, setActivePrefix] = useState<string>();
 
   useEffect(() => {
     document
@@ -43,7 +49,7 @@ export function useContextMenu(
         .getElementById("editor-container")
         ?.removeEventListener("scroll", handleScroll);
     };
-  }, [editor, prefix]);
+  }, [editor, prefixes]);
 
   useEffect(() => {
     if (target) {
@@ -83,46 +89,52 @@ export function useContextMenu(
     const { selection } = editor;
     let showing = false;
 
-    if (selection && Range.isCollapsed(selection)) {
-      const [start] = Range.edges(selection);
-      const bfr = Editor.before(editor, start, {
-        distance: prefix.length,
-        unit: "character",
-      });
-      const bfrRange = bfr && Editor.range(editor, bfr, start);
-      const bfrText = bfrRange && Editor.string(editor, bfrRange);
+    for (const prefix of prefixes) {
+      if (selection && Range.isCollapsed(selection)) {
+        const [start] = Range.edges(selection);
+        const bfr = Editor.before(editor, start, {
+          distance: prefix.length,
+          unit: "character",
+        });
+        const bfrRange = bfr && Editor.range(editor, bfr, start);
+        const bfrText = bfrRange && Editor.string(editor, bfrRange);
 
-      if (bfrText === prefix) {
-        setTarget(bfrRange);
-        setIndex(0);
-        setSearch("");
-        showing = true;
-      } else {
-        const wordBefore = Editor.before(editor, start, { unit: "word" });
-        const before =
-          wordBefore &&
-          Editor.before(editor, wordBefore, {
-            distance: prefix.length,
-            unit: "character",
-          });
-        const beforeRange = before && Editor.range(editor, before, start);
-        const beforeText = beforeRange && Editor.string(editor, beforeRange);
-        const beforeMatch =
-          beforeText &&
-          beforeText.match(new RegExp(`^${escape(prefix)}(\\w*)$`));
-
-        if (beforeMatch) {
-          setTarget(beforeRange);
+        if (bfrText === prefix) {
+          setTarget(bfrRange);
           setIndex(0);
+          setSearch("");
+          setActivePrefix(prefix);
           showing = true;
+          break;
+        } else {
+          const wordBefore = Editor.before(editor, start, { unit: "word" });
+          const before =
+            wordBefore &&
+            Editor.before(editor, wordBefore, {
+              distance: prefix.length,
+              unit: "character",
+            });
+          const beforeRange = before && Editor.range(editor, before, start);
+          const beforeText = beforeRange && Editor.string(editor, beforeRange);
+          const beforeMatch =
+            beforeText &&
+            beforeText.match(new RegExp(`^${escape(prefix)}(\\w*)$`));
 
-          const after = Editor.after(editor, start);
-          const afterRange = Editor.range(editor, start, after);
-          const afterText = Editor.string(editor, afterRange);
-          const afterMatch = afterText.match(/^(\s|$)/);
+          if (beforeMatch) {
+            setTarget(beforeRange);
+            setIndex(0);
+            showing = true;
+            setActivePrefix(prefix);
 
-          if (afterMatch) {
-            setSearch(beforeMatch[1]);
+            const after = Editor.after(editor, start);
+            const afterRange = Editor.range(editor, start, after);
+            const afterText = Editor.string(editor, afterRange);
+            const afterMatch = afterText.match(/^(\s|$)/);
+
+            if (afterMatch) {
+              setSearch(beforeMatch[1]);
+            }
+            break;
           }
         }
       }
@@ -131,6 +143,7 @@ export function useContextMenu(
     if (!showing) {
       setTarget(undefined);
       setSearch("");
+      setActivePrefix(undefined);
     }
   }, [editor]);
 
@@ -153,7 +166,7 @@ export function useContextMenu(
           case "Tab":
           case "Enter":
             e.preventDefault();
-            onEnter({ index, target, search });
+            onEnter({ index, target, search, prefix: activePrefix! });
             setTarget(undefined);
             break;
           case "Escape":
@@ -169,9 +182,8 @@ export function useContextMenu(
   const handleItemClick = useCallback(
     (e: React.MouseEvent<HTMLLIElement, MouseEvent>, idx: number) => {
       if (target) {
-        console.log({ index, target });
         e.preventDefault();
-        onEnter({ index: idx, target, search });
+        onEnter({ index: idx, target, search, prefix: activePrefix! });
         setTarget(undefined);
       }
     },
@@ -201,6 +213,7 @@ export function useContextMenu(
     handleItemClick,
     search,
     setCount,
+    activePrefix,
   };
 }
 
