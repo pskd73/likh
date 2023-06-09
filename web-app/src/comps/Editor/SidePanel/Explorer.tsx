@@ -86,6 +86,11 @@ const Explorer = () => {
     newNote({ text });
   };
 
+  const handleNoteClick = (note: SavedNote) => {
+    setSideBar(undefined);
+    updateNote(note);
+  };
+
   return (
     <>
       <div
@@ -131,7 +136,7 @@ const Explorer = () => {
                 <NoteListItem
                   key={i}
                   note={note}
-                  onClick={() => updateNote(note)}
+                  onClick={() => handleNoteClick(note)}
                 />
               ))}
             </List>
@@ -152,7 +157,7 @@ const Explorer = () => {
                       note={note}
                       onClick={() => {
                         if (note) {
-                          updateNote(note);
+                          handleNoteClick(note);
                         }
                       }}
                     />
