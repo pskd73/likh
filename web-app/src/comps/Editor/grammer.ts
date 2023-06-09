@@ -9,7 +9,7 @@ export const link = {
 };
 
 export const notelink: CustomGrammarValue = {
-  pattern: /\[\[[^\[\]]+\]\](\(.+\))?/m,
+  pattern: /\[\[[^\[\]]+\]\](\([^\(\)]+\))?/m,
   greedy: true,
   inside: {
     punctuation: [
