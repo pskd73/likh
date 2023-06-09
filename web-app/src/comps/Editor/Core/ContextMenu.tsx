@@ -61,8 +61,10 @@ export function useContextMenu(
         const menuPadY = 24;
         const lineHeight = 34;
         let top = rect.top + window.pageYOffset + menuPadY;
-        if (top + MENU_HEIGHT > window.innerHeight) {
-          top -= MENU_HEIGHT + menuPadY + lineHeight;
+        const menuHeight =
+          document.getElementById("context-menu")?.clientHeight || 0;
+        if (top + menuHeight > window.innerHeight) {
+          top -= menuHeight + lineHeight;
         }
 
         el.style.top = `${top}px`;
@@ -206,6 +208,7 @@ export const ContextMenu = forwardRef<HTMLDivElement, ComponentProps<"div">>(
   ({ children, className, style, ...restProps }, ref) => {
     return (
       <div
+        id="context-menu"
         ref={ref}
         className={twMerge(
           className,
