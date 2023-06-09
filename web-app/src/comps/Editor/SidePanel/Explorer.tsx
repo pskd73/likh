@@ -16,6 +16,7 @@ import { MdInstallDesktop } from "react-icons/md";
 import { SavedNote } from "../type";
 import moment from "moment";
 import { BiFile } from "react-icons/bi";
+import { isMobile } from "../device";
 
 const NoteListItem = ({
   note,
@@ -87,7 +88,9 @@ const Explorer = () => {
   };
 
   const handleNoteClick = (note: SavedNote) => {
-    setSideBar(undefined);
+    if (isMobile) {
+      setSideBar(undefined);
+    }
     updateNote(note);
   };
 

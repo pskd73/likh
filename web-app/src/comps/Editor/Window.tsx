@@ -9,15 +9,13 @@ import useShortcuts from "./useShortcuts";
 import classNames from "classnames";
 import "./Core/test";
 import { textToTitle } from "../../Note";
-import { iOS } from "./device";
+import { iOS, isMobile } from "./device";
 
 const isSlateDOM = (node: any) => {
   return !!node.attributes["data-slate-node"];
 };
 
 const STATUS_BAR_HEIGHT = 30;
-
-const isMobile = window.innerWidth < 500;
 
 const EditorWindow = () => {
   const storage = useStorage();
@@ -84,7 +82,7 @@ const EditorWindow = () => {
 
   return (
     <EditorContext.Provider value={editorState}>
-      <div className="min-h-[100vh] bg-base text-primary-700 flex w-[10000px]">
+      <div className="min-h-[100vh] bg-base text-primary-700 flex">
         <SidePanel />
         <div
           style={{

@@ -5,6 +5,7 @@ import Collapsible from "../Collapsible";
 import ListWidget from "../List";
 import Button from "../../Button";
 import { TbExternalLink } from "react-icons/tb";
+import { isMobile } from "../device";
 
 type OutlineTitle = {
   text: string | null;
@@ -79,20 +80,27 @@ const List = ({
   root?: boolean;
   prefix?: string;
 }) => {
+  const { setSideBar } = useContext(EditorContext);
+
   return (
     <ul className={classNames("space-y-2", { "pl-4": !root })}>
       {titles.map((title, i) => (
         <li key={i}>
-          <a
-            href={`#${title.id}`}
-            className={classNames("hover:underline", {
+          <span
+            className={classNames("hover:underline cursor-pointer", {
               "text-lg": title.level === 1,
               "text-md": title.level === 2,
             })}
+            onClick={() => {
+              if (isMobile) {
+                setSideBar(undefined);
+              }
+              (window.location as any).href = `#${title.id}`;
+            }}
           >
             {prefix}
             {i + 1}. {title.text}
-          </a>
+          </span>
           {title.children && (
             <div className="my-2">
               <List titles={title.children} prefix={`${prefix}${i + 1}.`} />
@@ -105,7 +113,7 @@ const List = ({
 };
 
 const Outline = () => {
-  const { note, setOrNewNote } = useContext(EditorContext);
+  const { note, setOrNewNote, setSideBar } = useContext(EditorContext);
   const titles = useMemo(() => {
     const titles = generateTitles();
     return nested(titles, 0).children;
@@ -129,9 +137,17 @@ const Outline = () => {
                   key={i}
                   className="cursor-auto hover:bg-white flex justify-between items-center"
                 >
-                  <a href={`#${link.id}`} className="hover:underline">
+                  <span
+                    className="hover:underline cursor-pointer"
+                    onClick={() => {
+                      if (isMobile) {
+                        setSideBar(undefined);
+                      }
+                      (window.location as any).href = `#${link.id}`;
+                    }}
+                  >
                     {link.text}
-                  </a>
+                  </span>
                   <div>
                     <Button onClick={() => setOrNewNote(link.text)}>
                       <TbExternalLink />

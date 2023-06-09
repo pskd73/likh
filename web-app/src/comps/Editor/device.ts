@@ -12,3 +12,5 @@ export function iOS() {
     (navigator.userAgent.includes("Mac") && "ontouchend" in document)
   );
 }
+
+export const isMobile = window.innerWidth < 500;
