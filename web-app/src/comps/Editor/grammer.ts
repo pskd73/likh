@@ -1,15 +1,15 @@
 import { GrammarValue } from "prismjs";
 
-export type CustomGrammerValue = GrammarValue & { payload?: any };
-export type CustomGrammer = Record<string, CustomGrammerValue>;
+export type CustomGrammarValue = GrammarValue & { payload?: any };
+export type CustomGrammar = Record<string, CustomGrammarValue>;
 
 export const link = {
   pattern:
     /((https?:\/\/)|(www\.))[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/m,
 };
 
-export const notelink: GrammarValue = {
-  pattern: /\[\[[^\[\]]+\]\]/m,
+export const notelink: CustomGrammarValue = {
+  pattern: /\[\[[^\[\]]+\]\](\([^\(\)]+\))?/m,
   greedy: true,
   inside: {
     punctuation: [
@@ -18,14 +18,28 @@ export const notelink: GrammarValue = {
         greedy: true,
       },
       {
-        pattern: /\]\]$/,
+        pattern: /\]\]/,
         greedy: true,
       },
     ],
+    notelinkId: {
+      pattern: /\(.+\)$/,
+      inside: {
+        punctuation: [
+          { pattern: /^\(/, greedy: true },
+          { pattern: /\)$/, greedy: true },
+        ],
+      },
+    },
+  },
+  payload: {
+    notelinkId: (token: any) => {
+      return token.content[3]?.content[1];
+    },
   },
 };
 
-export const mdLink: CustomGrammerValue = {
+export const mdLink: CustomGrammarValue = {
   pattern: /\[.+\]\(.+\)/m,
   greedy: true,
   inside: {
@@ -53,7 +67,7 @@ export const mdLink: CustomGrammerValue = {
   },
 };
 
-export const strikethrough: CustomGrammerValue = {
+export const strikethrough: CustomGrammarValue = {
   pattern: /~~.+~~/m,
   greedy: true,
   inside: {
@@ -71,7 +85,7 @@ export const strikethrough: CustomGrammerValue = {
   },
 };
 
-export const italic: CustomGrammerValue = {
+export const italic: CustomGrammarValue = {
   pattern: /[_*][^_*]+[_*]/m,
   greedy: true,
   inside: {
@@ -91,7 +105,7 @@ export const italic: CustomGrammerValue = {
   },
 };
 
-export const bold: CustomGrammerValue = {
+export const bold: CustomGrammarValue = {
   pattern: /[_*]{2}[^_*]+[_*]{2}/m,
   greedy: true,
   inside: {
@@ -112,7 +126,7 @@ export const bold: CustomGrammerValue = {
   },
 };
 
-export const title1: CustomGrammerValue = {
+export const title1: CustomGrammarValue = {
   pattern: /^# .+$/m,
   inside: {
     hashes: /^# /m,
@@ -123,7 +137,7 @@ export const title1: CustomGrammerValue = {
   },
 };
 
-export const title2: CustomGrammerValue = {
+export const title2: CustomGrammarValue = {
   pattern: /^## .+$/m,
   inside: {
     hashes: /^## /m,
@@ -134,7 +148,7 @@ export const title2: CustomGrammerValue = {
   },
 };
 
-export const title3: CustomGrammerValue = {
+export const title3: CustomGrammarValue = {
   pattern: /^### .+$/m,
   inside: {
     hashes: /^### /m,
@@ -145,7 +159,7 @@ export const title3: CustomGrammerValue = {
   },
 };
 
-export const inlineCode: CustomGrammerValue = {
+export const inlineCode: CustomGrammarValue = {
   pattern: /`+[^`]+`+/,
   greedy: true,
   inside: {
@@ -153,7 +167,7 @@ export const inlineCode: CustomGrammerValue = {
   },
 };
 
-export const checkbox: CustomGrammerValue = {
+export const checkbox: CustomGrammarValue = {
   pattern: /^\[[ x]\]/,
   inside: {
     punctuation: /\[|\]/,
@@ -161,7 +175,7 @@ export const checkbox: CustomGrammerValue = {
 };
 
 export const listRegex = /^( *)(([-*\+])|(([0-9]+).)) (.*)$/m;
-export const list: CustomGrammerValue = {
+export const list: CustomGrammarValue = {
   pattern: listRegex,
   inside: {
     bullet: /^ *(([-*\+])|([0-9]+.)) /,
@@ -178,7 +192,7 @@ export const list: CustomGrammerValue = {
 };
 
 export const quoteRegex = /^\> .*$/m;
-export const quote: CustomGrammerValue = {
+export const quote: CustomGrammarValue = {
   pattern: /^\> .*$/m,
   inside: {
     punctuation: /^> /m,
@@ -191,13 +205,13 @@ export const quote: CustomGrammerValue = {
   },
 };
 
-export const hashtag: CustomGrammerValue = {
+export const hashtag: CustomGrammarValue = {
   pattern: /\B(#[a-zA-Z_]+\b)(?!;)/m,
   greedy: true,
 };
 
 export const imageRegex = /^\!\[.*\]\(.+( ".+")?\)$/m;
-export const image: CustomGrammerValue = {
+export const image: CustomGrammarValue = {
   pattern: imageRegex,
   greedy: true,
   inside: {
@@ -209,7 +223,7 @@ export const image: CustomGrammerValue = {
   },
 };
 
-export const codeBlock: CustomGrammerValue = {
+export const codeBlock: CustomGrammarValue = {
   pattern: /^``` ?[a-zA-Z0-9]*$/m,
   inside: {
     punctuation: /```/,
@@ -217,7 +231,7 @@ export const codeBlock: CustomGrammerValue = {
   },
 };
 
-const grammer: CustomGrammer = {
+const grammer: CustomGrammar = {
   strikethrough,
   italic,
   bold,

@@ -1,5 +1,5 @@
 import { Descendant } from "slate";
-import MEditor from "./MEditor";
+import MEditor, { Suggestion } from "./MEditor";
 import { EditorContext, useEditor } from "./Context";
 import SidePanel from "./SidePanel/SidePanel";
 import StatusBar from "./StatusBar/StatusBar";
@@ -9,6 +9,7 @@ import useShortcuts from "./useShortcuts";
 import classNames from "classnames";
 import "./Core/test";
 import { INTRO_TEXT } from "./Intro";
+import { textToTitle } from "../../Note";
 
 const isSlateDOM = (node: any) => {
   return !!node.attributes["data-slate-node"];
@@ -43,14 +44,14 @@ const EditorWindow = () => {
   }, [editorState.note.id]);
 
   const handleSectionClick: MouseEventHandler<HTMLDivElement> = (e) => {
-    const target = e.target as any;
-    let isEditor =
-      isSlateDOM(target) ||
-      isSlateDOM(target.parentNode) ||
-      isSlateDOM(target.parentNode.parentNode);
-    if (!isEditor) {
-      setFocus(new Date().getTime());
-    }
+    // const target = e.target as any;
+    // let isEditor =
+    //   isSlateDOM(target) ||
+    //   isSlateDOM(target.parentNode) ||
+    //   isSlateDOM(target.parentNode.parentNode);
+    // if (!isEditor) {
+    //   setFocus(new Date().getTime());
+    // }
   };
 
   return (
@@ -79,7 +80,30 @@ const EditorWindow = () => {
                 initText={editorState.note.text}
                 typeWriter={editorState.typewriterMode}
                 focus={focus}
-                onNoteLinkClick={(title) => editorState.setOrNewNote(title)}
+                onNoteLinkClick={(title, id) => {
+                  if (id) {
+                    const note = editorState.storage.getNote(id);
+                    if (note) {
+                      editorState.updateNote(note);
+                      return;
+                    }
+                  }
+                  editorState.setOrNewNote(title);
+                }}
+                getSuggestions={(term) => {
+                  const suggestions: Suggestion[] = [];
+                  editorState.storage.notes.forEach((noteMeta) => {
+                    if (noteMeta.id === editorState.note.id) return;
+                    const note = editorState.storage.getNote(noteMeta.id);
+                    if (note) {
+                      const title = textToTitle(note.text, 50);
+                      if (title.toLowerCase().includes(term.toLowerCase())) {
+                        suggestions.push({ title, id: note.id });
+                      }
+                    }
+                  });
+                  return suggestions;
+                }}
               />
             </div>
           </div>
