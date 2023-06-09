@@ -21,7 +21,7 @@ function escape(str: string) {
 }
 
 const MENU_WIDTH = 300;
-const MENU_HEIGHT = 400;
+const MENU_HEIGHT = 300;
 
 export function useContextMenu(
   editor: CustomEditor,
@@ -53,12 +53,19 @@ export function useContextMenu(
       const rect = domRange.getBoundingClientRect();
       if (el) {
         const rawLeft = rect.left + window.pageXOffset;
-        const menuPad = 20;
+        const menuPadX = 20;
         const left =
           rawLeft -
-          Math.max(0, rawLeft + MENU_WIDTH + menuPad - window.innerWidth);
+          Math.max(0, rawLeft + MENU_WIDTH + menuPadX - window.innerWidth);
 
-        el.style.top = `${rect.top + window.pageYOffset + 24}px`;
+        const menuPadY = 24;
+        const lineHeight = 34;
+        let top = rect.top + window.pageYOffset + menuPadY;
+        if (top + MENU_HEIGHT > window.innerHeight) {
+          top -= MENU_HEIGHT + menuPadY + lineHeight;
+        }
+
+        el.style.top = `${top}px`;
         el.style.left = `${left}px`;
       }
     }
@@ -174,7 +181,6 @@ export function useContextMenu(
     const targetLi = document.getElementById(`suggestion-item-${idx}`);
 
     if (list && targetLi) {
-      console.log(list.scrollTop, targetLi.offsetTop);
       if (
         list.scrollTop + MENU_HEIGHT - 20 < targetLi.offsetTop ||
         list.scrollTop > targetLi.offsetTop
