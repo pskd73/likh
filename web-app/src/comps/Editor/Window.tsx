@@ -4,15 +4,18 @@ import { EditorContext, useEditor } from "./Context";
 import SidePanel from "./SidePanel/SidePanel";
 import StatusBar from "./StatusBar/StatusBar";
 import useStorage from "./useStorage";
-import { MouseEventHandler, useEffect, useState } from "react";
+import { MouseEventHandler, useEffect, useMemo, useState } from "react";
 import useShortcuts from "./useShortcuts";
 import classNames from "classnames";
 import "./Core/test";
 import { textToTitle } from "../../Note";
+import { iOS } from "./device";
 
 const isSlateDOM = (node: any) => {
   return !!node.attributes["data-slate-node"];
 };
+
+const STATUS_BAR_HEIGHT = 30;
 
 const isMobile = window.innerWidth < 500;
 
@@ -21,6 +24,7 @@ const EditorWindow = () => {
   const editorState = useEditor({ storage });
   const [editorKey, setEditorKey] = useState<number>(new Date().getTime());
   const [focus, setFocus] = useState<number>(new Date().getTime());
+  const statusBarPadding = useMemo(() => (iOS() ? 20 : 0), []);
 
   useShortcuts(editorState);
 
@@ -95,7 +99,9 @@ const EditorWindow = () => {
             id="editor-container"
             className="flex-1 p-4 py-8 flex justify-center overflow-y-scroll"
             onClick={handleSectionClick}
-            style={{ height: "calc(100vh - 30px)" }}
+            style={{
+              height: `calc(100vh - ${STATUS_BAR_HEIGHT + statusBarPadding}px)`,
+            }}
           >
             <div className={classNames("w-full max-w-[860px] md:w-[860px]")}>
               <MEditor
@@ -110,7 +116,11 @@ const EditorWindow = () => {
               />
             </div>
           </div>
-          <StatusBar text={editorState.note.text} />
+          <StatusBar
+            text={editorState.note.text}
+            height={STATUS_BAR_HEIGHT}
+            padding={statusBarPadding}
+          />
         </div>
       </div>
     </EditorContext.Provider>
