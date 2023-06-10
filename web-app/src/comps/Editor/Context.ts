@@ -2,6 +2,7 @@ import { createContext, useMemo, useState } from "react";
 import { Storage } from "./useStorage";
 import { NewNote, SavedNote } from "./type";
 import { getNoteTitle } from "../../Note";
+import { LinkSuggestion, getLinkSuggestions } from "./Suggestion";
 
 type StateSetter<T> = React.Dispatch<React.SetStateAction<T>>;
 type CountStatType = "words" | "readTime";
@@ -40,6 +41,8 @@ export type EditorContextType = {
   setOrNewNote: (title: string) => void;
 
   getHashtags: () => Record<string, SavedNote[]>;
+
+  getLinkSuggestions: () => LinkSuggestion[];
 };
 
 export const EditorContext = createContext<EditorContextType>(
@@ -145,6 +148,11 @@ export const useEditor = ({
     return hashtags;
   };
 
+  const _getLinkSuggestions = () => {
+    const notes = storage.notes.map((meta) => storage.getNote(meta.id));
+    return getLinkSuggestions(notes.filter((n) => !!n) as SavedNote[]);
+  };
+
   return {
     storage,
 
@@ -177,5 +185,7 @@ export const useEditor = ({
     setOrNewNote,
 
     getHashtags,
+
+    getLinkSuggestions: _getLinkSuggestions,
   };
 };

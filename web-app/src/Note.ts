@@ -26,3 +26,17 @@ export const getNoteTitle = (note: Note) => {
   }
   return note.title;
 };
+
+export const isLinked = (phrase: string, text: string) => {
+  const title = textToTitle(text);
+  return title.toLowerCase().trim().startsWith(phrase.toLowerCase().trim());
+};
+
+export const titleCase = (text: string) => {
+  var splitStr = text.toLowerCase().split(" ");
+  for (var i = 0; i < splitStr.length; i++) {
+    splitStr[i] =
+      splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+  }
+  return splitStr.join(" ");
+};

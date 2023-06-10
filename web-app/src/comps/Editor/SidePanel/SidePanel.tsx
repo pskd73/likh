@@ -5,6 +5,7 @@ import Explorer from "./Explorer";
 import Outline from "./Outline";
 import Shortcuts from "./Shortcuts";
 import { isMobile } from "../device";
+import LinkSuggestions from "./LinkSuggestions";
 
 const SidePanel = () => {
   const { sideBar, setSideBar } = useContext(EditorContext);
@@ -40,6 +41,7 @@ const SidePanel = () => {
           {sideBar === "explorer" && <Explorer />}
           {sideBar === "outline" && <Outline />}
           {sideBar === "shortcuts" && <Shortcuts />}
+          {sideBar === "link-suggestions" && <LinkSuggestions />}
         </div>
       </div>
     </>
