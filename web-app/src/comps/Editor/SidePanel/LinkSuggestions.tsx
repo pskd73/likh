@@ -25,7 +25,7 @@ const LinkSuggestions = () => {
 
   return (
     <Collapsible>
-      <Collapsible.Item title="Links to expand" active onToggle={() => {}}>
+      <Collapsible.Item title="Notes to expand" active onToggle={() => {}}>
         <div className="p-2 py-4">
           <ul
             className="flex gap-2 flex-wrap"
