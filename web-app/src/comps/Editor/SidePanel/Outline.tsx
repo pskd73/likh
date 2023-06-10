@@ -121,38 +121,41 @@ const Outline = () => {
 
   return (
     <div>
-      <div className="p-4">
+      <div>
         {titles && <List titles={titles} root />}
         {titles.length === 0 ? <span>No headings yet!</span> : null}
       </div>
       <Collapsible>
         {links.length > 0 && (
-          <Collapsible.Item title="Links" onToggle={console.log} active>
-            <ListWidget>
-              {links.map((link, i) => (
-                <ListWidget.Item
-                  key={i}
-                  className="cursor-auto hover:bg-white flex justify-between items-center text-sm"
-                >
-                  <span
-                    className="hover:underline cursor-pointer"
-                    onClick={() => {
-                      if (isMobile) {
-                        setSideBar(undefined);
-                      }
-                      (window.location as any).href = `#${link.id}`;
-                    }}
+          <Collapsible.Item>
+            <Collapsible.Item.Label>Links</Collapsible.Item.Label>
+            <Collapsible.Item.Content>
+              <ListWidget>
+                {links.map((link, i) => (
+                  <ListWidget.Item
+                    key={i}
+                    className="cursor-auto hover:bg-white flex justify-between items-center text-sm"
                   >
-                    {link.text}
-                  </span>
-                  <div>
-                    <Button lite onClick={() => setOrNewNote(link.text)}>
-                      <TbExternalLink />
-                    </Button>
-                  </div>
-                </ListWidget.Item>
-              ))}
-            </ListWidget>
+                    <span
+                      className="hover:underline cursor-pointer"
+                      onClick={() => {
+                        if (isMobile) {
+                          setSideBar(undefined);
+                        }
+                        (window.location as any).href = `#${link.id}`;
+                      }}
+                    >
+                      {link.text}
+                    </span>
+                    <div>
+                      <Button lite onClick={() => setOrNewNote(link.text)}>
+                        <TbExternalLink />
+                      </Button>
+                    </div>
+                  </ListWidget.Item>
+                ))}
+              </ListWidget>
+            </Collapsible.Item.Content>
           </Collapsible.Item>
         )}
       </Collapsible>

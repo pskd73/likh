@@ -83,20 +83,22 @@ const StatusBar = ({
           <BiSpreadsheet />
         </Button>
         <Button
+          lite={sideBar !== "link-suggestions"}
+          className="rounded-none"
+          onClick={() =>
+            setSideBar((b) =>
+              b === "link-suggestions" ? undefined : "link-suggestions"
+            )
+          }
+        >
+          <BiLink />
+        </Button>
+        <Button
           lite={!fullScreen}
           className="rounded-none"
           onClick={handleFullScreen}
         >
           <BiFullscreen />
-        </Button>
-        <Button
-          lite={sideBar !== "link-suggestions"}
-          className="rounded-none"
-          onClick={() =>
-            setSideBar((b) => (b === "link-suggestions" ? undefined : "link-suggestions"))
-          }
-        >
-          <BiLink />
         </Button>
         <div className="hidden md:flex items-center px-1 space-x-1 h-full">
           <span className="opacity-50 text-xs">

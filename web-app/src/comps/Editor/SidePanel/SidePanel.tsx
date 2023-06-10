@@ -37,7 +37,7 @@ const SidePanel = () => {
           }
         )}
       >
-        <div className="max-w-full overflow-hidden">
+        <div className="max-w-full overflow-hidden p-2">
           {sideBar === "explorer" && <Explorer />}
           {sideBar === "outline" && <Outline />}
           {sideBar === "shortcuts" && <Shortcuts />}

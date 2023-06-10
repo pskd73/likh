@@ -130,20 +130,24 @@ export const useEditor = ({
   };
 
   const getHashtags = () => {
-    const hashtags: Record<string, SavedNote[]> = {};
+    const hashtagsMap: Record<string, Record<string, SavedNote>> = {};
     for (const noteMeta of notesToShow) {
       const note = storage.getNote(noteMeta.id);
       if (note) {
         const matches = note.text.match(/\B\#\w\w+\b/g);
         if (matches) {
           for (const hashtag of matches) {
-            if (!hashtags[hashtag]) {
-              hashtags[hashtag] = [];
+            if (!hashtagsMap[hashtag]) {
+              hashtagsMap[hashtag] = {};
             }
-            hashtags[hashtag].push(note);
+            hashtagsMap[hashtag][note.id] = note;
           }
         }
       }
+    }
+    const hashtags: Record<string, SavedNote[]> = {};
+    for (const hashtag of Object.keys(hashtagsMap)) {
+      hashtags[hashtag] = Object.values(hashtagsMap[hashtag])
     }
     return hashtags;
   };
