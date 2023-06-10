@@ -15,13 +15,20 @@ import { usePWA } from "../PWA";
 import { MdInstallDesktop } from "react-icons/md";
 import { SavedNote } from "../type";
 import moment from "moment";
-import { BiCog, BiFile, BiHash } from "react-icons/bi";
+import {
+  BiCog,
+  BiCollapseVertical,
+  BiFile,
+  BiHash,
+  BiInfoCircle,
+  BiStats,
+} from "react-icons/bi";
 import { isMobile } from "../device";
 
 const NoteListItem = ({
   note,
   ...restProps
-}: ComponentProps<"li"> & { note: SavedNote }) => {
+}: ComponentProps<"li"> & { note: SavedNote; active?: boolean }) => {
   return (
     <List.Item className="text-sm" {...restProps}>
       <span className="flex space-x-2">
@@ -98,7 +105,11 @@ const Explorer = () => {
     <>
       <div className={classNames("flex justify-between items-center ", "p-2")}>
         <div>
-          <img src="/icons/icon-128x128.png" alt="Retro Note" className="w-8 opacity-50" />
+          <img
+            src="/icons/icon-128x128.png"
+            alt="Retro Note"
+            className="w-8 opacity-50"
+          />
         </div>
         <div className="space-x-2">
           {installable && (
@@ -138,11 +149,12 @@ const Explorer = () => {
           </Collapsible.Item.Label>
           <Collapsible.Item.Content>
             <List>
-              {notesToShow.map((note, i) => (
+              {notesToShow.map((_note, i) => (
                 <NoteListItem
                   key={i}
-                  note={note}
-                  onClick={() => handleNoteClick(note)}
+                  note={_note}
+                  onClick={() => handleNoteClick(_note)}
+                  active={note.id === _note.id}
                 />
               ))}
             </List>
@@ -161,16 +173,13 @@ const Explorer = () => {
             <Collapsible.Item.Content>
               <List>
                 {hashtag.notes.map((noteMeta, i) => {
-                  const note = storage.getNote(noteMeta.id);
-                  return note ? (
+                  const _note = storage.getNote(noteMeta.id);
+                  return _note ? (
                     <NoteListItem
                       key={i}
-                      note={note}
-                      onClick={() => {
-                        if (note) {
-                          handleNoteClick(note);
-                        }
-                      }}
+                      note={_note}
+                      onClick={() => handleNoteClick(_note)}
+                      active={note.id === _note.id}
                     />
                   ) : null;
                 })}
@@ -190,7 +199,10 @@ const Explorer = () => {
           <Collapsible.Item.Content>
             <List>
               <List.Item className="flex justify-between items-center">
-                <span>Stats</span>
+                <div className="flex items-center space-x-1">
+                  <BiStats />
+                  <span>Stats</span>
+                </div>
                 <Toggle
                   id="stats"
                   checked={showStats}
@@ -198,7 +210,10 @@ const Explorer = () => {
                 />
               </List.Item>
               <List.Item className="flex justify-between items-center">
-                <span>Typewriter mode</span>
+                <div className="flex items-center space-x-1">
+                  <BiCollapseVertical />
+                  <span>Typewriter mode</span>
+                </div>
                 <Toggle
                   id="typewriterMode"
                   checked={typewriterMode}
@@ -209,7 +224,10 @@ const Explorer = () => {
                 className="flex justify-between items-center"
                 onClick={() => newNote({ text: INTRO_TEXT })}
               >
-                <span>Introduction note</span>
+                <div className="flex items-center space-x-1">
+                  <BiInfoCircle />
+                  <span>Introduction note</span>
+                </div>
               </List.Item>
             </List>
           </Collapsible.Item.Content>

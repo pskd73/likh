@@ -6,7 +6,7 @@ const SearchInput = () => {
   const { searchTerm, setSearchTerm } = useContext(EditorContext);
 
   return (
-    <div className="flex items-center">
+    <div className="flex items-center text-sm">
       <input
         type="text"
         placeholder="Search"

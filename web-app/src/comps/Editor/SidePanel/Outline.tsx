@@ -121,7 +121,7 @@ const Outline = () => {
 
   return (
     <div>
-      <div className="p-4">
+      <div>
         {titles && <List titles={titles} root />}
         {titles.length === 0 ? <span>No headings yet!</span> : null}
       </div>

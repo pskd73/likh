@@ -38,15 +38,16 @@ const Label = ({ children }: PropsWithChildren) => {
     <div
       className={classNames(
         "flex items-center font-semibold",
-        "px-2 py-1 text-sm bg-primary-700 bg-opacity-0 hover:bg-opacity-10",
-        "rounded"
+        "px-2 py-1 text-sm bg-primary-700 bg-opacity-0",
+        "rounded hover:bg-opacity-10 active:bg-opacity-20",
+        "cursor-pointer"
       )}
       onClick={() => {
         onToggle();
       }}
     >
       <span>{children}</span>
-      <span className="text-xl">
+      <span className="text-xl opacity-50">
         {active ? <BiChevronUp /> : <BiChevronDown />}
       </span>
     </div>
