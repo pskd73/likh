@@ -3,7 +3,7 @@ import { ComponentProps, PropsWithChildren } from "react";
 import { twMerge } from "tailwind-merge";
 
 const List = ({ children }: PropsWithChildren) => {
-  return <ul className="">{children}</ul>;
+  return <ul>{children}</ul>;
 };
 
 const Item = ({
@@ -26,6 +26,7 @@ const Item = ({
         ),
         className
       )}
+      style={{marginTop: 2}}
       {...restProps}
     >
       {children}
