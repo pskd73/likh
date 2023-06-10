@@ -6,6 +6,7 @@ import ListWidget from "../List";
 import Button from "../../Button";
 import { TbExternalLink } from "react-icons/tb";
 import { isMobile } from "../device";
+import { BiLink } from "react-icons/bi";
 
 type OutlineTitle = {
   text: string | null;
@@ -121,20 +122,25 @@ const Outline = () => {
 
   return (
     <div>
-      <div>
+      <div className="p-2">
         {titles && <List titles={titles} root />}
         {titles.length === 0 ? <span>No headings yet!</span> : null}
       </div>
       <Collapsible>
         {links.length > 0 && (
-          <Collapsible.Item>
-            <Collapsible.Item.Label>Links</Collapsible.Item.Label>
+          <Collapsible.Item defaultActive={false}>
+            <Collapsible.Item.Label>
+              <div className="flex items-center space-x-1">
+                <BiLink />
+                <span>Links</span>
+              </div>
+            </Collapsible.Item.Label>
             <Collapsible.Item.Content>
               <ListWidget>
                 {links.map((link, i) => (
                   <ListWidget.Item
                     key={i}
-                    className="cursor-auto hover:bg-white flex justify-between items-center text-sm"
+                    className="cursor-auto hover:bg-white flex items-center text-sm space-x-2"
                   >
                     <span
                       className="hover:underline cursor-pointer"
