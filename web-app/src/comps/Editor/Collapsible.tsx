@@ -1,51 +1,75 @@
 import classNames from "classnames";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, createContext, useContext, useState } from "react";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 
+type ContextType = {
+  active?: boolean;
+  onToggle: () => void;
+};
+
+const Context = createContext({} as ContextType);
+
 const Collapsible = ({ children }: PropsWithChildren) => {
-  return <div className="">{children}</div>;
+  return <div>{children}</div>;
 };
 
 const Item = ({
   children,
-  title,
-  active,
-  onToggle,
+  defaultActive = true,
 }: PropsWithChildren & {
-  title: string;
-  active?: boolean;
-  onToggle: () => void;
+  defaultActive?: boolean;
 }) => {
+  const [active, setActive] = useState<boolean>(defaultActive);
+
+  const handleToggle = () => {
+    setActive((a) => !a);
+  };
+
   return (
-    <div>
-      <div
-        className={classNames(
-          "bg-primary-700 bg-opacity-10 p-2",
-          "flex justify-between items-center",
-          "border-y border-primary-700 border-opacity-20",
-          "shadow-md cursor-pointer"
-        )}
-        onClick={() => {
-          onToggle();
-        }}
-      >
-        <span>{title}</span>
-        <span className="text-xl">
-          {active ? <BiChevronUp /> : <BiChevronDown />}
-        </span>
-      </div>
-      <div
-        className={classNames("overflow-hidden transition-all", {
-          "max-h-0": !active,
-          "max-h-[10000000px]": active,
-        })}
-      >
-        {children}
-      </div>
+    <Context.Provider value={{ active, onToggle: handleToggle }}>
+      {children}
+    </Context.Provider>
+  );
+};
+
+const Label = ({ children }: PropsWithChildren) => {
+  const { active, onToggle } = useContext(Context);
+  return (
+    <div
+      className={classNames(
+        "flex items-center font-semibold",
+        "px-2 py-1 text-sm bg-primary-700 bg-opacity-0 hover:bg-opacity-10",
+        "rounded"
+      )}
+      onClick={() => {
+        onToggle();
+      }}
+    >
+      <span>{children}</span>
+      <span className="text-xl">
+        {active ? <BiChevronUp /> : <BiChevronDown />}
+      </span>
     </div>
   );
 };
 
+const Content = ({ children }: PropsWithChildren) => {
+  const { active } = useContext(Context);
+
+  return (
+    <div
+      className={classNames("overflow-hidden transition-all pl-3", {
+        "max-h-0": !active,
+        "max-h-[10000000px]": active,
+      })}
+    >
+      {children}
+    </div>
+  );
+};
+
+Item.Label = Label;
+Item.Content = Content;
 Collapsible.Item = Item;
 
 export default Collapsible;

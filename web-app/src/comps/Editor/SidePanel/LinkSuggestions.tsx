@@ -24,37 +24,30 @@ const LinkSuggestions = () => {
   };
 
   return (
-    <Collapsible>
-      <Collapsible.Item title="Notes to expand" active onToggle={() => {}}>
-        <div className="p-2 py-4">
-          <ul
-            className="flex gap-2 flex-wrap"
-            style={{ fontSize: BASE_FONT_SIZE }}
+    <div className="p-2 py-4">
+      <ul className="flex gap-2 flex-wrap" style={{ fontSize: BASE_FONT_SIZE }}>
+        {suggestions.map((suggestion) => (
+          <li
+            className={classNames(
+              "bg-primary-700 bg-opacity-10 py-1 px-2 rounded-lg inline-block space-x-2",
+              "flex items-center"
+            )}
+            style={{
+              fontSize:
+                BASE_FONT_SIZE + (suggestion.occurances - 1) * MULTIPLIER,
+            }}
           >
-            {suggestions.map((suggestion) => (
-              <li
-                className={classNames(
-                  "bg-primary-700 bg-opacity-10 py-1 px-2 rounded-lg inline-block space-x-2",
-                  "flex items-center"
-                )}
-                style={{
-                  fontSize:
-                    BASE_FONT_SIZE + (suggestion.occurances - 1) * MULTIPLIER,
-                }}
-              >
-                <span
-                  className="hover:underline cursor-pointer"
-                  onClick={() => handleClick(suggestion)}
-                >
-                  {suggestion.text}
-                </span>
-                <span className="opacity-50">({suggestion.occurances})</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </Collapsible.Item>
-    </Collapsible>
+            <span
+              className="hover:underline cursor-pointer"
+              onClick={() => handleClick(suggestion)}
+            >
+              {suggestion.text}
+            </span>
+            <span className="opacity-50">({suggestion.occurances})</span>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
 

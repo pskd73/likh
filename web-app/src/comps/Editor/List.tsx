@@ -11,9 +11,9 @@ const Item = ({ children, className, ...restProps }: ComponentProps<"li">) => {
     <li
       className={twMerge(
         classNames(
-          "p-2 border-b last:border-b-0 border-primary-700 border-opacity-20",
-          "bg-primary-700 bg-opacity-0 hover:bg-opacity-5 transition-colors",
-          "cursor-pointer"
+          "py-1 px-2 last:border-b-0 border-primary-700 border-opacity-20",
+          "bg-primary-700 bg-opacity-0 hover:bg-opacity-10 transition-colors",
+          "cursor-pointer rounded text-sm last:mb-4"
         ),
         className
       )}

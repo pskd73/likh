@@ -15,7 +15,7 @@ import { usePWA } from "../PWA";
 import { MdInstallDesktop } from "react-icons/md";
 import { SavedNote } from "../type";
 import moment from "moment";
-import { BiFile } from "react-icons/bi";
+import { BiCog, BiFile, BiHash } from "react-icons/bi";
 import { isMobile } from "../device";
 
 const NoteListItem = ({
@@ -24,17 +24,17 @@ const NoteListItem = ({
 }: ComponentProps<"li"> & { note: SavedNote }) => {
   return (
     <List.Item className="text-sm" {...restProps}>
-      <span className="font-semibold flex space-x-2">
+      <span className="flex space-x-2">
         <span className="opacity-50 mt-1">
           <BiFile />
         </span>
         <span>{textToTitle(note.text, 50)}</span>
       </span>
-      <div className="py-1 flex items-center space-x-1">
+      {/* <div className="py-1 flex items-center space-x-1">
         <span className="opacity-50">
           {moment(new Date(note.created_at)).fromNow()}
         </span>
-      </div>
+      </div> */}
     </List.Item>
   );
 };
@@ -96,44 +96,47 @@ const Explorer = () => {
 
   return (
     <>
-      <div
-        className={classNames(
-          "flex justify-end items-center space-x-2",
-          "p-2 border-b border-primary-700 border-opacity-20"
-        )}
-      >
-        {installable && (
-          <Button
-            onClick={install}
-            className="text-xs h-full flex space-x-1 items-center"
-          >
-            <MdInstallDesktop />
-            <span>Install</span>
+      <div className={classNames("flex justify-between items-center ", "p-2")}>
+        <div>
+          <img src="/icons/icon-128x128.png" alt="Retro Note" className="w-8 opacity-50" />
+        </div>
+        <div className="space-x-2">
+          {installable && (
+            <Button
+              onClick={install}
+              className="text-xs h-full flex space-x-1 items-center"
+            >
+              <MdInstallDesktop />
+              <span>Install</span>
+            </Button>
+          )}
+          <Button onClick={() => setSideBar("shortcuts")} className="h-full">
+            <BsKeyboard />
           </Button>
-        )}
-        <Button onClick={() => setSideBar("shortcuts")} className="h-full">
-          <BsKeyboard />
-        </Button>
-        <Button onClick={handleOpen} className="h-full">
-          <FiUpload />
-        </Button>
-        <Button
-          onClick={() => newNote({ text: "New note" })}
-          className="h-full"
-        >
-          <FiPlus />
-        </Button>
+          <Button onClick={handleOpen} className="h-full">
+            <FiUpload />
+          </Button>
+          <Button
+            onClick={() => newNote({ text: "New note" })}
+            className="h-full"
+          >
+            <FiPlus />
+          </Button>
+        </div>
       </div>
 
       <SearchInput />
 
       <Collapsible>
-        <Collapsible.Item
-          title="Notes"
-          active={isSideMenuActive("notes")}
-          onToggle={() => toggleSideMenu("notes")}
-        >
-          <div>
+        {/* Notes */}
+        <Collapsible.Item>
+          <Collapsible.Item.Label>
+            <span className="flex items-center space-x-1">
+              <BiFile />
+              <span>Notes</span>
+            </span>
+          </Collapsible.Item.Label>
+          <Collapsible.Item.Content>
             <List>
               {notesToShow.map((note, i) => (
                 <NoteListItem
@@ -143,14 +146,19 @@ const Explorer = () => {
                 />
               ))}
             </List>
-          </div>
-          {hashtags.map((hashtag, i) => (
-            <div key={i}>
-              <div className="px-2 border-b border-primary-700 border-opacity-20 mt-6 pb-2">
-                <span className="bg-primary-700 text-base text-xs p-1 px-2 rounded-full">
-                  {hashtag.hashtag}
-                </span>
-              </div>
+          </Collapsible.Item.Content>
+        </Collapsible.Item>
+
+        {/* Hashtags */}
+        {hashtags.map((hashtag, i) => (
+          <Collapsible.Item key={i} defaultActive={false}>
+            <Collapsible.Item.Label>
+              <span className="flex items-center space-x-1">
+                <BiHash />
+                <span>{hashtag.hashtag.replace("#", "")}</span>
+              </span>
+            </Collapsible.Item.Label>
+            <Collapsible.Item.Content>
               <List>
                 {hashtag.notes.map((noteMeta, i) => {
                   const note = storage.getNote(noteMeta.id);
@@ -167,15 +175,19 @@ const Explorer = () => {
                   ) : null;
                 })}
               </List>
-            </div>
-          ))}
-        </Collapsible.Item>
-        <Collapsible.Item
-          title="Settings"
-          active={isSideMenuActive("settings")}
-          onToggle={() => toggleSideMenu("settings")}
-        >
-          <div className="text-sm">
+            </Collapsible.Item.Content>
+          </Collapsible.Item>
+        ))}
+
+        {/* Settings */}
+        <Collapsible.Item>
+          <Collapsible.Item.Label>
+            <span className="flex items-center space-x-1">
+              <BiCog />
+              <span>Settings</span>
+            </span>
+          </Collapsible.Item.Label>
+          <Collapsible.Item.Content>
             <List>
               <List.Item className="flex justify-between items-center">
                 <span>Stats</span>
@@ -200,9 +212,11 @@ const Explorer = () => {
                 <span>Introduction note</span>
               </List.Item>
             </List>
-          </div>
+          </Collapsible.Item.Content>
         </Collapsible.Item>
       </Collapsible>
+
+      {/* Built by */}
       <div className="p-2 text-xs">
         <span className="opacity-40">Built by </span>
         <a

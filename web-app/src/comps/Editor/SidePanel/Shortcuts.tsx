@@ -41,69 +41,72 @@ const Shortcuts = () => {
   return (
     <div>
       <Collapsible>
-        <Collapsible.Item active title="Shortcuts" onToggle={() => {}}>
-          <List>
-            <List.Item className="flex justify-between hover:bg-none">
-              <span>New note</span>
-              <div className="flex space-x-1">
-                <DefaultComboKeys />
-                <span>+</span>
-                <Key>N</Key>
-              </div>
-            </List.Item>
-            <List.Item className="flex justify-between hover:bg-none">
-              <span>Previous note</span>
-              <div className="flex space-x-1">
-                <DefaultComboKeys />
-                <span>+</span>
-                <Key>
-                  <MdKeyboardArrowLeft />
-                </Key>
-              </div>
-            </List.Item>
-            <List.Item className="flex justify-between hover:bg-none">
-              <span>Next note</span>
-              <div className="flex space-x-1">
-                <DefaultComboKeys />
-                <span>+</span>
-                <Key>
-                  <MdKeyboardArrowRight />
-                </Key>
-              </div>
-            </List.Item>
-            <List.Item className="flex justify-between hover:bg-none">
-              <span>Save markdown</span>
-              <div className="flex space-x-1">
-                <DefaultComboKeys />
-                <span>+</span>
-                <Key>S</Key>
-              </div>
-            </List.Item>
-            <List.Item className="flex justify-between hover:bg-none">
-              <span>Open markdown</span>
-              <div className="flex space-x-1">
-                <DefaultComboKeys />
-                <span>+</span>
-                <Key>O</Key>
-              </div>
-            </List.Item>
-            <List.Item className="flex justify-between hover:bg-none">
-              <span>Explorer</span>
-              <div className="flex space-x-1">
-                <DefaultComboKeys />
-                <span>+</span>
-                <Key>L</Key>
-              </div>
-            </List.Item>
-            <List.Item className="flex justify-between hover:bg-none">
-              <span>Index</span>
-              <div className="flex space-x-1">
-                <DefaultComboKeys />
-                <span>+</span>
-                <Key>I</Key>
-              </div>
-            </List.Item>
-          </List>
+        <Collapsible.Item>
+          <Collapsible.Item.Label>Shortcuts</Collapsible.Item.Label>
+          <Collapsible.Item.Content>
+            <List>
+              <List.Item className="flex justify-between hover:bg-none">
+                <span>New note</span>
+                <div className="flex space-x-1">
+                  <DefaultComboKeys />
+                  <span>+</span>
+                  <Key>N</Key>
+                </div>
+              </List.Item>
+              <List.Item className="flex justify-between hover:bg-none">
+                <span>Previous note</span>
+                <div className="flex space-x-1">
+                  <DefaultComboKeys />
+                  <span>+</span>
+                  <Key>
+                    <MdKeyboardArrowLeft />
+                  </Key>
+                </div>
+              </List.Item>
+              <List.Item className="flex justify-between hover:bg-none">
+                <span>Next note</span>
+                <div className="flex space-x-1">
+                  <DefaultComboKeys />
+                  <span>+</span>
+                  <Key>
+                    <MdKeyboardArrowRight />
+                  </Key>
+                </div>
+              </List.Item>
+              <List.Item className="flex justify-between hover:bg-none">
+                <span>Save markdown</span>
+                <div className="flex space-x-1">
+                  <DefaultComboKeys />
+                  <span>+</span>
+                  <Key>S</Key>
+                </div>
+              </List.Item>
+              <List.Item className="flex justify-between hover:bg-none">
+                <span>Open markdown</span>
+                <div className="flex space-x-1">
+                  <DefaultComboKeys />
+                  <span>+</span>
+                  <Key>O</Key>
+                </div>
+              </List.Item>
+              <List.Item className="flex justify-between hover:bg-none">
+                <span>Explorer</span>
+                <div className="flex space-x-1">
+                  <DefaultComboKeys />
+                  <span>+</span>
+                  <Key>L</Key>
+                </div>
+              </List.Item>
+              <List.Item className="flex justify-between hover:bg-none">
+                <span>Index</span>
+                <div className="flex space-x-1">
+                  <DefaultComboKeys />
+                  <span>+</span>
+                  <Key>I</Key>
+                </div>
+              </List.Item>
+            </List>
+          </Collapsible.Item.Content>
         </Collapsible.Item>
       </Collapsible>
     </div>
