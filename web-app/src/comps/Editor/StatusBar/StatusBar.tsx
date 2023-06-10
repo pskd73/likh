@@ -2,7 +2,13 @@ import { useContext, useState } from "react";
 import { EditorContext } from "../Context";
 import TextCounter from "./TextCounter";
 import Button from "../../Button";
-import { BiFullscreen, BiMenu, BiSave, BiSpreadsheet } from "react-icons/bi";
+import {
+  BiFullscreen,
+  BiLink,
+  BiMenu,
+  BiSave,
+  BiSpreadsheet,
+} from "react-icons/bi";
 import { saveNote } from "../File";
 import Delete from "./Delete";
 import classNames from "classnames";
@@ -82,6 +88,15 @@ const StatusBar = ({
           onClick={handleFullScreen}
         >
           <BiFullscreen />
+        </Button>
+        <Button
+          lite={sideBar !== "link-suggestions"}
+          className="rounded-none"
+          onClick={() =>
+            setSideBar((b) => (b === "link-suggestions" ? undefined : "link-suggestions"))
+          }
+        >
+          <BiLink />
         </Button>
         <div className="hidden md:flex items-center px-1 space-x-1 h-full">
           <span className="opacity-50 text-xs">
