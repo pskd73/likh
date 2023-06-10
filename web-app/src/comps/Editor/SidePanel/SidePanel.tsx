@@ -4,18 +4,27 @@ import { EditorContext } from "../Context";
 import Explorer from "./Explorer";
 import Outline from "./Outline";
 import Shortcuts from "./Shortcuts";
+import { isMobile } from "../device";
 
 const SidePanel = () => {
-  const { sideBar } = useContext(EditorContext);
+  const { sideBar, setSideBar } = useContext(EditorContext);
 
   return (
     <>
-      <div
-        className={classNames({
-          "w-[0px]": !sideBar,
-          "w-[300px] md:w-[300px] transition-all": sideBar,
-        })}
-      />
+      {!isMobile && (
+        <div
+          className={classNames({
+            "w-[0px]": !sideBar,
+            "w-[300px] md:w-[300px] transition-all": sideBar,
+          })}
+        />
+      )}
+      {isMobile && sideBar && (
+        <div
+          className="bg-primary-700 bg-opacity-70 w-[100vw] h-[100vh] fixed top-0 left-0 z-20"
+          onClick={() => setSideBar(undefined)}
+        />
+      )}
       <div
         className={classNames(
           "transition-all shadow-xl z-30 h-[100vh] overflow-y-scroll scrollbar-hide",
