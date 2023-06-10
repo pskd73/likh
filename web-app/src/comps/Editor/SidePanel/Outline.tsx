@@ -83,14 +83,11 @@ const List = ({
   const { setSideBar } = useContext(EditorContext);
 
   return (
-    <ul className={classNames("space-y-2", { "pl-4": !root })}>
+    <ul className={classNames("space-y-1", { "pl-4": !root })}>
       {titles.map((title, i) => (
         <li key={i}>
           <span
-            className={classNames("hover:underline cursor-pointer", {
-              "text-lg": title.level === 1,
-              "text-md": title.level === 2,
-            })}
+            className={classNames("hover:underline cursor-pointer text-sm")}
             onClick={() => {
               if (isMobile) {
                 setSideBar(undefined);
@@ -135,7 +132,7 @@ const Outline = () => {
               {links.map((link, i) => (
                 <ListWidget.Item
                   key={i}
-                  className="cursor-auto hover:bg-white flex justify-between items-center"
+                  className="cursor-auto hover:bg-white flex justify-between items-center text-sm"
                 >
                   <span
                     className="hover:underline cursor-pointer"
@@ -149,7 +146,7 @@ const Outline = () => {
                     {link.text}
                   </span>
                   <div>
-                    <Button onClick={() => setOrNewNote(link.text)}>
+                    <Button lite onClick={() => setOrNewNote(link.text)}>
                       <TbExternalLink />
                     </Button>
                   </div>

@@ -175,7 +175,7 @@ const Explorer = () => {
           active={isSideMenuActive("settings")}
           onToggle={() => toggleSideMenu("settings")}
         >
-          <div>
+          <div className="text-sm">
             <List>
               <List.Item className="flex justify-between items-center">
                 <span>Stats</span>
