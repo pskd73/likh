@@ -75,10 +75,12 @@ const EditableNote = ({
   };
 
   const handleNewRollNote = () => {
-    const note = newNote({
-      text: `${rollHashTag}\n\nWrite your journal ...`,
-    });
-    setNotes({ ...notes, [note.id]: note });
+    newNote(
+      {
+        text: `${rollHashTag}\n\nWrite your journal ...`,
+      },
+      false
+    );
   };
 
   return (

@@ -15,7 +15,10 @@ const shortcuts: Record<string, (editor: EditorContextType) => void> = {
     editor.setSideBar((b) => (b === "explorer" ? undefined : "explorer")),
   i: (editor) =>
     editor.setSideBar((b) => (b === "outline" ? undefined : "outline")),
-  n: (editor) => editor.newNote({ text: "New note" }),
+  n: (editor) => {
+    editor.newNote({ text: "New note" });
+    editor.setRollHashTag("");
+  },
   ArrowLeft: (editor) => {
     const { storage } = editor;
     const idx = storage.notes.findIndex((note) => editor.note.id === note.id);

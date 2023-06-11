@@ -141,7 +141,10 @@ const Explorer = () => {
             <FiUpload />
           </Button>
           <Button
-            onClick={() => newNote({ text: "New note" })}
+            onClick={() => {
+              newNote({ text: "New note" });
+              setRollHashTag("");
+            }}
             className="h-full"
           >
             <FiPlus />

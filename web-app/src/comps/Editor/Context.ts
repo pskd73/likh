@@ -36,7 +36,7 @@ export type EditorContextType = {
   setSearchTerm: StateSetter<string>;
 
   notesToShow: SavedNote[];
-  newNote: (note: NewNote) => SavedNote;
+  newNote: (note: NewNote, replace?: boolean) => SavedNote;
 
   deleteNote: (noteId: string) => void;
 
@@ -113,9 +113,12 @@ export const useEditor = ({
     setNotes(updatedNotes);
   };
 
-  const newNote = (note: NewNote) => {
+  const newNote = (note: NewNote, replace: boolean = true) => {
     const savedNote = storage.newNote(note.text);
-    const updatedNotes = { ...notes };
+    let updatedNotes = { ...notes };
+    if (replace) {
+      updatedNotes = {};
+    }
     updatedNotes[savedNote.id] = savedNote;
     setNotes(updatedNotes);
     return savedNote;
