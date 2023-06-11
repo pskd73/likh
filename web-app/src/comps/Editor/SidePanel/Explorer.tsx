@@ -153,7 +153,7 @@ const Explorer = () => {
 
       <Collapsible>
         {/* Notes */}
-        <Collapsible.Item>
+        <Collapsible.Item defaultActive={false}>
           <Collapsible.Item.Label>
             <span className="flex items-center space-x-1">
               <BiFile />
