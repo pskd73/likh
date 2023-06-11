@@ -1,7 +1,7 @@
 import { createContext, useMemo, useState } from "react";
 import { Storage } from "./useStorage";
 import { NewNote, SavedNote } from "./type";
-import { getNoteTitle } from "../../Note";
+import { getNoteTitle, isLinked } from "../../Note";
 import { LinkSuggestion, getLinkSuggestions } from "./Suggestion";
 
 type StateSetter<T> = React.Dispatch<React.SetStateAction<T>>;
@@ -119,14 +119,17 @@ export const useEditor = ({
   };
 
   const setOrNewNote = (title: string) => {
-    const note = getNoteByTitle(title);
-    if (!note) {
-      newNote({
-        text: `# ${title}\nWrite more here`,
-      });
-    } else {
-      setNote(note);
+    for (const meta of storage.notes) {
+      const note = storage.getNote(meta.id);
+      if (note) {
+        if (isLinked(title, note.text)) {
+          return setNote(note);
+        }
+      }
     }
+    newNote({
+      text: `# ${title}\nWrite more here`,
+    });
   };
 
   const getHashtags = () => {
@@ -147,7 +150,7 @@ export const useEditor = ({
     }
     const hashtags: Record<string, SavedNote[]> = {};
     for (const hashtag of Object.keys(hashtagsMap)) {
-      hashtags[hashtag] = Object.values(hashtagsMap[hashtag])
+      hashtags[hashtag] = Object.values(hashtagsMap[hashtag]);
     }
     return hashtags;
   };

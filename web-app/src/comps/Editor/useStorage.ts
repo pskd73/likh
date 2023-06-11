@@ -65,7 +65,7 @@ const useStorage = (): Storage => {
       .map((nm) => getNote(nm.id))
       .filter((n) => !!n) as SavedNote[];
     return notes.filter((note) => {
-      return note.text.includes(text);
+      return note.text.toLowerCase().includes(text.toLowerCase());
     });
   };
 
