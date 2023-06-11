@@ -40,7 +40,7 @@ const SidePanel = () => {
       >
         <div className="max-w-full overflow-hidden p-2">
           {sideBar === "explorer" && <Explorer />}
-          {sideBar === "outline" && isRoll ? <RollOutline /> : <Outline />}
+          {sideBar === "outline" ? isRoll ? <RollOutline /> : <Outline /> : null}
           {sideBar === "shortcuts" && <Shortcuts />}
           {sideBar === "link-suggestions" && <LinkSuggestions />}
         </div>
