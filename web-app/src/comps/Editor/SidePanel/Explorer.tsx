@@ -126,7 +126,7 @@ const Explorer = () => {
           <img
             src="/icons/icon-128x128.png"
             alt="Retro Note"
-            className="w-8 opacity-50"
+            className="w-8 opacity-80"
           />
         </div>
         <div className="space-x-2">
