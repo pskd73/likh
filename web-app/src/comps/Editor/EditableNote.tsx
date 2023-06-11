@@ -1,17 +1,15 @@
 import { Descendant } from "slate";
 import MEditor, { Suggestion } from "./MEditor";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext } from "react";
 import { EditorContext } from "./Context";
-import { SavedNote } from "./type";
 
 const EditableNote = ({
   getSuggestions,
 }: {
   getSuggestions: (prefix: string, term: string) => Suggestion[];
 }) => {
-  const { note, notes, updateNote, typewriterMode, storage, setOrNewNote } =
+  const { notes, updateNote, typewriterMode, storage, setOrNewNote } =
     useContext(EditorContext);
-  const [editorKey, setEditorKey] = useState<number>(new Date().getTime());
 
   const handleChange = (
     id: string,
@@ -30,10 +28,6 @@ const EditableNote = ({
     updateNote(updatedNote);
   };
 
-  useEffect(() => {
-    setEditorKey(new Date().getTime());
-  }, [note.id]);
-
   const handleNoteLinkClick = (title: string, id?: string) => {
     if (id) {
       const note = storage.getNote(id);
@@ -47,7 +41,7 @@ const EditableNote = ({
 
   return (
     <>
-      {Object.keys(notes).map(id => (
+      {Object.keys(notes).map((id) => (
         <MEditor
           key={id}
           onChange={(v) => handleChange(id, v)}
@@ -58,15 +52,6 @@ const EditableNote = ({
           getSuggestions={getSuggestions}
         />
       ))}
-      {/* <MEditor
-        key={editorKey}
-        onChange={handleChange}
-        initValue={note.serialized}
-        initText={note.text}
-        typeWriter={typewriterMode}
-        onNoteLinkClick={handleNoteLinkClick}
-        getSuggestions={getSuggestions}
-      /> */}
     </>
   );
 };

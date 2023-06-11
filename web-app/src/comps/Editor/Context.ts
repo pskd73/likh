@@ -1,7 +1,7 @@
 import { createContext, useMemo, useState } from "react";
 import { Storage } from "./useStorage";
 import { NewNote, SavedNote } from "./type";
-import { getNoteTitle, isLinked } from "../../Note";
+import { isLinked } from "../../Note";
 import { LinkSuggestion, getLinkSuggestions } from "./Suggestion";
 
 type StateSetter<T> = React.Dispatch<React.SetStateAction<T>>;
@@ -65,7 +65,6 @@ export const useEditor = ({
   const [showStats, setShowStats] = useState(true);
   const [typewriterMode, setTypewriterMode] = useState(false);
   const [countStatType, setCountStatType] = useState<CountStatType>("words");
-  // const [note, setNote] = useState<SavedNote>(storage.getRecentNote());
   const [notes, setNotes] = useState<Record<string, SavedNote>>({
     [storage.getRecentNote().id]: storage.getRecentNote(),
   });
@@ -107,7 +106,6 @@ export const useEditor = ({
     }
     updatedNotes[note.id] = note;
     setNotes(updatedNotes);
-    // setNote(note);
   };
 
   const newNote = (note: NewNote) => {
@@ -115,12 +113,10 @@ export const useEditor = ({
     const updatedNotes = { ...notes };
     updatedNotes[savedNote.id] = savedNote;
     setNotes(updatedNotes);
-    // setNote(savedNote);
   };
 
   const deleteNote = (noteId: string) => {
     storage.delete(noteId);
-    // setNote(storage.getRecentNote());
   };
 
   const getNoteByTitle = (title: string) => {
@@ -145,7 +141,6 @@ export const useEditor = ({
           const updatedNotes = { ...notes };
           updatedNotes[note.id] = note;
           return setNotes(updatedNotes);
-          // return setNote(note);
         }
       }
     }
