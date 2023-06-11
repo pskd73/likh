@@ -76,7 +76,6 @@ const NoteWriter = ({
         key={0}
         initValue={note.slate_value}
         initText={note.text}
-        typeWriter={typeWriter}
         editor={editor}
       />
     </div>

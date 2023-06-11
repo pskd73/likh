@@ -22,7 +22,8 @@ const StatusBar = ({
   height: number;
   padding: number;
 }) => {
-  const { showStats, note, sideBar, setSideBar } = useContext(EditorContext);
+  const { showStats, note, sideBar, setSideBar, isRoll } =
+    useContext(EditorContext);
   const [fullScreen, setFullScreen] = useState(false);
 
   const handleSave = () => {
@@ -110,7 +111,7 @@ const StatusBar = ({
         </div>
       </div>
       <div className="flex justify-end h-full">
-        <Delete />
+        {!isRoll && <Delete />}
         <Button className="rounded-none" lite onClick={handleSave}>
           <BiSave />
         </Button>

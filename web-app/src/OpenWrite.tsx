@@ -63,7 +63,6 @@ const OpenWrite = () => {
             key={1}
             onChange={handleChange}
             initValue={initalValue!}
-            typeWriter
           />
         </div>
       </Paper>

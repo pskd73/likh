@@ -1,7 +1,7 @@
 import { createContext, useMemo, useState } from "react";
 import { Storage } from "./useStorage";
 import { NewNote, SavedNote } from "./type";
-import { getNoteTitle, isLinked } from "../../Note";
+import { isLinked } from "../../Note";
 import { LinkSuggestion, getLinkSuggestions } from "./Suggestion";
 
 type StateSetter<T> = React.Dispatch<React.SetStateAction<T>>;
@@ -27,13 +27,16 @@ export type EditorContextType = {
   setCountStatType: StateSetter<CountStatType>;
 
   note: SavedNote;
-  updateNote: (note: SavedNote) => void;
+  updateNote: (note: SavedNote, replace?: boolean) => void;
+
+  notes: Record<string, SavedNote>;
+  setNotes: StateSetter<Record<string, SavedNote>>;
 
   searchTerm: string;
   setSearchTerm: StateSetter<string>;
 
   notesToShow: SavedNote[];
-  newNote: (note: NewNote) => void;
+  newNote: (note: NewNote, replace?: boolean) => SavedNote;
 
   deleteNote: (noteId: string) => void;
 
@@ -43,6 +46,10 @@ export type EditorContextType = {
   getHashtags: () => Record<string, SavedNote[]>;
 
   getLinkSuggestions: () => LinkSuggestion[];
+
+  isRoll: boolean;
+  rollHashTag: string;
+  setRollHashTag: StateSetter<string>;
 };
 
 export const EditorContext = createContext<EditorContextType>(
@@ -62,8 +69,15 @@ export const useEditor = ({
   const [showStats, setShowStats] = useState(true);
   const [typewriterMode, setTypewriterMode] = useState(false);
   const [countStatType, setCountStatType] = useState<CountStatType>("words");
-  const [note, setNote] = useState<SavedNote>(storage.getRecentNote());
+  const [notes, setNotes] = useState<Record<string, SavedNote>>({
+    [storage.getRecentNote().id]: storage.getRecentNote(),
+  });
+  const note = useMemo(() => {
+    const ids = Object.keys(notes);
+    return notes[ids[ids.length - 1]];
+  }, [notes]);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [rollHashTag, setRollHashTag] = useState<string>("");
 
   const notesToShow = useMemo<SavedNote[]>(() => {
     if (searchTerm) {
@@ -89,19 +103,40 @@ export const useEditor = ({
 
   const isSideMenuActive = (key: string) => activeSideMenus.includes(key);
 
-  const updateNote = (note: SavedNote) => {
+  const updateNote = (note: SavedNote, replace: boolean = true) => {
     storage.saveNote(note);
-    setNote(note);
+    let updatedNotes = { ...notes };
+    if (replace) {
+      updatedNotes = {};
+    }
+    updatedNotes[note.id] = note;
+    setNotes(updatedNotes);
   };
 
-  const newNote = (note: NewNote) => {
+  const newNote = (note: NewNote, replace: boolean = true) => {
     const savedNote = storage.newNote(note.text);
-    setNote(savedNote);
+    let updatedNotes = { ...notes };
+    if (replace) {
+      updatedNotes = {};
+    }
+    updatedNotes[savedNote.id] = savedNote;
+    setNotes(updatedNotes);
+    return savedNote;
   };
 
   const deleteNote = (noteId: string) => {
     storage.delete(noteId);
-    setNote(storage.getRecentNote());
+    if (notes[noteId]) {
+      const newNotes = { ...notes };
+      delete newNotes[noteId];
+
+      if (Object.keys(newNotes).length === 0) {
+        const recentNote = storage.getRecentNote();
+        newNotes[recentNote.id] = recentNote;
+      }
+
+      setNotes(newNotes);
+    }
   };
 
   const getNoteByTitle = (title: string) => {
@@ -123,7 +158,9 @@ export const useEditor = ({
       const note = storage.getNote(meta.id);
       if (note) {
         if (isLinked(title, note.text)) {
-          return setNote(note);
+          const updatedNotes = { ...notes };
+          updatedNotes[note.id] = note;
+          return setNotes(updatedNotes);
         }
       }
     }
@@ -181,6 +218,9 @@ export const useEditor = ({
     note,
     updateNote,
 
+    notes,
+    setNotes,
+
     searchTerm,
     setSearchTerm,
     notesToShow,
@@ -194,5 +234,9 @@ export const useEditor = ({
     getHashtags,
 
     getLinkSuggestions: _getLinkSuggestions,
+
+    isRoll: !!rollHashTag,
+    rollHashTag,
+    setRollHashTag,
   };
 };

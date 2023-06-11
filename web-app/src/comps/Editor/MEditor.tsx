@@ -4,7 +4,6 @@ import {
   CSSProperties,
   KeyboardEventHandler,
   useCallback,
-  useEffect,
   useMemo,
   useRef,
 } from "react";
@@ -19,11 +18,9 @@ import {
 import { withHistory } from "slate-history";
 import { Slate, Editable, withReact } from "slate-react";
 import grammer, { imageRegex, quoteRegex } from "./grammer";
-import { useMiddle } from "../useMiddle";
 import slugify from "slugify";
 import {
   CustomEditor,
-  focusEnd,
   CustomElement,
   serialize,
   deserialize,
@@ -223,26 +220,22 @@ const MEditor = ({
   onChange,
   initValue,
   initText,
-  typeWriter,
   editor: passedEditor,
   onNoteLinkClick,
   getSuggestions,
-  key,
 }: {
   onChange: (val: {
     value: Descendant[];
     text: string;
     serialized: string;
+    editor: CustomEditor;
   }) => void;
-  key: number;
   initValue?: string;
   initText?: string;
-  typeWriter?: boolean;
   editor?: CustomEditor;
   onNoteLinkClick?: (title: string, id?: string) => void;
   getSuggestions?: (prefix: string, term: string) => Suggestion[];
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
   const editor = useMemo(
     () => passedEditor || withHistory(withReact(createEditor())),
     [passedEditor]
@@ -358,14 +351,6 @@ const MEditor = ({
     },
     []
   );
-  const scroll = useMiddle(containerRef, [], {
-    active: typeWriter,
-    editor,
-  });
-
-  useEffect(() => {
-    scroll.scrollToTop();
-  }, [key]);
 
   const handleContextMenuSelect = (
     index: number,
@@ -382,15 +367,9 @@ const MEditor = ({
       value,
       text: serialize(value),
       serialized: JSON.stringify(value),
+      editor,
     });
-    if (typeWriter) {
-      scroll.update();
-    }
     contextMenu.handleChange();
-  };
-
-  const handleKeyUp: KeyboardEventHandler<HTMLDivElement> = (e) => {
-    scroll.scroll();
   };
 
   const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = (e) => {
@@ -422,44 +401,41 @@ const MEditor = ({
   };
 
   return (
-    <div style={{ ...scroll.style }}>
-      <div ref={containerRef} id="editorContainer">
-        <Slate
-          editor={editor}
-          value={getInitValue() as any}
-          onChange={handleChange}
-        >
-          <Editable
-            decorate={decorate}
-            renderLeaf={renderLeaf}
-            renderElement={renderElement}
-            onKeyUp={handleKeyUp}
-            onKeyDown={handleKeyDown}
-            placeholder="Write your mind here ..."
-            onPaste={handlePaste}
-          />
-          {contextMenu.active && suggestions && suggestions.length > 0 && (
-            <ContextMenu
-              ref={contextMenu.ref}
-              style={{ top: -9999, right: -9999 }}
-              className="text-sm"
-            >
-              <ContextMenuList>
-                {suggestions.map((suggestion, i) => (
-                  <ContextMenuList.Item
-                    key={i}
-                    idx={i}
-                    hover={contextMenu.index === i}
-                    onClick={(e) => contextMenu.handleItemClick(e, i)}
-                  >
-                    {suggestion.title}
-                  </ContextMenuList.Item>
-                ))}
-              </ContextMenuList>
-            </ContextMenu>
-          )}
-        </Slate>
-      </div>
+    <div id="editorContainer">
+      <Slate
+        editor={editor}
+        value={getInitValue() as any}
+        onChange={handleChange}
+      >
+        <Editable
+          decorate={decorate}
+          renderLeaf={renderLeaf}
+          renderElement={renderElement}
+          onKeyDown={handleKeyDown}
+          placeholder="Write your mind here ..."
+          onPaste={handlePaste}
+        />
+        {contextMenu.active && suggestions && suggestions.length > 0 && (
+          <ContextMenu
+            ref={contextMenu.ref}
+            style={{ top: -9999, right: -9999 }}
+            className="text-sm"
+          >
+            <ContextMenuList>
+              {suggestions.map((suggestion, i) => (
+                <ContextMenuList.Item
+                  key={i}
+                  idx={i}
+                  hover={contextMenu.index === i}
+                  onClick={(e) => contextMenu.handleItemClick(e, i)}
+                >
+                  {suggestion.title}
+                </ContextMenuList.Item>
+              ))}
+            </ContextMenuList>
+          </ContextMenu>
+        )}
+      </Slate>
     </div>
   );
 };

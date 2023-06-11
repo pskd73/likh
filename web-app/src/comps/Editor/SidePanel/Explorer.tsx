@@ -21,6 +21,7 @@ import {
   BiFile,
   BiHash,
   BiInfoCircle,
+  BiPencil,
   BiStats,
 } from "react-icons/bi";
 import { isMobile } from "../device";
@@ -50,8 +51,6 @@ const Explorer = () => {
   const {
     note,
     storage,
-    isSideMenuActive,
-    toggleSideMenu,
     showStats,
     setShowStats,
     typewriterMode,
@@ -61,6 +60,8 @@ const Explorer = () => {
     updateNote,
     setSideBar,
     getHashtags,
+    setNotes,
+    setRollHashTag,
   } = useContext(EditorContext);
   const { install, installable } = usePWA();
 
@@ -99,6 +100,18 @@ const Explorer = () => {
       setSideBar(undefined);
     }
     updateNote(note);
+    setRollHashTag("");
+  };
+
+  const handleRoll = (hashtag: string) => {
+    const hashtags = getHashtags();
+    const notes = hashtags[hashtag].sort((a, b) => a.created_at - b.created_at);
+    const notesMap: Record<string, SavedNote> = {};
+    notes.forEach((note) => {
+      notesMap[note.id] = note;
+    });
+    setNotes(notesMap);
+    setRollHashTag(hashtag);
   };
 
   return (
@@ -128,7 +141,10 @@ const Explorer = () => {
             <FiUpload />
           </Button>
           <Button
-            onClick={() => newNote({ text: "New note" })}
+            onClick={() => {
+              newNote({ text: "New note" });
+              setRollHashTag("");
+            }}
             className="h-full"
           >
             <FiPlus />
@@ -140,7 +156,7 @@ const Explorer = () => {
 
       <Collapsible>
         {/* Notes */}
-        <Collapsible.Item>
+        <Collapsible.Item defaultActive={false}>
           <Collapsible.Item.Label>
             <span className="flex items-center space-x-1">
               <BiFile />
@@ -172,6 +188,14 @@ const Explorer = () => {
             </Collapsible.Item.Label>
             <Collapsible.Item.Content>
               <List>
+                <List.Item onClick={() => handleRoll(hashtag.hashtag)}>
+                  <div className="flex items-center space-x-2">
+                    <span className="opacity-50">
+                      <BiPencil />
+                    </span>
+                    <span>Journal it</span>
+                  </div>
+                </List.Item>
                 {hashtag.notes.map((noteMeta, i) => {
                   const _note = storage.getNote(noteMeta.id);
                   return _note ? (
