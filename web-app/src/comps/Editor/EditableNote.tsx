@@ -4,6 +4,10 @@ import { useContext, useEffect, useRef } from "react";
 import { EditorContext } from "./Context";
 import { useMiddle } from "../useMiddle";
 import { CustomEditor } from "./Core/Core";
+import classNames from "classnames";
+import moment from "moment";
+import { BiPlus } from "react-icons/bi";
+import Button from "../Button";
 
 const EditableNote = ({
   getSuggestions,
@@ -11,8 +15,15 @@ const EditableNote = ({
   getSuggestions: (prefix: string, term: string) => Suggestion[];
 }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const { notes, note, updateNote, typewriterMode, storage, setOrNewNote } =
-    useContext(EditorContext);
+  const {
+    notes,
+    note,
+    updateNote,
+    typewriterMode,
+    storage,
+    setOrNewNote,
+    isRoll,
+  } = useContext(EditorContext);
   const scroll = useMiddle(ref, [typewriterMode], {
     typeWriter: typewriterMode,
   });
@@ -57,17 +68,38 @@ const EditableNote = ({
   };
 
   return (
-    <div ref={ref} style={{ ...scroll.style }} className="space-y-10">
+    <div ref={ref} style={{ ...scroll.style }} className="space-y-6">
       {Object.keys(notes).map((id) => (
-        <MEditor
-          key={id}
-          onChange={(v) => handleChange(id, v)}
-          initValue={notes[id].serialized}
-          initText={notes[id].text}
-          onNoteLinkClick={handleNoteLinkClick}
-          getSuggestions={getSuggestions}
-        />
+        <div>
+          {isRoll && (
+            <div
+              className={classNames(
+                "flex justify-end text-sm",
+                "border-b border-primary-700 mb-4 pb-2",
+                "border-opacity-10 opacity-50"
+              )}
+            >
+              {moment(new Date(notes[id].created_at)).format(
+                "MMMM Do YYYY, h:mm:ss a"
+              )}
+            </div>
+          )}
+          <MEditor
+            key={id}
+            onChange={(v) => handleChange(id, v)}
+            initValue={notes[id].serialized}
+            initText={notes[id].text}
+            onNoteLinkClick={handleNoteLinkClick}
+            getSuggestions={getSuggestions}
+          />
+        </div>
       ))}
+      <div>
+        <Button className="flex items-center space-x-1 text-sm">
+          <BiPlus />
+          <span>New note</span>
+        </Button>
+      </div>
     </div>
   );
 };

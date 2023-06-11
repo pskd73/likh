@@ -46,6 +46,8 @@ export type EditorContextType = {
   getHashtags: () => Record<string, SavedNote[]>;
 
   getLinkSuggestions: () => LinkSuggestion[];
+
+  isRoll: boolean;
 };
 
 export const EditorContext = createContext<EditorContextType>(
@@ -73,6 +75,10 @@ export const useEditor = ({
     return notes[ids[ids.length - 1]];
   }, [notes]);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const isRoll = useMemo(
+    () => Object.keys(notes).length > 1,
+    [Object.keys(notes)]
+  );
 
   const notesToShow = useMemo<SavedNote[]>(() => {
     if (searchTerm) {
@@ -214,5 +220,7 @@ export const useEditor = ({
     getHashtags,
 
     getLinkSuggestions: _getLinkSuggestions,
+
+    isRoll,
   };
 };
