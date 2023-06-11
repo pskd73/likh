@@ -358,14 +358,14 @@ const MEditor = ({
     },
     []
   );
-  const scroll = useMiddle(containerRef, [], {
-    active: typeWriter,
-    editor,
-  });
+  // const scroll = useMiddle(containerRef, [], {
+  //   active: typeWriter,
+  //   editor,
+  // });
 
-  useEffect(() => {
-    scroll.scrollToTop();
-  }, [key]);
+  // useEffect(() => {
+  //   scroll.scrollToTop();
+  // }, [key]);
 
   const handleContextMenuSelect = (
     index: number,
@@ -383,9 +383,9 @@ const MEditor = ({
       text: serialize(value),
       serialized: JSON.stringify(value),
     });
-    if (typeWriter) {
-      scroll.update();
-    }
+    // if (typeWriter) {
+    //   scroll.update();
+    // }
     contextMenu.handleChange();
   };
 
@@ -422,44 +422,42 @@ const MEditor = ({
   };
 
   return (
-    <div style={{ ...scroll.style }}>
-      <div ref={containerRef} id="editorContainer">
-        <Slate
-          editor={editor}
-          value={getInitValue() as any}
-          onChange={handleChange}
-        >
-          <Editable
-            decorate={decorate}
-            renderLeaf={renderLeaf}
-            renderElement={renderElement}
-            onKeyUp={handleKeyUp}
-            onKeyDown={handleKeyDown}
-            placeholder="Write your mind here ..."
-            onPaste={handlePaste}
-          />
-          {contextMenu.active && suggestions && suggestions.length > 0 && (
-            <ContextMenu
-              ref={contextMenu.ref}
-              style={{ top: -9999, right: -9999 }}
-              className="text-sm"
-            >
-              <ContextMenuList>
-                {suggestions.map((suggestion, i) => (
-                  <ContextMenuList.Item
-                    key={i}
-                    idx={i}
-                    hover={contextMenu.index === i}
-                    onClick={(e) => contextMenu.handleItemClick(e, i)}
-                  >
-                    {suggestion.title}
-                  </ContextMenuList.Item>
-                ))}
-              </ContextMenuList>
-            </ContextMenu>
-          )}
-        </Slate>
-      </div>
+    <div ref={containerRef} id="editorContainer">
+      <Slate
+        editor={editor}
+        value={getInitValue() as any}
+        onChange={handleChange}
+      >
+        <Editable
+          decorate={decorate}
+          renderLeaf={renderLeaf}
+          renderElement={renderElement}
+          onKeyUp={handleKeyUp}
+          onKeyDown={handleKeyDown}
+          placeholder="Write your mind here ..."
+          onPaste={handlePaste}
+        />
+        {contextMenu.active && suggestions && suggestions.length > 0 && (
+          <ContextMenu
+            ref={contextMenu.ref}
+            style={{ top: -9999, right: -9999 }}
+            className="text-sm"
+          >
+            <ContextMenuList>
+              {suggestions.map((suggestion, i) => (
+                <ContextMenuList.Item
+                  key={i}
+                  idx={i}
+                  hover={contextMenu.index === i}
+                  onClick={(e) => contextMenu.handleItemClick(e, i)}
+                >
+                  {suggestion.title}
+                </ContextMenuList.Item>
+              ))}
+            </ContextMenuList>
+          </ContextMenu>
+        )}
+      </Slate>
     </div>
   );
 };
