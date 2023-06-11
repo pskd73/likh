@@ -185,6 +185,14 @@ const Explorer = () => {
             </Collapsible.Item.Label>
             <Collapsible.Item.Content>
               <List>
+                <List.Item onClick={() => handleRoll(hashtag.hashtag)}>
+                  <div className="flex items-center space-x-2">
+                    <span className="opacity-50">
+                      <BiFilm />
+                    </span>
+                    <span>Roll it</span>
+                  </div>
+                </List.Item>
                 {hashtag.notes.map((noteMeta, i) => {
                   const _note = storage.getNote(noteMeta.id);
                   return _note ? (
@@ -196,14 +204,6 @@ const Explorer = () => {
                     />
                   ) : null;
                 })}
-                <List.Item onClick={() => handleRoll(hashtag.hashtag)}>
-                  <div className="flex items-center space-x-2">
-                    <span className="opacity-50">
-                      <BiFilm />
-                    </span>
-                    <span>Roll</span>
-                  </div>
-                </List.Item>
               </List>
             </Collapsible.Item.Content>
           </Collapsible.Item>
