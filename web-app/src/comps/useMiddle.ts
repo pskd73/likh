@@ -21,27 +21,22 @@ export const useMiddle = (
   ref: RefObject<HTMLDivElement>,
   deps: DependencyList,
   options?: {
-    active?: boolean;
+    typeWriter?: boolean;
   }
 ) => {
   options = options || {
-    active: true,
+    typeWriter: true,
   };
   const height = useMemo(() => window.innerHeight, []);
   const [paddingTop, setPaddingTop] = useState(height / 2);
 
   useEffect(() => {
     update();
-  }, [options.active, ...deps]);
+  }, [options.typeWriter, ...deps]);
 
   const update = () => {
     if (ref.current) {
       let clientHeight = ref.current.clientHeight;
-      console.log(
-        window
-          .getComputedStyle(ref.current, null)
-          .getPropertyValue("padding-top")
-      );
       clientHeight -= Number(
         window
           .getComputedStyle(ref.current, null)
@@ -93,8 +88,8 @@ export const useMiddle = (
     scroll,
     scrollToTop,
     style: {
-      paddingTop: options.active ? paddingTop : 0,
-      paddingBottom: options.active ? height / 2 : 100,
+      paddingTop: options.typeWriter ? paddingTop : 0,
+      paddingBottom: options.typeWriter ? height / 2 : 100,
     },
   };
 };

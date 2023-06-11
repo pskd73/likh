@@ -13,7 +13,9 @@ const EditableNote = ({
   const ref = useRef<HTMLDivElement>(null);
   const { notes, note, updateNote, typewriterMode, storage, setOrNewNote } =
     useContext(EditorContext);
-  const scroll = useMiddle(ref, [], { active: true });
+  const scroll = useMiddle(ref, [typewriterMode], {
+    typeWriter: typewriterMode,
+  });
 
   useEffect(() => {
     scroll.scrollToTop();
@@ -35,10 +37,12 @@ const EditableNote = ({
     const updatedNote = { ...notes[id] };
     updatedNote.text = text;
     updatedNote.serialized = serialized;
-    updateNote(updatedNote);
+    updateNote(updatedNote, false);
 
     scroll.update();
-    scroll.scroll({ editor });
+    if (id === note.id) {
+      scroll.scroll({ editor });
+    }
   };
 
   const handleNoteLinkClick = (title: string, id?: string) => {
@@ -53,7 +57,7 @@ const EditableNote = ({
   };
 
   return (
-    <div ref={ref} style={{ ...scroll.style }}>
+    <div ref={ref} style={{ ...scroll.style }} className="space-y-10">
       {Object.keys(notes).map((id) => (
         <MEditor
           key={id}

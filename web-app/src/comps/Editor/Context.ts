@@ -27,7 +27,7 @@ export type EditorContextType = {
   setCountStatType: StateSetter<CountStatType>;
 
   note: SavedNote;
-  updateNote: (note: SavedNote) => void;
+  updateNote: (note: SavedNote, replace?: boolean) => void;
 
   notes: Record<string, SavedNote>;
   setNotes: StateSetter<Record<string, SavedNote>>;
