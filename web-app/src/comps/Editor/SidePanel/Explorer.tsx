@@ -19,9 +19,9 @@ import {
   BiCog,
   BiCollapseVertical,
   BiFile,
-  BiFilm,
   BiHash,
   BiInfoCircle,
+  BiPencil,
   BiStats,
 } from "react-icons/bi";
 import { isMobile } from "../device";
@@ -188,9 +188,9 @@ const Explorer = () => {
                 <List.Item onClick={() => handleRoll(hashtag.hashtag)}>
                   <div className="flex items-center space-x-2">
                     <span className="opacity-50">
-                      <BiFilm />
+                      <BiPencil />
                     </span>
-                    <span>Roll it</span>
+                    <span>Journal it</span>
                   </div>
                 </List.Item>
                 {hashtag.notes.map((noteMeta, i) => {
