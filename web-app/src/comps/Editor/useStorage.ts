@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { NoteMeta, SavedNote } from "./type";
 import { INTRO_TEXT } from "./Intro";
 

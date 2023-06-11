@@ -1,26 +1,30 @@
 import { Descendant } from "slate";
 import MEditor, { Suggestion } from "./MEditor";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { EditorContext } from "./Context";
+import { SavedNote } from "./type";
 
 const EditableNote = ({
   getSuggestions,
 }: {
   getSuggestions: (prefix: string, term: string) => Suggestion[];
 }) => {
-  const { note, updateNote, typewriterMode, storage, setOrNewNote } =
+  const { note, notes, updateNote, typewriterMode, storage, setOrNewNote } =
     useContext(EditorContext);
   const [editorKey, setEditorKey] = useState<number>(new Date().getTime());
 
-  const handleChange = ({
-    text,
-    serialized,
-  }: {
-    value: Descendant[];
-    text: string;
-    serialized: string;
-  }) => {
-    const updatedNote = { ...note };
+  const handleChange = (
+    id: string,
+    {
+      text,
+      serialized,
+    }: {
+      value: Descendant[];
+      text: string;
+      serialized: string;
+    }
+  ) => {
+    const updatedNote = { ...notes[id] };
     updatedNote.text = text;
     updatedNote.serialized = serialized;
     updateNote(updatedNote);
@@ -42,15 +46,28 @@ const EditableNote = ({
   };
 
   return (
-    <MEditor
-      key={editorKey}
-      onChange={handleChange}
-      initValue={note.serialized}
-      initText={note.text}
-      typeWriter={typewriterMode}
-      onNoteLinkClick={handleNoteLinkClick}
-      getSuggestions={getSuggestions}
-    />
+    <>
+      {Object.keys(notes).map(id => (
+        <MEditor
+          key={id}
+          onChange={(v) => handleChange(id, v)}
+          initValue={notes[id].serialized}
+          initText={notes[id].text}
+          typeWriter={typewriterMode}
+          onNoteLinkClick={handleNoteLinkClick}
+          getSuggestions={getSuggestions}
+        />
+      ))}
+      {/* <MEditor
+        key={editorKey}
+        onChange={handleChange}
+        initValue={note.serialized}
+        initText={note.text}
+        typeWriter={typewriterMode}
+        onNoteLinkClick={handleNoteLinkClick}
+        getSuggestions={getSuggestions}
+      /> */}
+    </>
   );
 };
 

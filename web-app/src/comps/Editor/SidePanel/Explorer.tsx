@@ -19,6 +19,7 @@ import {
   BiCog,
   BiCollapseVertical,
   BiFile,
+  BiFilm,
   BiHash,
   BiInfoCircle,
   BiStats,
@@ -61,6 +62,7 @@ const Explorer = () => {
     updateNote,
     setSideBar,
     getHashtags,
+    setNotes,
   } = useContext(EditorContext);
   const { install, installable } = usePWA();
 
@@ -99,6 +101,16 @@ const Explorer = () => {
       setSideBar(undefined);
     }
     updateNote(note);
+  };
+
+  const handleRoll = (hashtag: string) => {
+    const hashtags = getHashtags();
+    const notes = hashtags[hashtag];
+    const notesMap: Record<string, SavedNote> = {};
+    notes.forEach((note) => {
+      notesMap[note.id] = note;
+    });
+    setNotes(notesMap);
   };
 
   return (
@@ -183,6 +195,14 @@ const Explorer = () => {
                     />
                   ) : null;
                 })}
+                <List.Item onClick={() => handleRoll(hashtag.hashtag)}>
+                  <div className="flex items-center space-x-2">
+                    <span className="opacity-50">
+                      <BiFilm />
+                    </span>
+                    <span>Roll</span>
+                  </div>
+                </List.Item>
               </List>
             </Collapsible.Item.Content>
           </Collapsible.Item>

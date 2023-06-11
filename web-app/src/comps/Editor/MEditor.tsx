@@ -234,7 +234,7 @@ const MEditor = ({
     text: string;
     serialized: string;
   }) => void;
-  key: number;
+  key: number | string;
   initValue?: string;
   initText?: string;
   typeWriter?: boolean;
@@ -390,7 +390,7 @@ const MEditor = ({
   };
 
   const handleKeyUp: KeyboardEventHandler<HTMLDivElement> = (e) => {
-    scroll.scroll();
+    // scroll.scroll();
   };
 
   const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = (e) => {
