@@ -155,28 +155,6 @@ const Explorer = () => {
       <SearchInput />
 
       <Collapsible>
-        {/* Notes */}
-        <Collapsible.Item defaultActive={false}>
-          <Collapsible.Item.Label>
-            <span className="flex items-center space-x-1">
-              <BiFile />
-              <span>Notes</span>
-            </span>
-          </Collapsible.Item.Label>
-          <Collapsible.Item.Content>
-            <List>
-              {notesToShow.map((_note, i) => (
-                <NoteListItem
-                  key={i}
-                  note={_note}
-                  onClick={() => handleNoteClick(_note)}
-                  active={note.id === _note.id}
-                />
-              ))}
-            </List>
-          </Collapsible.Item.Content>
-        </Collapsible.Item>
-
         {/* Hashtags */}
         {hashtags.map((hashtag, i) => (
           <Collapsible.Item key={i} defaultActive={false}>
@@ -211,6 +189,30 @@ const Explorer = () => {
             </Collapsible.Item.Content>
           </Collapsible.Item>
         ))}
+        <br />
+
+        {/* Notes */}
+        <Collapsible.Item defaultActive={false}>
+          <Collapsible.Item.Label>
+            <span className="flex items-center space-x-1">
+              <BiFile />
+              <span>All notes</span>
+            </span>
+          </Collapsible.Item.Label>
+          <Collapsible.Item.Content>
+            <List>
+              {notesToShow.map((_note, i) => (
+                <NoteListItem
+                  key={i}
+                  note={_note}
+                  onClick={() => handleNoteClick(_note)}
+                  active={note.id === _note.id}
+                />
+              ))}
+            </List>
+          </Collapsible.Item.Content>
+        </Collapsible.Item>
+        <br />
 
         {/* Settings */}
         <Collapsible.Item>
