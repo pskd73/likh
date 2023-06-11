@@ -32,12 +32,6 @@ const Roll = () => {
   const hashtag = useMemo(() => params.get("hashtag"), [params]);
   const containerRef = useRef<HTMLDivElement>(null);
   const newApi = useFetch<Note>();
-  const scroll = useMiddle(containerRef, [noteStates], {
-    active: true,
-    editor: noteStates.length
-      ? noteStates[noteStates.length - 1].editor
-      : undefined,
-  });
 
   useEffect(() => {
     if (newApi.response) {
@@ -98,10 +92,6 @@ const Roll = () => {
     });
   };
 
-  const handleLastNoteChange = () => {
-    scroll.scroll();
-  };
-
   const handleNew = () => {
     if (user) {
       let text = `My note - ${new Date().toLocaleString()}`;
@@ -125,7 +115,7 @@ const Roll = () => {
   };
 
   return (
-    <div style={{ ...scroll.style }}>
+    <div>
       <div ref={containerRef}>
         {noteStates.map((noteState, i) => (
           <div key={i} className="mb-10 group">
@@ -140,9 +130,6 @@ const Roll = () => {
               key={i}
               note={noteState.note}
               typeWriter={false}
-              onNoteChange={
-                i === noteStates.length - 1 ? handleLastNoteChange : undefined
-              }
               editor={noteState.editor}
             />
             {

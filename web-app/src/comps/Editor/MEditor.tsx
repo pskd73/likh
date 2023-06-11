@@ -4,7 +4,6 @@ import {
   CSSProperties,
   KeyboardEventHandler,
   useCallback,
-  useEffect,
   useMemo,
   useRef,
 } from "react";
@@ -19,11 +18,9 @@ import {
 import { withHistory } from "slate-history";
 import { Slate, Editable, withReact } from "slate-react";
 import grammer, { imageRegex, quoteRegex } from "./grammer";
-import { useMiddle } from "../useMiddle";
 import slugify from "slugify";
 import {
   CustomEditor,
-  focusEnd,
   CustomElement,
   serialize,
   deserialize,
@@ -223,26 +220,22 @@ const MEditor = ({
   onChange,
   initValue,
   initText,
-  typeWriter,
   editor: passedEditor,
   onNoteLinkClick,
   getSuggestions,
-  key,
 }: {
   onChange: (val: {
     value: Descendant[];
     text: string;
     serialized: string;
+    editor: CustomEditor;
   }) => void;
-  key: number | string;
   initValue?: string;
   initText?: string;
-  typeWriter?: boolean;
   editor?: CustomEditor;
   onNoteLinkClick?: (title: string, id?: string) => void;
   getSuggestions?: (prefix: string, term: string) => Suggestion[];
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
   const editor = useMemo(
     () => passedEditor || withHistory(withReact(createEditor())),
     [passedEditor]
@@ -358,14 +351,6 @@ const MEditor = ({
     },
     []
   );
-  // const scroll = useMiddle(containerRef, [], {
-  //   active: typeWriter,
-  //   editor,
-  // });
-
-  // useEffect(() => {
-  //   scroll.scrollToTop();
-  // }, [key]);
 
   const handleContextMenuSelect = (
     index: number,
@@ -382,15 +367,9 @@ const MEditor = ({
       value,
       text: serialize(value),
       serialized: JSON.stringify(value),
+      editor,
     });
-    // if (typeWriter) {
-    //   scroll.update();
-    // }
     contextMenu.handleChange();
-  };
-
-  const handleKeyUp: KeyboardEventHandler<HTMLDivElement> = (e) => {
-    // scroll.scroll();
   };
 
   const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = (e) => {
@@ -422,7 +401,7 @@ const MEditor = ({
   };
 
   return (
-    <div ref={containerRef} id="editorContainer">
+    <div id="editorContainer">
       <Slate
         editor={editor}
         value={getInitValue() as any}
@@ -432,7 +411,6 @@ const MEditor = ({
           decorate={decorate}
           renderLeaf={renderLeaf}
           renderElement={renderElement}
-          onKeyUp={handleKeyUp}
           onKeyDown={handleKeyDown}
           placeholder="Write your mind here ..."
           onPaste={handlePaste}

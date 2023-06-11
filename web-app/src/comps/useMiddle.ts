@@ -1,6 +1,7 @@
 import { DependencyList, RefObject, useEffect, useMemo, useState } from "react";
 import { BaseEditor, Editor } from "slate";
 import { ReactEditor } from "slate-react";
+import { CustomEditor } from "./Editor/Core/Core";
 
 const isCursorAtEnd = (editor: BaseEditor & ReactEditor) => {
   const { selection } = editor;
@@ -20,7 +21,6 @@ export const useMiddle = (
   ref: RefObject<HTMLDivElement>,
   deps: DependencyList,
   options?: {
-    editor?: BaseEditor & ReactEditor;
     active?: boolean;
   }
 ) => {
@@ -32,21 +32,40 @@ export const useMiddle = (
 
   useEffect(() => {
     update();
-    // scroll(true);
-  }, [options.active, options.editor, ...deps]);
+  }, [options.active, ...deps]);
 
   const update = () => {
     if (ref.current) {
-      setPaddingTop(Math.max(0, height / 2 - ref.current.clientHeight));
+      let clientHeight = ref.current.clientHeight;
+      console.log(
+        window
+          .getComputedStyle(ref.current, null)
+          .getPropertyValue("padding-top")
+      );
+      clientHeight -= Number(
+        window
+          .getComputedStyle(ref.current, null)
+          .getPropertyValue("padding-top")
+          .replace("px", "")
+      );
+      clientHeight -= Number(
+        window
+          .getComputedStyle(ref.current, null)
+          .getPropertyValue("padding-bottom")
+          .replace("px", "")
+      );
+      setPaddingTop(Math.max(0, height / 2 - clientHeight));
     }
   };
 
-  const scroll = (force?: boolean) => {
-    if (
-      force ||
-      !options?.editor ||
-      (options.editor && isCursorAtEnd(options.editor))
-    ) {
+  const scroll = ({
+    editor,
+    force,
+  }: {
+    editor?: CustomEditor;
+    force?: boolean;
+  }) => {
+    if (force || !editor || (editor && isCursorAtEnd(editor))) {
       let element = document.getElementById("editor-container");
       if (!element) {
         element = document.body;
@@ -60,14 +79,14 @@ export const useMiddle = (
 
   const scrollToTop = () => {
     let element = document.getElementById("editor-container");
-      if (!element) {
-        element = document.body;
-      }
-      element.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-  }
+    if (!element) {
+      element = document.body;
+    }
+    element.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
   return {
     update,
