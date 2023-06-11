@@ -51,8 +51,6 @@ const Explorer = () => {
   const {
     note,
     storage,
-    isSideMenuActive,
-    toggleSideMenu,
     showStats,
     setShowStats,
     typewriterMode,
@@ -63,6 +61,7 @@ const Explorer = () => {
     setSideBar,
     getHashtags,
     setNotes,
+    setRollHashTag,
   } = useContext(EditorContext);
   const { install, installable } = usePWA();
 
@@ -101,16 +100,18 @@ const Explorer = () => {
       setSideBar(undefined);
     }
     updateNote(note);
+    setRollHashTag("");
   };
 
   const handleRoll = (hashtag: string) => {
     const hashtags = getHashtags();
-    const notes = hashtags[hashtag];
+    const notes = hashtags[hashtag].sort((a, b) => a.created_at - b.created_at);
     const notesMap: Record<string, SavedNote> = {};
     notes.forEach((note) => {
       notesMap[note.id] = note;
     });
     setNotes(notesMap);
+    setRollHashTag(hashtag);
   };
 
   return (

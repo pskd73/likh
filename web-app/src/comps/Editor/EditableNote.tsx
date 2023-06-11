@@ -23,14 +23,21 @@ const EditableNote = ({
     storage,
     setOrNewNote,
     isRoll,
+    newNote,
+    rollHashTag,
+    setNotes,
   } = useContext(EditorContext);
   const scroll = useMiddle(ref, [typewriterMode], {
     typeWriter: typewriterMode,
   });
 
   useEffect(() => {
-    scroll.scrollToTop();
-  }, [note.id]);
+    if (!isRoll) {
+      scroll.scrollToTop();
+    } else {
+      scroll.scroll({ force: true });
+    }
+  }, [note.id, isRoll]);
 
   const handleChange = (
     id: string,
@@ -67,6 +74,13 @@ const EditableNote = ({
     setOrNewNote(title);
   };
 
+  const handleNewRollNote = () => {
+    const note = newNote({
+      text: `${rollHashTag}\n\nWrite your journal ...`,
+    });
+    setNotes({ ...notes, [note.id]: note });
+  };
+
   return (
     <div ref={ref} style={{ ...scroll.style }} className="space-y-6">
       {Object.keys(notes).map((id) => (
@@ -94,12 +108,17 @@ const EditableNote = ({
           />
         </div>
       ))}
-      <div>
-        <Button className="flex items-center space-x-1 text-sm">
-          <BiPlus />
-          <span>New note</span>
-        </Button>
-      </div>
+      {isRoll && (
+        <div>
+          <Button
+            className="flex items-center space-x-1 text-sm"
+            onClick={handleNewRollNote}
+          >
+            <BiPlus />
+            <span>New note</span>
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

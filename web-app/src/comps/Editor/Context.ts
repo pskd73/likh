@@ -36,7 +36,7 @@ export type EditorContextType = {
   setSearchTerm: StateSetter<string>;
 
   notesToShow: SavedNote[];
-  newNote: (note: NewNote) => void;
+  newNote: (note: NewNote) => SavedNote;
 
   deleteNote: (noteId: string) => void;
 
@@ -48,6 +48,8 @@ export type EditorContextType = {
   getLinkSuggestions: () => LinkSuggestion[];
 
   isRoll: boolean;
+  rollHashTag: string;
+  setRollHashTag: StateSetter<string>;
 };
 
 export const EditorContext = createContext<EditorContextType>(
@@ -75,10 +77,7 @@ export const useEditor = ({
     return notes[ids[ids.length - 1]];
   }, [notes]);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const isRoll = useMemo(
-    () => Object.keys(notes).length > 1,
-    [Object.keys(notes)]
-  );
+  const [rollHashTag, setRollHashTag] = useState<string>("");
 
   const notesToShow = useMemo<SavedNote[]>(() => {
     if (searchTerm) {
@@ -119,10 +118,22 @@ export const useEditor = ({
     const updatedNotes = { ...notes };
     updatedNotes[savedNote.id] = savedNote;
     setNotes(updatedNotes);
+    return savedNote;
   };
 
   const deleteNote = (noteId: string) => {
     storage.delete(noteId);
+    if (notes[noteId]) {
+      const newNotes = { ...notes };
+      delete newNotes[noteId];
+
+      if (Object.keys(newNotes).length === 0) {
+        const recentNote = storage.getRecentNote();
+        newNotes[recentNote.id] = recentNote;
+      }
+
+      setNotes(newNotes);
+    }
   };
 
   const getNoteByTitle = (title: string) => {
@@ -221,6 +232,8 @@ export const useEditor = ({
 
     getLinkSuggestions: _getLinkSuggestions,
 
-    isRoll,
+    isRoll: !!rollHashTag,
+    rollHashTag,
+    setRollHashTag,
   };
 };
