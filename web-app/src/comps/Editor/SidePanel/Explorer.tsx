@@ -103,7 +103,12 @@ const Explorer = () => {
     setRollHashTag("");
   };
 
-  const handleRoll = (hashtag: string) => {
+  const handleRoll = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    hashtag: string
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
     const hashtags = getHashtags();
     const notes = hashtags[hashtag].sort((a, b) => a.created_at - b.created_at);
     const notesMap: Record<string, SavedNote> = {};
@@ -159,21 +164,20 @@ const Explorer = () => {
         {hashtags.map((hashtag, i) => (
           <Collapsible.Item key={i} defaultActive={false}>
             <Collapsible.Item.Label>
-              <span className="flex items-center space-x-1">
-                <BiHash />
+              <span className="flex items-center space-x-2">
+                <Button
+                  className="p-1"
+                  onClick={(
+                    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+                  ) => handleRoll(e, hashtag.hashtag)}
+                >
+                  <BiHash />
+                </Button>
                 <span>{hashtag.hashtag.replace("#", "")}</span>
               </span>
             </Collapsible.Item.Label>
             <Collapsible.Item.Content>
               <List>
-                <List.Item onClick={() => handleRoll(hashtag.hashtag)}>
-                  <div className="flex items-center space-x-2">
-                    <span className="opacity-50">
-                      <BiPencil />
-                    </span>
-                    <span>Journal it</span>
-                  </div>
-                </List.Item>
                 {hashtag.notes.map((noteMeta, i) => {
                   const _note = storage.getNote(noteMeta.id);
                   return _note ? (
