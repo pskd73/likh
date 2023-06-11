@@ -84,7 +84,7 @@ const EditableNote = ({
   return (
     <div ref={ref} style={{ ...scroll.style }} className="space-y-6">
       {Object.keys(notes).map((id) => (
-        <div>
+        <div id={`note-${id}`}>
           {isRoll && (
             <div
               className={classNames(

@@ -6,9 +6,10 @@ import Outline from "./Outline";
 import Shortcuts from "./Shortcuts";
 import { isMobile } from "../device";
 import LinkSuggestions from "./LinkSuggestions";
+import RollOutline from "./RollOutline";
 
 const SidePanel = () => {
-  const { sideBar, setSideBar } = useContext(EditorContext);
+  const { sideBar, setSideBar, isRoll } = useContext(EditorContext);
 
   return (
     <>
@@ -39,7 +40,7 @@ const SidePanel = () => {
       >
         <div className="max-w-full overflow-hidden p-2">
           {sideBar === "explorer" && <Explorer />}
-          {sideBar === "outline" && <Outline />}
+          {sideBar === "outline" && isRoll ? <RollOutline /> : <Outline />}
           {sideBar === "shortcuts" && <Shortcuts />}
           {sideBar === "link-suggestions" && <LinkSuggestions />}
         </div>
