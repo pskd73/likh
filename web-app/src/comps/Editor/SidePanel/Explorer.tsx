@@ -154,8 +154,8 @@ const Explorer = () => {
         {/* Notes */}
         <Collapsible.Item defaultActive={false} active={!!searchTerm}>
           <Collapsible.Item.Label>
-            <span className="flex items-center space-x-1">
-              <BiFile />
+            <span className="flex items-center space-x-2">
+              <span className="p-1"><BiFile /></span>
               <span>All notes</span>
             </span>
           </Collapsible.Item.Label>
@@ -212,8 +212,8 @@ const Explorer = () => {
         {/* Settings */}
         <Collapsible.Item>
           <Collapsible.Item.Label>
-            <span className="flex items-center space-x-1">
-              <BiCog />
+            <span className="flex items-center space-x-2">
+              <span className="p-1"><BiCog /></span>
               <span>Settings</span>
             </span>
           </Collapsible.Item.Label>
