@@ -6,7 +6,7 @@ import { LinkSuggestion, getLinkSuggestions } from "./Suggestion";
 
 type StateSetter<T> = React.Dispatch<React.SetStateAction<T>>;
 type CountStatType = "words" | "readTime";
-type NoteSummary = {
+export type NoteSummary = {
   note: SavedNote;
   summary?: string;
   start?: number;
@@ -98,6 +98,7 @@ export const useEditor = ({
       .sort((a, b) => a?.created_at || 0 - (b?.created_at || 0))
       .map((note) => ({
         note,
+        summary: "Some more summary goes here",
       })) as NoteSummary[];
   }, [storage.notes, searchTerm, note]);
 
