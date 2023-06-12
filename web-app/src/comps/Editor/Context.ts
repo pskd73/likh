@@ -212,7 +212,7 @@ export const useEditor = ({
           if (!hashtagsMap[hashtag]) {
             hashtagsMap[hashtag] = {};
           }
-          hashtagsMap[hashtag][note.id] = summary;
+          hashtagsMap[hashtag][summary.note.id] = summary;
         }
       }
     }
