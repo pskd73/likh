@@ -11,6 +11,7 @@ export type NoteSummary = {
   summary?: string;
   start?: number;
   end?: number;
+  highlight?: string;
 };
 
 export type EditorContextType = {
@@ -88,9 +89,24 @@ export const useEditor = ({
   const notesToShow = useMemo<NoteSummary[]>(() => {
     if (searchTerm) {
       const results = storage.search(searchTerm);
-      return results.map((note) => ({
-        note,
-      }));
+      const MAX_SUMMARY_LENGTH = 50;
+      return results.map((note) => {
+        const idx = note.text.toLowerCase().indexOf(searchTerm.toLowerCase());
+        const midIdx = idx + Math.floor(searchTerm.length / 2);
+        const expStartIdx = Math.max(
+          0,
+          midIdx - Math.floor(MAX_SUMMARY_LENGTH / 2)
+        );
+        const expEndIdx = Math.min(
+          note.text.length - 1,
+          midIdx + Math.floor(MAX_SUMMARY_LENGTH / 2)
+        );
+        return {
+          note,
+          summary: note.text.substring(expStartIdx, expEndIdx),
+          highlight: searchTerm,
+        };
+      });
     }
     return storage.notes
       .map((nm) => storage.getNote(nm.id))
@@ -98,7 +114,6 @@ export const useEditor = ({
       .sort((a, b) => a?.created_at || 0 - (b?.created_at || 0))
       .map((note) => ({
         note,
-        summary: "Some more summary goes here",
       })) as NoteSummary[];
   }, [storage.notes, searchTerm, note]);
 
@@ -184,17 +199,14 @@ export const useEditor = ({
 
   const getHashtags = () => {
     const hashtagsMap: Record<string, Record<string, NoteSummary>> = {};
-    for (const noteMeta of notesToShow) {
-      const note = storage.getNote(noteMeta.note.id);
-      if (note) {
-        const matches = note.text.match(/\B\#\w\w+\b/g);
-        if (matches) {
-          for (const hashtag of matches) {
-            if (!hashtagsMap[hashtag]) {
-              hashtagsMap[hashtag] = {};
-            }
-            hashtagsMap[hashtag][note.id] = { note };
+    for (const summary of notesToShow) {
+      const matches = summary.note.text.match(/\B\#\w\w+\b/g);
+      if (matches) {
+        for (const hashtag of matches) {
+          if (!hashtagsMap[hashtag]) {
+            hashtagsMap[hashtag] = {};
           }
+          hashtagsMap[hashtag][note.id] = summary;
         }
       }
     }

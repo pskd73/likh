@@ -23,6 +23,20 @@ import {
   BiStats,
 } from "react-icons/bi";
 import { isMobile } from "../device";
+import { highlight, makeExtractor } from "../Marker";
+
+const Highligher = (word: string) =>
+  makeExtractor(
+    () => RegExp(word, "i"),
+    (text: string) => ({
+      type: "element",
+      content: (
+        <span className="bg-primary-700 rounded px-1 text-white">
+          {text}
+        </span>
+      ),
+    })
+  );
 
 const NoteListItem = ({
   summary,
@@ -30,12 +44,19 @@ const NoteListItem = ({
 }: ComponentProps<"li"> & { summary: NoteSummary; active?: boolean }) => {
   return (
     <List.Item className="text-sm" {...restProps}>
-      <span className="flex space-x-2">
-        <span className="opacity-50 mt-1">
+      <div className="flex">
+        <span className="opacity-50 mt-1 min-w-5 w-5">
           <BiFile />
         </span>
-        <span>{textToTitle(summary.note.text, 50)}</span>
-      </span>
+        <span>{textToTitle(summary.note.text, 20)}</span>
+      </div>
+      {summary.summary && (
+        <div className="text-xs py-1 ml-5">
+          <span className="opacity-50">
+            {highlight(summary.summary, [Highligher(summary.highlight || "")])}
+          </span>
+        </div>
+      )}
     </List.Item>
   );
 };
