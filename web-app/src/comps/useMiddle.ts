@@ -34,6 +34,14 @@ export const useMiddle = (
     update();
   }, [options.typeWriter, ...deps]);
 
+  const getScrollElement = () => {
+    let element = document.getElementById("editor-container");
+    if (!element) {
+      element = document.body;
+    }
+    return element;
+  };
+
   const update = () => {
     if (ref.current) {
       let clientHeight = ref.current.clientHeight;
@@ -61,11 +69,7 @@ export const useMiddle = (
     force?: boolean;
   }) => {
     if (force || !editor || (editor && isCursorAtEnd(editor))) {
-      let element = document.getElementById("editor-container");
-      if (!element) {
-        element = document.body;
-      }
-      element.scrollTo({
+      getScrollElement().scrollTo({
         top: 10000000,
         behavior: "smooth",
       });
@@ -73,20 +77,23 @@ export const useMiddle = (
   };
 
   const scrollToTop = () => {
-    let element = document.getElementById("editor-container");
-    if (!element) {
-      element = document.body;
-    }
-    element.scrollTo({
+    getScrollElement().scrollTo({
       top: 0,
       behavior: "smooth",
     });
+  };
+
+  const scrollTo = ({ className }: { className?: string }) => {
+    if (className) {
+      document.querySelector(`.${className}`)?.scrollIntoView(true);
+    }
   };
 
   return {
     update,
     scroll,
     scrollToTop,
+    scrollTo,
     style: {
       paddingTop: options.typeWriter ? paddingTop : 0,
       paddingBottom: options.typeWriter ? height / 2 : 100,

@@ -30,11 +30,7 @@ const Highligher = (word: string) =>
     () => RegExp(word, "i"),
     (text: string) => ({
       type: "element",
-      content: (
-        <span className="bg-primary-700 rounded px-1 text-white">
-          {text}
-        </span>
-      ),
+      content: <span className="bg-primary-700 text-white">{text}</span>,
     })
   );
 
