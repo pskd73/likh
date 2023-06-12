@@ -93,17 +93,23 @@ export const useEditor = ({
       return results.map((note) => {
         const idx = note.text.toLowerCase().indexOf(searchTerm.toLowerCase());
         const midIdx = idx + Math.floor(searchTerm.length / 2);
-        const expStartIdx = Math.max(
-          0,
-          midIdx - Math.floor(MAX_SUMMARY_LENGTH / 2)
-        );
-        const expEndIdx = Math.min(
+        const start = Math.max(0, midIdx - Math.floor(MAX_SUMMARY_LENGTH / 2));
+        const end = Math.min(
           note.text.length - 1,
           midIdx + Math.floor(MAX_SUMMARY_LENGTH / 2)
         );
+        let summary = note.text.substring(start, end);
+        if (start !== 0) {
+          summary = "... " + summary;
+        }
+        if (end !== note.text.length - 1) {
+          summary += " ...";
+        }
         return {
           note,
-          summary: note.text.substring(expStartIdx, expEndIdx),
+          summary,
+          start,
+          end,
           highlight: searchTerm,
         };
       });
