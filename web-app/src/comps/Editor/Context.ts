@@ -6,6 +6,12 @@ import { LinkSuggestion, getLinkSuggestions } from "./Suggestion";
 
 type StateSetter<T> = React.Dispatch<React.SetStateAction<T>>;
 type CountStatType = "words" | "readTime";
+type NoteSummary = {
+  note: SavedNote;
+  summary?: string;
+  start?: number;
+  end?: number;
+};
 
 export type EditorContextType = {
   storage: Storage;
@@ -35,7 +41,7 @@ export type EditorContextType = {
   searchTerm: string;
   setSearchTerm: StateSetter<string>;
 
-  notesToShow: SavedNote[];
+  notesToShow: NoteSummary[];
   newNote: (note: NewNote, replace?: boolean) => SavedNote;
 
   deleteNote: (noteId: string) => void;
@@ -43,7 +49,7 @@ export type EditorContextType = {
   getNoteByTitle: (title: string) => void;
   setOrNewNote: (title: string) => void;
 
-  getHashtags: () => Record<string, SavedNote[]>;
+  getHashtags: () => Record<string, NoteSummary[]>;
 
   getLinkSuggestions: () => LinkSuggestion[];
 
@@ -79,14 +85,20 @@ export const useEditor = ({
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [rollHashTag, setRollHashTag] = useState<string>("");
 
-  const notesToShow = useMemo<SavedNote[]>(() => {
+  const notesToShow = useMemo<NoteSummary[]>(() => {
     if (searchTerm) {
-      return storage.search(searchTerm);
+      const results = storage.search(searchTerm);
+      return results.map((note) => ({
+        note,
+      }));
     }
     return storage.notes
       .map((nm) => storage.getNote(nm.id))
       .filter((n) => !!n)
-      .sort((a, b) => a?.created_at || 0 - (b?.created_at || 0)) as SavedNote[];
+      .sort((a, b) => a?.created_at || 0 - (b?.created_at || 0))
+      .map((note) => ({
+        note,
+      })) as NoteSummary[];
   }, [storage.notes, searchTerm, note]);
 
   const toggleSideMenu = (key: string) => {
@@ -170,9 +182,9 @@ export const useEditor = ({
   };
 
   const getHashtags = () => {
-    const hashtagsMap: Record<string, Record<string, SavedNote>> = {};
+    const hashtagsMap: Record<string, Record<string, NoteSummary>> = {};
     for (const noteMeta of notesToShow) {
-      const note = storage.getNote(noteMeta.id);
+      const note = storage.getNote(noteMeta.note.id);
       if (note) {
         const matches = note.text.match(/\B\#\w\w+\b/g);
         if (matches) {
@@ -180,12 +192,12 @@ export const useEditor = ({
             if (!hashtagsMap[hashtag]) {
               hashtagsMap[hashtag] = {};
             }
-            hashtagsMap[hashtag][note.id] = note;
+            hashtagsMap[hashtag][note.id] = { note };
           }
         }
       }
     }
-    const hashtags: Record<string, SavedNote[]> = {};
+    const hashtags: Record<string, NoteSummary[]> = {};
     for (const hashtag of Object.keys(hashtagsMap)) {
       hashtags[hashtag] = Object.values(hashtagsMap[hashtag]);
     }

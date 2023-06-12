@@ -14,14 +14,12 @@ import { INTRO_TEXT } from "../Intro";
 import { usePWA } from "../PWA";
 import { MdInstallDesktop } from "react-icons/md";
 import { SavedNote } from "../type";
-import moment from "moment";
 import {
   BiCog,
   BiCollapseVertical,
   BiFile,
   BiHash,
   BiInfoCircle,
-  BiPencil,
   BiStats,
 } from "react-icons/bi";
 import { isMobile } from "../device";
@@ -38,11 +36,6 @@ const NoteListItem = ({
         </span>
         <span>{textToTitle(note.text, 50)}</span>
       </span>
-      {/* <div className="py-1 flex items-center space-x-1">
-        <span className="opacity-50">
-          {moment(new Date(note.created_at)).fromNow()}
-        </span>
-      </div> */}
     </List.Item>
   );
 };
@@ -62,6 +55,7 @@ const Explorer = () => {
     getHashtags,
     setNotes,
     setRollHashTag,
+    searchTerm,
   } = useContext(EditorContext);
   const { install, installable } = usePWA();
 
@@ -72,8 +66,8 @@ const Explorer = () => {
     for (const tag of Object.keys(raw)) {
       const notes = raw[tag];
       parsed[tag] = [];
-      for (const note of notes) {
-        parsed[tag].push({ id: note.id, title: textToTitle(note.text, 50) });
+      for (const noteSummary of notes) {
+        parsed[tag].push({ id: noteSummary.note.id, title: textToTitle(noteSummary.note.text, 50) });
       }
     }
 
@@ -110,10 +104,10 @@ const Explorer = () => {
     e.preventDefault();
     e.stopPropagation();
     const hashtags = getHashtags();
-    const notes = hashtags[hashtag].sort((a, b) => a.created_at - b.created_at);
+    const notes = hashtags[hashtag].sort((a, b) => a.note.created_at - b.note.created_at);
     const notesMap: Record<string, SavedNote> = {};
-    notes.forEach((note) => {
-      notesMap[note.id] = note;
+    notes.forEach((noteSummary) => {
+      notesMap[noteSummary.note.id] = noteSummary.note;
     });
     setNotes(notesMap);
     setRollHashTag(hashtag);
@@ -160,6 +154,29 @@ const Explorer = () => {
       <SearchInput />
 
       <Collapsible>
+        {/* Notes */}
+        <Collapsible.Item defaultActive={false} active={!!searchTerm}>
+          <Collapsible.Item.Label>
+            <span className="flex items-center space-x-1">
+              <BiFile />
+              <span>All notes</span>
+            </span>
+          </Collapsible.Item.Label>
+          <Collapsible.Item.Content>
+            <List>
+              {notesToShow.map((_noteSummary, i) => (
+                <NoteListItem
+                  key={i}
+                  note={_noteSummary.note}
+                  onClick={() => handleNoteClick(_noteSummary.note)}
+                  active={note.id === _noteSummary.note.id}
+                />
+              ))}
+            </List>
+          </Collapsible.Item.Content>
+        </Collapsible.Item>
+        <br />
+
         {/* Hashtags */}
         {hashtags.map((hashtag, i) => (
           <Collapsible.Item key={i} defaultActive={false}>
@@ -193,29 +210,6 @@ const Explorer = () => {
             </Collapsible.Item.Content>
           </Collapsible.Item>
         ))}
-        <br />
-
-        {/* Notes */}
-        <Collapsible.Item defaultActive={false}>
-          <Collapsible.Item.Label>
-            <span className="flex items-center space-x-1">
-              <BiFile />
-              <span>All notes</span>
-            </span>
-          </Collapsible.Item.Label>
-          <Collapsible.Item.Content>
-            <List>
-              {notesToShow.map((_note, i) => (
-                <NoteListItem
-                  key={i}
-                  note={_note}
-                  onClick={() => handleNoteClick(_note)}
-                  active={note.id === _note.id}
-                />
-              ))}
-            </List>
-          </Collapsible.Item.Content>
-        </Collapsible.Item>
         <br />
 
         {/* Settings */}
