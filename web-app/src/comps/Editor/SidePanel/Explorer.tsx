@@ -1,6 +1,6 @@
 import { ComponentProps, useContext, useMemo } from "react";
 import List from "../List";
-import { EditorContext } from "../Context";
+import { EditorContext, NoteSummary } from "../Context";
 import SearchInput from "./SearchInput";
 import Collapsible from "../Collapsible";
 import { textToTitle } from "../../../Note";
@@ -14,35 +14,45 @@ import { INTRO_TEXT } from "../Intro";
 import { usePWA } from "../PWA";
 import { MdInstallDesktop } from "react-icons/md";
 import { SavedNote } from "../type";
-import moment from "moment";
 import {
   BiCog,
   BiCollapseVertical,
   BiFile,
   BiHash,
   BiInfoCircle,
-  BiPencil,
   BiStats,
 } from "react-icons/bi";
 import { isMobile } from "../device";
+import { highlight, makeExtractor } from "../Marker";
+
+const Highligher = (word: string) =>
+  makeExtractor(
+    () => RegExp(word, "i"),
+    (text: string) => ({
+      type: "element",
+      content: <span className="bg-primary-700 text-white">{text}</span>,
+    })
+  );
 
 const NoteListItem = ({
-  note,
+  summary,
   ...restProps
-}: ComponentProps<"li"> & { note: SavedNote; active?: boolean }) => {
+}: ComponentProps<"li"> & { summary: NoteSummary; active?: boolean }) => {
   return (
     <List.Item className="text-sm" {...restProps}>
-      <span className="flex space-x-2">
-        <span className="opacity-50 mt-1">
+      <div className="flex">
+        <span className="opacity-50 mt-1 min-w-5 w-5">
           <BiFile />
         </span>
-        <span>{textToTitle(note.text, 50)}</span>
-      </span>
-      {/* <div className="py-1 flex items-center space-x-1">
-        <span className="opacity-50">
-          {moment(new Date(note.created_at)).fromNow()}
-        </span>
-      </div> */}
+        <span>{textToTitle(summary.note.text, 20)}</span>
+      </div>
+      {summary.summary && (
+        <div className="text-xs py-1 ml-5">
+          <span className="opacity-50">
+            {highlight(summary.summary, [Highligher(summary.highlight || "")])}
+          </span>
+        </div>
+      )}
     </List.Item>
   );
 };
@@ -50,7 +60,6 @@ const NoteListItem = ({
 const Explorer = () => {
   const {
     note,
-    storage,
     showStats,
     setShowStats,
     typewriterMode,
@@ -62,32 +71,12 @@ const Explorer = () => {
     getHashtags,
     setNotes,
     setRollHashTag,
+    searchTerm,
   } = useContext(EditorContext);
   const { install, installable } = usePWA();
 
-  const hashtags = useMemo(() => {
-    const raw = getHashtags();
-    const parsed: Record<string, { id: string; title: string }[]> = {};
-
-    for (const tag of Object.keys(raw)) {
-      const notes = raw[tag];
-      parsed[tag] = [];
-      for (const note of notes) {
-        parsed[tag].push({ id: note.id, title: textToTitle(note.text, 50) });
-      }
-    }
-
-    const flatten: Array<{
-      hashtag: string;
-      notes: { id: string; title: string }[];
-    }> = [];
-    for (const tag of Object.keys(parsed)) {
-      flatten.push({
-        hashtag: tag,
-        notes: parsed[tag],
-      });
-    }
-    return flatten;
+  const hashtags = useMemo<Record<string, NoteSummary[]>>(() => {
+    return getHashtags();
   }, [notesToShow, note]);
 
   const handleOpen = async () => {
@@ -110,10 +99,12 @@ const Explorer = () => {
     e.preventDefault();
     e.stopPropagation();
     const hashtags = getHashtags();
-    const notes = hashtags[hashtag].sort((a, b) => a.created_at - b.created_at);
+    const notes = hashtags[hashtag].sort(
+      (a, b) => a.note.created_at - b.note.created_at
+    );
     const notesMap: Record<string, SavedNote> = {};
-    notes.forEach((note) => {
-      notesMap[note.id] = note;
+    notes.forEach((noteSummary) => {
+      notesMap[noteSummary.note.id] = noteSummary.note;
     });
     setNotes(notesMap);
     setRollHashTag(hashtag);
@@ -160,43 +151,8 @@ const Explorer = () => {
       <SearchInput />
 
       <Collapsible>
-        {/* Hashtags */}
-        {hashtags.map((hashtag, i) => (
-          <Collapsible.Item key={i} defaultActive={false}>
-            <Collapsible.Item.Label>
-              <span className="flex items-center space-x-2">
-                <Button
-                  className="p-1"
-                  onClick={(
-                    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-                  ) => handleRoll(e, hashtag.hashtag)}
-                >
-                  <BiHash />
-                </Button>
-                <span>{hashtag.hashtag.replace("#", "")}</span>
-              </span>
-            </Collapsible.Item.Label>
-            <Collapsible.Item.Content>
-              <List>
-                {hashtag.notes.map((noteMeta, i) => {
-                  const _note = storage.getNote(noteMeta.id);
-                  return _note ? (
-                    <NoteListItem
-                      key={i}
-                      note={_note}
-                      onClick={() => handleNoteClick(_note)}
-                      active={note.id === _note.id}
-                    />
-                  ) : null;
-                })}
-              </List>
-            </Collapsible.Item.Content>
-          </Collapsible.Item>
-        ))}
-        <br />
-
         {/* Notes */}
-        <Collapsible.Item defaultActive={false}>
+        <Collapsible.Item defaultActive={false} active={!!searchTerm}>
           <Collapsible.Item.Label>
             <span className="flex items-center space-x-1">
               <BiFile />
@@ -205,17 +161,52 @@ const Explorer = () => {
           </Collapsible.Item.Label>
           <Collapsible.Item.Content>
             <List>
-              {notesToShow.map((_note, i) => (
+              {notesToShow.map((_noteSummary, i) => (
                 <NoteListItem
                   key={i}
-                  note={_note}
-                  onClick={() => handleNoteClick(_note)}
-                  active={note.id === _note.id}
+                  summary={_noteSummary}
+                  onClick={() => handleNoteClick(_noteSummary.note)}
+                  active={note.id === _noteSummary.note.id}
                 />
               ))}
             </List>
           </Collapsible.Item.Content>
         </Collapsible.Item>
+        <br />
+
+        {/* Hashtags */}
+        {Object.keys(hashtags).map((hashtag, i) => {
+          const summaries = hashtags[hashtag];
+          return (
+            <Collapsible.Item key={i} defaultActive={false}>
+              <Collapsible.Item.Label>
+                <span className="flex items-center space-x-2">
+                  <Button
+                    className="p-1"
+                    onClick={(
+                      e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+                    ) => handleRoll(e, hashtag)}
+                  >
+                    <BiHash />
+                  </Button>
+                  <span>{hashtag.replace("#", "")}</span>
+                </span>
+              </Collapsible.Item.Label>
+              <Collapsible.Item.Content>
+                <List>
+                  {summaries.map((summary, i) => (
+                    <NoteListItem
+                      key={i}
+                      summary={summary}
+                      onClick={() => handleNoteClick(summary.note)}
+                      active={note.id === summary.note.id}
+                    />
+                  ))}
+                </List>
+              </Collapsible.Item.Content>
+            </Collapsible.Item>
+          );
+        })}
         <br />
 
         {/* Settings */}

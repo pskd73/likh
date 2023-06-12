@@ -25,19 +25,26 @@ const EditableNote = ({
     isRoll,
     newNote,
     rollHashTag,
-    setNotes,
+    searchTerm,
   } = useContext(EditorContext);
   const scroll = useMiddle(ref, [typewriterMode], {
     typeWriter: typewriterMode,
   });
 
   useEffect(() => {
+    if (searchTerm) {
+      setTimeout(() => {
+        scroll.scrollTo({ className: "highlight" });
+      }, 100);
+      return;
+    }
+
     if (!isRoll) {
       scroll.scrollToTop();
     } else {
       scroll.scroll({ force: true });
     }
-  }, [note.id, isRoll]);
+  }, [note.id, isRoll, searchTerm]);
 
   const handleChange = (
     id: string,
@@ -86,7 +93,7 @@ const EditableNote = ({
   return (
     <div ref={ref} style={{ ...scroll.style }} className="space-y-6">
       {Object.keys(notes).map((id) => (
-        <div id={`note-${id}`}>
+        <div id={`note-${id}`} key={id}>
           {isRoll && (
             <div
               className={classNames(
@@ -107,6 +114,7 @@ const EditableNote = ({
             initText={notes[id].text}
             onNoteLinkClick={handleNoteLinkClick}
             getSuggestions={getSuggestions}
+            highlight={searchTerm}
           />
         </div>
       ))}

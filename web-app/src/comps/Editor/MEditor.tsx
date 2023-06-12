@@ -4,6 +4,7 @@ import {
   CSSProperties,
   KeyboardEventHandler,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
 } from "react";
@@ -144,6 +145,9 @@ function Leaf({
 
     // mdLink
     "mdLink underline cursor-pointer": leaf.mdLink,
+
+    // highlight
+    "highlight bg-primary-700 bg-opacity-20 py-1": leaf.highlight,
   });
 
   if (leaf.code) {
@@ -190,15 +194,19 @@ function Leaf({
     );
   }
 
+  let id: string | undefined = undefined;
+  if (leaf.highlight) {
+    id = "highlight";
+  }
+  if (title && !leaf.punctuation) {
+    id = slugify(leaf.text, { lower: true });
+  }
+
   return (
     <span
       {...attributes}
       className={className}
-      id={
-        title && !leaf.punctuation
-          ? slugify(leaf.text, { lower: true })
-          : undefined
-      }
+      id={id}
       data-title-level={classNames({
         title1: leaf.title1,
         title2: leaf.title2,
@@ -223,6 +231,7 @@ const MEditor = ({
   editor: passedEditor,
   onNoteLinkClick,
   getSuggestions,
+  highlight,
 }: {
   onChange: (val: {
     value: Descendant[];
@@ -235,6 +244,7 @@ const MEditor = ({
   editor?: CustomEditor;
   onNoteLinkClick?: (title: string, id?: string) => void;
   getSuggestions?: (prefix: string, term: string) => Suggestion[];
+  highlight?: string;
 }) => {
   const editor = useMemo(
     () => passedEditor || withHistory(withReact(createEditor())),
@@ -268,25 +278,36 @@ const MEditor = ({
     ),
     []
   );
-  const decorate = useCallback(([node, path]: NodeEntry) => {
-    if (!Text.isText(node)) {
-      return [];
-    }
+  const decorate = useCallback(
+    ([node, path]: NodeEntry) => {
+      if (!Text.isText(node)) {
+        return [];
+      }
+      const newGrammer = { ...grammer };
+      if (highlight) {
+        for (const key of Object.keys(newGrammer)) {
+          (newGrammer[key] as any).inside.highlight = {
+            pattern: RegExp(highlight, "i"),
+          };
+        }
+        newGrammer.highlight = { pattern: RegExp(highlight, "i"), inside: {} };
+      }
+      const tokens = Prism.tokenize(node.text, newGrammer);
 
-    const tokens = Prism.tokenize(node.text, grammer);
-
-    let ranges: BaseRange[] = [];
-    const [rootCodeNode] = getRootCodeNode(editor, path);
-    if (!rootCodeNode) {
-      ranges = [
-        ...ranges,
-        ...getTokensRanges(editor, path, tokens, 0, [], {}, grammer),
-      ];
-    } else {
-      ranges = [...ranges, ...getCodeRanges(editor, path)];
-    }
-    return ranges.map((range) => ({ ...range, path }));
-  }, []);
+      let ranges: BaseRange[] = [];
+      const [rootCodeNode] = getRootCodeNode(editor, path);
+      if (!rootCodeNode) {
+        ranges = [
+          ...ranges,
+          ...getTokensRanges(editor, path, tokens, 0, [], {}, newGrammer),
+        ];
+      } else {
+        ranges = [...ranges, ...getCodeRanges(editor, path)];
+      }
+      return ranges.map((range) => ({ ...range, path }));
+    },
+    [highlight]
+  );
 
   const renderElement = useCallback(
     ({

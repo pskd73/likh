@@ -6,6 +6,13 @@ import { LinkSuggestion, getLinkSuggestions } from "./Suggestion";
 
 type StateSetter<T> = React.Dispatch<React.SetStateAction<T>>;
 type CountStatType = "words" | "readTime";
+export type NoteSummary = {
+  note: SavedNote;
+  summary?: string;
+  start?: number;
+  end?: number;
+  highlight?: string;
+};
 
 export type EditorContextType = {
   storage: Storage;
@@ -35,7 +42,7 @@ export type EditorContextType = {
   searchTerm: string;
   setSearchTerm: StateSetter<string>;
 
-  notesToShow: SavedNote[];
+  notesToShow: NoteSummary[];
   newNote: (note: NewNote, replace?: boolean) => SavedNote;
 
   deleteNote: (noteId: string) => void;
@@ -43,7 +50,7 @@ export type EditorContextType = {
   getNoteByTitle: (title: string) => void;
   setOrNewNote: (title: string) => void;
 
-  getHashtags: () => Record<string, SavedNote[]>;
+  getHashtags: () => Record<string, NoteSummary[]>;
 
   getLinkSuggestions: () => LinkSuggestion[];
 
@@ -79,14 +86,41 @@ export const useEditor = ({
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [rollHashTag, setRollHashTag] = useState<string>("");
 
-  const notesToShow = useMemo<SavedNote[]>(() => {
+  const notesToShow = useMemo<NoteSummary[]>(() => {
     if (searchTerm) {
-      return storage.search(searchTerm);
+      const results = storage.search(searchTerm);
+      const MAX_SUMMARY_LENGTH = 50;
+      return results.map((note) => {
+        const idx = note.text.toLowerCase().indexOf(searchTerm.toLowerCase());
+        const midIdx = idx + Math.floor(searchTerm.length / 2);
+        const start = Math.max(0, midIdx - Math.floor(MAX_SUMMARY_LENGTH / 2));
+        const end = Math.min(
+          note.text.length - 1,
+          midIdx + Math.floor(MAX_SUMMARY_LENGTH / 2)
+        );
+        let summary = note.text.substring(start, end);
+        if (start !== 0) {
+          summary = "... " + summary;
+        }
+        if (end !== note.text.length - 1) {
+          summary += " ...";
+        }
+        return {
+          note,
+          summary,
+          start,
+          end,
+          highlight: searchTerm,
+        };
+      });
     }
     return storage.notes
       .map((nm) => storage.getNote(nm.id))
       .filter((n) => !!n)
-      .sort((a, b) => a?.created_at || 0 - (b?.created_at || 0)) as SavedNote[];
+      .sort((a, b) => a?.created_at || 0 - (b?.created_at || 0))
+      .map((note) => ({
+        note,
+      })) as NoteSummary[];
   }, [storage.notes, searchTerm, note]);
 
   const toggleSideMenu = (key: string) => {
@@ -170,22 +204,19 @@ export const useEditor = ({
   };
 
   const getHashtags = () => {
-    const hashtagsMap: Record<string, Record<string, SavedNote>> = {};
-    for (const noteMeta of notesToShow) {
-      const note = storage.getNote(noteMeta.id);
-      if (note) {
-        const matches = note.text.match(/\B\#\w\w+\b/g);
-        if (matches) {
-          for (const hashtag of matches) {
-            if (!hashtagsMap[hashtag]) {
-              hashtagsMap[hashtag] = {};
-            }
-            hashtagsMap[hashtag][note.id] = note;
+    const hashtagsMap: Record<string, Record<string, NoteSummary>> = {};
+    for (const summary of notesToShow) {
+      const matches = summary.note.text.match(/\B\#\w\w+\b/g);
+      if (matches) {
+        for (const hashtag of matches) {
+          if (!hashtagsMap[hashtag]) {
+            hashtagsMap[hashtag] = {};
           }
+          hashtagsMap[hashtag][note.id] = summary;
         }
       }
     }
-    const hashtags: Record<string, SavedNote[]> = {};
+    const hashtags: Record<string, NoteSummary[]> = {};
     for (const hashtag of Object.keys(hashtagsMap)) {
       hashtags[hashtag] = Object.values(hashtagsMap[hashtag]);
     }

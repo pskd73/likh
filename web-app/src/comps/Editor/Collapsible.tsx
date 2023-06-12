@@ -1,5 +1,11 @@
 import classNames from "classnames";
-import { PropsWithChildren, createContext, useContext, useState } from "react";
+import {
+  PropsWithChildren,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 
 type ContextType = {
@@ -16,10 +22,18 @@ const Collapsible = ({ children }: PropsWithChildren) => {
 const Item = ({
   children,
   defaultActive = true,
+  active: passedActive,
 }: PropsWithChildren & {
   defaultActive?: boolean;
+  active?: boolean;
 }) => {
   const [active, setActive] = useState<boolean>(defaultActive);
+
+  useEffect(() => {
+    if (passedActive !== undefined) {
+      setActive(passedActive);
+    }
+  }, [passedActive]);
 
   const handleToggle = () => {
     setActive((a) => !a);
