@@ -35,7 +35,9 @@ export const notelink: CustomGrammarValue = {
   },
   payload: {
     notelinkId: (token: any) => {
-      return token.content[3]?.content[1];
+      return token.content[3]?.content
+        ? token.content[3]?.content[1]
+        : undefined;
     },
   },
 };
