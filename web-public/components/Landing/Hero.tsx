@@ -17,8 +17,8 @@ export default function Hero() {
   return (
     <div className="flex justify-center flex-col items-center">
       <div className="text-lg text-center px-6 md:px-0">
-        A simple, powerful, minimalistic, markdown based note taking app that
-        you all need!
+        A simple, powerful, minimalistic, markdown based note taking and
+        journaling app all that you need!
       </div>
       <h1
         className={classNames(

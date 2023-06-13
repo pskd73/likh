@@ -5,7 +5,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Retro Note",
-  description: "Build up writing habit without distractions",
+  description: "A simple, powerful, minimalistic, markdown based note taking and journaling app all that you need!",
 };
 
 export default function RootLayout({
