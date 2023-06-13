@@ -18,16 +18,18 @@ function getConfig<T>(key: string): T | undefined {
 }
 
 function setConfig(key: string, value: any) {
-  const config = getJsonFromUrl();
-  config[key] = value;
-  const paramsStr = new URLSearchParams(config).toString();
-  window.history.replaceState(
-    {
-      info: "Updated from app",
-    },
-    "Updated title",
-    `${window.location.origin}${window.location.pathname}?${paramsStr}`
-  );
+  if (value !== undefined) {
+    const config = getJsonFromUrl();
+    config[key] = value;
+    const paramsStr = new URLSearchParams(config).toString();
+    window.history.replaceState(
+      {
+        info: "Updated from app",
+      },
+      "Updated title",
+      `${window.location.origin}${window.location.pathname}?${paramsStr}`
+    );
+  }
 }
 
 const listSerialize = (list?: any[]) => {
