@@ -72,13 +72,13 @@ const Calendar = ({
 
   return (
     <div>
-      <div className="flex justify-between mb-4">
-        <div>{year}</div>
-        <div className="flex items-center space-x-4">
+      <div className="flex justify-between items-center mb-4">
+        <span>{year}</span>
+        <div className="flex items-center">
           <Button lite onClick={handlePrev} className="text-lg">
             <BiChevronLeft />
           </Button>
-          <div>{monthName}</div>
+          <div className="w-24 text-center">{monthName}</div>
           <Button lite onClick={handleNext} className="text-lg">
             <BiChevronRight />
           </Button>
