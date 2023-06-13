@@ -154,7 +154,15 @@ export const useEditor = ({
       updatedNotes = {};
     }
     updatedNotes[savedNote.id] = savedNote;
-    setNotes(updatedNotes);
+
+    let _notes = Object.values(updatedNotes);
+    _notes = _notes.sort((a, b) => a.created_at - b.created_at);
+    const sortedNotes: Record<string, SavedNote> = {};
+    for (const note of _notes) {
+      sortedNotes[note.id] = note;
+    }
+
+    setNotes(sortedNotes);
     return savedNote;
   };
 

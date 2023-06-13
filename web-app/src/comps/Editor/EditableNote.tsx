@@ -8,6 +8,7 @@ import classNames from "classnames";
 import moment from "moment";
 import { BiPlus } from "react-icons/bi";
 import Button from "../Button";
+import { scrollTo } from "./scroll";
 
 const EditableNote = ({
   getSuggestions,
@@ -82,25 +83,31 @@ const EditableNote = ({
   };
 
   const handleNewRollNote = () => {
-    newNote(
+    const savedNote = newNote(
       {
         text: `${rollHashTag}\nWrite your journal ...`,
       },
       false
     );
+    scrollTo({ noteId: savedNote.id });
   };
 
   return (
     <div ref={ref} style={{ ...scroll.style }} className="space-y-6">
       {Object.keys(notes).map((id) => (
-        <div id={`note-${id}`} key={id}>
+        <div
+          className={classNames(
+            `note-date-${moment(notes[id].created_at).format("YYYY-MM-DD")}`,
+            `note-${id}`
+          )}
+          key={id}
+        >
           {isRoll && (
             <div
               className={classNames(
                 "flex justify-end text-sm",
                 "border-b border-primary-700 mb-4 pb-2",
-                "border-opacity-10 opacity-50",
-                `note-date-${moment(notes[id].created_at).format('YYYY-MM-DD')}`
+                "border-opacity-10 opacity-50"
               )}
             >
               {moment(new Date(notes[id].created_at)).format(

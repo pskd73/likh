@@ -6,12 +6,7 @@ import Button from "../../Button";
 import { BiCalendarEvent, BiFile, BiMap, BiPlus } from "react-icons/bi";
 import List from "../List";
 import { SavedNote } from "../type";
-
-const scrollToClassName = (className: string) => {
-  if (className) {
-    document.querySelector(`.${className}`)?.scrollIntoView(true);
-  }
-};
+import { scrollTo } from "../scroll";
 
 const RollOutline = () => {
   const { notes, newNote, rollHashTag } = useContext(EditorContext);
@@ -48,26 +43,35 @@ const RollOutline = () => {
   }, [date, notesMap]);
 
   const handleClick = (id: string) => {
-    window.location.href = `#note-${id}`;
+    scrollTo({ noteId: id });
   };
 
   const handleNew = () => {
-    newNote(
+    const savedNote = newNote(
       {
         text: `${rollHashTag}\nWrite your day ...`,
         created_at: date.dt.getTime(),
       },
       false
     );
+    setTimeout(() => {
+      scrollTo({ noteId: savedNote.id });
+    }, 100);
   };
 
   const handleDayChange = (day: CalenderDay) => {
-    scrollToClassName(`note-date-${moment(day.dt).format("YYYY-MM-DD")}`);
+    scrollTo({ date: day.dt });
     setDate(day);
   };
 
   const handleToday = () => {
-    // setDay();
+    scrollTo({ date: new Date() });
+    setDate({
+      dt: new Date(),
+      today: true,
+      otherMonth: false,
+      count: 0,
+    });
   };
 
   return (
@@ -77,7 +81,7 @@ const RollOutline = () => {
         onCellClick={handleDayChange}
         active={date.dt}
       />
-      <div className="my-4 mt-10 flex justify-between">
+      <div className="my-4 mt-10 flex items-center justify-between">
         <div className="text-lg flex items-center space-x-2">
           <span>
             <BiCalendarEvent />
