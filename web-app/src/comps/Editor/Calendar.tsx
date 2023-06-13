@@ -1,25 +1,25 @@
 import classNames from "classnames";
 import moment from "moment";
 import { useMemo, useState } from "react";
-import { Note } from "../type";
-import { BiArrowBack, BiChevronLeft, BiChevronRight } from "react-icons/bi";
-import Button from "./Button";
+import { BiCalendar, BiChevronLeft, BiChevronRight } from "react-icons/bi";
+import Button from "../Button";
+import { SavedNote } from "./type";
 
-type CalenderDay = {
+export type CalenderDay = {
   dt: Date;
   today: boolean;
   otherMonth: boolean;
-  notes: Note[];
+  count: number;
 };
 
 const now = new Date();
 
 const Calendar = ({
-  notes,
+  counts,
   onCellClick,
   active,
 }: {
-  notes: Note[];
+  counts: Record<string, number>;
   onCellClick: (day: CalenderDay) => void;
   active?: Date;
 }) => {
@@ -42,15 +42,13 @@ const Calendar = ({
           dt,
           today: dt.toDateString() === today.toDateString(),
           otherMonth: dt.getMonth() !== month,
-          notes: notes.filter((note) =>
-            dtMoment.isSame(new Date(note.created_at), "day")
-          ),
+          count: counts[moment(dt).format("YYYY-MM-DD")],
         });
       }
       rows.push(cells);
     }
     return rows;
-  }, [notes, year, month]);
+  }, [counts, year, month]);
   const monthName = useMemo<string>(
     () => moment(new Date(year, month, 1)).format("MMMM"),
     [year, month]
@@ -71,58 +69,53 @@ const Calendar = ({
   };
 
   return (
-    <div className="mb-10">
-      <div className="text-4xl font-CourierPrime italic flex justify-between mb-4">
-        <div>{year}</div>
-        <div className="flex items-center space-x-4">
-          <Button lite onClick={handlePrev}>
+    <div>
+      <div className="flex justify-between items-center mb-4">
+        <span>{year}</span>
+        <div className="flex items-center">
+          <Button lite onClick={handlePrev} className="text-lg">
             <BiChevronLeft />
           </Button>
-          <div>{monthName}</div>
-          <Button lite onClick={handleNext}>
+          <div className="w-24 text-center">{monthName}</div>
+          <Button lite onClick={handleNext} className="text-lg">
             <BiChevronRight />
           </Button>
         </div>
       </div>
-      <div className="space-y-2">
+      <div className="space-y-1 text-xs">
         {days.map((rows, i) => (
-          <div key={i} className="flex space-x-2">
+          <div key={i} className="flex space-x-1">
             {rows.map((cell, j) => (
               <div
                 key={j}
                 style={{ width: `${100 / 7}%` }}
                 className={classNames(
-                  "bg-primary-700 bg-opacity-10 rounded-md p-2 hover:shadow-md cursor-pointer border-2 border-primary-700",
+                  "bg-primary-700 bg-opacity-10 rounded-md p-1 hover:shadow-md",
+                  "cursor-pointer border-2 border-primary-700 transition-shadow",
+                  "w-10 h-10 flex flex-col justify-between",
                   {
                     "opacity-40": cell.otherMonth,
                     "border-opacity-0": !cell.today && active !== cell.dt,
                     "border-opacity-30": cell.today,
-                    "border-opacity-80": active === cell.dt,
+                    "border-opacity-80": moment(active).isSame(cell.dt, "date"),
                   }
                 )}
                 onClick={() => onCellClick(cell)}
               >
-                <div className="flex justify-end font-CourierPrime text-lg italic">
-                  <span
-                    className={classNames(
-                      "w-8 h-8 flex justify-center items-center",
-                      {
-                        "bg-primary-700 bg-opacity-20 rounded-full": false,
-                      }
-                    )}
-                  >
-                    {cell.dt.getDate()}
-                  </span>
-                </div>
-                <div>
-                  <span
-                    className={classNames(
-                      "text-xs px-1 bg-primary-700 text-white rounded",
-                      { invisible: !cell.notes.length }
-                    )}
-                  >
-                    {cell.notes.length || 0}
-                  </span>
+                <div className="flex justify-end">{cell.dt.getDate()}</div>
+                <div className="flex flex-wrap items-end">
+                  {[...Array(cell.count || 0)].map((_, i) => (
+                    <span
+                      key={i}
+                      className="inline-block bg-opacity-80 rounded-full bg-primary-700"
+                      style={{
+                        width: 3,
+                        height: 3,
+                        marginRight: 1,
+                        marginBottom: 1,
+                      }}
+                    />
+                  ))}
                 </div>
               </div>
             ))}

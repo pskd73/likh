@@ -148,13 +148,21 @@ export const useEditor = ({
   };
 
   const newNote = (note: NewNote, replace: boolean = true) => {
-    const savedNote = storage.newNote(note.text);
+    const savedNote = storage.newNote(note.text, note.created_at);
     let updatedNotes = { ...notes };
     if (replace) {
       updatedNotes = {};
     }
     updatedNotes[savedNote.id] = savedNote;
-    setNotes(updatedNotes);
+
+    let _notes = Object.values(updatedNotes);
+    _notes = _notes.sort((a, b) => a.created_at - b.created_at);
+    const sortedNotes: Record<string, SavedNote> = {};
+    for (const note of _notes) {
+      sortedNotes[note.id] = note;
+    }
+
+    setNotes(sortedNotes);
     return savedNote;
   };
 

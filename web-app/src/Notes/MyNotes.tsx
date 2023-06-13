@@ -8,13 +8,11 @@ import moment from "moment";
 import { Link, useSearchParams } from "react-router-dom";
 import { FullLoader } from "../comps/Loading";
 import { Helmet } from "react-helmet";
-import { getNoteTitle } from "../Note";
 import { Hashtag } from "../Home/Hashtags";
 import { BiLink, BiTrash } from "react-icons/bi";
 import { MdPublic, MdPublicOff } from "react-icons/md";
 import Button from "../comps/Button";
 import { Header } from "../comps/Typo";
-import Calendar from "../comps/Calendar";
 
 function copy(text: string) {
   var input = document.createElement("textarea");
@@ -151,17 +149,6 @@ const MyNotes = () => {
       <Helmet>
         <title>My notes - Retro Note</title>
       </Helmet>
-      <div className="hidden md:block">
-        {notesApi.response && (
-          <Calendar
-            notes={notesApi.response}
-            onCellClick={(day) =>
-              setDate((_dt) => (_dt === day.dt ? undefined : day.dt))
-            }
-            active={date}
-          />
-        )}
-      </div>
       <div className="mb-2 flex items-center space-x-2">
         <Header className="">My notes</Header>
         {hashtag && <Hashtag hashtag={`#${hashtag}`} />}
