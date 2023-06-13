@@ -98,7 +98,8 @@ const EditableNote = ({
         <div
           className={classNames(
             `note-date-${moment(notes[id].created_at).format("YYYY-MM-DD")}`,
-            `note-${id}`
+            `note-${id}`,
+            "pt-2"
           )}
           key={id}
         >
