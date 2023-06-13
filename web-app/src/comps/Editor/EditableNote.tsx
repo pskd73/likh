@@ -99,7 +99,8 @@ const EditableNote = ({
               className={classNames(
                 "flex justify-end text-sm",
                 "border-b border-primary-700 mb-4 pb-2",
-                "border-opacity-10 opacity-50"
+                "border-opacity-10 opacity-50",
+                `note-date-${moment(notes[id].created_at).format('YYYY-MM-DD')}`
               )}
             >
               {moment(new Date(notes[id].created_at)).format(

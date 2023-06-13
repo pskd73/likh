@@ -6,6 +6,12 @@ import Button from "../../Button";
 import { BiFile, BiPlus } from "react-icons/bi";
 import List from "../List";
 
+const scrollToClassName = (className: string) => {
+  if (className) {
+    document.querySelector(`.${className}`)?.scrollIntoView(true);
+  }
+};
+
 const RollOutline = () => {
   const { notes, newNote, rollHashTag } = useContext(EditorContext);
   const [day, setDay] = useState<CalenderDay>({
@@ -29,11 +35,16 @@ const RollOutline = () => {
     );
   };
 
+  const handleDayChange = (day: CalenderDay) => {
+    scrollToClassName(`note-date-${moment(day.dt).format("YYYY-MM-DD")}`);
+    setDay(day);
+  };
+
   return (
     <div className="text-sm p-2">
       <Calendar
         notes={Object.values(notes)}
-        onCellClick={setDay}
+        onCellClick={handleDayChange}
         active={day.dt}
       />
       <div className="my-4 mt-10 flex justify-between">
