@@ -1,10 +1,11 @@
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { EditorContext } from "../Context";
 import moment from "moment";
 import Calendar, { CalenderDay } from "../Calendar";
 import Button from "../../Button";
-import { BiFile, BiPlus } from "react-icons/bi";
+import { BiCalendarEvent, BiFile, BiMap, BiPlus } from "react-icons/bi";
 import List from "../List";
+import { SavedNote } from "../type";
 
 const scrollToClassName = (className: string) => {
   if (className) {
@@ -14,12 +15,37 @@ const scrollToClassName = (className: string) => {
 
 const RollOutline = () => {
   const { notes, newNote, rollHashTag } = useContext(EditorContext);
-  const [day, setDay] = useState<CalenderDay>({
+
+  const notesMap = useMemo(() => {
+    const _map: Record<string, SavedNote[]> = {};
+    Object.values(notes).forEach((note) => {
+      const key = moment(note.created_at).format("YYYY-MM-DD");
+      if (!_map[key]) {
+        _map[key] = [];
+      }
+      _map[key].push(note);
+    });
+    return _map;
+  }, [notes]);
+
+  const notesCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    Object.keys(notesMap).forEach((key) => {
+      counts[key] = notesMap[key].length;
+    });
+    return counts;
+  }, [notesMap]);
+
+  const [date, setDate] = useState<CalenderDay>({
     dt: new Date(),
-    today: true,
+    today: false,
     otherMonth: false,
-    notes: [],
+    count: 0,
   });
+
+  const notesToShow = useMemo(() => {
+    return notesMap[moment(date.dt).format("YYYY-MM-DD")] || [];
+  }, [date, notesMap]);
 
   const handleClick = (id: string) => {
     window.location.href = `#note-${id}`;
@@ -29,7 +55,7 @@ const RollOutline = () => {
     newNote(
       {
         text: `${rollHashTag}\nWrite your day ...`,
-        created_at: day.dt.getTime(),
+        created_at: date.dt.getTime(),
       },
       false
     );
@@ -37,30 +63,42 @@ const RollOutline = () => {
 
   const handleDayChange = (day: CalenderDay) => {
     scrollToClassName(`note-date-${moment(day.dt).format("YYYY-MM-DD")}`);
-    setDay(day);
+    setDate(day);
+  };
+
+  const handleToday = () => {
+    // setDay();
   };
 
   return (
     <div className="text-sm p-2">
       <Calendar
-        notes={Object.values(notes)}
+        counts={notesCounts}
         onCellClick={handleDayChange}
-        active={day.dt}
+        active={date.dt}
       />
       <div className="my-4 mt-10 flex justify-between">
-        <span className="text-lg ">
-          {moment(day.dt).format("MMMM Do YYYY")}
-        </span>
-        <span>
-          {!day.today && (
+        <div className="text-lg flex items-center space-x-2">
+          <span>
+            <BiCalendarEvent />
+          </span>
+          <span>{moment(date.dt).format("MMMM Do YYYY")}</span>
+        </div>
+        <div className="space-x-1">
+          {!date.today && (
+            <Button onClick={handleToday} lite>
+              <BiMap />
+            </Button>
+          )}
+          {!date.today && (
             <Button onClick={handleNew}>
               <BiPlus />
             </Button>
           )}
-        </span>
+        </div>
       </div>
       <List>
-        {day.notes.map((note, i) => (
+        {notesToShow.map((note, i) => (
           <List.Item
             key={i}
             onClick={() => handleClick(note.id)}
