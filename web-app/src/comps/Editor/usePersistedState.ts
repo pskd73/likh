@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 
 function getJsonFromUrl(url?: string) {
-  console.log("fetching json from url");
   if (!url) url = window.location.search;
   var query = url.substr(1);
   var result: Record<string, any> = {};
@@ -19,9 +18,7 @@ function getConfig<T>(key: string): T | undefined {
 }
 
 function setConfig(key: string, value: any) {
-  console.log("saving to url");
   const config = getJsonFromUrl();
-  console.log({ config });
   config[key] = value;
   const paramsStr = new URLSearchParams(config).toString();
   window.history.replaceState(

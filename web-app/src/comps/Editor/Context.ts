@@ -71,6 +71,8 @@ const { hook: useTypewriterMode } = PersistedState("typewriterMode", {
 });
 const { hook: useShowStats } = PersistedState("showStats", { type: "boolean" });
 const { hook: useNoteId, value: defaultNoteId } = PersistedState("noteId");
+const { hook: useRollHashtag, value: defaultRollHashtag } =
+  PersistedState("rollHashtag");
 
 export const useEditor = ({
   storage,
@@ -86,7 +88,7 @@ export const useEditor = ({
   const [typewriterMode, setTypewriterMode] = useTypewriterMode(false);
   const [countStatType, setCountStatType] = useState<CountStatType>("words");
   const [notes, setNotes] = useState<Record<string, SavedNote>>(() => {
-    if (defaultNoteId) {
+    if (defaultNoteId && !defaultRollHashtag) {
       const _note = storage.getNote(defaultNoteId);
       if (_note) {
         return { [defaultNoteId]: _note };
@@ -99,7 +101,7 @@ export const useEditor = ({
     return notes[ids[ids.length - 1]];
   }, [notes]);
   const [searchTerm, setSearchTerm] = useSearchTerm<string>("");
-  const [rollHashTag, setRollHashTag] = useState<string>("");
+  const [rollHashTag, setRollHashTag] = useRollHashtag<string>("");
   const [noteId, setNoteId] = useNoteId<string | undefined>(defaultNoteId);
 
   const notesToShow = useMemo<NoteSummary[]>(() => {
@@ -142,6 +144,22 @@ export const useEditor = ({
   useEffect(() => {
     setNoteId(note.id);
   }, [note]);
+
+  useEffect(() => {
+    if (rollHashTag) {
+      const hashtags = getHashtags();
+      if (hashtags[rollHashTag]) {
+        const notes = hashtags[rollHashTag].sort(
+          (a, b) => a.note.created_at - b.note.created_at
+        );
+        const notesMap: Record<string, SavedNote> = {};
+        notes.forEach((noteSummary) => {
+          notesMap[noteSummary.note.id] = noteSummary.note;
+        });
+        setNotes(notesMap);
+      }
+    }
+  }, [rollHashTag]);
 
   const toggleSideMenu = (key: string) => {
     setActiveSideMenus((items) => {
