@@ -87,5 +87,5 @@ export const PersistedState = (
     return [liveValue, setCurrentValue];
   };
 
-  return useHook;
+  return { hook: useHook, value: existingConfig };
 };

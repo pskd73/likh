@@ -1,4 +1,4 @@
-import { createContext, useMemo, useState } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 import { Storage } from "./useStorage";
 import { NewNote, SavedNote } from "./type";
 import { isLinked } from "../../Note";
@@ -64,10 +64,13 @@ export const EditorContext = createContext<EditorContextType>(
   {} as EditorContextType
 );
 
-const useSideBar = PersistedState("sideBar");
-const useSearchTerm = PersistedState("searchTerm");
-const useTypewriterMode = PersistedState("typewriterMode", { type: "boolean" });
-const useShowStats = PersistedState("showStats", { type: "boolean" });
+const { hook: useSideBar } = PersistedState("sideBar");
+const { hook: useSearchTerm } = PersistedState("searchTerm");
+const { hook: useTypewriterMode } = PersistedState("typewriterMode", {
+  type: "boolean",
+});
+const { hook: useShowStats } = PersistedState("showStats", { type: "boolean" });
+const { hook: useNoteId, value: defaultNoteId } = PersistedState("noteId");
 
 export const useEditor = ({
   storage,
@@ -82,8 +85,14 @@ export const useEditor = ({
   const [showStats, setShowStats] = useShowStats(true);
   const [typewriterMode, setTypewriterMode] = useTypewriterMode(false);
   const [countStatType, setCountStatType] = useState<CountStatType>("words");
-  const [notes, setNotes] = useState<Record<string, SavedNote>>({
-    [storage.getRecentNote().id]: storage.getRecentNote(),
+  const [notes, setNotes] = useState<Record<string, SavedNote>>(() => {
+    if (defaultNoteId) {
+      const _note = storage.getNote(defaultNoteId);
+      if (_note) {
+        return { [defaultNoteId]: _note };
+      }
+    }
+    return { [storage.getRecentNote().id]: storage.getRecentNote() };
   });
   const note = useMemo(() => {
     const ids = Object.keys(notes);
@@ -91,6 +100,7 @@ export const useEditor = ({
   }, [notes]);
   const [searchTerm, setSearchTerm] = useSearchTerm<string>("");
   const [rollHashTag, setRollHashTag] = useState<string>("");
+  const [noteId, setNoteId] = useNoteId<string | undefined>(defaultNoteId);
 
   const notesToShow = useMemo<NoteSummary[]>(() => {
     if (searchTerm) {
@@ -128,6 +138,10 @@ export const useEditor = ({
         note,
       })) as NoteSummary[];
   }, [storage.notes, searchTerm, note]);
+
+  useEffect(() => {
+    setNoteId(note.id);
+  }, [note]);
 
   const toggleSideMenu = (key: string) => {
     setActiveSideMenus((items) => {
