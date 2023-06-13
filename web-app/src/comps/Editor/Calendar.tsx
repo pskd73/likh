@@ -96,8 +96,8 @@ const Calendar = ({
                   {
                     "opacity-40": cell.otherMonth,
                     "border-opacity-0": !cell.today && active !== cell.dt,
-                    "border-opacity-60": cell.today,
-                    "border-opacity-80": active === cell.dt,
+                    "border-opacity-30": cell.today,
+                    "border-opacity-80": moment(active).isSame(cell.dt, "date"),
                   }
                 )}
                 onClick={() => onCellClick(cell)}
@@ -108,7 +108,12 @@ const Calendar = ({
                     <span
                       key={i}
                       className="inline-block bg-opacity-80 rounded-full bg-primary-700"
-                      style={{ width: 3, height: 3, marginRight: 1, marginBottom: 1 }}
+                      style={{
+                        width: 3,
+                        height: 3,
+                        marginRight: 1,
+                        marginBottom: 1,
+                      }}
                     />
                   ))}
                 </div>
