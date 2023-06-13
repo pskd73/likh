@@ -3,6 +3,7 @@ import { Storage } from "./useStorage";
 import { NewNote, SavedNote } from "./type";
 import { isLinked } from "../../Note";
 import { LinkSuggestion, getLinkSuggestions } from "./Suggestion";
+import { PersistedState } from "./usePersistedState";
 
 type StateSetter<T> = React.Dispatch<React.SetStateAction<T>>;
 type CountStatType = "words" | "readTime";
@@ -63,18 +64,23 @@ export const EditorContext = createContext<EditorContextType>(
   {} as EditorContextType
 );
 
+const useSideBar = PersistedState("sideBar");
+const useSearchTerm = PersistedState("searchTerm");
+const useTypewriterMode = PersistedState("typewriterMode", { type: "boolean" });
+const useShowStats = PersistedState("showStats", { type: "boolean" });
+
 export const useEditor = ({
   storage,
 }: {
   storage: Storage;
 }): EditorContextType => {
-  const [sideBar, setSideBar] = useState<string | undefined>();
+  const [sideBar, setSideBar] = useSideBar<string | undefined>(undefined);
   const [activeSideMenus, setActiveSideMenus] = useState<string[]>([
     "notes",
     "settings",
   ]);
-  const [showStats, setShowStats] = useState(true);
-  const [typewriterMode, setTypewriterMode] = useState(false);
+  const [showStats, setShowStats] = useShowStats(true);
+  const [typewriterMode, setTypewriterMode] = useTypewriterMode(false);
   const [countStatType, setCountStatType] = useState<CountStatType>("words");
   const [notes, setNotes] = useState<Record<string, SavedNote>>({
     [storage.getRecentNote().id]: storage.getRecentNote(),
@@ -83,7 +89,7 @@ export const useEditor = ({
     const ids = Object.keys(notes);
     return notes[ids[ids.length - 1]];
   }, [notes]);
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useSearchTerm<string>("");
   const [rollHashTag, setRollHashTag] = useState<string>("");
 
   const notesToShow = useMemo<NoteSummary[]>(() => {

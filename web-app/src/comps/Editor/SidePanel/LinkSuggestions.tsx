@@ -11,13 +11,8 @@ const BASE_FONT_SIZE = 12;
 const MULTIPLIER = 3;
 
 const LinkSuggestions = () => {
-  const {
-    getLinkSuggestions,
-    setSideBar,
-    setOrNewNote,
-    note,
-    setSearchTerm,
-  } = useContext(EditorContext);
+  const { getLinkSuggestions, setSideBar, setOrNewNote, note, setSearchTerm } =
+    useContext(EditorContext);
   const [update, setUpdate] = useState(new Date().getTime());
   const suggestions = useMemo(() => getLinkSuggestions(), [update, note.id]);
 
@@ -37,8 +32,9 @@ const LinkSuggestions = () => {
   return (
     <div className="p-2 py-4">
       <ul className="flex gap-2 flex-wrap" style={{ fontSize: BASE_FONT_SIZE }}>
-        {suggestions.map((suggestion) => (
+        {suggestions.map((suggestion, i) => (
           <li
+            key={i}
             className={classNames(
               "bg-primary-700 bg-opacity-10 py-1 px-2 rounded-lg inline-block space-x-2",
               "flex items-center group"
