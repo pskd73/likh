@@ -4,7 +4,7 @@ import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Retro Note",
+  title: "Retro Note - A place to journal and take notes",
   description: "A simple, powerful, minimalistic, markdown based note taking and journaling app all that you need!",
 };
 
