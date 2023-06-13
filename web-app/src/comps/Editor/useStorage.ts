@@ -23,7 +23,7 @@ const getNote = (id: string): SavedNote | undefined => {
 
 export type Storage = {
   notes: NoteMeta[];
-  newNote: (text: string) => SavedNote;
+  newNote: (text: string, date?: number) => SavedNote;
   getNote: (id: string) => SavedNote | undefined;
   getRecentNote: () => SavedNote;
   saveNote: (note: SavedNote) => void;
@@ -34,9 +34,9 @@ export type Storage = {
 const useStorage = (): Storage => {
   const [notes, setNotes] = useState<NoteMeta[]>(getNoteMetas());
 
-  const newNote = (text: string) => {
+  const newNote = (text: string, date?: number) => {
     const id = new Date().getTime().toString();
-    const newNote = { id, text, created_at: new Date().getTime() };
+    const newNote = { id, text, created_at: date || new Date().getTime() };
     const newNotes = [
       ...notes,
       {

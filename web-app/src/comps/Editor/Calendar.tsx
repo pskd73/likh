@@ -1,15 +1,15 @@
 import classNames from "classnames";
 import moment from "moment";
 import { useMemo, useState } from "react";
-import { Note } from "../type";
-import { BiArrowBack, BiChevronLeft, BiChevronRight } from "react-icons/bi";
-import Button from "./Button";
+import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
+import Button from "../Button";
+import { SavedNote } from "./type";
 
-type CalenderDay = {
+export type CalenderDay = {
   dt: Date;
   today: boolean;
   otherMonth: boolean;
-  notes: Note[];
+  notes: SavedNote[];
 };
 
 const now = new Date();
@@ -19,7 +19,7 @@ const Calendar = ({
   onCellClick,
   active,
 }: {
-  notes: Note[];
+  notes: SavedNote[];
   onCellClick: (day: CalenderDay) => void;
   active?: Date;
 }) => {
@@ -71,58 +71,48 @@ const Calendar = ({
   };
 
   return (
-    <div className="mb-10">
-      <div className="text-4xl font-CourierPrime italic flex justify-between mb-4">
+    <div>
+      <div className="flex justify-between mb-4">
         <div>{year}</div>
         <div className="flex items-center space-x-4">
-          <Button lite onClick={handlePrev}>
+          <Button lite onClick={handlePrev} className="text-lg">
             <BiChevronLeft />
           </Button>
           <div>{monthName}</div>
-          <Button lite onClick={handleNext}>
+          <Button lite onClick={handleNext} className="text-lg">
             <BiChevronRight />
           </Button>
         </div>
       </div>
-      <div className="space-y-2">
+      <div className="space-y-1 text-xs">
         {days.map((rows, i) => (
-          <div key={i} className="flex space-x-2">
+          <div key={i} className="flex space-x-1">
             {rows.map((cell, j) => (
               <div
                 key={j}
                 style={{ width: `${100 / 7}%` }}
                 className={classNames(
-                  "bg-primary-700 bg-opacity-10 rounded-md p-2 hover:shadow-md cursor-pointer border-2 border-primary-700",
+                  "bg-primary-700 bg-opacity-10 rounded-md p-1 hover:shadow-md",
+                  "cursor-pointer border-2 border-primary-700 transition-shadow",
+                  "w-10 h-10",
                   {
                     "opacity-40": cell.otherMonth,
                     "border-opacity-0": !cell.today && active !== cell.dt,
-                    "border-opacity-30": cell.today,
+                    "border-opacity-60": cell.today,
                     "border-opacity-80": active === cell.dt,
                   }
                 )}
                 onClick={() => onCellClick(cell)}
               >
-                <div className="flex justify-end font-CourierPrime text-lg italic">
-                  <span
-                    className={classNames(
-                      "w-8 h-8 flex justify-center items-center",
-                      {
-                        "bg-primary-700 bg-opacity-20 rounded-full": false,
-                      }
-                    )}
-                  >
-                    {cell.dt.getDate()}
-                  </span>
-                </div>
+                <div className="flex justify-end">{cell.dt.getDate()}</div>
                 <div>
-                  <span
-                    className={classNames(
-                      "text-xs px-1 bg-primary-700 text-white rounded",
-                      { invisible: !cell.notes.length }
-                    )}
-                  >
-                    {cell.notes.length || 0}
-                  </span>
+                  {cell.notes.map((_, i) => (
+                    <span
+                      key={i}
+                      className="inline-block bg-opacity-80 rounded-full bg-primary-700"
+                      style={{marginRight: 2, width: 6, height: 6}}
+                    />
+                  ))}
                 </div>
               </div>
             ))}

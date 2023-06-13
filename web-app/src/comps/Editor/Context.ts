@@ -148,7 +148,7 @@ export const useEditor = ({
   };
 
   const newNote = (note: NewNote, replace: boolean = true) => {
-    const savedNote = storage.newNote(note.text);
+    const savedNote = storage.newNote(note.text, note.created_at);
     let updatedNotes = { ...notes };
     if (replace) {
       updatedNotes = {};
