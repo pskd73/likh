@@ -43,7 +43,7 @@ export const notelink: CustomGrammarValue = {
 };
 
 export const mdLink: CustomGrammarValue = {
-  pattern: /\[.+\]\(.+\)/m,
+  pattern: /\[[^\[]+\]\([^\[]+\)/m,
   greedy: true,
   inside: {
     labelPart: {
