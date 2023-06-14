@@ -61,7 +61,7 @@ export type Suggestion = {
   description?: string;
 };
 
-const images: Record<number, SavedImg | null> = {};
+const images: Record<number, SavedImg | null | undefined> = {};
 
 function Leaf({
   attributes,
@@ -354,7 +354,9 @@ const Editor = ({
             if (imgRef) {
               imgRef.src = savedImg.uri;
             }
-          });
+          }).catch(() => {
+            images[imgId] = undefined;
+          })
           images[imgId] = null;
         }
         imgUri = images[imgId]?.uri;
