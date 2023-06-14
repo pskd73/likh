@@ -64,8 +64,12 @@ export const useEditorPaste = ({
   };
 
   const handleFile = (file: File) => {
+    const LIMIT_KB = 500;
     const reader = new FileReader();
     reader.onload = async function (event) {
+      if (event.total > LIMIT_KB * 1000) {
+        return alert(`Cannot upload more than ${LIMIT_KB}kb images!`);
+      }
       if (handleSaveImg && event.target?.result) {
         const uri = event.target.result.toString();
         let imgText = `![](${uri})`;
