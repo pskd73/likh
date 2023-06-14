@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import Prism, { TokenObject } from "prismjs";
+import Prism from "prismjs";
 import {
   CSSProperties,
   KeyboardEventHandler,
@@ -383,8 +383,14 @@ const Editor = ({
           })}
           style={style}
         >
-          {/* eslint-disable-next-line jsx-a11y/alt-text */}
-          {imgUrl && <img ref={(r) => (imgRef = r)} src={imgUri || imgUrl} />}
+          {imgUrl && (
+            <img
+              ref={(r) => (imgRef = r)}
+              src={imgUri || imgUrl}
+              className="rounded-lg"
+              alt="Retro Note"
+            />
+          )}
           <span
             className={classNames({
               "py-2 text-center text-sm block opacity-50": imgUrl,
