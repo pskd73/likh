@@ -69,7 +69,6 @@ const Explorer = () => {
     updateNote,
     setSideBar,
     getHashtags,
-    setNotes,
     setRollHashTag,
     searchTerm,
   } = useContext(EditorContext);
@@ -98,15 +97,6 @@ const Explorer = () => {
   ) => {
     e.preventDefault();
     e.stopPropagation();
-    const hashtags = getHashtags();
-    const notes = hashtags[hashtag].sort(
-      (a, b) => a.note.created_at - b.note.created_at
-    );
-    const notesMap: Record<string, SavedNote> = {};
-    notes.forEach((noteSummary) => {
-      notesMap[noteSummary.note.id] = noteSummary.note;
-    });
-    setNotes(notesMap);
     setRollHashTag(hashtag);
   };
 

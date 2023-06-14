@@ -1,8 +1,9 @@
-import { createContext, useMemo, useState } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 import { Storage } from "./useStorage";
 import { NewNote, SavedNote } from "./type";
 import { isLinked } from "../../Note";
 import { LinkSuggestion, getLinkSuggestions } from "./Suggestion";
+import { PersistedState } from "./usePersistedState";
 
 type StateSetter<T> = React.Dispatch<React.SetStateAction<T>>;
 type CountStatType = "words" | "readTime";
@@ -63,28 +64,45 @@ export const EditorContext = createContext<EditorContextType>(
   {} as EditorContextType
 );
 
+const { hook: useSideBar } = PersistedState("sideBar");
+const { hook: useSearchTerm } = PersistedState("searchTerm");
+const { hook: useTypewriterMode } = PersistedState("typewriterMode");
+const { hook: useShowStats } = PersistedState("showStats");
+const { hook: useNoteId, value: defaultNoteId } =
+  PersistedState<string>("noteId");
+const { hook: useRollHashtag, value: defaultRollHashtag } =
+  PersistedState<string>("rollHashtag");
+const { hook: useActiveSideMenus } = PersistedState("activeSideMenus");
+
 export const useEditor = ({
   storage,
 }: {
   storage: Storage;
 }): EditorContextType => {
-  const [sideBar, setSideBar] = useState<string | undefined>();
-  const [activeSideMenus, setActiveSideMenus] = useState<string[]>([
+  const [sideBar, setSideBar] = useSideBar<string | undefined>(undefined);
+  const [activeSideMenus, setActiveSideMenus] = useActiveSideMenus<string[]>([
     "notes",
     "settings",
   ]);
-  const [showStats, setShowStats] = useState(true);
-  const [typewriterMode, setTypewriterMode] = useState(false);
+  const [showStats, setShowStats] = useShowStats(true);
+  const [typewriterMode, setTypewriterMode] = useTypewriterMode(false);
   const [countStatType, setCountStatType] = useState<CountStatType>("words");
-  const [notes, setNotes] = useState<Record<string, SavedNote>>({
-    [storage.getRecentNote().id]: storage.getRecentNote(),
+  const [notes, setNotes] = useState<Record<string, SavedNote>>(() => {
+    if (defaultNoteId && !defaultRollHashtag) {
+      const _note = storage.getNote(defaultNoteId);
+      if (_note) {
+        return { [defaultNoteId]: _note };
+      }
+    }
+    return { [storage.getRecentNote().id]: storage.getRecentNote() };
   });
   const note = useMemo(() => {
     const ids = Object.keys(notes);
     return notes[ids[ids.length - 1]];
   }, [notes]);
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [rollHashTag, setRollHashTag] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useSearchTerm<string>("");
+  const [rollHashTag, setRollHashTag] = useRollHashtag<string>("");
+  const [noteId, setNoteId] = useNoteId<string | undefined>(defaultNoteId);
 
   const notesToShow = useMemo<NoteSummary[]>(() => {
     if (searchTerm) {
@@ -122,6 +140,26 @@ export const useEditor = ({
         note,
       })) as NoteSummary[];
   }, [storage.notes, searchTerm, note]);
+
+  useEffect(() => {
+    setNoteId(note.id);
+  }, [note]);
+
+  useEffect(() => {
+    if (rollHashTag) {
+      const hashtags = getHashtags();
+      if (hashtags[rollHashTag]) {
+        const notes = hashtags[rollHashTag].sort(
+          (a, b) => a.note.created_at - b.note.created_at
+        );
+        const notesMap: Record<string, SavedNote> = {};
+        notes.forEach((noteSummary) => {
+          notesMap[noteSummary.note.id] = noteSummary.note;
+        });
+        setNotes(notesMap);
+      }
+    }
+  }, [rollHashTag]);
 
   const toggleSideMenu = (key: string) => {
     setActiveSideMenus((items) => {

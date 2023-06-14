@@ -1,4 +1,4 @@
-import { useContext, useMemo } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { EditorContext } from "../Context";
 import classNames from "classnames";
 import Collapsible from "../Collapsible";
@@ -112,12 +112,17 @@ const List = ({
 
 const Outline = () => {
   const { note, setOrNewNote, setSideBar } = useContext(EditorContext);
+  const [timer, setTimer] = useState(new Date().getTime());
   const titles = useMemo(() => {
     const titles = generateTitles();
     return nested(titles, 0).children;
-  }, [note]);
+  }, [timer]);
   const links = useMemo(() => {
     return generateLinks();
+  }, [timer]);
+
+  useEffect(() => {
+    setTimer(new Date().getTime());
   }, [note]);
 
   return (
