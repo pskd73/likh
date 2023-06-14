@@ -72,6 +72,7 @@ const { hook: useNoteId, value: defaultNoteId } =
   PersistedState<string>("noteId");
 const { hook: useRollHashtag, value: defaultRollHashtag } =
   PersistedState<string>("rollHashtag");
+const { hook: useActiveSideMenus } = PersistedState("activeSideMenus");
 
 export const useEditor = ({
   storage,
@@ -79,7 +80,7 @@ export const useEditor = ({
   storage: Storage;
 }): EditorContextType => {
   const [sideBar, setSideBar] = useSideBar<string | undefined>(undefined);
-  const [activeSideMenus, setActiveSideMenus] = useState<string[]>([
+  const [activeSideMenus, setActiveSideMenus] = useActiveSideMenus<string[]>([
     "notes",
     "settings",
   ]);
