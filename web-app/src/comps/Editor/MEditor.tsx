@@ -1,12 +1,10 @@
 import classNames from "classnames";
-import Prism, { TokenObject } from "prismjs";
+import Prism from "prismjs";
 import {
   CSSProperties,
   KeyboardEventHandler,
   useCallback,
-  useEffect,
   useMemo,
-  useRef,
 } from "react";
 import {
   createEditor,
@@ -47,6 +45,7 @@ import {
   ContextMenuList,
   useContextMenu,
 } from "./Core/ContextMenu";
+import { PastedImg, SavedImg, useEditorPaste } from "./useEditorPaste";
 
 const defaultValue = [
   {
@@ -61,6 +60,8 @@ export type Suggestion = {
   id?: string;
   description?: string;
 };
+
+const images: Record<number, SavedImg | null> = {};
 
 function Leaf({
   attributes,
@@ -148,6 +149,9 @@ function Leaf({
 
     // highlight
     "highlight bg-primary-700 bg-opacity-20 py-1": leaf.highlight,
+
+    // image
+    "hidden image": leaf.image && !leaf.alt && !leaf.focused,
   });
 
   if (leaf.code) {
@@ -224,7 +228,7 @@ function Leaf({
   );
 }
 
-const MEditor = ({
+const Editor = ({
   onChange,
   initValue,
   initText,
@@ -232,6 +236,8 @@ const MEditor = ({
   onNoteLinkClick,
   getSuggestions,
   highlight,
+  handleSaveImg,
+  getSavedImg,
 }: {
   onChange: (val: {
     value: Descendant[];
@@ -245,6 +251,8 @@ const MEditor = ({
   onNoteLinkClick?: (title: string, id?: string) => void;
   getSuggestions?: (prefix: string, term: string) => Suggestion[];
   highlight?: string;
+  handleSaveImg?: (img: PastedImg) => Promise<SavedImg>;
+  getSavedImg?: (id: number) => Promise<SavedImg>;
 }) => {
   const editor = useMemo(
     () => passedEditor || withHistory(withReact(createEditor())),
@@ -267,6 +275,8 @@ const MEditor = ({
     }
     return [];
   }, [contextMenu.search, contextMenu.activePrefix]);
+
+  useEditorPaste({ editor, handleSaveImg });
 
   const renderLeaf = useCallback(
     (props: any) => (
@@ -323,10 +333,28 @@ const MEditor = ({
       for (const child of element.children) {
         text += child.text;
       }
-      const imgMatch = text.match(imageRegex)
-        ? text.match((grammer.link as TokenObject).pattern)
-        : null;
-      const imgUrl = imgMatch ? imgMatch[0] : null;
+
+      // image
+      const imgMatch = text.match(imageRegex);
+      const imgUrl = imgMatch ? imgMatch[1] : null;
+      const localImgMatch = imgUrl?.match(/^image:\/\/(.+)$/);
+      let imgUri: string | undefined = undefined;
+      let imgRef: HTMLImageElement | null = null;
+      if (getSavedImg && localImgMatch) {
+        const imgId = Number(localImgMatch[1]);
+        if (images[imgId] === undefined) {
+          getSavedImg(imgId).then((savedImg) => {
+            images[imgId] = savedImg;
+            if (imgRef) {
+              imgRef.src = savedImg.uri;
+            }
+          });
+          images[imgId] = null;
+        }
+        imgUri = images[imgId]?.uri;
+      }
+
+      // quote
       const quote = text.match(quoteRegex);
 
       const style: CSSProperties = {};
@@ -348,26 +376,40 @@ const MEditor = ({
       }
 
       return (
-        <p
-          {...attributes}
-          className={classNames({
-            "px-6 bg-primary-700 bg-opacity-10 py-2 italic": quote,
-            "border-l-4 border-primary-700 border-opacity-30": quote,
-            "flex flex-col items-center py-10": imgUrl,
-            "mb-2": !quote,
-          })}
-          style={style}
-        >
-          {/* eslint-disable-next-line jsx-a11y/alt-text */}
-          {imgUrl && <img src={imgUrl} />}
-          <span
+        <>
+          {imgUrl && (
+            <div
+              style={{ userSelect: "none" }}
+              contentEditable={false}
+              className="flex flex-col items-center w-full"
+            >
+              <img
+                ref={(r) => (imgRef = r)}
+                src={imgUri || imgUrl}
+                className="rounded-lg"
+                alt="Retro Note"
+              />
+            </div>
+          )}
+          <p
+            {...attributes}
             className={classNames({
-              "py-2 text-center text-sm block opacity-50": imgUrl,
+              "px-6 bg-primary-700 bg-opacity-10 py-2 italic": quote,
+              "border-l-4 border-primary-700 border-opacity-30": quote,
+              "pb-10": imgUrl,
+              "mb-2": !quote,
             })}
+            style={style}
           >
-            {children}
-          </span>
-        </p>
+            <span
+              className={classNames({
+                "py-2 text-center text-sm block opacity-50": imgUrl,
+              })}
+            >
+              {children}
+            </span>
+          </p>
+        </>
       );
     },
     []
@@ -461,4 +503,4 @@ const MEditor = ({
   );
 };
 
-export default MEditor;
+export default Editor;

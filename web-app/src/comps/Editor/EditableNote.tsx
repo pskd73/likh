@@ -1,5 +1,5 @@
 import { Descendant } from "slate";
-import MEditor, { Suggestion } from "./MEditor";
+import Editor, { Suggestion } from "./MEditor";
 import { useContext, useEffect, useRef } from "react";
 import { EditorContext } from "./Context";
 import { useMiddle } from "../useMiddle";
@@ -9,6 +9,7 @@ import moment from "moment";
 import { BiPlus } from "react-icons/bi";
 import Button from "../Button";
 import { scrollTo } from "./scroll";
+import { getImage, insertImage } from "./db";
 
 const EditableNote = ({
   getSuggestions,
@@ -93,7 +94,7 @@ const EditableNote = ({
   };
 
   return (
-    <div ref={ref} style={{ ...scroll.style }} className="space-y-6">
+    <div ref={ref} style={{ ...scroll.style }} className="space-y-6" id="editable">
       {Object.keys(notes).map((id) => (
         <div
           className={classNames(
@@ -116,7 +117,7 @@ const EditableNote = ({
               )}
             </div>
           )}
-          <MEditor
+          <Editor
             key={id}
             onChange={(v) => handleChange(id, v)}
             initValue={notes[id].serialized}
@@ -124,6 +125,16 @@ const EditableNote = ({
             onNoteLinkClick={handleNoteLinkClick}
             getSuggestions={getSuggestions}
             highlight={searchTerm}
+            getSavedImg={async (id) => {
+              const img = await getImage(id);
+              return { id, uri: img.uri };
+            }}
+            handleSaveImg={async (img) => {
+              const id = await insertImage({
+                uri: img.uri,
+              });
+              return { id, uri: img.uri };
+            }}
           />
         </div>
       ))}

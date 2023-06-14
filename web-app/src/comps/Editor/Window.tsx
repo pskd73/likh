@@ -1,3 +1,4 @@
+import "./db";
 import { Suggestion } from "./MEditor";
 import { EditorContext, useEditor } from "./Context";
 import SidePanel from "./SidePanel/SidePanel";
@@ -72,7 +73,7 @@ const EditorWindow = () => {
               height: `calc(100vh - ${STATUS_BAR_HEIGHT + statusBarPadding}px)`,
             }}
           >
-            <div className={classNames("w-full max-w-[860px] md:w-[860px]")}>
+            <div className={classNames("w-full max-w-[860px] md:w-[860px] break-all")}>
               <EditableNote getSuggestions={getSuggestions} />
             </div>
           </div>

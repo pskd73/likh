@@ -5,7 +5,7 @@ export type CustomGrammar = Record<string, CustomGrammarValue>;
 
 export const link = {
   pattern:
-    /((https?:\/\/)|(www\.))[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/m,
+    /((https?:\/\/)|(www\.))[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/m,
   inside: {},
 };
 
@@ -214,14 +214,14 @@ export const hashtag: CustomGrammarValue = {
   inside: {},
 };
 
-export const imageRegex = /^\!\[.*\]\(.+( ".+")?\)$/m;
+export const imageRegex = /^\!\[.*\]\(([^\)\[\"\']+)( ".*")?\)$/m;
 export const image: CustomGrammarValue = {
   pattern: imageRegex,
   greedy: true,
   inside: {
     link,
     alt: {
-      pattern: /^\[.*\]/m,
+      pattern: /^\!\[(.*)\]/m,
       greedy: true,
     },
   },
