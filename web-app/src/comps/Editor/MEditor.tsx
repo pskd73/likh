@@ -376,34 +376,40 @@ const Editor = ({
       }
 
       return (
-        <p
-          {...attributes}
-          className={classNames({
-            "px-6 bg-primary-700 bg-opacity-10 py-2 italic": quote,
-            "border-l-4 border-primary-700 border-opacity-30": quote,
-            "flex flex-col items-center py-10": imgUrl,
-            "mb-2": !quote,
-          })}
-          style={style}
-        >
-          <div contentEditable={false}>
-            {imgUrl && (
+        <>
+          {imgUrl && (
+            <div
+              style={{ userSelect: "none" }}
+              contentEditable={false}
+              className="flex flex-col items-center w-full"
+            >
               <img
                 ref={(r) => (imgRef = r)}
                 src={imgUri || imgUrl}
                 className="rounded-lg"
                 alt="Retro Note"
               />
-            )}
-          </div>
-          <span
+            </div>
+          )}
+          <p
+            {...attributes}
             className={classNames({
-              "py-2 text-center text-sm block opacity-50": imgUrl,
+              "px-6 bg-primary-700 bg-opacity-10 py-2 italic": quote,
+              "border-l-4 border-primary-700 border-opacity-30": quote,
+              "pb-10": imgUrl,
+              "mb-2": !quote,
             })}
+            style={style}
           >
-            {children}
-          </span>
-        </p>
+            <span
+              className={classNames({
+                "py-2 text-center text-sm block opacity-50": imgUrl,
+              })}
+            >
+              {children}
+            </span>
+          </p>
+        </>
       );
     },
     []
