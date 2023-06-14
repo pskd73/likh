@@ -386,14 +386,16 @@ const Editor = ({
           })}
           style={style}
         >
-          {imgUrl && (
-            <img
-              ref={(r) => (imgRef = r)}
-              src={imgUri || imgUrl}
-              className="rounded-lg"
-              alt="Retro Note"
-            />
-          )}
+          <div contentEditable={false}>
+            {imgUrl && (
+              <img
+                ref={(r) => (imgRef = r)}
+                src={imgUri || imgUrl}
+                className="rounded-lg"
+                alt="Retro Note"
+              />
+            )}
+          </div>
           <span
             className={classNames({
               "py-2 text-center text-sm block opacity-50": imgUrl,

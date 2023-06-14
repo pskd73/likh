@@ -32,10 +32,13 @@ export const useEditorPaste = ({
               var reader = new FileReader();
               reader.onload = async function (event) {
                 if (handleSaveImg && event.target?.result) {
+                  const uri = event.target.result.toString();
+                  let imgText = `![](${uri})`;
                   const savedImg = await handleSaveImg({
-                    uri: event.target.result.toString(),
+                    uri,
                   });
-                  Transforms.insertText(editor, `![](image://${savedImg.id})`);
+                  imgText = `![](image://${savedImg.id})`;
+                  Transforms.insertText(editor, imgText);
                 }
               };
               reader.readAsDataURL(blob);
