@@ -1,75 +1,27 @@
 import { useMemo, useState } from "react";
 
-function getJsonFromUrl(url?: string) {
-  if (!url) url = window.location.search;
-  var query = url.substr(1);
-  var result: Record<string, any> = {};
-  query.split("&").forEach(function (part) {
-    var item = part.split("=");
-    if (item[0]) {
-      result[item[0]] = decodeURIComponent(item[1]);
-    }
-  });
-  return result;
+function getLocalState() {
+  return JSON.parse(localStorage.getItem("state") || "{}");
+}
+
+function updateLocalState(state: Record<string, any>) {
+  localStorage.setItem("state", JSON.stringify(state));
 }
 
 function getConfig<T>(key: string): T | undefined {
-  return getJsonFromUrl()[key];
+  return getLocalState()[key];
 }
 
 function setConfig(key: string, value: any) {
   if (value !== undefined) {
-    const config = getJsonFromUrl();
-    config[key] = value;
-    const paramsStr = new URLSearchParams(config).toString();
-    window.history.replaceState(
-      {
-        info: "Updated from app",
-      },
-      "Updated title",
-      `${window.location.origin}${window.location.pathname}?${paramsStr}`
-    );
+    const localState = getLocalState();
+    localState[key] = value;
+    updateLocalState(localState);
   }
 }
 
-const listSerialize = (list?: any[]) => {
-  if (list === undefined) return undefined;
-  return list.join(",");
-};
-
-const listDeserialize = (str?: string) => {
-  if (str === undefined) return undefined;
-  return str.split(",");
-};
-
-const booleanSerialize = (val?: boolean) => {
-  if (val === undefined) return undefined;
-  return String(val);
-};
-
-const booleanDeserialize = (val?: string) => {
-  if (val === undefined) return undefined;
-  return val === "true";
-};
-
-export const PersistedState = (
-  key: string,
-  options?: { type?: "premitive" | "list" | "boolean" }
-) => {
-  options = options || {
-    type: "premitive",
-  };
-
-  let [serialize, deserialize] = [(a: any) => a, (a: any) => a];
-  if (options.type === "list") {
-    serialize = listSerialize;
-    deserialize = listDeserialize;
-  } else if (options.type === "boolean") {
-    serialize = booleanSerialize;
-    deserialize = booleanDeserialize;
-  }
-
-  const existingConfig = deserialize(getConfig(key));
+export const PersistedState = <T>(key: string) => {
+  const existingConfig = getConfig(key);
 
   const useHook = <T>(
     value: T
@@ -79,12 +31,12 @@ export const PersistedState = (
     );
     const liveValue = useMemo(() => {
       const updatedValue = currentValue !== undefined ? currentValue : value;
-      setConfig(key, serialize(updatedValue));
+      setConfig(key, updatedValue);
       return updatedValue;
     }, [currentValue, value]);
 
     return [liveValue, setCurrentValue];
   };
 
-  return { hook: useHook, value: existingConfig };
+  return { hook: useHook, value: existingConfig as T };
 };

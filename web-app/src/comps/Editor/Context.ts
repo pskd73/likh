@@ -66,13 +66,12 @@ export const EditorContext = createContext<EditorContextType>(
 
 const { hook: useSideBar } = PersistedState("sideBar");
 const { hook: useSearchTerm } = PersistedState("searchTerm");
-const { hook: useTypewriterMode } = PersistedState("typewriterMode", {
-  type: "boolean",
-});
-const { hook: useShowStats } = PersistedState("showStats", { type: "boolean" });
-const { hook: useNoteId, value: defaultNoteId } = PersistedState("noteId");
+const { hook: useTypewriterMode } = PersistedState("typewriterMode");
+const { hook: useShowStats } = PersistedState("showStats");
+const { hook: useNoteId, value: defaultNoteId } =
+  PersistedState<string>("noteId");
 const { hook: useRollHashtag, value: defaultRollHashtag } =
-  PersistedState("rollHashtag");
+  PersistedState<string>("rollHashtag");
 
 export const useEditor = ({
   storage,
