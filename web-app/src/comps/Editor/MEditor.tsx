@@ -386,7 +386,7 @@ const Editor = ({
               <img
                 ref={(r) => (imgRef = r)}
                 src={imgUri || imgUrl}
-                className="rounded-lg"
+                className="rounded-lg max-h-[400px]"
                 alt="Retro Note"
               />
             </div>
