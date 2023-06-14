@@ -73,6 +73,7 @@ const { hook: useNoteId, value: defaultNoteId } =
 const { hook: useRollHashtag, value: defaultRollHashtag } =
   PersistedState<string>("rollHashtag");
 const { hook: useActiveSideMenus } = PersistedState("activeSideMenus");
+const { hook: useCountStatType } = PersistedState<CountStatType>("countStatType");
 
 export const useEditor = ({
   storage,
@@ -86,7 +87,7 @@ export const useEditor = ({
   ]);
   const [showStats, setShowStats] = useShowStats(true);
   const [typewriterMode, setTypewriterMode] = useTypewriterMode(false);
-  const [countStatType, setCountStatType] = useState<CountStatType>("words");
+  const [countStatType, setCountStatType] = useCountStatType<CountStatType>("words");
   const [notes, setNotes] = useState<Record<string, SavedNote>>(() => {
     if (defaultNoteId && !defaultRollHashtag) {
       const _note = storage.getNote(defaultNoteId);

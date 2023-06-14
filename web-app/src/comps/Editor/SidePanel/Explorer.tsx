@@ -98,6 +98,7 @@ const Explorer = () => {
     e.preventDefault();
     e.stopPropagation();
     setRollHashTag(hashtag);
+    setSideBar("outline");
   };
 
   return (
@@ -145,7 +146,9 @@ const Explorer = () => {
         <Collapsible.Item defaultActive={false} active={!!searchTerm}>
           <Collapsible.Item.Label>
             <span className="flex items-center space-x-2">
-              <span className="p-1"><BiFile /></span>
+              <span className="p-1">
+                <BiFile />
+              </span>
               <span>All notes</span>
             </span>
           </Collapsible.Item.Label>
@@ -203,7 +206,9 @@ const Explorer = () => {
         <Collapsible.Item>
           <Collapsible.Item.Label>
             <span className="flex items-center space-x-2">
-              <span className="p-1"><BiCog /></span>
+              <span className="p-1">
+                <BiCog />
+              </span>
               <span>Settings</span>
             </span>
           </Collapsible.Item.Label>
