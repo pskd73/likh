@@ -24,6 +24,7 @@ export type EditorContextType = {
   activeSideMenus: string[];
   toggleSideMenu: (key: string) => void;
   isSideMenuActive: (key: string) => boolean;
+  setActiveSideMenus: StateSetter<string[]>,
 
   showStats: boolean;
   setShowStats: StateSetter<boolean>;
@@ -284,6 +285,7 @@ export const useEditor = ({
     activeSideMenus,
     toggleSideMenu,
     isSideMenuActive,
+    setActiveSideMenus,
 
     showStats,
     setShowStats,

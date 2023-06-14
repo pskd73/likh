@@ -113,6 +113,7 @@ const List = ({
 const Outline = () => {
   const { note, setOrNewNote, setSideBar } = useContext(EditorContext);
   const [timer, setTimer] = useState(new Date().getTime());
+  const [linksActive, setLinksActive] = useState(false);
   const titles = useMemo(() => {
     const titles = generateTitles();
     return nested(titles, 0).children;
@@ -133,7 +134,10 @@ const Outline = () => {
       </div>
       <Collapsible>
         {links.length > 0 && (
-          <Collapsible.Item defaultActive={false}>
+          <Collapsible.Item
+            active={linksActive}
+            handleToggle={() => setLinksActive((a) => !a)}
+          >
             <Collapsible.Item.Label>
               <div className="flex items-center space-x-1">
                 <BiLink />

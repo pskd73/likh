@@ -70,7 +70,8 @@ const Explorer = () => {
     setSideBar,
     getHashtags,
     setRollHashTag,
-    searchTerm,
+    toggleSideMenu,
+    isSideMenuActive,
   } = useContext(EditorContext);
   const { install, installable } = usePWA();
 
@@ -143,7 +144,10 @@ const Explorer = () => {
 
       <Collapsible>
         {/* Notes */}
-        <Collapsible.Item defaultActive={false} active={!!searchTerm}>
+        <Collapsible.Item
+          active={isSideMenuActive("notes")}
+          handleToggle={() => toggleSideMenu("notes")}
+        >
           <Collapsible.Item.Label>
             <span className="flex items-center space-x-2">
               <span className="p-1">
@@ -171,7 +175,11 @@ const Explorer = () => {
         {Object.keys(hashtags).map((hashtag, i) => {
           const summaries = hashtags[hashtag];
           return (
-            <Collapsible.Item key={i} defaultActive={false}>
+            <Collapsible.Item
+              key={i}
+              active={isSideMenuActive(hashtag)}
+              handleToggle={() => toggleSideMenu(hashtag)}
+            >
               <Collapsible.Item.Label>
                 <span className="flex items-center space-x-2">
                   <Button
@@ -203,7 +211,10 @@ const Explorer = () => {
         <br />
 
         {/* Settings */}
-        <Collapsible.Item>
+        <Collapsible.Item
+          active={isSideMenuActive("settings")}
+          handleToggle={() => toggleSideMenu("settings")}
+        >
           <Collapsible.Item.Label>
             <span className="flex items-center space-x-2">
               <span className="p-1">

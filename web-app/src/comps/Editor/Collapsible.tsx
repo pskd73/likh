@@ -1,11 +1,5 @@
 import classNames from "classnames";
-import {
-  PropsWithChildren,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { PropsWithChildren, createContext, useContext } from "react";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 
 type ContextType = {
@@ -21,24 +15,12 @@ const Collapsible = ({ children }: PropsWithChildren) => {
 
 const Item = ({
   children,
-  defaultActive = true,
-  active: passedActive,
+  active,
+  handleToggle,
 }: PropsWithChildren & {
-  defaultActive?: boolean;
-  active?: boolean;
+  active: boolean;
+  handleToggle: () => void;
 }) => {
-  const [active, setActive] = useState<boolean>(defaultActive);
-
-  useEffect(() => {
-    if (passedActive !== undefined) {
-      setActive(passedActive);
-    }
-  }, [passedActive]);
-
-  const handleToggle = () => {
-    setActive((a) => !a);
-  };
-
   return (
     <Context.Provider value={{ active, onToggle: handleToggle }}>
       {children}
