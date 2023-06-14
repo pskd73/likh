@@ -27,21 +27,9 @@ export const useEditorPaste = ({
           if (item.kind === "file" && item.type.startsWith("image")) {
             event.preventDefault();
             event.stopPropagation();
-            var blob = item.getAsFile();
+            const blob = item.getAsFile();
             if (blob) {
-              var reader = new FileReader();
-              reader.onload = async function (event) {
-                if (handleSaveImg && event.target?.result) {
-                  const uri = event.target.result.toString();
-                  let imgText = `![](${uri})`;
-                  const savedImg = await handleSaveImg({
-                    uri,
-                  });
-                  imgText = `![](image://${savedImg.id})`;
-                  Transforms.insertText(editor, imgText);
-                }
-              };
-              reader.readAsDataURL(blob);
+              handleFile(blob);
             }
           }
         }
@@ -51,4 +39,43 @@ export const useEditorPaste = ({
       document.onpaste = null;
     };
   }, [editor]);
+
+  useEffect(() => {
+    const dropZone = document.getElementById("editable");
+    dropZone?.addEventListener("drop", handleDrop);
+    return () => {
+      dropZone?.removeEventListener("drop", handleDrop);
+    };
+  }, [editor]);
+
+  const handleDrop = (e: DragEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const files = e.dataTransfer?.files;
+
+    if (files) {
+      for (const i in files) {
+        const file = files[i];
+        if (file.type?.startsWith("image")) {
+          handleFile(file);
+        }
+      }
+    }
+  };
+
+  const handleFile = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = async function (event) {
+      if (handleSaveImg && event.target?.result) {
+        const uri = event.target.result.toString();
+        let imgText = `![](${uri})`;
+        const savedImg = await handleSaveImg({
+          uri,
+        });
+        imgText = `![Image](image://${savedImg.id})`;
+        Transforms.insertText(editor, imgText);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
 };

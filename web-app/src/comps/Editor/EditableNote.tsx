@@ -94,7 +94,7 @@ const EditableNote = ({
   };
 
   return (
-    <div ref={ref} style={{ ...scroll.style }} className="space-y-6">
+    <div ref={ref} style={{ ...scroll.style }} className="space-y-6" id="editable">
       {Object.keys(notes).map((id) => (
         <div
           className={classNames(

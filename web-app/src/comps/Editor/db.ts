@@ -27,7 +27,7 @@ export const insertImage = ({ uri }: { uri: string }): Promise<number> => {
     const query = store.put({ uri });
 
     query.onsuccess = (e: any) => {
-      console.log("inserted image", e.target)
+      // console.log("inserted image", e.target)
       resolve(e.target.result);
     };
 
@@ -44,7 +44,7 @@ export const getImage = (id: number): Promise<{ uri: string }> => {
     const query = store.get(id);
 
     query.onsuccess = (e: any) => {
-      console.log("fetched image", e.target)
+      // console.log("fetched image", e.target)
       resolve(e.target.result);
     };
 
