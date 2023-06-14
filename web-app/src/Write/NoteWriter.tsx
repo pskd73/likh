@@ -77,6 +77,7 @@ const NoteWriter = ({
         initValue={note.slate_value}
         initText={note.text}
         editor={editor}
+        containerClassName="dummy"
       />
     </div>
   );

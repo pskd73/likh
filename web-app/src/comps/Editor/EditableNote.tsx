@@ -94,7 +94,7 @@ const EditableNote = ({
   };
 
   return (
-    <div ref={ref} style={{ ...scroll.style }} className="space-y-6" id="editable">
+    <div ref={ref} style={{ ...scroll.style }} className="space-y-6">
       {Object.keys(notes).map((id) => (
         <div
           className={classNames(
@@ -119,6 +119,7 @@ const EditableNote = ({
           )}
           <Editor
             key={id}
+            containerClassName={`note-${id}`}
             onChange={(v) => handleChange(id, v)}
             initValue={notes[id].serialized}
             initText={notes[id].text}

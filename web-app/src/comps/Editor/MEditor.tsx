@@ -238,6 +238,7 @@ const Editor = ({
   highlight,
   handleSaveImg,
   getSavedImg,
+  containerClassName,
 }: {
   onChange: (val: {
     value: Descendant[];
@@ -245,6 +246,7 @@ const Editor = ({
     serialized: string;
     editor: CustomEditor;
   }) => void;
+  containerClassName: string;
   initValue?: string;
   initText?: string;
   editor?: CustomEditor;
@@ -276,7 +278,11 @@ const Editor = ({
     return [];
   }, [contextMenu.search, contextMenu.activePrefix]);
 
-  useEditorPaste({ editor, handleSaveImg });
+  useEditorPaste({
+    editor,
+    handleSaveImg,
+    container: document.querySelector(`.${containerClassName}`),
+  });
 
   const renderLeaf = useCallback(
     (props: any) => (

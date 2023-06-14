@@ -13,40 +13,43 @@ export type SavedImg = {
 
 export const useEditorPaste = ({
   editor,
+  container,
   handleSaveImg,
 }: {
   editor: CustomEditor;
+  container: HTMLElement | null;
   handleSaveImg?: (img: PastedImg) => Promise<SavedImg>;
 }) => {
   useEffect(() => {
-    document.onpaste = async (event) => {
-      if (event.clipboardData) {
-        const items = event.clipboardData.items;
-        for (const i in items) {
-          const item = items[i];
-          if (item.kind === "file" && item.type.startsWith("image")) {
-            event.preventDefault();
-            event.stopPropagation();
-            const blob = item.getAsFile();
-            if (blob) {
-              handleFile(blob);
+    if (container) {
+      (container as any).onpaste = async (event: ClipboardEvent) => {
+        if (event.clipboardData) {
+          const items = event.clipboardData.items;
+          for (const i in items) {
+            const item = items[i];
+            if (item.kind === "file" && item.type.startsWith("image")) {
+              event.preventDefault();
+              event.stopPropagation();
+              const blob = item.getAsFile();
+              if (blob) {
+                handleFile(blob);
+              }
             }
           }
         }
-      }
-    };
-    return () => {
-      document.onpaste = null;
-    };
-  }, [editor]);
+      };
+      return () => {
+        container.onpaste = null;
+      };
+    }
+  }, [editor, container]);
 
   useEffect(() => {
-    const dropZone = document.getElementById("editable");
-    dropZone?.addEventListener("drop", handleDrop);
+    container?.addEventListener("drop", handleDrop);
     return () => {
-      dropZone?.removeEventListener("drop", handleDrop);
+      container?.removeEventListener("drop", handleDrop);
     };
-  }, [editor]);
+  }, [editor, container]);
 
   const handleDrop = (e: DragEvent) => {
     e.stopPropagation();
