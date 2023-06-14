@@ -3,7 +3,7 @@ import { Note } from "../type";
 import { AppContext } from "../components/AppContext";
 import { API_HOST } from "../config";
 import useFetch from "../useFetch";
-import MEditor from "../comps/Editor/MEditor";
+import Editor from "../comps/Editor/MEditor";
 import { CustomEditor } from "../comps/Editor/Core/Core";
 
 const useTimer = <T extends unknown>(callback: (state: T | null) => void) => {
@@ -71,7 +71,7 @@ const NoteWriter = ({
 
   return (
     <div className="text-[20px] font-CourierPrime leading-8">
-      <MEditor
+      <Editor
         onChange={({ serialized, text }) => handleChange(serialized, text)}
         key={0}
         initValue={note.slate_value}

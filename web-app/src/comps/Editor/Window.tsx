@@ -1,3 +1,4 @@
+import "./db";
 import { Suggestion } from "./MEditor";
 import { EditorContext, useEditor } from "./Context";
 import SidePanel from "./SidePanel/SidePanel";

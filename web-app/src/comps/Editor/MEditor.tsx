@@ -4,9 +4,7 @@ import {
   CSSProperties,
   KeyboardEventHandler,
   useCallback,
-  useEffect,
   useMemo,
-  useRef,
 } from "react";
 import {
   createEditor,
@@ -47,6 +45,7 @@ import {
   ContextMenuList,
   useContextMenu,
 } from "./Core/ContextMenu";
+import { PastedImg, SavedImg, useEditorPaste } from "./useEditorPaste";
 
 const defaultValue = [
   {
@@ -61,6 +60,8 @@ export type Suggestion = {
   id?: string;
   description?: string;
 };
+
+const images: Record<number, SavedImg | null> = {};
 
 function Leaf({
   attributes,
@@ -224,7 +225,7 @@ function Leaf({
   );
 }
 
-const MEditor = ({
+const Editor = ({
   onChange,
   initValue,
   initText,
@@ -232,6 +233,8 @@ const MEditor = ({
   onNoteLinkClick,
   getSuggestions,
   highlight,
+  handleSaveImg,
+  getSavedImg,
 }: {
   onChange: (val: {
     value: Descendant[];
@@ -245,6 +248,8 @@ const MEditor = ({
   onNoteLinkClick?: (title: string, id?: string) => void;
   getSuggestions?: (prefix: string, term: string) => Suggestion[];
   highlight?: string;
+  handleSaveImg?: (img: PastedImg) => Promise<SavedImg>;
+  getSavedImg?: (id: number) => Promise<SavedImg>;
 }) => {
   const editor = useMemo(
     () => passedEditor || withHistory(withReact(createEditor())),
@@ -267,6 +272,8 @@ const MEditor = ({
     }
     return [];
   }, [contextMenu.search, contextMenu.activePrefix]);
+
+  useEditorPaste({ editor, handleSaveImg });
 
   const renderLeaf = useCallback(
     (props: any) => (
@@ -323,10 +330,28 @@ const MEditor = ({
       for (const child of element.children) {
         text += child.text;
       }
-      const imgMatch = text.match(imageRegex)
-        ? text.match((grammer.link as TokenObject).pattern)
-        : null;
-      const imgUrl = imgMatch ? imgMatch[0] : null;
+
+      // image
+      const imgMatch = text.match(imageRegex);
+      const imgUrl = imgMatch ? imgMatch[1] : null;
+      const localImgMatch = imgUrl?.match(/^image:\/\/(.+)$/);
+      let imgUri: string | undefined = undefined;
+      let imgRef: HTMLImageElement | null = null;
+      if (getSavedImg && localImgMatch) {
+        const imgId = Number(localImgMatch[1]);
+        if (images[imgId] === undefined) {
+          getSavedImg(imgId).then((savedImg) => {
+            images[imgId] = savedImg;
+            if (imgRef) {
+              imgRef.src = savedImg.uri;
+            }
+          });
+          images[imgId] = null;
+        }
+        imgUri = images[imgId]?.uri;
+      }
+
+      // quote
       const quote = text.match(quoteRegex);
 
       const style: CSSProperties = {};
@@ -359,7 +384,7 @@ const MEditor = ({
           style={style}
         >
           {/* eslint-disable-next-line jsx-a11y/alt-text */}
-          {imgUrl && <img src={imgUrl} />}
+          {imgUrl && <img ref={(r) => (imgRef = r)} src={imgUri || imgUrl} />}
           <span
             className={classNames({
               "py-2 text-center text-sm block opacity-50": imgUrl,
@@ -461,4 +486,4 @@ const MEditor = ({
   );
 };
 
-export default MEditor;
+export default Editor;

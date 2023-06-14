@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { Paper } from "./comps/Layout";
-import MEditor from "./comps/Editor/MEditor";
+import Editor from "./comps/Editor/MEditor";
 import Event from "./components/Event";
 import { Descendant } from "slate";
 import Button from "./comps/Button";
@@ -59,7 +59,7 @@ const OpenWrite = () => {
           </Button>
         </div>
         <div className="text-[20px] font-CourierPrime leading-8">
-          <MEditor
+          <Editor
             key={1}
             onChange={handleChange}
             initValue={initalValue!}
