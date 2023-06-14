@@ -35,10 +35,6 @@ export const useEditorPaste = ({
                   const savedImg = await handleSaveImg({
                     uri: event.target.result.toString(),
                   });
-                  // Transforms.insertText(
-                  //   editor,
-                  //   `![img](https://img.freepik.com/free-vector/sunset-sunrise-ocean-nature-landscape_33099-2244.jpg?w=2000 "img")`
-                  // );
                   Transforms.insertText(editor, `![](image://${savedImg.id})`);
                 }
               };

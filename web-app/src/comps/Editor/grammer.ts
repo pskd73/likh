@@ -221,7 +221,7 @@ export const image: CustomGrammarValue = {
   inside: {
     link,
     alt: {
-      pattern: /^\[.*\]/m,
+      pattern: /^\!\[(.*)\]/m,
       greedy: true,
     },
   },

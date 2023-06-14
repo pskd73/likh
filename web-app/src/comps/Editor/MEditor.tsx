@@ -149,6 +149,9 @@ function Leaf({
 
     // highlight
     "highlight bg-primary-700 bg-opacity-20 py-1": leaf.highlight,
+
+    // image
+    "hidden image": leaf.image && !leaf.alt && !leaf.focused,
   });
 
   if (leaf.code) {
