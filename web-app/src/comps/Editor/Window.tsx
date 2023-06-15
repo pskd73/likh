@@ -73,7 +73,7 @@ const EditorWindow = () => {
               height: `calc(100vh - ${STATUS_BAR_HEIGHT + statusBarPadding}px)`,
             }}
           >
-            <div className={classNames("w-full max-w-[860px] md:w-[860px] break-all")}>
+            <div className={classNames("w-full max-w-[860px] md:w-[860px]")}>
               <EditableNote getSuggestions={getSuggestions} />
             </div>
           </div>
