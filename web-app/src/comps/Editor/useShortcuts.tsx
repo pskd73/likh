@@ -1,7 +1,6 @@
 import { useCallback, useEffect } from "react";
 import { EditorContextType } from "./Context";
-import { openFile, saveNote } from "./File";
-import { zipIt } from "./Backup/Zip";
+import { openFile, saveNote, zipIt } from "./File";
 import { SavedNote } from "./type";
 
 const isWindowShortcut = (e: KeyboardEvent) => {
