@@ -26,7 +26,7 @@ const Item = ({
         ),
         className
       )}
-      style={{marginTop: 2}}
+      style={{ marginTop: 2 }}
       {...restProps}
     >
       {children}
@@ -34,6 +34,11 @@ const Item = ({
   );
 };
 
+const Description = ({ children }: PropsWithChildren) => {
+  return <div className="text-xs py-1 ml-5 opacity-50">{children}</div>;
+};
+
+Item.Description = Description;
 List.Item = Item;
 
 export default List;

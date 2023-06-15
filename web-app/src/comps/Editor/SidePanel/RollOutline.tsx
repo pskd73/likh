@@ -3,10 +3,11 @@ import { EditorContext } from "../Context";
 import moment from "moment";
 import Calendar, { CalenderDay } from "../Calendar";
 import Button from "../../Button";
-import { BiCalendarEvent, BiFile, BiMap, BiPlus } from "react-icons/bi";
+import { BiCalendarEvent, BiFile, BiHash, BiMap, BiPlus } from "react-icons/bi";
 import List from "../List";
 import { SavedNote } from "../type";
 import { scrollTo } from "../scroll";
+import { textToTitle } from "../../../Note";
 
 const RollOutline = () => {
   const { notes, newNote, rollHashTag } = useContext(EditorContext);
@@ -76,6 +77,15 @@ const RollOutline = () => {
 
   return (
     <div className="text-sm p-2">
+      <div className="mb-4 text-2xl">
+        <span className="pb-2 flex space-x-2 items-center font-bold">
+          <span>
+            <BiHash />
+          </span>
+          <span>{rollHashTag.replace(/^#+/, "")}</span>
+        </span>
+        <hr />
+      </div>
       <Calendar
         counts={notesCounts}
         onCellClick={handleDayChange}
@@ -103,19 +113,20 @@ const RollOutline = () => {
       </div>
       <List>
         {notesToShow.map((note, i) => (
-          <List.Item
-            key={i}
-            onClick={() => handleClick(note.id)}
-            className="flex space-x-2 items-center"
-          >
-            <span>
-              <BiFile />
-            </span>
-            <span>
-              {moment(new Date(note.created_at)).format(
-                "MMMM Do YYYY, h:mm:ss a"
-              )}
-            </span>
+          <List.Item key={i} onClick={() => handleClick(note.id)}>
+            <div className="flex space-x-2 items-center">
+              <span>
+                <BiFile />
+              </span>
+              <span>
+                {moment(new Date(note.created_at)).format(
+                  "h:mm:ss a"
+                )}
+              </span>
+            </div>
+            <List.Item.Description>
+              {textToTitle(note.text, 100)}
+            </List.Item.Description>
           </List.Item>
         ))}
       </List>

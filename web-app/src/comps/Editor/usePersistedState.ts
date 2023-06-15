@@ -13,11 +13,9 @@ function getConfig<T>(key: string): T | undefined {
 }
 
 function setConfig(key: string, value: any) {
-  if (value !== undefined) {
-    const localState = getLocalState();
-    localState[key] = value;
-    updateLocalState(localState);
-  }
+  const localState = getLocalState();
+  localState[key] = value;
+  updateLocalState(localState);
 }
 
 export const PersistedState = <T>(key: string) => {
@@ -30,10 +28,9 @@ export const PersistedState = <T>(key: string) => {
       existingConfig !== undefined ? (existingConfig as T) : value
     );
     const liveValue = useMemo(() => {
-      const updatedValue = currentValue !== undefined ? currentValue : value;
-      setConfig(key, updatedValue);
-      return updatedValue;
-    }, [currentValue, value]);
+      setConfig(key, currentValue);
+      return currentValue;
+    }, [currentValue]);
 
     return [liveValue, setCurrentValue];
   };

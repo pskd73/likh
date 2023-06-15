@@ -47,11 +47,9 @@ const NoteListItem = ({
         <span>{textToTitle(summary.note.text, 20)}</span>
       </div>
       {summary.summary && (
-        <div className="text-xs py-1 ml-5">
-          <span className="opacity-50">
-            {highlight(summary.summary, [Highligher(summary.highlight || "")])}
-          </span>
-        </div>
+        <List.Item.Description>
+          {highlight(summary.summary, [Highligher(summary.highlight || "")])}
+        </List.Item.Description>
       )}
     </List.Item>
   );
