@@ -43,11 +43,11 @@ export const notelink: CustomGrammarValue = {
 };
 
 export const mdLink: CustomGrammarValue = {
-  pattern: /\[[^\[]+\]\([^\[]+\)/m,
+  pattern: /\[[^\[\]\(\)]+\]\([^\(\)\[\]]+\)/m,
   greedy: true,
   inside: {
     labelPart: {
-      pattern: /^\[.+\]/m,
+      pattern: /^\[[^\[\]\(\)]+\]/m,
       inside: {
         punctuation: [
           {
@@ -66,7 +66,7 @@ export const mdLink: CustomGrammarValue = {
     },
   },
   payload: {
-    link: (token: any) => token.content[1].content.match(/^\((.*)\)$/)[1],
+    link: (token: any) => token?.content[1]?.content?.match(/^\((.*)\)$/)[1],
   },
 };
 
