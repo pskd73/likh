@@ -111,7 +111,6 @@ function Leaf({
     "text-3xl": leaf.title1,
     "text-2xl": leaf.title2,
     "text-xl": leaf.title3,
-    "acc-title": title && !leaf.hashes,
 
     // list
     "opacity-30 inline-flex justify-end pr-[4px]": leaf.bullet,
@@ -199,20 +198,12 @@ function Leaf({
   if (leaf.highlight) {
     id = "highlight";
   }
-  if (title && !leaf.punctuation) {
-    id = slugify(leaf.text, { lower: true });
-  }
 
   return (
     <span
       {...attributes}
       className={className}
       id={id}
-      data-title-level={classNames({
-        title1: leaf.title1,
-        title2: leaf.title2,
-        title3: leaf.title3,
-      })}
       style={style}
       onClick={() => {
         if (leaf.checkbox) {
@@ -364,6 +355,11 @@ const Editor = ({
       // quote
       const quote = text.match(quoteRegex);
 
+      // title
+      const titleMatch = text.match(/^(#{1,6}) .+/);
+      const titleSlug = titleMatch ? slugify(text, { lower: true }) : undefined;
+      const titleLavel = titleMatch ? titleMatch[1].length : undefined;
+
       const style: CSSProperties = {};
       const parsed = parseListText(text);
       if (parsed) {
@@ -407,6 +403,8 @@ const Editor = ({
               "mb-2": !quote,
             })}
             style={style}
+            data-title-level={titleLavel}
+            data-title-slug={titleSlug}
           >
             <span
               className={classNames({

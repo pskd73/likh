@@ -7,12 +7,14 @@ import Button from "../../Button";
 import { TbExternalLink } from "react-icons/tb";
 import { isMobile } from "../device";
 import { BiLink } from "react-icons/bi";
+import { scrollTo } from "../scroll";
 
 type OutlineTitle = {
   text: string | null;
   level: number;
   id: string;
   children: OutlineTitle[];
+  slug: string;
 };
 
 type NoteLink = {
@@ -45,17 +47,13 @@ const nested = (
 };
 
 const generateTitles = () => {
-  const nodes = document.querySelectorAll(".acc-title");
+  const nodes = document.querySelectorAll("[data-title-level]");
   const titles: OutlineTitle[] = [];
   nodes.forEach((node) => {
-    let level = NaN;
-    const rawLevel = node.getAttribute("data-title-level");
-    if (rawLevel) {
-      level = Number(rawLevel.replace("title", ""));
-    }
     titles.push({
-      text: node.textContent,
-      level,
+      text: node.textContent?.replace(/^#{1,6} /, "") || "",
+      level: Number(node.getAttribute("data-title-level")),
+      slug: node.getAttribute("data-title-slug")!.toString(),
       id: node.id,
       children: [],
     });
@@ -93,7 +91,7 @@ const List = ({
               if (isMobile) {
                 setSideBar(undefined);
               }
-              (window.location as any).href = `#${title.id}`;
+              scrollTo({ title: title.slug });
             }}
           >
             {prefix}
