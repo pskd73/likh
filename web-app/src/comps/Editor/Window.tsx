@@ -4,13 +4,14 @@ import { EditorContext, useEditor } from "./Context";
 import SidePanel from "./SidePanel/SidePanel";
 import StatusBar from "./StatusBar/StatusBar";
 import useStorage from "./useStorage";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useShortcuts from "./useShortcuts";
 import classNames from "classnames";
 import "./Core/test";
 import { textToTitle } from "../../Note";
 import { iOS, isMobile } from "./device";
 import EditableNote from "./EditableNote";
+import { init } from "./db";
 
 const STATUS_BAR_HEIGHT = 30;
 
@@ -18,8 +19,16 @@ const EditorWindow = () => {
   const storage = useStorage();
   const editorState = useEditor({ storage });
   const statusBarPadding = useMemo(() => (iOS() ? 20 : 0), []);
+  const [dbInitiated, setDbInitiated] = useState(false);
 
   useShortcuts(editorState);
+
+  useEffect(() => {
+    (async () => {
+      await init();
+      setDbInitiated(true);
+    })();
+  }, []);
 
   const getSuggestions = (prefix: string, term: string) => {
     const suggestions: Suggestion[] = [];
@@ -53,6 +62,10 @@ const EditorWindow = () => {
     }
     return suggestions;
   };
+
+  if (!dbInitiated) {
+    return null;
+  }
 
   return (
     <EditorContext.Provider value={editorState}>

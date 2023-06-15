@@ -1,19 +1,27 @@
-const request = indexedDB.open("retronote", 2);
 let db: IDBDatabase;
 
-request.onupgradeneeded = () => {
-  db = request.result;
+export const init = (): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open("retronote", 2);
+    request.onupgradeneeded = () => {
+      db = request.result;
 
-  const objectStore = db.createObjectStore("images", { autoIncrement: true });
-};
+      const objectStore = db.createObjectStore("images", {
+        autoIncrement: true,
+      });
+    };
 
-request.onsuccess = () => {
-  db = request.result;
-};
+    request.onsuccess = () => {
+      db = request.result;
+      resolve();
+    };
 
-request.onerror = (event) => {
-  console.error("Unable to create database connection!");
-  console.error(event);
+    request.onerror = (event) => {
+      console.error("Unable to create database connection!");
+      console.error(event);
+      reject();
+    };
+  });
 };
 
 export const close = () => {
