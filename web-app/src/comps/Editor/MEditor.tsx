@@ -103,17 +103,14 @@ function Leaf({
     "opacity-30": leaf.punctuation || leaf.blockquote,
 
     // title
-    "md:inline-flex": title && !leaf.hashes,
+    "md:inline-flex font-semibold": title && !leaf.hashes,
     "md:-ml-[50px] md:w-[50px] md:pr-[10px]": title && leaf.hashes,
     "md:inline-flex 1": title && leaf.hashes && leaf.focused,
     "hidden 1": title && leaf.hashes && !leaf.focused,
     "justify-end opacity-30": title && leaf.hashes,
-    "text-4xl": leaf.title1,
-    "text-3xl": leaf.title2,
-    "text-2xl": leaf.title3,
-    "mb-6": leaf.title1 && !leaf.punctuation,
-    "mb-4": leaf.title2 && !leaf.punctuation,
-    "mb-2": leaf.title3 && !leaf.punctuation,
+    "text-3xl": leaf.title1,
+    "text-2xl": leaf.title2,
+    "text-xl": leaf.title3,
     "acc-title": title && !leaf.hashes,
 
     // list

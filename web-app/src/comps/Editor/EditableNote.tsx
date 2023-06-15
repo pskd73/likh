@@ -94,13 +94,13 @@ const EditableNote = ({
   };
 
   return (
-    <div ref={ref} style={{ ...scroll.style }} className="space-y-6">
+    <div ref={ref} style={{ ...scroll.style }} className="space-y-6 md:px-20">
       {Object.keys(notes).map((id) => (
         <div
           className={classNames(
             `note-date-${moment(notes[id].created_at).format("YYYY-MM-DD")}`,
             `note-${id}`,
-            "pt-2"
+            "pt-2",
           )}
           key={id}
         >
