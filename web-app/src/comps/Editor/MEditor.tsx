@@ -97,17 +97,17 @@ function Leaf({
     italic: leaf.italic,
     "line-through": leaf.strikethrough,
     hidden:
-      leaf.hidable &&
-      !leaf.focused &&
-      (leaf.punctuation || leaf.hashes || leaf.notelinkId),
+      leaf.hidable && !leaf.focused && (leaf.punctuation || leaf.notelinkId),
 
     // generic punctuation
     "opacity-30": leaf.punctuation || leaf.blockquote,
 
     // title
-    "inline-flex font-bold": title,
-    "-ml-[50px] w-[50px] justify-end pr-[10px] opacity-30":
-      title && leaf.hashes,
+    "md:inline-flex": title && !leaf.hashes,
+    "md:-ml-[50px] md:w-[50px] md:pr-[10px]": title && leaf.hashes,
+    "md:inline-flex 1": title && leaf.hashes && leaf.focused,
+    "hidden 1": title && leaf.hashes && !leaf.focused,
+    "justify-end opacity-30": title && leaf.hashes,
     "text-4xl": leaf.title1,
     "text-3xl": leaf.title2,
     "text-2xl": leaf.title3,
@@ -349,14 +349,16 @@ const Editor = ({
       if (getSavedImg && localImgMatch) {
         const imgId = Number(localImgMatch[1]);
         if (images[imgId] === undefined) {
-          getSavedImg(imgId).then((savedImg) => {
-            images[imgId] = savedImg;
-            if (imgRef) {
-              imgRef.src = savedImg.uri;
-            }
-          }).catch(() => {
-            images[imgId] = undefined;
-          })
+          getSavedImg(imgId)
+            .then((savedImg) => {
+              images[imgId] = savedImg;
+              if (imgRef) {
+                imgRef.src = savedImg.uri;
+              }
+            })
+            .catch(() => {
+              images[imgId] = undefined;
+            });
           images[imgId] = null;
         }
         imgUri = images[imgId]?.uri;
