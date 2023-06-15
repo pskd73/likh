@@ -32,7 +32,7 @@ export const useEditorPaste = ({
               event.stopPropagation();
               const blob = item.getAsFile();
               if (blob) {
-                handleFile(blob);
+                return handleFile(blob);
               }
             }
           }
@@ -70,11 +70,11 @@ export const useEditorPaste = ({
     const LIMIT_KB = 500;
     const reader = new FileReader();
     reader.onload = async function (event) {
-      if (event.total > LIMIT_KB * 1000) {
-        return alert(`Cannot upload more than ${LIMIT_KB}kb images!`);
-      }
       if (handleSaveImg && event.target?.result) {
         const uri = event.target.result.toString();
+        if (uri.length > LIMIT_KB * 1000) {
+          return alert(`Cannot upload more than ${LIMIT_KB}kb images!`);
+        }
         let imgText = `![](${uri})`;
         const savedImg = await handleSaveImg({
           uri,
