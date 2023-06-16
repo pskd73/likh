@@ -110,7 +110,7 @@ const Explorer = () => {
             className="w-8 opacity-80"
           />
         </div>
-        <div className="space-x-2">
+        <div className="flex space-x-2">
           {installable && (
             <Button
               onClick={install}
