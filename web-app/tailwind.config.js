@@ -13,8 +13,6 @@ module.exports = {
       },
       colors: {
         "primary-700": "#6C6327",
-        "primary-500": "#CDC596",
-        "primary-400": "#E9E3C2",
         "base": "#FFFEF8"
       },
       typography: (theme) => ({
