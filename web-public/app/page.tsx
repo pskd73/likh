@@ -11,11 +11,11 @@ export default function Landing() {
       <Event name="landing_page" />
       <Auth />
       <div className="hidden bg-opacity-10" />
-      <div className="relative bg-[url('/hero_bg.png')] bg-center px-2 md:px-0">
-        <Nav />
+      <div className="relative bg-[url('/hero_bg.png')] bg-center px-2 md:px-0 py-16">
+        {/* <Nav /> */}
         <Hero />
       </div>
-      <div className="space-y-6" id="features">
+      {/* <div className="space-y-6" id="features">
         <Feature bg>
           <Feature.Content>
             <Feature.Title>Privacy</Feature.Title>
@@ -93,7 +93,7 @@ export default function Landing() {
             </Feature.DemoImg>
           </Feature.Demo>
         </Feature>
-      </div>
+      </div> */}
       <Footer />
     </div>
   );
