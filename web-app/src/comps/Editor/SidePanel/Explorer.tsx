@@ -15,6 +15,7 @@ import { usePWA } from "../PWA";
 import { MdInstallDesktop } from "react-icons/md";
 import { SavedNote } from "../type";
 import {
+  BiBrush,
   BiCog,
   BiCollapseVertical,
   BiFile,
@@ -24,6 +25,8 @@ import {
 } from "react-icons/bi";
 import { isMobile } from "../device";
 import { highlight, makeExtractor } from "../Marker";
+import { Themes } from "../Theme";
+import { twMerge } from "tailwind-merge";
 
 const Highligher = (word: string) =>
   makeExtractor(
@@ -55,6 +58,38 @@ const NoteListItem = ({
   );
 };
 
+const ThemeBox = ({
+  children,
+  className,
+  themeName,
+  active,
+  ...restProps
+}: ComponentProps<"div"> & { themeName: string; active: boolean }) => {
+  const theme = Themes[themeName];
+
+  return (
+    <div
+      className={twMerge(
+        classNames(
+          theme.font.base,
+          "px-3 h-8 border-primary-700 border-2 cursor-pointer",
+          "rounded flex justify-center items-center",
+          "hover:bg-primary-700 hover:bg-opacity-5 active:bg-opacity-10",
+          "transition-all",
+          {
+            "border-opacity-30": !active,
+            "border-opacity-80": active,
+          }
+        ),
+        className
+      )}
+      {...restProps}
+    >
+      {children}
+    </div>
+  );
+};
+
 const Explorer = () => {
   const {
     note,
@@ -70,6 +105,8 @@ const Explorer = () => {
     setRollHashTag,
     toggleSideMenu,
     isSideMenuActive,
+    themeName,
+    setThemeName,
   } = useContext(EditorContext);
   const { install, installable } = usePWA();
 
@@ -252,6 +289,30 @@ const Explorer = () => {
                 <div className="flex items-center space-x-1">
                   <BiInfoCircle />
                   <span>Introduction note</span>
+                </div>
+              </List.Item>
+              <List.Item noHover>
+                <div className="flex space-x-1">
+                  <BiBrush className="mt-1" />
+                  <div>
+                    <div className="mb-2">Theme</div>
+                    <div className="flex space-x-2">
+                      <ThemeBox
+                        themeName="Basic"
+                        onClick={() => setThemeName("Basic")}
+                        active={themeName === "Basic"}
+                      >
+                        Basic
+                      </ThemeBox>
+                      <ThemeBox
+                        themeName="Lite"
+                        onClick={() => setThemeName("Lite")}
+                        active={themeName === "Lite"}
+                      >
+                        Lite
+                      </ThemeBox>
+                    </div>
+                  </div>
                 </div>
               </List.Item>
             </List>

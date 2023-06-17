@@ -10,6 +10,7 @@ import { BiPlus } from "react-icons/bi";
 import Button from "../Button";
 import { scrollTo } from "./scroll";
 import { getImage, insertImage } from "./db";
+import { Themes } from "./Theme";
 
 const EditableNote = ({
   getSuggestions,
@@ -28,6 +29,7 @@ const EditableNote = ({
     newNote,
     rollHashTag,
     searchTerm,
+    themeName,
   } = useContext(EditorContext);
   const scroll = useMiddle(ref, [typewriterMode], {
     typeWriter: typewriterMode,
@@ -100,7 +102,7 @@ const EditableNote = ({
           className={classNames(
             `note-date-${moment(notes[id].created_at).format("YYYY-MM-DD")}`,
             `note-${id}`,
-            "pt-2",
+            "pt-2"
           )}
           key={id}
         >
@@ -136,6 +138,7 @@ const EditableNote = ({
               });
               return { id, uri: img.uri };
             }}
+            theme={Themes[themeName] || Themes.Basic}
           />
         </div>
       ))}

@@ -4,6 +4,7 @@ import { NewNote, SavedNote } from "./type";
 import { isLinked } from "../../Note";
 import { LinkSuggestion, getLinkSuggestions } from "./Suggestion";
 import { PersistedState } from "./usePersistedState";
+import { Theme, Themes } from "./Theme";
 
 type StateSetter<T> = React.Dispatch<React.SetStateAction<T>>;
 type CountStatType = "words" | "readTime";
@@ -24,7 +25,7 @@ export type EditorContextType = {
   activeSideMenus: string[];
   toggleSideMenu: (key: string) => void;
   isSideMenuActive: (key: string) => boolean;
-  setActiveSideMenus: StateSetter<string[]>,
+  setActiveSideMenus: StateSetter<string[]>;
 
   showStats: boolean;
   setShowStats: StateSetter<boolean>;
@@ -59,6 +60,9 @@ export type EditorContextType = {
   isRoll: boolean;
   rollHashTag: string;
   setRollHashTag: StateSetter<string>;
+
+  themeName: string;
+  setThemeName: StateSetter<string>;
 };
 
 export const EditorContext = createContext<EditorContextType>(
@@ -74,7 +78,9 @@ const { hook: useNoteId, value: defaultNoteId } =
 const { hook: useRollHashtag, value: defaultRollHashtag } =
   PersistedState<string>("rollHashtag");
 const { hook: useActiveSideMenus } = PersistedState("activeSideMenus");
-const { hook: useCountStatType } = PersistedState<CountStatType>("countStatType");
+const { hook: useCountStatType } =
+  PersistedState<CountStatType>("countStatType");
+const { hook: useThemeName } = PersistedState<Theme>("themeName");
 
 export const useEditor = ({
   storage,
@@ -88,7 +94,8 @@ export const useEditor = ({
   ]);
   const [showStats, setShowStats] = useShowStats(true);
   const [typewriterMode, setTypewriterMode] = useTypewriterMode(false);
-  const [countStatType, setCountStatType] = useCountStatType<CountStatType>("words");
+  const [countStatType, setCountStatType] =
+    useCountStatType<CountStatType>("words");
   const [notes, setNotes] = useState<Record<string, SavedNote>>(() => {
     if (defaultNoteId && !defaultRollHashtag) {
       const _note = storage.getNote(defaultNoteId);
@@ -105,6 +112,7 @@ export const useEditor = ({
   const [searchTerm, setSearchTerm] = useSearchTerm<string>("");
   const [rollHashTag, setRollHashTag] = useRollHashtag<string>("");
   const [noteId, setNoteId] = useNoteId<string | undefined>(defaultNoteId);
+  const [themeName, setThemeName] = useThemeName<string>("Basic");
 
   const notesToShow = useMemo<NoteSummary[]>(() => {
     if (searchTerm) {
@@ -318,5 +326,8 @@ export const useEditor = ({
     isRoll: !!rollHashTag,
     rollHashTag,
     setRollHashTag,
+
+    themeName,
+    setThemeName,
   };
 };

@@ -24,7 +24,6 @@ export type Suggestion = {
 };
 
 export enum Font {
-  SpecialElite = "Special Elite",
   CourierPrime = "Courier Prime",
   CutiveMono = "Cutive Mono",
 }

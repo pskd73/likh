@@ -10,20 +10,18 @@ const Item = ({
   children,
   className,
   active,
+  noHover,
   ...restProps
-}: ComponentProps<"li"> & { active?: boolean }) => {
+}: ComponentProps<"li"> & { active?: boolean; noHover?: boolean }) => {
   return (
     <li
       className={twMerge(
-        classNames(
-          "py-1 px-2 last:border-b-0 border-primary-700 border-opacity-20",
-          "bg-primary-700 hover:bg-opacity-10 active:bg-opacity-20 transition-colors",
-          "cursor-pointer rounded text-sm last:mb-4",
-          {
-            "bg-opacity-10": active,
-            "bg-opacity-0": !active,
-          }
-        ),
+        classNames("py-1 px-2", "rounded text-sm last:mb-4", {
+          "bg-opacity-10": active,
+          "bg-opacity-0": !active,
+          "bg-primary-700  transition-colors cursor-pointer": !noHover,
+          "hover:bg-opacity-10 active:bg-opacity-20": !noHover,
+        }),
         className
       )}
       style={{ marginTop: 2 }}

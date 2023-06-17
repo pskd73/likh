@@ -46,6 +46,7 @@ import {
   useContextMenu,
 } from "./Core/ContextMenu";
 import { PastedImg, SavedImg, useEditorPaste } from "./useEditorPaste";
+import { Theme, Themes } from "./Theme";
 
 const defaultValue = [
   {
@@ -70,6 +71,7 @@ function Leaf({
   onCheckboxToggle,
   onNoteLinkClick,
   text,
+  theme,
 }: {
   attributes: any;
   children: any;
@@ -77,6 +79,7 @@ function Leaf({
   onCheckboxToggle(path: number[]): void;
   onNoteLinkClick(title: string, id?: string): void;
   text: string;
+  theme: Theme;
 }) {
   const title = leaf.title1 || leaf.title2 || leaf.title3;
 
@@ -108,9 +111,9 @@ function Leaf({
     "md:inline-flex 1": title && leaf.hashes && leaf.focused,
     "hidden 1": title && leaf.hashes && !leaf.focused,
     "justify-end opacity-30": title && leaf.hashes,
-    "text-3xl": leaf.title1,
-    "text-2xl": leaf.title2,
-    "text-xl": leaf.title3,
+    [theme.font.title1]: leaf.title1,
+    [theme.font.title2]: leaf.title2,
+    [theme.font.title3]: leaf.title3,
 
     // list
     "opacity-30 inline-flex justify-end pr-[4px]": leaf.bullet,
@@ -227,6 +230,7 @@ const Editor = ({
   handleSaveImg,
   getSavedImg,
   containerClassName,
+  theme,
 }: {
   onChange: (val: {
     value: Descendant[];
@@ -243,7 +247,10 @@ const Editor = ({
   highlight?: string;
   handleSaveImg?: (img: PastedImg) => Promise<SavedImg>;
   getSavedImg?: (id: number) => Promise<SavedImg>;
+  theme?: Theme;
 }) => {
+  theme = theme || Themes.Basic;
+
   const editor = useMemo(
     () => passedEditor || withHistory(withReact(createEditor())),
     [passedEditor]
@@ -278,6 +285,7 @@ const Editor = ({
         {...props}
         onCheckboxToggle={(path) => toggleCheckbox(editor, path)}
         onNoteLinkClick={onNoteLinkClick || (() => {})}
+        theme={theme}
       />
     ),
     []
@@ -476,6 +484,7 @@ const Editor = ({
         onChange={handleChange}
       >
         <Editable
+          className={theme.font.base}
           decorate={decorate}
           renderLeaf={renderLeaf}
           renderElement={renderElement}

@@ -7,9 +7,9 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        SpecialElite: ["Special Elite", "cursive"],
         CourierPrime: ["Courier Prime", "monospace"],
-        Inter: ["Inter", "sans-serif"]
+        Inter: ["Inter", "sans-serif"],
+        Cormorant: ["'Cormorant Garamond'", "serif"]
       },
       colors: {
         "primary-700": "#6C6327",
