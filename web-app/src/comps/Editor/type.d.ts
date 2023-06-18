@@ -12,4 +12,7 @@ export type SavedNote = {
   text: string;
   serialized?: string;
   created_at: number;
+  reminder?: {
+    date: number;
+  }
 };

@@ -118,7 +118,8 @@ const List = ({
 };
 
 const Outline = () => {
-  const { note, setOrNewNote, setSideBar } = useContext(EditorContext);
+  const { note, updateNote, setOrNewNote, setSideBar } =
+    useContext(EditorContext);
   const [timer, setTimer] = useState(new Date().getTime());
   const [linksActive, setLinksActive] = useState(false);
   const titles = useMemo(() => {
@@ -144,8 +145,15 @@ const Outline = () => {
     } else if (e.target.value === "a week") {
       date = date.add(7, "days");
     }
+
+    const updatedNote = { ...note };
+    updatedNote.reminder = {
+      date: date.toDate().getTime(),
+    };
+    updateNote(updatedNote);
+
     const link = getGoogleCalendarLink({
-      text: `Continue writing ${textToTitle(note.text)}`,
+      text: `Continue writing "${textToTitle(note.text)}"`,
       date: date.toDate(),
       location: "https://app.retronote.app/write",
     });
@@ -207,7 +215,10 @@ const Outline = () => {
           </span>
           <div className="flex items-center justify-between w-full">
             <span>Reminder</span>
-            <select className="p-1 rounded cursor-pointer" onChange={handleReminder}>
+            <select
+              className="p-1 rounded cursor-pointer"
+              onChange={handleReminder}
+            >
               <option value={""}>Select ...</option>
               <option value={"tonight"}>Tonight</option>
               <option value={"tomorrow"}>Tomorrow</option>
