@@ -53,8 +53,18 @@ FeatureItem.Icon = function Icon({ children }: PropsWithChildren) {
   );
 };
 
-FeatureItem.Text = function Text({ children }: PropsWithChildren) {
-  return <div className="text-center h-1/2">{children}</div>;
+FeatureItem.Body = function Body({ children }: PropsWithChildren) {
+  return <p className="text-center h-1/2">{children}</p>;
+};
+
+FeatureItem.Title = function Title({ children }: PropsWithChildren) {
+  return <h2 className="text-center font-semibold">{children}</h2>;
+};
+
+FeatureItem.Description = function Description({
+  children,
+}: PropsWithChildren) {
+  return <div className="text-center h-1/2 text-xs py-1">{children}</div>;
 };
 
 FeatureItem.Soon = function Soon() {
@@ -78,7 +88,12 @@ function AllFeatures() {
           <FeatureItem.Icon>
             <SiMarkdown />
           </FeatureItem.Icon>
-          <FeatureItem.Text>Full markdown support for styling</FeatureItem.Text>
+          <FeatureItem.Body>
+            <FeatureItem.Title>Markdown</FeatureItem.Title>
+            <FeatureItem.Description>
+              Decorate your notes with full markdown support
+            </FeatureItem.Description>
+          </FeatureItem.Body>
         </FeatureItem>
       </li>
       <li>
@@ -86,7 +101,12 @@ function AllFeatures() {
           <FeatureItem.Icon>
             <BiHash />
           </FeatureItem.Icon>
-          <FeatureItem.Text>Organise notes by hashtags</FeatureItem.Text>
+          <FeatureItem.Body>
+            <FeatureItem.Title>Organise</FeatureItem.Title>
+            <FeatureItem.Description>
+              Categorise and group your notes by hashtags
+            </FeatureItem.Description>
+          </FeatureItem.Body>
         </FeatureItem>
       </li>
       <li>
@@ -94,7 +114,12 @@ function AllFeatures() {
           <FeatureItem.Icon>
             <BiSearch />
           </FeatureItem.Icon>
-          <FeatureItem.Text>Easy search across notes</FeatureItem.Text>
+          <FeatureItem.Body>
+            <FeatureItem.Title>Search</FeatureItem.Title>
+            <FeatureItem.Description>
+              Quickly search what you want across the notes
+            </FeatureItem.Description>
+          </FeatureItem.Body>
         </FeatureItem>
       </li>
       <li>
@@ -102,7 +127,12 @@ function AllFeatures() {
           <FeatureItem.Icon>
             <BiRightArrow />
           </FeatureItem.Icon>
-          <FeatureItem.Text>Chronological journaling</FeatureItem.Text>
+          <FeatureItem.Body>
+            <FeatureItem.Title>Journaling</FeatureItem.Title>
+            <FeatureItem.Description>
+              Write your dairies or any chronological notes
+            </FeatureItem.Description>
+          </FeatureItem.Body>
         </FeatureItem>
       </li>
       <li>
@@ -110,7 +140,12 @@ function AllFeatures() {
           <FeatureItem.Icon>
             <BiSpreadsheet />
           </FeatureItem.Icon>
-          <FeatureItem.Text>Easy outline of the note</FeatureItem.Text>
+          <FeatureItem.Body>
+            <FeatureItem.Title>Outline</FeatureItem.Title>
+            <FeatureItem.Description>
+              Always have an highlevel structure of your note
+            </FeatureItem.Description>
+          </FeatureItem.Body>
         </FeatureItem>
       </li>
       <li>
@@ -118,7 +153,12 @@ function AllFeatures() {
           <FeatureItem.Icon>
             <BiImages />
           </FeatureItem.Icon>
-          <FeatureItem.Text>Drag and drop images</FeatureItem.Text>
+          <FeatureItem.Body>
+            <FeatureItem.Title>Images</FeatureItem.Title>
+            <FeatureItem.Description>
+              Drag and drop images from your system
+            </FeatureItem.Description>
+          </FeatureItem.Body>
         </FeatureItem>
       </li>
       <li>
@@ -126,9 +166,12 @@ function AllFeatures() {
           <FeatureItem.Icon>
             <BiCodeAlt />
           </FeatureItem.Icon>
-          <FeatureItem.Text>
-            Code blocks with syntax highlighting
-          </FeatureItem.Text>
+          <FeatureItem.Body>
+            <FeatureItem.Title>Code blocks</FeatureItem.Title>
+            <FeatureItem.Description>
+              Write down the code inside note with syntax highlighting
+            </FeatureItem.Description>
+          </FeatureItem.Body>
         </FeatureItem>
       </li>
       <li>
@@ -136,7 +179,12 @@ function AllFeatures() {
           <FeatureItem.Icon>
             <BiShapePolygon />
           </FeatureItem.Icon>
-          <FeatureItem.Text>Link notes to build a brain dump</FeatureItem.Text>
+          <FeatureItem.Body>
+            <FeatureItem.Title>Linked notes</FeatureItem.Title>
+            <FeatureItem.Description>
+              Embed notes in another note to create the connections
+            </FeatureItem.Description>
+          </FeatureItem.Body>
         </FeatureItem>
       </li>
       <li>
@@ -144,7 +192,12 @@ function AllFeatures() {
           <FeatureItem.Icon>
             <TbZip />
           </FeatureItem.Icon>
-          <FeatureItem.Text>Quick export. No lock in</FeatureItem.Text>
+          <FeatureItem.Body>
+            <FeatureItem.Title>Export</FeatureItem.Title>
+            <FeatureItem.Description>
+              Quickly export all of your notes. No lock in
+            </FeatureItem.Description>
+          </FeatureItem.Body>
         </FeatureItem>
       </li>
       <li>
@@ -152,9 +205,12 @@ function AllFeatures() {
           <FeatureItem.Icon>
             <BiCalendar />
           </FeatureItem.Icon>
-          <FeatureItem.Text>
-            Calendar view for quick navigation
-          </FeatureItem.Text>
+          <FeatureItem.Body>
+            <FeatureItem.Title>Calendar</FeatureItem.Title>
+            <FeatureItem.Description>
+              Navigate through the time with a calendar view
+            </FeatureItem.Description>
+          </FeatureItem.Body>
         </FeatureItem>
       </li>
       <li>
@@ -162,7 +218,12 @@ function AllFeatures() {
           <FeatureItem.Icon>
             <BiBriefcase />
           </FeatureItem.Icon>
-          <FeatureItem.Text>Local only. Full privacy</FeatureItem.Text>
+          <FeatureItem.Body>
+            <FeatureItem.Title>Local first</FeatureItem.Title>
+            <FeatureItem.Description>
+              Your data stays on your device. Full privacy
+            </FeatureItem.Description>
+          </FeatureItem.Body>
         </FeatureItem>
       </li>
       <li>
@@ -170,7 +231,12 @@ function AllFeatures() {
           <FeatureItem.Icon>
             <BsKeyboard />
           </FeatureItem.Icon>
-          <FeatureItem.Text>All actions by keyboard shortcuts</FeatureItem.Text>
+          <FeatureItem.Body>
+            <FeatureItem.Title>Shortcuts</FeatureItem.Title>
+            <FeatureItem.Description>
+              Use shortcuts for all actions. Fingers on keys alway
+            </FeatureItem.Description>
+          </FeatureItem.Body>
         </FeatureItem>
       </li>
       <li>
@@ -178,7 +244,12 @@ function AllFeatures() {
           <FeatureItem.Icon>
             <BiAlarm />
           </FeatureItem.Icon>
-          <FeatureItem.Text>Reminders to follow up sessions</FeatureItem.Text>
+          <FeatureItem.Body>
+            <FeatureItem.Title>Reminders</FeatureItem.Title>
+            <FeatureItem.Description>
+              Keep track of your future plans by setting reminders
+            </FeatureItem.Description>
+          </FeatureItem.Body>
         </FeatureItem>
       </li>
       <li>
@@ -186,7 +257,12 @@ function AllFeatures() {
           <FeatureItem.Icon>
             <BiBrush />
           </FeatureItem.Icon>
-          <FeatureItem.Text>Themes for all sort of tastes</FeatureItem.Text>
+          <FeatureItem.Body>
+            <FeatureItem.Title>Themes</FeatureItem.Title>
+            <FeatureItem.Description>
+              Change look and feel that matches your taste
+            </FeatureItem.Description>
+          </FeatureItem.Body>
         </FeatureItem>
       </li>
       <li>
@@ -195,7 +271,12 @@ function AllFeatures() {
           <FeatureItem.Icon>
             <BiShareAlt />
           </FeatureItem.Icon>
-          <FeatureItem.Text>Quick sharing privately</FeatureItem.Text>
+          <FeatureItem.Body>
+            <FeatureItem.Title>Share</FeatureItem.Title>
+            <FeatureItem.Description>
+              Share your notes to your friends privately
+            </FeatureItem.Description>
+          </FeatureItem.Body>
         </FeatureItem>
       </li>
       <li>
@@ -204,7 +285,12 @@ function AllFeatures() {
           <FeatureItem.Icon>
             <BiDevices />
           </FeatureItem.Icon>
-          <FeatureItem.Text>Sync multi device seamlessly</FeatureItem.Text>
+          <FeatureItem.Body>
+            <FeatureItem.Title>Multi-device</FeatureItem.Title>
+            <FeatureItem.Description>
+              Switch between mobile and system to continue your work
+            </FeatureItem.Description>
+          </FeatureItem.Body>
         </FeatureItem>
       </li>
     </>
