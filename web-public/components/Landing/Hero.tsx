@@ -329,7 +329,7 @@ export default function Hero() {
       </div>
 
       <div className="flex flex-col items-center space-y-10 max-w-[900px] mt-16 px-6 md:px-0">
-        <img src="/one.png" className={"shadow-2xl rounded-lg w-full"} />
+        <img src="/one.png" className={"shadow-2xl rounded-lg w-full"} alt="A sample note on Retro Note" />
       </div>
     </div>
   );
