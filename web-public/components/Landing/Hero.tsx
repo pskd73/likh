@@ -64,7 +64,7 @@ FeatureItem.Title = function Title({ children }: PropsWithChildren) {
 FeatureItem.Description = function Description({
   children,
 }: PropsWithChildren) {
-  return <div className="text-center h-1/2 text-xs py-1">{children}</div>;
+  return <div className="text-center h-1/2 text-xs py-1 opacity-70">{children}</div>;
 };
 
 FeatureItem.Soon = function Soon() {
