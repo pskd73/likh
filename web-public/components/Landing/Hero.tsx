@@ -73,55 +73,55 @@ FeatureItem.Soon = function Soon() {
 function AllFeatures() {
   return (
     <>
-      <div>
+      <li>
         <FeatureItem>
           <FeatureItem.Icon>
             <SiMarkdown />
           </FeatureItem.Icon>
           <FeatureItem.Text>Full markdown support for styling</FeatureItem.Text>
         </FeatureItem>
-      </div>
-      <div>
+      </li>
+      <li>
         <FeatureItem>
           <FeatureItem.Icon>
             <BiHash />
           </FeatureItem.Icon>
           <FeatureItem.Text>Organise notes by hashtags</FeatureItem.Text>
         </FeatureItem>
-      </div>
-      <div>
+      </li>
+      <li>
         <FeatureItem>
           <FeatureItem.Icon>
             <BiSearch />
           </FeatureItem.Icon>
           <FeatureItem.Text>Easy search across notes</FeatureItem.Text>
         </FeatureItem>
-      </div>
-      <div>
+      </li>
+      <li>
         <FeatureItem>
           <FeatureItem.Icon>
             <BiRightArrow />
           </FeatureItem.Icon>
           <FeatureItem.Text>Chronological journaling</FeatureItem.Text>
         </FeatureItem>
-      </div>
-      <div>
+      </li>
+      <li>
         <FeatureItem>
           <FeatureItem.Icon>
             <BiSpreadsheet />
           </FeatureItem.Icon>
           <FeatureItem.Text>Easy outline of the note</FeatureItem.Text>
         </FeatureItem>
-      </div>
-      <div>
+      </li>
+      <li>
         <FeatureItem>
           <FeatureItem.Icon>
             <BiImages />
           </FeatureItem.Icon>
           <FeatureItem.Text>Drag and drop images</FeatureItem.Text>
         </FeatureItem>
-      </div>
-      <div>
+      </li>
+      <li>
         <FeatureItem>
           <FeatureItem.Icon>
             <BiCodeAlt />
@@ -130,24 +130,24 @@ function AllFeatures() {
             Code blocks with syntax highlighting
           </FeatureItem.Text>
         </FeatureItem>
-      </div>
-      <div>
+      </li>
+      <li>
         <FeatureItem>
           <FeatureItem.Icon>
             <BiShapePolygon />
           </FeatureItem.Icon>
           <FeatureItem.Text>Link notes to build a brain dump</FeatureItem.Text>
         </FeatureItem>
-      </div>
-      <div>
+      </li>
+      <li>
         <FeatureItem>
           <FeatureItem.Icon>
             <TbZip />
           </FeatureItem.Icon>
           <FeatureItem.Text>Quick export. No lock in</FeatureItem.Text>
         </FeatureItem>
-      </div>
-      <div>
+      </li>
+      <li>
         <FeatureItem>
           <FeatureItem.Icon>
             <BiCalendar />
@@ -156,40 +156,40 @@ function AllFeatures() {
             Calendar view for quick navigation
           </FeatureItem.Text>
         </FeatureItem>
-      </div>
-      <div>
+      </li>
+      <li>
         <FeatureItem>
           <FeatureItem.Icon>
             <BiBriefcase />
           </FeatureItem.Icon>
           <FeatureItem.Text>Local only. Full privacy</FeatureItem.Text>
         </FeatureItem>
-      </div>
-      <div>
+      </li>
+      <li>
         <FeatureItem>
           <FeatureItem.Icon>
             <BsKeyboard />
           </FeatureItem.Icon>
           <FeatureItem.Text>All actions by keyboard shortcuts</FeatureItem.Text>
         </FeatureItem>
-      </div>
-      <div>
+      </li>
+      <li>
         <FeatureItem>
           <FeatureItem.Icon>
             <BiAlarm />
           </FeatureItem.Icon>
           <FeatureItem.Text>Reminders to follow up sessions</FeatureItem.Text>
         </FeatureItem>
-      </div>
-      <div>
+      </li>
+      <li>
         <FeatureItem>
           <FeatureItem.Icon>
             <BiBrush />
           </FeatureItem.Icon>
           <FeatureItem.Text>Themes for all sort of tastes</FeatureItem.Text>
         </FeatureItem>
-      </div>
-      <div>
+      </li>
+      <li>
         <FeatureItem>
           <FeatureItem.Soon />
           <FeatureItem.Icon>
@@ -197,8 +197,8 @@ function AllFeatures() {
           </FeatureItem.Icon>
           <FeatureItem.Text>Quick sharing privately</FeatureItem.Text>
         </FeatureItem>
-      </div>
-      <div>
+      </li>
+      <li>
         <FeatureItem>
           <FeatureItem.Soon />
           <FeatureItem.Icon>
@@ -206,7 +206,7 @@ function AllFeatures() {
           </FeatureItem.Icon>
           <FeatureItem.Text>Sync multi device seamlessly</FeatureItem.Text>
         </FeatureItem>
-      </div>
+      </li>
     </>
   );
 }
