@@ -19,7 +19,6 @@ import {
 } from "react-icons/bi";
 import { TbZip } from "react-icons/tb";
 import { BsKeyboard } from "react-icons/bs";
-import Marquee from "react-fast-marquee";
 
 export function Highlight({ children }: PropsWithChildren) {
   return (
@@ -38,7 +37,7 @@ function FeatureItem({ children }: ComponentProps<"li">) {
       className={classNames(
         "p-4 border border-primary-700 border-opacity-30 rounded-lg",
         "flex flex-col justify-center bg-white",
-        "w-44 h-44 mr-4 relative"
+        "w-44 h-44 relative"
       )}
     >
       {children}
@@ -71,6 +70,147 @@ FeatureItem.Soon = function Soon() {
   );
 };
 
+function AllFeatures() {
+  return (
+    <>
+      <div>
+        <FeatureItem>
+          <FeatureItem.Icon>
+            <SiMarkdown />
+          </FeatureItem.Icon>
+          <FeatureItem.Text>Full markdown support for styling</FeatureItem.Text>
+        </FeatureItem>
+      </div>
+      <div>
+        <FeatureItem>
+          <FeatureItem.Icon>
+            <BiHash />
+          </FeatureItem.Icon>
+          <FeatureItem.Text>Organise notes by hashtags</FeatureItem.Text>
+        </FeatureItem>
+      </div>
+      <div>
+        <FeatureItem>
+          <FeatureItem.Icon>
+            <BiSearch />
+          </FeatureItem.Icon>
+          <FeatureItem.Text>Easy search across notes</FeatureItem.Text>
+        </FeatureItem>
+      </div>
+      <div>
+        <FeatureItem>
+          <FeatureItem.Icon>
+            <BiRightArrow />
+          </FeatureItem.Icon>
+          <FeatureItem.Text>Chronological journaling</FeatureItem.Text>
+        </FeatureItem>
+      </div>
+      <div>
+        <FeatureItem>
+          <FeatureItem.Icon>
+            <BiSpreadsheet />
+          </FeatureItem.Icon>
+          <FeatureItem.Text>Easy outline of the note</FeatureItem.Text>
+        </FeatureItem>
+      </div>
+      <div>
+        <FeatureItem>
+          <FeatureItem.Icon>
+            <BiImages />
+          </FeatureItem.Icon>
+          <FeatureItem.Text>Drag and drop images</FeatureItem.Text>
+        </FeatureItem>
+      </div>
+      <div>
+        <FeatureItem>
+          <FeatureItem.Icon>
+            <BiCodeAlt />
+          </FeatureItem.Icon>
+          <FeatureItem.Text>
+            Code blocks with syntax highlighting
+          </FeatureItem.Text>
+        </FeatureItem>
+      </div>
+      <div>
+        <FeatureItem>
+          <FeatureItem.Icon>
+            <BiShapePolygon />
+          </FeatureItem.Icon>
+          <FeatureItem.Text>Link notes to build a brain dump</FeatureItem.Text>
+        </FeatureItem>
+      </div>
+      <div>
+        <FeatureItem>
+          <FeatureItem.Icon>
+            <TbZip />
+          </FeatureItem.Icon>
+          <FeatureItem.Text>Quick export. No lock in</FeatureItem.Text>
+        </FeatureItem>
+      </div>
+      <div>
+        <FeatureItem>
+          <FeatureItem.Icon>
+            <BiCalendar />
+          </FeatureItem.Icon>
+          <FeatureItem.Text>
+            Calendar view for quick navigation
+          </FeatureItem.Text>
+        </FeatureItem>
+      </div>
+      <div>
+        <FeatureItem>
+          <FeatureItem.Icon>
+            <BiBriefcase />
+          </FeatureItem.Icon>
+          <FeatureItem.Text>Local only. Full privacy</FeatureItem.Text>
+        </FeatureItem>
+      </div>
+      <div>
+        <FeatureItem>
+          <FeatureItem.Icon>
+            <BsKeyboard />
+          </FeatureItem.Icon>
+          <FeatureItem.Text>All actions by keyboard shortcuts</FeatureItem.Text>
+        </FeatureItem>
+      </div>
+      <div>
+        <FeatureItem>
+          <FeatureItem.Icon>
+            <BiAlarm />
+          </FeatureItem.Icon>
+          <FeatureItem.Text>Reminders to follow up sessions</FeatureItem.Text>
+        </FeatureItem>
+      </div>
+      <div>
+        <FeatureItem>
+          <FeatureItem.Icon>
+            <BiBrush />
+          </FeatureItem.Icon>
+          <FeatureItem.Text>Themes for all sort of tastes</FeatureItem.Text>
+        </FeatureItem>
+      </div>
+      <div>
+        <FeatureItem>
+          <FeatureItem.Soon />
+          <FeatureItem.Icon>
+            <BiShareAlt />
+          </FeatureItem.Icon>
+          <FeatureItem.Text>Quick sharing privately</FeatureItem.Text>
+        </FeatureItem>
+      </div>
+      <div>
+        <FeatureItem>
+          <FeatureItem.Soon />
+          <FeatureItem.Icon>
+            <BiDevices />
+          </FeatureItem.Icon>
+          <FeatureItem.Text>Sync multi device seamlessly</FeatureItem.Text>
+        </FeatureItem>
+      </div>
+    </>
+  );
+}
+
 export default function Hero() {
   return (
     <div className="flex justify-center flex-col items-center">
@@ -96,124 +236,10 @@ export default function Hero() {
         Start writing &rarr;
       </a>
 
-      <div className="mt-10 w-full py-4">
-        <Marquee
-          speed={100}
-          pauseOnHover
-          gradient
-          gradientWidth={100}
-          gradientColor={[255, 254, 248]}
-          play={true}
-        >
-          <FeatureItem>
-            <FeatureItem.Icon>
-              <SiMarkdown />
-            </FeatureItem.Icon>
-            <FeatureItem.Text>
-              Full markdown support for styling
-            </FeatureItem.Text>
-          </FeatureItem>
-          <FeatureItem>
-            <FeatureItem.Icon>
-              <BiHash />
-            </FeatureItem.Icon>
-            <FeatureItem.Text>Organise notes by hashtags</FeatureItem.Text>
-          </FeatureItem>
-          <FeatureItem>
-            <FeatureItem.Icon>
-              <BiSearch />
-            </FeatureItem.Icon>
-            <FeatureItem.Text>Easy search across notes</FeatureItem.Text>
-          </FeatureItem>
-          <FeatureItem>
-            <FeatureItem.Icon>
-              <BiRightArrow />
-            </FeatureItem.Icon>
-            <FeatureItem.Text>Chronological journaling</FeatureItem.Text>
-          </FeatureItem>
-          <FeatureItem>
-            <FeatureItem.Icon>
-              <BiSpreadsheet />
-            </FeatureItem.Icon>
-            <FeatureItem.Text>Easy outline of the note</FeatureItem.Text>
-          </FeatureItem>
-          <FeatureItem>
-            <FeatureItem.Icon>
-              <BiImages />
-            </FeatureItem.Icon>
-            <FeatureItem.Text>Drag and drop images</FeatureItem.Text>
-          </FeatureItem>
-          <FeatureItem>
-            <FeatureItem.Icon>
-              <BiCodeAlt />
-            </FeatureItem.Icon>
-            <FeatureItem.Text>
-              Code blocks with syntax highlighting
-            </FeatureItem.Text>
-          </FeatureItem>
-          <FeatureItem>
-            <FeatureItem.Icon>
-              <BiShapePolygon />
-            </FeatureItem.Icon>
-            <FeatureItem.Text>
-              Link notes to build a brain dump
-            </FeatureItem.Text>
-          </FeatureItem>
-          <FeatureItem>
-            <FeatureItem.Icon>
-              <TbZip />
-            </FeatureItem.Icon>
-            <FeatureItem.Text>Quick export. No lock in</FeatureItem.Text>
-          </FeatureItem>
-          <FeatureItem>
-            <FeatureItem.Icon>
-              <BiCalendar />
-            </FeatureItem.Icon>
-            <FeatureItem.Text>
-              Calendar view for quick navigation
-            </FeatureItem.Text>
-          </FeatureItem>
-          <FeatureItem>
-            <FeatureItem.Icon>
-              <BiBriefcase />
-            </FeatureItem.Icon>
-            <FeatureItem.Text>Local only. Full privacy</FeatureItem.Text>
-          </FeatureItem>
-          <FeatureItem>
-            <FeatureItem.Icon>
-              <BsKeyboard />
-            </FeatureItem.Icon>
-            <FeatureItem.Text>
-              All actions by keyboard shortcuts
-            </FeatureItem.Text>
-          </FeatureItem>
-          <FeatureItem>
-            <FeatureItem.Icon>
-              <BiAlarm />
-            </FeatureItem.Icon>
-            <FeatureItem.Text>Reminders to follow up sessions</FeatureItem.Text>
-          </FeatureItem>
-          <FeatureItem>
-            <FeatureItem.Icon>
-              <BiBrush />
-            </FeatureItem.Icon>
-            <FeatureItem.Text>Themes for all sort of tastes</FeatureItem.Text>
-          </FeatureItem>
-          <FeatureItem>
-            <FeatureItem.Soon />
-            <FeatureItem.Icon>
-              <BiShareAlt />
-            </FeatureItem.Icon>
-            <FeatureItem.Text>Quick sharing privately</FeatureItem.Text>
-          </FeatureItem>
-          <FeatureItem>
-            <FeatureItem.Soon />
-            <FeatureItem.Icon>
-              <BiDevices />
-            </FeatureItem.Icon>
-            <FeatureItem.Text>Sync multi device seamlessly</FeatureItem.Text>
-          </FeatureItem>
-        </Marquee>
+      <div className="relative flex mt-10 w-full md:w-3/4 py-4 overflow-hidden">
+        <ul id="marquee" className="flex flex-wrap justify-center gap-4">
+          <AllFeatures />
+        </ul>
       </div>
 
       <div className="flex flex-col items-center space-y-10 max-w-[900px] mt-16 px-6 md:px-0">
