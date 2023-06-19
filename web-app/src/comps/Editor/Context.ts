@@ -36,7 +36,7 @@ export type EditorContextType = {
   countStatType: CountStatType;
   setCountStatType: StateSetter<CountStatType>;
 
-  note: SavedNote;
+  note: SavedNote | undefined;
   updateNote: (note: SavedNote, replace?: boolean) => void;
 
   notes: Record<string, SavedNote>;
@@ -55,7 +55,7 @@ export type EditorContextType = {
 
   getHashtags: () => Record<string, NoteSummary[]>;
 
-  getLinkSuggestions: () => LinkSuggestion[];
+  getLinkSuggestions: () => Promise<LinkSuggestion[]>;
 
   isRoll: boolean;
   rollHashTag: string;
@@ -96,16 +96,8 @@ export const useEditor = ({
   const [typewriterMode, setTypewriterMode] = useTypewriterMode(false);
   const [countStatType, setCountStatType] =
     useCountStatType<CountStatType>("words");
-  const [notes, setNotes] = useState<Record<string, SavedNote>>(() => {
-    if (defaultNoteId && !defaultRollHashtag) {
-      const _note = storage.getNote(defaultNoteId);
-      if (_note) {
-        return { [defaultNoteId]: _note };
-      }
-    }
-    return { [storage.getRecentNote().id]: storage.getRecentNote() };
-  });
-  const note = useMemo(() => {
+  const [notes, setNotes] = useState<Record<string, SavedNote>>({});
+  const note = useMemo<SavedNote | undefined>(() => {
     const ids = Object.keys(notes);
     return notes[ids[ids.length - 1]];
   }, [notes]);
@@ -113,49 +105,92 @@ export const useEditor = ({
   const [rollHashTag, setRollHashTag] = useRollHashtag<string>("");
   const [noteId, setNoteId] = useNoteId<string | undefined>(defaultNoteId);
   const [themeName, setThemeName] = useThemeName<string>("Basic");
+  const [notesToShow, setNotesToShow] = useState<NoteSummary[]>([]);
 
-  const notesToShow = useMemo<NoteSummary[]>(() => {
-    if (searchTerm) {
-      const results = storage.search(searchTerm);
-      const MAX_SUMMARY_LENGTH = 50;
-      return results.map((note) => {
-        const idx = note.text.toLowerCase().indexOf(searchTerm.toLowerCase());
-        const midIdx = idx + Math.floor(searchTerm.length / 2);
-        const start = Math.max(0, midIdx - Math.floor(MAX_SUMMARY_LENGTH / 2));
-        const end = Math.min(
-          note.text.length - 1,
-          midIdx + Math.floor(MAX_SUMMARY_LENGTH / 2)
-        );
-        let summary = note.text.substring(start, end);
-        if (start !== 0) {
-          summary = "... " + summary;
+  useEffect(() => {
+    (async () => {
+      if (defaultNoteId && !defaultRollHashtag) {
+        const _note = await storage.getNote(defaultNoteId);
+        if (_note) {
+          return setNotes({ [defaultNoteId]: _note });
         }
-        if (end !== note.text.length - 1) {
-          summary += " ...";
+      }
+      const hashTagNotes = getHashTagNotes();
+      if (hashTagNotes) {
+        return setNotes(hashTagNotes);
+      }
+      const recentNote = await storage.getRecentNote();
+      setNotes({ [recentNote.id]: recentNote });
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      if (searchTerm) {
+        const results = await storage.search(searchTerm);
+        const MAX_SUMMARY_LENGTH = 50;
+        const nts = results.map((note) => {
+          const idx = note.text.toLowerCase().indexOf(searchTerm.toLowerCase());
+          const midIdx = idx + Math.floor(searchTerm.length / 2);
+          const start = Math.max(
+            0,
+            midIdx - Math.floor(MAX_SUMMARY_LENGTH / 2)
+          );
+          const end = Math.min(
+            note.text.length - 1,
+            midIdx + Math.floor(MAX_SUMMARY_LENGTH / 2)
+          );
+          let summary = note.text.substring(start, end);
+          if (start !== 0) {
+            summary = "... " + summary;
+          }
+          if (end !== note.text.length - 1) {
+            summary += " ...";
+          }
+          return {
+            note,
+            summary,
+            start,
+            end,
+            highlight: searchTerm,
+          };
+        });
+        return setNotesToShow(nts);
+      }
+
+      let _notes: SavedNote[] = [];
+      for (const meta of storage.notes) {
+        const note = await storage.getNote(meta.id);
+        if (note) {
+          _notes.push(note);
         }
-        return {
-          note,
-          summary,
-          start,
-          end,
-          highlight: searchTerm,
-        };
-      });
-    }
-    return storage.notes
-      .map((nm) => storage.getNote(nm.id))
-      .filter((n) => !!n)
-      .sort((a, b) => a?.created_at || 0 - (b?.created_at || 0))
-      .map((note) => ({
-        note,
-      })) as NoteSummary[];
+      }
+
+      setNotesToShow(
+        _notes
+          .filter((n) => !!n)
+          .sort((a, b) => a?.created_at || 0 - (b?.created_at || 0))
+          .map((note) => ({
+            note,
+          })) as NoteSummary[]
+      );
+    })();
   }, [storage.notes, searchTerm, note]);
 
   useEffect(() => {
-    setNoteId(note.id);
+    if (note) {
+      setNoteId(note.id);
+    }
   }, [note]);
 
   useEffect(() => {
+    const _notes = getHashTagNotes();
+    if (_notes) {
+      setNotes(_notes);
+    }
+  }, [rollHashTag, notesToShow]);
+
+  const getHashTagNotes = () => {
     if (rollHashTag) {
       const hashtags = getHashtags();
       if (hashtags[rollHashTag]) {
@@ -166,10 +201,10 @@ export const useEditor = ({
         notes.forEach((noteSummary) => {
           notesMap[noteSummary.note.id] = noteSummary.note;
         });
-        setNotes(notesMap);
+        return notesMap;
       }
     }
-  }, [rollHashTag]);
+  };
 
   const toggleSideMenu = (key: string) => {
     setActiveSideMenus((items) => {
@@ -214,14 +249,14 @@ export const useEditor = ({
     return savedNote;
   };
 
-  const deleteNote = (noteId: string) => {
+  const deleteNote = async (noteId: string) => {
     storage.delete(noteId);
     if (notes[noteId]) {
       const newNotes = { ...notes };
       delete newNotes[noteId];
 
       if (Object.keys(newNotes).length === 0) {
-        const recentNote = storage.getRecentNote();
+        const recentNote = await storage.getRecentNote();
         newNotes[recentNote.id] = recentNote;
       }
 
@@ -229,9 +264,9 @@ export const useEditor = ({
     }
   };
 
-  const getNoteByTitle = (title: string) => {
+  const getNoteByTitle = async (title: string) => {
     for (const noteMeta of storage.notes) {
-      const note = storage.getNote(noteMeta.id);
+      const note = await storage.getNote(noteMeta.id);
       if (note) {
         const match = note.text.match(/^ *#{1,3} (.*)$/m);
         if (match) {
@@ -243,9 +278,9 @@ export const useEditor = ({
     }
   };
 
-  const setOrNewNote = (title: string) => {
+  const setOrNewNote = async (title: string) => {
     for (const meta of storage.notes) {
-      const note = storage.getNote(meta.id);
+      const note = await storage.getNote(meta.id);
       if (note) {
         if (isLinked(title, note.text)) {
           const updatedNotes = { ...notes };
@@ -279,8 +314,14 @@ export const useEditor = ({
     return hashtags;
   };
 
-  const _getLinkSuggestions = () => {
-    const notes = storage.notes.map((meta) => storage.getNote(meta.id));
+  const _getLinkSuggestions = async () => {
+    const notes: SavedNote[] = [];
+    for (const meta of storage.notes) {
+      const note = await storage.getNote(meta.id);
+      if (note) {
+        notes.push(note);
+      }
+    }
     return getLinkSuggestions(notes.filter((n) => !!n) as SavedNote[]);
   };
 

@@ -18,36 +18,36 @@ const shortcuts: Record<string, (editor: EditorContextType) => void> = {
     editor.newNote({ text: "New note" });
     editor.setRollHashTag("");
   },
-  ArrowLeft: (editor) => {
+  ArrowLeft: async (editor) => {
     const { storage } = editor;
-    const idx = storage.notes.findIndex((note) => editor.note.id === note.id);
+    const idx = storage.notes.findIndex((note) => editor.note?.id === note.id);
     const prevNote = storage.notes[idx - 1]
-      ? storage.getNote(storage.notes[idx - 1].id)
+      ? await storage.getNote(storage.notes[idx - 1].id)
       : undefined;
     if (prevNote) {
       editor.updateNote(prevNote);
     }
   },
-  ArrowRight: (editor) => {
+  ArrowRight: async (editor) => {
     const { storage } = editor;
-    const idx = storage.notes.findIndex((note) => editor.note.id === note.id);
+    const idx = storage.notes.findIndex((note) => editor.note?.id === note.id);
     const nextNote = storage.notes[idx + 1]
-      ? storage.getNote(storage.notes[idx + 1].id)
+      ? await storage.getNote(storage.notes[idx + 1].id)
       : undefined;
     if (nextNote) {
       editor.updateNote(nextNote);
     }
   },
-  s: (editor) => saveNote(editor.note),
+  s: (editor) => editor.note && saveNote(editor.note),
   o: async (editor) => {
     const text = (await openFile()) as string;
     editor.newNote({ text });
   },
-  b: (editor) => {
+  b: async (editor) => {
     const notes: Record<string, SavedNote> = {};
     for (const meta of editor.storage.notes) {
       const id = meta.id;
-      const savedNote = editor.storage.getNote(id);
+      const savedNote = await editor.storage.getNote(id);
       if (savedNote) {
         notes[id] = savedNote;
       }

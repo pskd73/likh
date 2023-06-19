@@ -15,7 +15,7 @@ import { Themes } from "./Theme";
 const EditableNote = ({
   getSuggestions,
 }: {
-  getSuggestions: (prefix: string, term: string) => Suggestion[];
+  getSuggestions: (prefix: string, term: string) => Promise<Suggestion[]>;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const {
@@ -48,7 +48,7 @@ const EditableNote = ({
     } else {
       scroll.scroll({ force: true });
     }
-  }, [note.id, isRoll, searchTerm]);
+  }, [note?.id, isRoll, searchTerm]);
 
   const handleChange = (
     id: string,
@@ -69,14 +69,14 @@ const EditableNote = ({
     updateNote(updatedNote, false);
 
     scroll.update();
-    if (id === note.id) {
+    if (id === note?.id) {
       scroll.scroll({ editor });
     }
   };
 
-  const handleNoteLinkClick = (title: string, id?: string) => {
+  const handleNoteLinkClick = async (title: string, id?: string) => {
     if (id) {
-      const note = storage.getNote(id);
+      const note = await storage.getNote(id);
       if (note) {
         updateNote(note);
         return;

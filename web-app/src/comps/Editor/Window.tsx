@@ -30,12 +30,12 @@ const EditorWindow = () => {
     })();
   }, []);
 
-  const getSuggestions = (prefix: string, term: string) => {
+  const getSuggestions = async (prefix: string, term: string) => {
     const suggestions: Suggestion[] = [];
     if (prefix === "[[") {
-      editorState.storage.notes.forEach((noteMeta, i) => {
-        if (noteMeta.id === editorState.note.id) return;
-        const note = editorState.storage.getNote(noteMeta.id);
+      editorState.storage.notes.forEach(async (noteMeta, i) => {
+        if (noteMeta.id === editorState.note?.id) return;
+        const note = await editorState.storage.getNote(noteMeta.id);
         if (note) {
           const title = textToTitle(note.text, 50);
           if (title.toLowerCase().includes(term.toLowerCase())) {
@@ -91,7 +91,6 @@ const EditorWindow = () => {
             </div>
           </div>
           <StatusBar
-            text={editorState.note.text}
             height={STATUS_BAR_HEIGHT}
             padding={statusBarPadding}
           />
