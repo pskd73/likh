@@ -149,7 +149,7 @@ function Leaf({
     "mdLink underline cursor-pointer": leaf.mdLink,
 
     // highlight
-    "highlight bg-primary-700 bg-opacity-20 py-1": leaf.highlight,
+    "highlight bg-primary-700 bg-opacity-20": leaf.highlight,
 
     // image
     "hidden image": leaf.image && !leaf.alt && !leaf.focused,
@@ -301,11 +301,18 @@ const Editor = ({
       if (!Text.isText(node)) {
         return [];
       }
-      const newGrammer = { ...grammer };
+      const newGrammer = Object.assign({}, grammer);
       if (highlight) {
         for (const key of Object.keys(newGrammer)) {
-          (newGrammer[key] as any).inside.highlight = {
-            pattern: RegExp(highlight, "i"),
+          if (["hashtag"].includes(key)) continue;
+          (newGrammer[key] as any) = {
+            ...(newGrammer[key] as any),
+            inside: {
+              ...(newGrammer[key] as any).inside,
+              highlight: {
+                pattern: RegExp(highlight, "i"),
+              },
+            },
           };
         }
         newGrammer.highlight = { pattern: RegExp(highlight, "i"), inside: {} };
@@ -384,7 +391,7 @@ const Editor = ({
         return (
           <pre
             {...attributes}
-            className="mb-4 bg-primary-700 bg-opacity-5 p-4 rounded-md"
+            className="mb-4 bg-primary-700 bg-opacity-5 p-4 rounded-md whitespace-break-spaces"
             spellCheck={false}
           >
             {children}

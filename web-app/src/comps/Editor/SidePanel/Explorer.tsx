@@ -1,4 +1,4 @@
-import { ComponentProps, useContext, useMemo } from "react";
+import { ComponentProps, cloneElement, useContext, useMemo } from "react";
 import List from "../List";
 import { EditorContext, NoteSummary } from "../Context";
 import SearchInput from "./SearchInput";
@@ -54,7 +54,14 @@ const NoteListItem = ({
       </div>
       {summary.summary && (
         <List.Item.Description>
-          {highlight(summary.summary, [Highligher(summary.highlight || "")])}
+          {highlight(summary.summary, [Highligher(summary.highlight || "")])
+            .map((it, i) => {
+              if (typeof it === "string") {
+                return <span>{it}</span>;
+              }
+              return it;
+            })
+            .map((it, i) => cloneElement(it, { key: i }))}
         </List.Item.Description>
       )}
     </List.Item>
