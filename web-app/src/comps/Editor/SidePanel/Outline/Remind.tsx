@@ -12,6 +12,8 @@ const Remind = () => {
   const handleReminder: ChangeEventHandler<HTMLSelectElement> = (e) => {
     if (!e.target.value) return;
 
+    if (!note) return;
+
     const updatedNote = { ...note };
 
     if (e.target.value === "clear") {
@@ -57,7 +59,7 @@ const Remind = () => {
               onChange={handleReminder}
             >
               <option value={""}>
-                {note.reminder
+                {note?.reminder
                   ? moment(new Date(note.reminder.date)).fromNow()
                   : "Select .."}
               </option>
@@ -65,7 +67,7 @@ const Remind = () => {
               <option value={"tomorrow"}>Tomorrow</option>
               <option value={"2 days"}>After 2 days</option>
               <option value={"a week"}>After a week</option>
-              {note.reminder && <option value={"clear"}>Clear</option>}
+              {note?.reminder && <option value={"clear"}>Clear</option>}
             </select>
           </div>
         </div>

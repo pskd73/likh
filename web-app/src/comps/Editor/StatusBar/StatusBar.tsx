@@ -14,11 +14,9 @@ import Delete from "./Delete";
 import classNames from "classnames";
 
 const StatusBar = ({
-  text,
   height,
   padding,
 }: {
-  text: string;
   height: number;
   padding: number;
 }) => {
@@ -27,7 +25,9 @@ const StatusBar = ({
   const [fullScreen, setFullScreen] = useState(false);
 
   const handleSave = () => {
-    saveNote(note);
+    if (note) {
+      saveNote(note);
+    }
   };
 
   const handleFullScreen = () => {
@@ -115,7 +115,7 @@ const StatusBar = ({
         <Button className="rounded-none" lite onClick={handleSave}>
           <BiSave />
         </Button>
-        {showStats && <TextCounter text={text} />}
+        {showStats && note && <TextCounter text={note.text} />}
       </div>
     </div>
   );

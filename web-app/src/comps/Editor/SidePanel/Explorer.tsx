@@ -204,7 +204,7 @@ const Explorer = () => {
                   key={i}
                   summary={_noteSummary}
                   onClick={() => handleNoteClick(_noteSummary.note)}
-                  active={note.id === _noteSummary.note.id}
+                  active={note?.id === _noteSummary.note.id}
                 />
               ))}
             </List>
@@ -241,7 +241,7 @@ const Explorer = () => {
                       key={i}
                       summary={summary}
                       onClick={() => handleNoteClick(summary.note)}
-                      active={note.id === summary.note.id}
+                      active={note?.id === summary.note.id}
                     />
                   ))}
                 </List>

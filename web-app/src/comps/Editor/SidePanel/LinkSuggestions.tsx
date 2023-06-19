@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { EditorContext } from "../Context";
 import classNames from "classnames";
 import { LinkSuggestion } from "../Suggestion";
@@ -14,7 +14,13 @@ const LinkSuggestions = () => {
   const { getLinkSuggestions, setSideBar, setOrNewNote, note, setSearchTerm } =
     useContext(EditorContext);
   const [update, setUpdate] = useState(new Date().getTime());
-  const suggestions = useMemo(() => getLinkSuggestions(), [update, note.id]);
+  const [suggestions, setSuggestions] = useState<LinkSuggestion[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      setSuggestions(await getLinkSuggestions());
+    })();
+  }, [update, note?.id]);
 
   const handleClick = (suggestion: LinkSuggestion) => {
     if (isMobile) {

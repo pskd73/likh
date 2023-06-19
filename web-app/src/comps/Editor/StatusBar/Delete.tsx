@@ -9,8 +9,10 @@ const Delete = () => {
   const [prompt, setPrompt] = useState(false);
 
   const handleConfirm = () => {
-    deleteNote(note.id);
-    setPrompt(false);
+    if (note) {
+      deleteNote(note.id);
+      setPrompt(false);
+    }
   };
 
   if (!prompt) {

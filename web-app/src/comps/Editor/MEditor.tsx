@@ -4,7 +4,9 @@ import {
   CSSProperties,
   KeyboardEventHandler,
   useCallback,
+  useEffect,
   useMemo,
+  useState,
 } from "react";
 import {
   createEditor,
@@ -243,7 +245,7 @@ const Editor = ({
   initText?: string;
   editor?: CustomEditor;
   onNoteLinkClick?: (title: string, id?: string) => void;
-  getSuggestions?: (prefix: string, term: string) => Suggestion[];
+  getSuggestions?: (prefix: string, term: string) => Promise<Suggestion[]>;
   highlight?: string;
   handleSaveImg?: (img: PastedImg) => Promise<SavedImg>;
   getSavedImg?: (id: number) => Promise<SavedImg>;
@@ -262,15 +264,19 @@ const Editor = ({
       handleContextMenuSelect(index, target, prefix);
     }
   );
-  const suggestions: Suggestion[] = useMemo(() => {
-    if (contextMenu.activePrefix) {
-      let _suggestions: Suggestion[] = getSuggestions
-        ? getSuggestions(contextMenu.activePrefix, contextMenu.search)
-        : [];
-      contextMenu.setCount(_suggestions.length);
-      return _suggestions;
-    }
-    return [];
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      if (contextMenu.activePrefix) {
+        let _suggestions: Suggestion[] = getSuggestions
+          ? await getSuggestions(contextMenu.activePrefix, contextMenu.search)
+          : [];
+        contextMenu.setCount(_suggestions.length);
+        setSuggestions(_suggestions);
+      }
+      return setSuggestions([]);
+    })();
   }, [contextMenu.search, contextMenu.activePrefix]);
 
   useEditorPaste({
