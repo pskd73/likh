@@ -1,13 +1,13 @@
 import { useContext, useMemo, useState } from "react";
-import { EditorContext } from "../Context";
+import { EditorContext } from "../../Context";
 import moment from "moment";
-import Calendar, { CalenderDay } from "../Calendar";
-import Button from "../../Button";
+import Calendar, { CalenderDay } from "../../Calendar";
+import Button from "../../../Button";
 import { BiCalendarEvent, BiFile, BiHash, BiMap, BiPlus } from "react-icons/bi";
-import List from "../List";
-import { SavedNote } from "../type";
-import { scrollTo } from "../scroll";
-import { textToTitle } from "../../../Note";
+import List from "../../List";
+import { SavedNote } from "../../type";
+import { scrollTo } from "../../scroll";
+import { textToTitle } from "../../../../Note";
 
 const RollOutline = () => {
   const { notes, newNote, rollHashTag } = useContext(EditorContext);

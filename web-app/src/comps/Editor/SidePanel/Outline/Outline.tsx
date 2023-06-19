@@ -5,18 +5,19 @@ import {
   useMemo,
   useState,
 } from "react";
-import { EditorContext } from "../Context";
+import { EditorContext } from "../../Context";
 import classNames from "classnames";
-import Collapsible from "../Collapsible";
-import ListWidget from "../List";
-import Button from "../../Button";
+import Collapsible from "../../Collapsible";
+import ListWidget from "../../List";
+import Button from "../../../Button";
 import { TbExternalLink } from "react-icons/tb";
-import { isMobile } from "../device";
+import { isMobile } from "../../device";
 import { BiAlarm, BiLink } from "react-icons/bi";
-import { scrollTo } from "../scroll";
-import { getGoogleCalendarLink } from "../Reminder";
-import { textToTitle } from "../../../Note";
+import { scrollTo } from "../../scroll";
+import { getGoogleCalendarLink } from "../../Reminder";
+import { textToTitle } from "../../../../Note";
 import moment from "moment";
+import Remind from "./Remind";
 
 type OutlineTitle = {
   text: string | null;
@@ -134,32 +135,6 @@ const Outline = () => {
     setTimer(new Date().getTime());
   }, [note]);
 
-  const handleReminder: ChangeEventHandler<HTMLSelectElement> = (e) => {
-    let date = moment(new Date());
-    if (e.target.value === "tonight") {
-      date = date.hours(21).minutes(0);
-    } else if (e.target.value === "tomorrow") {
-      date = date.add(1, "days");
-    } else if (e.target.value === "2 days") {
-      date = date.add(2, "days");
-    } else if (e.target.value === "a week") {
-      date = date.add(7, "days");
-    }
-
-    const updatedNote = { ...note };
-    updatedNote.reminder = {
-      date: date.toDate().getTime(),
-    };
-    updateNote(updatedNote);
-
-    const link = getGoogleCalendarLink({
-      text: `Continue writing "${textToTitle(note.text)}"`,
-      date: date.toDate(),
-      location: "https://app.retronote.app/write",
-    });
-    window.open(link, "_blank");
-  };
-
   return (
     <div>
       <div className="p-2">
@@ -208,26 +183,7 @@ const Outline = () => {
           </Collapsible.Item>
         )}
       </Collapsible>
-      <ListWidget>
-        <ListWidget.Item className="flex items-center space-x-1" noHover>
-          <span>
-            <BiAlarm />
-          </span>
-          <div className="flex items-center justify-between w-full">
-            <span>Reminder</span>
-            <select
-              className="p-1 rounded cursor-pointer"
-              onChange={handleReminder}
-            >
-              <option value={""}>Select ...</option>
-              <option value={"tonight"}>Tonight</option>
-              <option value={"tomorrow"}>Tomorrow</option>
-              <option value={"2 days"}>After 2 days</option>
-              <option value={"a week"}>After a week</option>
-            </select>
-          </div>
-        </ListWidget.Item>
-      </ListWidget>
+      <Remind />
     </div>
   );
 };

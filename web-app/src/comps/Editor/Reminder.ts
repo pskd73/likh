@@ -17,10 +17,12 @@ export const getGoogleCalendarLink = ({
   text,
   date,
   location,
+  recur,
 }: {
   text: string;
   date: Date;
   location: string;
+  recur?: boolean;
 }) => {
   const dayStart = date;
   dayStart.setHours(0, 0, 0, 0);
@@ -32,7 +34,11 @@ export const getGoogleCalendarLink = ({
     "dates=" + formatDate(new Date(start)) + "/" + formatDate(new Date(end)),
     "text=" + encodeURIComponent(text),
     "location=" + location,
-    "recur=RRULE:FREQ%3DDAILY;INTERVAL%3D1",
   ];
+
+  if (recur) {
+    parts.push("recur=RRULE:FREQ%3DDAILY;INTERVAL%3D1");
+  }
+
   return "https://calendar.google.com/calendar/event?" + parts.join("&");
 };

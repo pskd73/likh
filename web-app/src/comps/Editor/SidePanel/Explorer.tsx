@@ -45,7 +45,7 @@ const NoteListItem = ({
   ...restProps
 }: ComponentProps<"li"> & { summary: NoteSummary; active?: boolean }) => {
   return (
-    <List.Item className="text-sm" {...restProps}>
+    <List.Item {...restProps}>
       <div className="flex">
         <span className="opacity-50 mt-1 min-w-5 w-5">
           <BiFile />
@@ -116,6 +116,9 @@ const Explorer = () => {
   const hashtags = useMemo<Record<string, NoteSummary[]>>(() => {
     return getHashtags();
   }, [notesToShow, note]);
+  const reminderNotes = useMemo<NoteSummary[]>(() => {
+    return notesToShow.filter((n) => !!n.note.reminder);
+  }, [notesToShow]);
 
   const handleOpen = async () => {
     const text = (await openFile()) as string;
@@ -258,38 +261,37 @@ const Explorer = () => {
               <span className="p-1">
                 <BiAlarm />
               </span>
-              <span>Reminders</span>
+              <span>Reminders ({reminderNotes.length})</span>
             </span>
           </Collapsible.Item.Label>
           <Collapsible.Item.Content>
             <List>
-              {notesToShow
-                .filter((n) => !!n.note.reminder)
-                .map((summary, i) => (
-                  <List.Item
-                    className="text-sm"
-                    onClick={() => handleNoteClick(summary.note)}
-                  >
-                    <div className="flex">
-                      <span className="opacity-50 mt-1 min-w-5 w-5">
-                        <BiFile />
-                      </span>
-                      <div>
-                        {textToTitle(summary.note.text, 20)}
-                        <div className="flex items-center space-x-1 opacity-50">
-                          <span>
-                            <BiAlarmExclamation />
-                          </span>
-                          <span>
-                            {moment(
-                              new Date(summary.note.reminder!.date)
-                            ).fromNow()}
-                          </span>
-                        </div>
+              {reminderNotes.map((summary, i) => (
+                <List.Item
+                  key={i}
+                  className="text-sm"
+                  onClick={() => handleNoteClick(summary.note)}
+                >
+                  <div className="flex">
+                    <span className="opacity-50 mt-1 min-w-5 w-5">
+                      <BiFile />
+                    </span>
+                    <div>
+                      {textToTitle(summary.note.text, 20)}
+                      <div className="flex items-center space-x-1 opacity-50">
+                        <span>
+                          <BiAlarmExclamation />
+                        </span>
+                        <span>
+                          {moment(
+                            new Date(summary.note.reminder!.date)
+                          ).fromNow()}
+                        </span>
                       </div>
                     </div>
-                  </List.Item>
-                ))}
+                  </div>
+                </List.Item>
+              ))}
             </List>
           </Collapsible.Item.Content>
         </Collapsible.Item>
