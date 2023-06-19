@@ -10,6 +10,15 @@ const Remind = () => {
   const { note, updateNote } = useContext(EditorContext);
 
   const handleReminder: ChangeEventHandler<HTMLSelectElement> = (e) => {
+    if (!e.target.value) return;
+
+    const updatedNote = { ...note };
+
+    if (e.target.value === "clear") {
+      updatedNote.reminder = undefined;
+      return updateNote(updatedNote);
+    }
+
     let date = moment(new Date());
     if (e.target.value === "tonight") {
       date = date.hours(21).minutes(0);
@@ -21,7 +30,6 @@ const Remind = () => {
       date = date.add(7, "days");
     }
 
-    const updatedNote = { ...note };
     updatedNote.reminder = {
       date: date.toDate().getTime(),
     };
@@ -37,35 +45,27 @@ const Remind = () => {
 
   return (
     <List>
-      {note.reminder && (
-        <List.Item withIcon noHover>
-          <List.Item.Icon>
-            <BiAlarmExclamation />
-          </List.Item.Icon>
-          <div>
-            Reminder{" "}
-            <span className="font-bold">
-              {moment(new Date(note.reminder.date)).fromNow()}
-            </span>
-          </div>
-        </List.Item>
-      )}
       <List.Item withIcon noHover>
         <List.Item.Icon>
           <BiAlarm />
         </List.Item.Icon>
         <div className="w-full space-y-2">
           <div className="flex items-center justify-between">
-            <span>Remind at</span>
+            <span>Remind me</span>
             <select
-              className="p-1 rounded cursor-pointer"
+              className="p-1 px-2 rounded cursor-pointer"
               onChange={handleReminder}
             >
-              <option value={""}>Select ...</option>
+              <option value={""}>
+                {note.reminder
+                  ? moment(new Date(note.reminder.date)).fromNow()
+                  : "Select .."}
+              </option>
               <option value={"tonight"}>Tonight</option>
               <option value={"tomorrow"}>Tomorrow</option>
               <option value={"2 days"}>After 2 days</option>
               <option value={"a week"}>After a week</option>
+              {note.reminder && <option value={"clear"}>Clear</option>}
             </select>
           </div>
         </div>
