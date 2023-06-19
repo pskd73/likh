@@ -2,11 +2,11 @@ import classNames from "classnames";
 import { useContext } from "react";
 import { EditorContext } from "../Context";
 import Explorer from "./Explorer";
-import Outline from "./Outline";
+import Outline from "./Outline/Outline";
 import Shortcuts from "./Shortcuts";
 import { isMobile } from "../device";
 import LinkSuggestions from "./LinkSuggestions";
-import RollOutline from "./RollOutline";
+import RollOutline from "./Outline/RollOutline";
 
 const SidePanel = () => {
   const { sideBar, setSideBar, isRoll } = useContext(EditorContext);

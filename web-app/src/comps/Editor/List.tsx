@@ -11,8 +11,13 @@ const Item = ({
   className,
   active,
   noHover,
+  withIcon,
   ...restProps
-}: ComponentProps<"li"> & { active?: boolean; noHover?: boolean }) => {
+}: ComponentProps<"li"> & {
+  active?: boolean;
+  noHover?: boolean;
+  withIcon?: boolean;
+}) => {
   return (
     <li
       className={twMerge(
@@ -21,6 +26,7 @@ const Item = ({
           "bg-opacity-0": !active,
           "bg-primary-700  transition-colors cursor-pointer": !noHover,
           "hover:bg-opacity-10 active:bg-opacity-20": !noHover,
+          "flex space-x-1": withIcon,
         }),
         className
       )}
@@ -36,6 +42,11 @@ const Description = ({ children }: PropsWithChildren) => {
   return <div className="text-xs py-1 ml-5 opacity-50">{children}</div>;
 };
 
+const Icon = ({ children }: PropsWithChildren) => {
+  return <span className="mt-1">{children}</span>;
+};
+
+Item.Icon = Icon;
 Item.Description = Description;
 List.Item = Item;
 

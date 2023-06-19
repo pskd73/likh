@@ -15,6 +15,8 @@ import { usePWA } from "../PWA";
 import { MdInstallDesktop } from "react-icons/md";
 import { SavedNote } from "../type";
 import {
+  BiAlarm,
+  BiAlarmExclamation,
   BiBrush,
   BiCog,
   BiCollapseVertical,
@@ -27,6 +29,7 @@ import { isMobile } from "../device";
 import { highlight, makeExtractor } from "../Marker";
 import { Themes } from "../Theme";
 import { twMerge } from "tailwind-merge";
+import moment from "moment";
 
 const Highligher = (word: string) =>
   makeExtractor(
@@ -42,7 +45,7 @@ const NoteListItem = ({
   ...restProps
 }: ComponentProps<"li"> & { summary: NoteSummary; active?: boolean }) => {
   return (
-    <List.Item className="text-sm" {...restProps}>
+    <List.Item {...restProps}>
       <div className="flex">
         <span className="opacity-50 mt-1 min-w-5 w-5">
           <BiFile />
@@ -113,6 +116,9 @@ const Explorer = () => {
   const hashtags = useMemo<Record<string, NoteSummary[]>>(() => {
     return getHashtags();
   }, [notesToShow, note]);
+  const reminderNotes = useMemo<NoteSummary[]>(() => {
+    return notesToShow.filter((n) => !!n.note.reminder);
+  }, [notesToShow]);
 
   const handleOpen = async () => {
     const text = (await openFile()) as string;
@@ -243,6 +249,52 @@ const Explorer = () => {
             </Collapsible.Item>
           );
         })}
+        <br />
+
+        {/* Reminders */}
+        <Collapsible.Item
+          active={isSideMenuActive("reminders")}
+          handleToggle={() => toggleSideMenu("reminders")}
+        >
+          <Collapsible.Item.Label>
+            <span className="flex items-center space-x-2">
+              <span className="p-1">
+                <BiAlarm />
+              </span>
+              <span>Reminders ({reminderNotes.length})</span>
+            </span>
+          </Collapsible.Item.Label>
+          <Collapsible.Item.Content>
+            <List>
+              {reminderNotes.map((summary, i) => (
+                <List.Item
+                  key={i}
+                  className="text-sm"
+                  onClick={() => handleNoteClick(summary.note)}
+                >
+                  <div className="flex">
+                    <span className="opacity-50 mt-1 min-w-5 w-5">
+                      <BiFile />
+                    </span>
+                    <div>
+                      {textToTitle(summary.note.text, 20)}
+                      <div className="flex items-center space-x-1 opacity-50">
+                        <span>
+                          <BiAlarmExclamation />
+                        </span>
+                        <span>
+                          {moment(
+                            new Date(summary.note.reminder!.date)
+                          ).fromNow()}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </List.Item>
+              ))}
+            </List>
+          </Collapsible.Item.Content>
+        </Collapsible.Item>
         <br />
 
         {/* Settings */}

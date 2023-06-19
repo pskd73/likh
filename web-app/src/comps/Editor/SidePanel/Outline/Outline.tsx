@@ -1,13 +1,23 @@
-import { useContext, useEffect, useMemo, useState } from "react";
-import { EditorContext } from "../Context";
+import {
+  ChangeEventHandler,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { EditorContext } from "../../Context";
 import classNames from "classnames";
-import Collapsible from "../Collapsible";
-import ListWidget from "../List";
-import Button from "../../Button";
+import Collapsible from "../../Collapsible";
+import ListWidget from "../../List";
+import Button from "../../../Button";
 import { TbExternalLink } from "react-icons/tb";
-import { isMobile } from "../device";
-import { BiLink } from "react-icons/bi";
-import { scrollTo } from "../scroll";
+import { isMobile } from "../../device";
+import { BiAlarm, BiLink } from "react-icons/bi";
+import { scrollTo } from "../../scroll";
+import { getGoogleCalendarLink } from "../../Reminder";
+import { textToTitle } from "../../../../Note";
+import moment from "moment";
+import Remind from "./Remind";
 
 type OutlineTitle = {
   text: string | null;
@@ -109,7 +119,8 @@ const List = ({
 };
 
 const Outline = () => {
-  const { note, setOrNewNote, setSideBar } = useContext(EditorContext);
+  const { note, updateNote, setOrNewNote, setSideBar } =
+    useContext(EditorContext);
   const [timer, setTimer] = useState(new Date().getTime());
   const [linksActive, setLinksActive] = useState(false);
   const titles = useMemo(() => {
@@ -172,6 +183,7 @@ const Outline = () => {
           </Collapsible.Item>
         )}
       </Collapsible>
+      <Remind />
     </div>
   );
 };
