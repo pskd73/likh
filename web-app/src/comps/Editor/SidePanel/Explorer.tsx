@@ -357,11 +357,11 @@ const Explorer = () => {
                         Basic
                       </ThemeBox>
                       <ThemeBox
-                        themeName="Lite"
-                        onClick={() => setThemeName("Lite")}
-                        active={themeName === "Lite"}
+                        themeName="Serif"
+                        onClick={() => setThemeName("Serif")}
+                        active={themeName === "Serif"}
                       >
-                        Lite
+                        Serif
                       </ThemeBox>
                     </div>
                   </div>

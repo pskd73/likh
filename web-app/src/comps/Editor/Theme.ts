@@ -16,9 +16,9 @@ export const Themes: Record<string, Theme> = {
       title3: "text-xl",
     },
   },
-  Lite: {
+  Serif: {
     font: {
-      base: "font-Cormorant text-xl",
+      base: "font-CrimsonText text-xl",
       title1: "text-4xl",
       title2: "text-3xl",
       title3: "text-2xl",

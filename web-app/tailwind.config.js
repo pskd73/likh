@@ -9,7 +9,7 @@ module.exports = {
       fontFamily: {
         CourierPrime: ["Courier Prime", "monospace"],
         Inter: ["Inter", "sans-serif"],
-        Cormorant: ["'Cormorant Garamond'", "serif"]
+        CrimsonText: ["'Crimson Text'", "serif"]
       },
       colors: {
         "primary-700": "#6C6327",
