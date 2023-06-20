@@ -1,9 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { NoteMeta, SavedNote } from "./type";
 import { INTRO_TEXT } from "./Intro";
+import * as Pouch from "./pouch";
 
-const getNoteMetas = (): Promise<NoteMeta[]> => {
-  return JSON.parse(localStorage.getItem("notes") || "[]");
+const getNoteMetas = async (): Promise<NoteMeta[]> => {
+  return (await Pouch.all()).rows;
+  // return metas.rows;
+  // return JSON.parse(localStorage.getItem("notes") || "[]");
 };
 
 const setNoteMetas = (notes: NoteMeta[]) => {
@@ -12,15 +15,26 @@ const setNoteMetas = (notes: NoteMeta[]) => {
 
 const saveNote = (note: SavedNote) => {
   localStorage.setItem(`note/${note.id}`, JSON.stringify(note));
+  Pouch.put(note.id, (doc) => {
+    if (doc === undefined) {
+      return { ...note, _id: note.id };
+    }
+    return { ...doc, text: note.text, serialized: note.serialized };
+  });
 };
 
 const getNote = (id: string): Promise<SavedNote | undefined> => {
-  const raw = localStorage.getItem(`note/${id}`);
-  if (raw) {
-    return Promise.resolve(JSON.parse(raw));
-  }
-  return Promise.resolve(undefined);
+  return Pouch.get(id);
+  // const raw = localStorage.getItem(`note/${id}`);
+  // if (raw) {
+  //   return Promise.resolve(JSON.parse(raw));
+  // }
+  // return Promise.resolve(undefined);
 };
+
+const deleteNote = (id: string): Promise<void> => {
+  return Pouch.del(id);
+}
 
 export type Storage = {
   notes: NoteMeta[];
@@ -50,7 +64,7 @@ const useStorage = (): Storage => {
         id,
       },
     ];
-    setNoteMetas(newNotes);
+    // setNoteMetas(newNotes);
     saveNote(newNote);
     setNotes(newNotes);
     return newNote;
@@ -87,7 +101,8 @@ const useStorage = (): Storage => {
     if (idx === -1) return;
     newNotes.splice(idx, 1);
     setNotes(newNotes);
-    setNoteMetas(newNotes);
+    deleteNote(id);
+    // setNoteMetas(newNotes);
   };
 
   return {
