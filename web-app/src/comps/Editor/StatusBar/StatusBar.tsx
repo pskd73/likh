@@ -20,7 +20,7 @@ const StatusBar = ({
   height: number;
   padding: number;
 }) => {
-  const { showStats, note, sideBar, setSideBar, isRoll } =
+  const { showStats, note, sideBar, setSideBar, isRoll, storage } =
     useContext(EditorContext);
   const [fullScreen, setFullScreen] = useState(false);
 
@@ -102,9 +102,7 @@ const StatusBar = ({
           <BiFullscreen />
         </Button>
         <div className="hidden md:flex items-center px-1 space-x-1 h-full">
-          <span className="opacity-50 text-xs">
-            Note is auto saved locally!
-          </span>
+          <span className="opacity-50 text-xs">{storage.syncState}</span>
           {/* <Button lite className="h-full rounded-none">
             <BiX />
           </Button> */}

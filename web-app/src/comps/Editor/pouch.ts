@@ -11,6 +11,7 @@ export type MyPouch = {
   ) => Promise<void>;
   all: <T extends {}>() => Promise<PouchDB.Core.AllDocsResponse<T>>;
   del: (id: string) => Promise<void>;
+  sync: (osc: (state: string) => void) => void;
 };
 
 export const MakePouch = (
@@ -20,13 +21,37 @@ export const MakePouch = (
     password: string;
   }
 ): MyPouch => {
-  const db = new PouchDB("notes");
+  const db: PouchDB.Database = new PouchDB("notes");
+  let remote: PouchDB.Database | undefined = undefined;
 
   if (config.username && config.password) {
-    const remote = new PouchDB(
+    remote = new PouchDB(
       `https://${config.username}:${config.password}@sync.retronote.app:6984/notes_${config.username}`
     );
-    db.sync(remote, { live: true });
+  }
+
+  function sync(onStateChange: (state: string) => void) {
+    if (remote) {
+      db.sync(remote, { live: true })
+        .on("change", function (info) {
+          onStateChange("change");
+        })
+        .on("paused", function (err) {
+          onStateChange("paused");
+        })
+        .on("active", function () {
+          onStateChange("active");
+        })
+        .on("denied", function (err) {
+          onStateChange("denied");
+        })
+        .on("complete", function (info) {
+          onStateChange("complete");
+        })
+        .on("error", function (err) {
+          onStateChange("error");
+        });
+    }
   }
 
   function encrypt<T>(obj: T) {
@@ -80,5 +105,6 @@ export const MakePouch = (
     put,
     all,
     del,
+    sync,
   };
 };

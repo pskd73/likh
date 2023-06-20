@@ -24,6 +24,7 @@ export type Storage = {
   search: (text: string) => Promise<SavedNote[]>;
   delete: (id: string) => void;
   pouch: Pouch.MyPouch;
+  syncState: string;
 };
 
 const useStorage = (): Storage => {
@@ -33,11 +34,18 @@ const useStorage = (): Storage => {
       password: "password",
     });
   }, []);
+  const [syncState, setSyncState] = useState("init");
   const [notes, setNotes] = useState<NoteMeta[]>([]);
 
   useEffect(() => {
     (async () => {
       setNotes((await pouch.all()).rows);
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      pouch.sync((state) => setSyncState(state));
     })();
   }, []);
 
@@ -68,7 +76,7 @@ const useStorage = (): Storage => {
     }
     lastSaved[note.id].timeout = setTimeout(() => {
       saveNoteImmediate(note);
-    }, 4 * 1000);
+    }, 1.5 * 1000);
   };
 
   const newNote = (text: string, date?: number) => {
@@ -128,6 +136,7 @@ const useStorage = (): Storage => {
     search,
     delete: _delete,
     pouch,
+    syncState,
   };
 };
 
