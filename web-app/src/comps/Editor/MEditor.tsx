@@ -273,7 +273,7 @@ const Editor = ({
           ? await getSuggestions(contextMenu.activePrefix, contextMenu.search)
           : [];
         contextMenu.setCount(_suggestions.length);
-        setSuggestions(_suggestions);
+        return setSuggestions(_suggestions);
       }
       return setSuggestions([]);
     })();
