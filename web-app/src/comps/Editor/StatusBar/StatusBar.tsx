@@ -3,8 +3,11 @@ import { EditorContext } from "../Context";
 import TextCounter from "./TextCounter";
 import Button from "../../Button";
 import {
+  BiCheckShield,
+  BiError,
   BiFullscreen,
   BiLink,
+  BiLoaderAlt,
   BiMenu,
   BiSave,
   BiSpreadsheet,
@@ -12,6 +15,16 @@ import {
 import { saveNote } from "../File";
 import Delete from "./Delete";
 import classNames from "classnames";
+
+const SyncIcon = ({ state }: { state: string }) => {
+  if (state === "paused" || state === "init") {
+    return <BiCheckShield />;
+  }
+  if (state === "error" || state === "denied") {
+    return <BiError />;
+  }
+  return <BiLoaderAlt className="animate-spin" />;
+};
 
 const StatusBar = ({
   height,
@@ -102,10 +115,9 @@ const StatusBar = ({
           <BiFullscreen />
         </Button>
         <div className="hidden md:flex items-center px-1 space-x-1 h-full">
-          <span className="opacity-50 text-xs">{storage.syncState}</span>
-          {/* <Button lite className="h-full rounded-none">
-            <BiX />
-          </Button> */}
+          <span className="opacity-50">
+            <SyncIcon state={storage.syncState} />
+          </span>
         </div>
       </div>
       <div className="flex justify-end h-full">
