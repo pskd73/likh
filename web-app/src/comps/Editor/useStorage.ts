@@ -24,7 +24,12 @@ const saveNoteImmediate = (note: SavedNote) => {
     if (doc === undefined) {
       return { ...note, _id: note.id };
     }
-    return { ...doc, text: note.text, serialized: note.serialized };
+    return {
+      ...doc,
+      text: note.text,
+      serialized: note.serialized,
+      reminder: note.reminder,
+    };
   });
   lastSaved[note.id].time = new Date().getTime();
 };
