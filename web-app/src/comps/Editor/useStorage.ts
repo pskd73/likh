@@ -22,7 +22,7 @@ export type Storage = {
   getRecentNote: () => Promise<SavedNote>;
   saveNote: (note: SavedNote) => void;
   search: (text: string) => Promise<SavedNote[]>;
-  delete: (id: string) => void;
+  delete: (id: string) => Promise<void>;
   pouch: Pouch.MyPouch;
   syncState: string;
 };
@@ -118,13 +118,13 @@ const useStorage = (): Storage => {
     });
   };
 
-  const _delete = (id: string) => {
+  const _delete = async (id: string): Promise<void> => {
     const newNotes = [...notes];
     const idx = newNotes.findIndex((note) => note.id === id);
     if (idx === -1) return;
     newNotes.splice(idx, 1);
     setNotes(newNotes);
-    pouch.del(id);
+    await pouch.del(id);
   };
 
   return {

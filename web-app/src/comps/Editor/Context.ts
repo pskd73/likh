@@ -250,7 +250,7 @@ export const useEditor = ({
   };
 
   const deleteNote = async (noteId: string) => {
-    storage.delete(noteId);
+    await storage.delete(noteId);
     if (notes[noteId]) {
       const newNotes = { ...notes };
       delete newNotes[noteId];
