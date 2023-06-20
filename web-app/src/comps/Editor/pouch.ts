@@ -1,57 +1,84 @@
 import PouchDB from "pouchdb";
 import CryptoJS from "crypto-js";
 
-const SECRET = "mysecret";
-
 type PouchDoc<T> = T & PouchDB.Core.IdMeta & PouchDB.Core.GetMeta;
 
-const db = new PouchDB("notes");
-const remote = new PouchDB("https://admin:password@sync.retronote.app:6984/notes");
-
-db.sync(remote, { live: true });
-
-function encrypt<T>(obj: T) {
-  return CryptoJS.AES.encrypt(JSON.stringify(obj), SECRET).toString();
-}
-
-function decrypt<T>(str: string): T {
-  var bytes = CryptoJS.AES.decrypt(str, SECRET);
-  var originalText = bytes.toString(CryptoJS.enc.Utf8);
-  return JSON.parse(originalText);
-}
-
-export const get = async <T>(id: string) => {
-  try {
-    const doc = await db.get<{ payload: string }>(id);
-    return decrypt(doc.payload) as T;
-  } catch (e) {
-    return undefined;
-  }
+export type MyPouch = {
+  get: <T>(id: string) => Promise<PouchDoc<T> | undefined>;
+  put: <T extends {}>(
+    id: string,
+    update: (doc?: PouchDoc<T> | T) => T
+  ) => Promise<void>;
+  all: <T extends {}>() => Promise<PouchDB.Core.AllDocsResponse<T>>;
+  del: (id: string) => Promise<void>;
 };
 
-export const put = async <T extends {}>(
-  id: string,
-  update: (doc?: PouchDoc<T> | T) => T
-): Promise<void> => {
-  let existingDoc: PouchDoc<{ payload: string }> | undefined = undefined;
-  try {
-    existingDoc = await db.get<{ payload: string }>(id);
-  } catch {}
-  if (!existingDoc) {
-    await db.put({ _id: id, payload: encrypt(update()) });
-  } else {
-    existingDoc.payload = encrypt(update(decrypt(existingDoc.payload)));
-    await db.put(existingDoc);
+export const MakePouch = (
+  secret: string,
+  config: {
+    username: string;
+    password: string;
   }
-};
+): MyPouch => {
+  const db = new PouchDB("notes");
 
-export const all = async <T>() => {
-  return await db.allDocs<T>();
-};
-
-export const del = async (id: string) => {
-  const existingDoc = await db.get(id);
-  if (existingDoc) {
-    db.remove(existingDoc);
+  if (config.username && config.password) {
+    const remote = new PouchDB(
+      `https://${config.username}:${config.password}@sync.retronote.app:6984/notes_${config.username}`
+    );
+    db.sync(remote, { live: true });
   }
+
+  function encrypt<T>(obj: T) {
+    return CryptoJS.AES.encrypt(JSON.stringify(obj), secret).toString();
+  }
+
+  function decrypt<T>(str: string): T {
+    var bytes = CryptoJS.AES.decrypt(str, secret);
+    var originalText = bytes.toString(CryptoJS.enc.Utf8);
+    return JSON.parse(originalText);
+  }
+
+  const get = async <T>(id: string) => {
+    try {
+      const doc = await db.get<{ payload: string }>(id);
+      return decrypt(doc.payload) as T;
+    } catch (e) {
+      return undefined;
+    }
+  };
+
+  const put = async <T extends {}>(
+    id: string,
+    update: (doc?: PouchDoc<T> | T) => T
+  ): Promise<void> => {
+    let existingDoc: PouchDoc<{ payload: string }> | undefined = undefined;
+    try {
+      existingDoc = await db.get<{ payload: string }>(id);
+    } catch {}
+    if (!existingDoc) {
+      await db.put({ _id: id, payload: encrypt(update()) });
+    } else {
+      existingDoc.payload = encrypt(update(decrypt(existingDoc.payload)));
+      await db.put(existingDoc);
+    }
+  };
+
+  const all = async <T>() => {
+    return await db.allDocs<T>();
+  };
+
+  const del = async (id: string) => {
+    const existingDoc = await db.get(id);
+    if (existingDoc) {
+      await db.remove(existingDoc);
+    }
+  };
+
+  return {
+    get,
+    put,
+    all,
+    del,
+  };
 };
