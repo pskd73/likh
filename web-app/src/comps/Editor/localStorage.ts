@@ -1,5 +1,5 @@
 import { NoteMeta, SavedNote } from "./type";
-import * as Pouch from "./Pouch";
+import * as Pouch from "./PouchDB";
 
 export async function migrate(pouch: Pouch.MyPouch) {
   const metas: NoteMeta[] = JSON.parse(localStorage.getItem("notes") || "[]");

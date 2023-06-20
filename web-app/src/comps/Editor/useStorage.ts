@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { NoteMeta, SavedNote } from "./type";
 import { INTRO_TEXT } from "./Intro";
-import * as Pouch from "./Pouch";
+import * as Pouch from "./PouchDB";
 
 const lastSaved: Record<string, { time: number; timeout?: NodeJS.Timeout }> =
   {};
