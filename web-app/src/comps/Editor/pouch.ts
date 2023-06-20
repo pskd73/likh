@@ -6,7 +6,7 @@ const SECRET = "mysecret";
 type PouchDoc<T> = T & PouchDB.Core.IdMeta & PouchDB.Core.GetMeta;
 
 const db = new PouchDB("notes");
-const remote = new PouchDB("http://admin:password@localhost:5984/notes");
+const remote = new PouchDB("http://admin:password@192.241.138.175:5984/notes");
 
 db.sync(remote, { live: true });
 
