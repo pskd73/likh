@@ -1,40 +1,56 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { NoteMeta, SavedNote } from "./type";
 import { INTRO_TEXT } from "./Intro";
 import * as Pouch from "./pouch";
 
+const lastSaved: Record<string, { time: number; timeout?: NodeJS.Timeout }> =
+  {};
+
+const shouldSave = (id: string) => {
+  if (!lastSaved[id]) {
+    return true;
+  }
+  if (new Date().getTime() - lastSaved[id].time > 4 * 1000) {
+    return true;
+  }
+};
+
 const getNoteMetas = async (): Promise<NoteMeta[]> => {
   return (await Pouch.all()).rows;
-  // return metas.rows;
-  // return JSON.parse(localStorage.getItem("notes") || "[]");
 };
 
-const setNoteMetas = (notes: NoteMeta[]) => {
-  localStorage.setItem("notes", JSON.stringify(notes));
-};
-
-const saveNote = (note: SavedNote) => {
-  localStorage.setItem(`note/${note.id}`, JSON.stringify(note));
+const saveNoteImmediate = (note: SavedNote) => {
   Pouch.put(note.id, (doc) => {
     if (doc === undefined) {
       return { ...note, _id: note.id };
     }
     return { ...doc, text: note.text, serialized: note.serialized };
   });
+  lastSaved[note.id].time = new Date().getTime();
+};
+
+const saveNote = (note: SavedNote) => {
+  if (!lastSaved[note.id]) {
+    lastSaved[note.id] = { time: -1 };
+  }
+  if (lastSaved[note.id].timeout) {
+    clearTimeout(lastSaved[note.id].timeout);
+  }
+  if (shouldSave(note.id)) {
+    return saveNoteImmediate(note);
+  }
+  lastSaved[note.id].timeout = setTimeout(() => {
+    saveNoteImmediate(note);
+  }, 4 * 1000);
 };
 
 const getNote = (id: string): Promise<SavedNote | undefined> => {
   return Pouch.get(id);
-  // const raw = localStorage.getItem(`note/${id}`);
-  // if (raw) {
-  //   return Promise.resolve(JSON.parse(raw));
-  // }
-  // return Promise.resolve(undefined);
 };
 
 const deleteNote = (id: string): Promise<void> => {
   return Pouch.del(id);
-}
+};
 
 export type Storage = {
   notes: NoteMeta[];
