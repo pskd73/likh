@@ -32,7 +32,7 @@ export const get = async <T>(id: string) => {
 export const put = async <T extends {}>(
   id: string,
   update: (doc?: PouchDoc<T> | T) => T
-) => {
+): Promise<void> => {
   let existingDoc: PouchDoc<{ payload: string }> | undefined = undefined;
   try {
     existingDoc = await db.get<{ payload: string }>(id);

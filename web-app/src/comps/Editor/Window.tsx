@@ -12,6 +12,7 @@ import { textToTitle } from "../../Note";
 import { iOS, isMobile } from "./device";
 import EditableNote from "./EditableNote";
 import { init } from "./db";
+import { migrate } from "./localStorage";
 
 const STATUS_BAR_HEIGHT = 30;
 
@@ -27,6 +28,7 @@ const EditorWindow = () => {
     (async () => {
       await init();
       setDbInitiated(true);
+      migrate();
     })();
   }, []);
 
