@@ -188,7 +188,7 @@ export const useEditor = ({
     if (_notes) {
       setNotes(_notes);
     }
-  }, [rollHashTag, notesToShow]);
+  }, [rollHashTag]);
 
   const getHashTagNotes = () => {
     if (rollHashTag) {
