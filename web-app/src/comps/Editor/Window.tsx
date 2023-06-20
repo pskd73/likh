@@ -28,7 +28,7 @@ const EditorWindow = () => {
     (async () => {
       await init();
       setDbInitiated(true);
-      migrate();
+      migrate(storage.pouch);
     })();
   }, []);
 
@@ -92,10 +92,7 @@ const EditorWindow = () => {
               <EditableNote getSuggestions={getSuggestions} />
             </div>
           </div>
-          <StatusBar
-            height={STATUS_BAR_HEIGHT}
-            padding={statusBarPadding}
-          />
+          <StatusBar height={STATUS_BAR_HEIGHT} padding={statusBarPadding} />
         </div>
       </div>
     </EditorContext.Provider>

@@ -23,6 +23,7 @@ export type Storage = {
   saveNote: (note: SavedNote) => void;
   search: (text: string) => Promise<SavedNote[]>;
   delete: (id: string) => void;
+  pouch: Pouch.MyPouch;
 };
 
 const useStorage = (): Storage => {
@@ -54,7 +55,7 @@ const useStorage = (): Storage => {
     });
     lastSaved[note.id].time = new Date().getTime();
   };
-  
+
   const saveNote = (note: SavedNote) => {
     if (!lastSaved[note.id]) {
       lastSaved[note.id] = { time: -1 };
@@ -126,6 +127,7 @@ const useStorage = (): Storage => {
     saveNote,
     search,
     delete: _delete,
+    pouch,
   };
 };
 
