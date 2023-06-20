@@ -17,8 +17,8 @@ export type MyPouch = {
 export const MakePouch = (
   secret: string,
   config: {
-    username: string;
-    password: string;
+    username?: string;
+    password?: string;
   }
 ): MyPouch => {
   const db: PouchDB.Database = new PouchDB("notes");
