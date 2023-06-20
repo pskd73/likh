@@ -33,7 +33,10 @@ export const put = async <T extends {}>(
   id: string,
   update: (doc?: PouchDoc<T> | T) => T
 ) => {
-  const existingDoc = await db.get<{ payload: string }>(id);
+  let existingDoc: PouchDoc<{ payload: string }> | undefined = undefined;
+  try {
+    existingDoc = await db.get<{ payload: string }>(id);
+  } catch {}
   if (!existingDoc) {
     await db.put({ _id: id, payload: encrypt(update()) });
   } else {
