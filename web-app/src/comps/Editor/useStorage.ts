@@ -85,7 +85,6 @@ const useStorage = (): Storage => {
         id,
       },
     ];
-    // setNoteMetas(newNotes);
     saveNote(newNote);
     setNotes(newNotes);
     return newNote;
@@ -123,7 +122,6 @@ const useStorage = (): Storage => {
     newNotes.splice(idx, 1);
     setNotes(newNotes);
     deleteNote(id);
-    // setNoteMetas(newNotes);
   };
 
   return {
