@@ -175,7 +175,11 @@ export const useEditor = ({
           })) as NoteSummary[]
       );
     })();
-  }, [storage.notes, searchTerm, note]);
+  }, [
+    storage.notes,
+    searchTerm,
+    Math.min(note?.text.length || 0, 50),
+  ]);
 
   useEffect(() => {
     if (note) {
