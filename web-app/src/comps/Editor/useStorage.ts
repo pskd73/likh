@@ -25,6 +25,7 @@ export type Storage = {
   delete: (id: string) => Promise<void>;
   pouch: Pouch.MyPouch;
   syncState: string;
+  lastSavedAt: number;
 };
 
 const useStorage = (): Storage => {
@@ -36,6 +37,7 @@ const useStorage = (): Storage => {
   }, []);
   const [syncState, setSyncState] = useState("init");
   const [notes, setNotes] = useState<NoteMeta[]>([]);
+  const [lastSavedAt, setLastSavedAt] = useState(new Date().getTime())
 
   useEffect(() => {
     (async () => {
@@ -62,6 +64,7 @@ const useStorage = (): Storage => {
       };
     });
     lastSaved[note.id].time = new Date().getTime();
+    setLastSavedAt(lastSaved[note.id].time);
   };
 
   const saveNote = (note: SavedNote) => {
@@ -137,6 +140,7 @@ const useStorage = (): Storage => {
     delete: _delete,
     pouch,
     syncState,
+    lastSavedAt,
   };
 };
 

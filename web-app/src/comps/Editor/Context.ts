@@ -178,7 +178,7 @@ export const useEditor = ({
   }, [
     storage.notes,
     searchTerm,
-    Math.min(note?.text.length || 0, 50),
+    (note?.text.length || 0) <= 50 ? storage.lastSavedAt : undefined,
   ]);
 
   useEffect(() => {
