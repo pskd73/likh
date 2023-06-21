@@ -14,6 +14,7 @@ import EditableNote from "./EditableNote";
 import { init } from "./db";
 import { migrate } from "./localStorage";
 import * as PouchDB from "./PouchDB";
+import HomeScreen from "./HomeScreen";
 
 const STATUS_BAR_HEIGHT = 30;
 
@@ -96,7 +97,10 @@ const EditorWindow = () => {
               <div
                 className={classNames("w-full max-w-[1000px] md:w-[1000px]")}
               >
-                <EditableNote getSuggestions={getSuggestions} />
+                {editorState.note && (
+                  <EditableNote getSuggestions={getSuggestions} />
+                )}
+                {!editorState.note && <HomeScreen />}
               </div>
             </div>
             <StatusBar height={STATUS_BAR_HEIGHT} padding={statusBarPadding} />

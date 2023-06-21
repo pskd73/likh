@@ -22,6 +22,7 @@ import {
   BiCollapseVertical,
   BiFile,
   BiHash,
+  BiHomeSmile,
   BiInfoCircle,
   BiStats,
 } from "react-icons/bi";
@@ -217,7 +218,6 @@ const Explorer = () => {
             </List>
           </Collapsible.Item.Content>
         </Collapsible.Item>
-        <br />
 
         {/* Hashtags */}
         {Object.keys(hashtags).map((hashtag, i) => {
@@ -256,7 +256,6 @@ const Explorer = () => {
             </Collapsible.Item>
           );
         })}
-        <br />
 
         {/* Reminders */}
         <Collapsible.Item
@@ -302,7 +301,6 @@ const Explorer = () => {
             </List>
           </Collapsible.Item.Content>
         </Collapsible.Item>
-        <br />
 
         {/* Settings */}
         <Collapsible.Item
