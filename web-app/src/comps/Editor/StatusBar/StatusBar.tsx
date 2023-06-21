@@ -15,6 +15,7 @@ import {
 import { saveNote } from "../File";
 import Delete from "./Delete";
 import classNames from "classnames";
+import { PouchContext } from "../PouchDB";
 
 const SyncIcon = ({ state }: { state: string }) => {
   if (state === "paused" || state === "init") {
@@ -33,6 +34,7 @@ const StatusBar = ({
   height: number;
   padding: number;
 }) => {
+  const {syncState} = useContext(PouchContext);
   const { showStats, note, sideBar, setSideBar, isRoll, storage } =
     useContext(EditorContext);
   const [fullScreen, setFullScreen] = useState(false);
@@ -121,7 +123,7 @@ const StatusBar = ({
             setSideBar((b) => (b === "storage" ? undefined : "storage"))
           }
         >
-          <SyncIcon state={storage.syncState} />
+          <SyncIcon state={syncState} />
         </Button>
       </div>
       <div className="flex justify-end h-full">

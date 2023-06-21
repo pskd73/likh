@@ -380,7 +380,7 @@ const Explorer = () => {
       </Collapsible>
 
       {/* Built by */}
-      <div className="mt-2 text-xs">
+      <div className="mt-2 text-xs px-2">
         <span className="opacity-40">Built by </span>
         <a
           className="opacity-40 hover:opacity-100 underline"
@@ -393,7 +393,7 @@ const Explorer = () => {
       </div>
 
       {/* Community */}
-      <div className="mb-2 text-xs">
+      <div className="mb-2 text-xs px-2">
         <span className="opacity-40">Join the </span>
         <a
           className="opacity-40 hover:opacity-100 underline"

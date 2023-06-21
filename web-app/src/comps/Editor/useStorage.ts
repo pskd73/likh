@@ -24,24 +24,16 @@ export type Storage = {
   search: (text: string) => Promise<SavedNote[]>;
   delete: (id: string) => Promise<void>;
   pouch: Pouch.MyPouch;
-  syncState: string;
   lastSavedAt: number;
 };
 
 const useStorage = (pouch: Pouch.MyPouch): Storage => {
-  const [syncState, setSyncState] = useState("change");
   const [notes, setNotes] = useState<NoteMeta[]>([]);
   const [lastSavedAt, setLastSavedAt] = useState(new Date().getTime());
 
   useEffect(() => {
     (async () => {
       setNotes((await pouch.all()).rows);
-    })();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      pouch.sync((state) => setSyncState(state));
     })();
   }, []);
 
@@ -135,7 +127,6 @@ const useStorage = (pouch: Pouch.MyPouch): Storage => {
     search,
     delete: _delete,
     pouch,
-    syncState,
     lastSavedAt,
   };
 };

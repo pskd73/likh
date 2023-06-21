@@ -2,7 +2,7 @@ import PouchDB from "pouchdb";
 import CryptoJS from "crypto-js";
 import { PersistedState } from "./usePersistedState";
 import { GPW } from "./gpw";
-import { createContext, useMemo } from "react";
+import { createContext, useMemo, useState } from "react";
 
 type PouchDoc<T> = T & PouchDB.Core.IdMeta & PouchDB.Core.GetMeta;
 
@@ -14,7 +14,6 @@ export type MyPouch = {
   ) => Promise<void>;
   all: <T extends {}>() => Promise<PouchDB.Core.AllDocsResponse<T>>;
   del: (id: string) => Promise<void>;
-  sync: (osc: (state: string) => void) => void;
 };
 
 export const MakePouch = (
@@ -22,8 +21,10 @@ export const MakePouch = (
   config: {
     username?: string;
     password?: string;
+    onStateChange?: (state: string) => void;
   }
 ): MyPouch => {
+  const onStateChange = config.onStateChange || (() => {});
   let localName = `notes_${secret}`;
   const db: PouchDB.Database = new PouchDB(localName);
   let remote: PouchDB.Database | undefined = undefined;
@@ -32,32 +33,25 @@ export const MakePouch = (
     remote = new PouchDB(
       `https://${config.username}:${config.password}@sync.retronote.app:6984/notes_${config.username}`
     );
-  }
-
-  function sync(onStateChange: (state: string) => void) {
-    if (remote) {
-      db.sync(remote, { live: true })
-        .on("change", function (info) {
-          onStateChange("change");
-        })
-        .on("paused", function (err) {
-          onStateChange("paused");
-        })
-        .on("active", function () {
-          onStateChange("active");
-        })
-        .on("denied", function (err) {
-          onStateChange("denied");
-        })
-        .on("complete", function (info) {
-          onStateChange("complete");
-        })
-        .on("error", function (err) {
-          onStateChange("error");
-        });
-    } else {
-      onStateChange("paused");
-    }
+    db.sync(remote, { live: true })
+      .on("change", function (info) {
+        onStateChange("change");
+      })
+      .on("paused", function (err) {
+        onStateChange("paused");
+      })
+      .on("active", function () {
+        onStateChange("active");
+      })
+      .on("denied", function (err) {
+        onStateChange("denied");
+      })
+      .on("complete", function (info) {
+        onStateChange("complete");
+      })
+      .on("error", function (err) {
+        onStateChange("error");
+      });
   }
 
   function encrypt<T>(obj: T) {
@@ -111,7 +105,6 @@ export const MakePouch = (
     put,
     all,
     del,
-    sync,
   };
 };
 
@@ -119,7 +112,7 @@ const { hook: useSecret } = PersistedState("secret");
 const { hook: useUsername } = PersistedState("username");
 const { hook: usePassword } = PersistedState("password");
 
-type PouchContextType = {
+export type PouchContextType = {
   secret: string;
   username?: string;
   password?: string;
@@ -127,6 +120,8 @@ type PouchContextType = {
   setUsername: (username?: string) => void;
   setPassword: (password?: string) => void;
   db: MyPouch;
+  syncState: string;
+  nSync: number;
 };
 
 export const PouchContext = createContext({} as PouchContextType);
@@ -135,10 +130,22 @@ export const usePouchDb = () => {
   const [secret, setSecret] = useSecret(GPW.pronounceable(10));
   const [username, setUsername] = useUsername<string | undefined>(undefined);
   const [password, setPassword] = usePassword<string | undefined>(undefined);
+  const [syncState, setSyncState] = useState("change");
+  const [nSync, setNSync] = useState(0);
   const db = useMemo(() => {
     return MakePouch(secret, {
       username,
       password,
+      onStateChange: (state) => {
+        setSyncState(state);
+        if (state === "paused") {
+          setTimeout(() => {
+            setNSync((n) => {
+              return n + 1;
+            });
+          }, 1000);
+        }
+      },
     });
   }, [secret, username, password]);
 
@@ -150,5 +157,7 @@ export const usePouchDb = () => {
     setUsername,
     setPassword,
     db,
+    syncState,
+    nSync,
   };
 };

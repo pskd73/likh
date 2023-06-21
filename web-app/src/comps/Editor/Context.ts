@@ -5,6 +5,7 @@ import { isLinked } from "../../Note";
 import { LinkSuggestion, getLinkSuggestions } from "./Suggestion";
 import { PersistedState } from "./usePersistedState";
 import { Theme, Themes } from "./Theme";
+import { MyPouch, PouchContextType } from "./PouchDB";
 
 type StateSetter<T> = React.Dispatch<React.SetStateAction<T>>;
 type CountStatType = "words" | "readTime";
@@ -84,8 +85,10 @@ const { hook: useThemeName } = PersistedState<Theme>("themeName");
 
 export const useEditor = ({
   storage,
+  pdb,
 }: {
   storage: Storage;
+  pdb: PouchContextType;
 }): EditorContextType => {
   const [sideBar, setSideBar] = useSideBar<string | undefined>(undefined);
   const [activeSideMenus, setActiveSideMenus] = useActiveSideMenus<string[]>([
@@ -181,6 +184,7 @@ export const useEditor = ({
     storage.notes,
     searchTerm,
     (note?.text.length || 0) <= 50 ? storage.lastSavedAt : undefined,
+    pdb.nSync > 0,
   ]);
 
   useEffect(() => {
