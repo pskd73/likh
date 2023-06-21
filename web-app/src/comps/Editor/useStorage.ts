@@ -35,7 +35,7 @@ const useStorage = (): Storage => {
       password: "password",
     });
   }, []);
-  const [syncState, setSyncState] = useState("init");
+  const [syncState, setSyncState] = useState("change");
   const [notes, setNotes] = useState<NoteMeta[]>([]);
   const [lastSavedAt, setLastSavedAt] = useState(new Date().getTime())
 
@@ -125,9 +125,9 @@ const useStorage = (): Storage => {
     const newNotes = [...notes];
     const idx = newNotes.findIndex((note) => note.id === id);
     if (idx === -1) return;
+    await pouch.del(id);
     newNotes.splice(idx, 1);
     setNotes(newNotes);
-    await pouch.del(id);
   };
 
   return {
