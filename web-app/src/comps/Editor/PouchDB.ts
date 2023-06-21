@@ -1,5 +1,8 @@
 import PouchDB from "pouchdb";
 import CryptoJS from "crypto-js";
+import { PersistedState } from "./usePersistedState";
+import { GPW } from "./gpw";
+import { createContext, useMemo } from "react";
 
 type PouchDoc<T> = T & PouchDB.Core.IdMeta & PouchDB.Core.GetMeta;
 
@@ -21,7 +24,8 @@ export const MakePouch = (
     password?: string;
   }
 ): MyPouch => {
-  const db: PouchDB.Database = new PouchDB("notes");
+  let localName = `notes_${secret}`;
+  const db: PouchDB.Database = new PouchDB(localName);
   let remote: PouchDB.Database | undefined = undefined;
 
   if (config.username && config.password) {
@@ -51,6 +55,8 @@ export const MakePouch = (
         .on("error", function (err) {
           onStateChange("error");
         });
+    } else {
+      onStateChange("paused");
     }
   }
 
@@ -106,5 +112,43 @@ export const MakePouch = (
     all,
     del,
     sync,
+  };
+};
+
+const { hook: useSecret } = PersistedState("secret");
+const { hook: useUsername } = PersistedState("username");
+const { hook: usePassword } = PersistedState("password");
+
+type PouchContextType = {
+  secret: string;
+  username?: string;
+  password?: string;
+  setSecret: (secret: string) => void;
+  setUsername: (username?: string) => void;
+  setPassword: (password?: string) => void;
+  db: MyPouch;
+};
+
+export const PouchContext = createContext({} as PouchContextType);
+
+export const usePouchDb = () => {
+  const [secret, setSecret] = useSecret(GPW.pronounceable(10));
+  const [username, setUsername] = useUsername<string | undefined>(undefined);
+  const [password, setPassword] = usePassword<string | undefined>(undefined);
+  const db = useMemo(() => {
+    return MakePouch(secret, {
+      username,
+      password,
+    });
+  }, [secret, username, password]);
+
+  return {
+    secret,
+    username,
+    password,
+    setSecret,
+    setUsername,
+    setPassword,
+    db,
   };
 };

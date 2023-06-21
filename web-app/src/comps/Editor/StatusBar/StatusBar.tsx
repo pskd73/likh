@@ -114,11 +114,15 @@ const StatusBar = ({
         >
           <BiFullscreen />
         </Button>
-        <div className="hidden md:flex items-center px-1 space-x-1 h-full">
-          <span className="opacity-50">
-            <SyncIcon state={storage.syncState} />
-          </span>
-        </div>
+        <Button
+          lite={sideBar !== "storage"}
+          className="rounded-none"
+          onClick={() =>
+            setSideBar((b) => (b === "storage" ? undefined : "storage"))
+          }
+        >
+          <SyncIcon state={storage.syncState} />
+        </Button>
       </div>
       <div className="flex justify-end h-full">
         {!isRoll && <Delete />}

@@ -13,11 +13,13 @@ import { iOS, isMobile } from "./device";
 import EditableNote from "./EditableNote";
 import { init } from "./db";
 import { migrate } from "./localStorage";
+import * as PouchDB from "./PouchDB";
 
 const STATUS_BAR_HEIGHT = 30;
 
 const EditorWindow = () => {
-  const storage = useStorage();
+  const pdb = PouchDB.usePouchDb();
+  const storage = useStorage(pdb.db);
   const editorState = useEditor({ storage });
   const statusBarPadding = useMemo(() => (iOS() ? 20 : 0), []);
   const [dbInitiated, setDbInitiated] = useState(false);
@@ -70,32 +72,38 @@ const EditorWindow = () => {
   }
 
   return (
-    <EditorContext.Provider value={editorState}>
-      <div className="min-h-[100vh] bg-base text-primary-700 flex">
-        <SidePanel />
-        <div
-          style={{
-            width:
-              editorState.sideBar && !isMobile
-                ? "calc(100vw - 300px)"
-                : "100vw",
-          }}
-        >
+    <PouchDB.PouchContext.Provider value={pdb}>
+      <EditorContext.Provider value={editorState}>
+        <div className="min-h-[100vh] bg-base text-primary-700 flex">
+          <SidePanel />
           <div
-            id="editor-container"
-            className="flex-1 p-4 py-8 flex justify-center overflow-y-scroll"
             style={{
-              height: `calc(100vh - ${STATUS_BAR_HEIGHT + statusBarPadding}px)`,
+              width:
+                editorState.sideBar && !isMobile
+                  ? "calc(100vw - 300px)"
+                  : "100vw",
             }}
           >
-            <div className={classNames("w-full max-w-[1000px] md:w-[1000px]")}>
-              <EditableNote getSuggestions={getSuggestions} />
+            <div
+              id="editor-container"
+              className="flex-1 p-4 py-8 flex justify-center overflow-y-scroll"
+              style={{
+                height: `calc(100vh - ${
+                  STATUS_BAR_HEIGHT + statusBarPadding
+                }px)`,
+              }}
+            >
+              <div
+                className={classNames("w-full max-w-[1000px] md:w-[1000px]")}
+              >
+                <EditableNote getSuggestions={getSuggestions} />
+              </div>
             </div>
+            <StatusBar height={STATUS_BAR_HEIGHT} padding={statusBarPadding} />
           </div>
-          <StatusBar height={STATUS_BAR_HEIGHT} padding={statusBarPadding} />
         </div>
-      </div>
-    </EditorContext.Provider>
+      </EditorContext.Provider>
+    </PouchDB.PouchContext.Provider>
   );
 };
 

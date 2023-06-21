@@ -28,13 +28,7 @@ export type Storage = {
   lastSavedAt: number;
 };
 
-const useStorage = (): Storage => {
-  const pouch = useMemo(() => {
-    return Pouch.MakePouch("mysecret", {
-      username: "pramod",
-      password: "password",
-    });
-  }, []);
+const useStorage = (pouch: Pouch.MyPouch): Storage => {
   const [syncState, setSyncState] = useState("change");
   const [notes, setNotes] = useState<NoteMeta[]>([]);
   const [lastSavedAt, setLastSavedAt] = useState(new Date().getTime())

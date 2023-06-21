@@ -192,7 +192,7 @@ const MyNotes = () => {
                       )}
                     </Button>
                     <Delete onConfirm={() => handleDeleteNote(note.id)} />
-                    {note.visibility === "public" && (
+                    {/* {note.visibility === "public" && (
                       <Button
                         link
                         lite
@@ -201,7 +201,7 @@ const MyNotes = () => {
                       >
                         <BiLink />
                       </Button>
-                    )}
+                    )} */}
                   </div>
                 </div>
               </li>
