@@ -19,7 +19,7 @@ export type Storage = {
   notes: NoteMeta[];
   newNote: (text: string, date?: number) => SavedNote;
   getNote: (id: string) => Promise<SavedNote | undefined>;
-  getRecentNote: () => Promise<SavedNote>;
+  getRecentNote: () => Promise<SavedNote | undefined>;
   saveNote: (note: SavedNote) => void;
   search: (text: string) => Promise<SavedNote[]>;
   delete: (id: string) => Promise<void>;
@@ -31,7 +31,7 @@ export type Storage = {
 const useStorage = (pouch: Pouch.MyPouch): Storage => {
   const [syncState, setSyncState] = useState("change");
   const [notes, setNotes] = useState<NoteMeta[]>([]);
-  const [lastSavedAt, setLastSavedAt] = useState(new Date().getTime())
+  const [lastSavedAt, setLastSavedAt] = useState(new Date().getTime());
 
   useEffect(() => {
     (async () => {
@@ -92,11 +92,13 @@ const useStorage = (pouch: Pouch.MyPouch): Storage => {
 
   const getRecentNote = async () => {
     const noteMetas = (await pouch.all()).rows;
-    const note = noteMetas.length
-      ? await pouch.get<SavedNote>(noteMetas[noteMetas.length - 1].id)
-      : undefined;
-    if (note) {
-      return note;
+    for (const meta of noteMetas) {
+      const note = noteMetas.length
+        ? await pouch.get<SavedNote>(meta.id)
+        : undefined;
+      if (note) {
+        return note;
+      }
     }
     return newNote(INTRO_TEXT);
   };

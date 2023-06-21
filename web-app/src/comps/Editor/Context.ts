@@ -120,7 +120,9 @@ export const useEditor = ({
         return setNotes(hashTagNotes);
       }
       const recentNote = await storage.getRecentNote();
-      setNotes({ [recentNote.id]: recentNote });
+      if (recentNote) {
+        setNotes({ [recentNote.id]: recentNote });
+      }
     })();
   }, []);
 
@@ -261,7 +263,9 @@ export const useEditor = ({
 
       if (Object.keys(newNotes).length === 0) {
         const recentNote = await storage.getRecentNote();
-        newNotes[recentNote.id] = recentNote;
+        if (recentNote) {
+          newNotes[recentNote.id] = recentNote;
+        }
       }
 
       setNotes(newNotes);
