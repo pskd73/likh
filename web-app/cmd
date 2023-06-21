@@ -1,0 +1,7 @@
+docker run -e COUCHDB_USER=admin -e COUCHDB_PASSWORD=password \
+    -p 5984:5984 \
+    -p 6984:6984 \
+    -v /root/test/data:/opt/couchdb/data \
+    -v /root/test/keys/:/home/keys \
+    -v /root/test/local.ini:/opt/couchdb/etc/local.ini \
+    -d couchdb

@@ -3,8 +3,11 @@ import { EditorContext } from "../Context";
 import TextCounter from "./TextCounter";
 import Button from "../../Button";
 import {
+  BiCheckShield,
+  BiError,
   BiFullscreen,
   BiLink,
+  BiLoaderAlt,
   BiMenu,
   BiSave,
   BiSpreadsheet,
@@ -12,6 +15,17 @@ import {
 import { saveNote } from "../File";
 import Delete from "./Delete";
 import classNames from "classnames";
+import { PouchContext } from "../PouchDB";
+
+const SyncIcon = ({ state }: { state: string }) => {
+  if (state === "paused" || state === "init") {
+    return <BiCheckShield />;
+  }
+  if (state === "error" || state === "denied") {
+    return <BiError />;
+  }
+  return <BiLoaderAlt className="animate-spin" />;
+};
 
 const StatusBar = ({
   height,
@@ -20,7 +34,8 @@ const StatusBar = ({
   height: number;
   padding: number;
 }) => {
-  const { showStats, note, sideBar, setSideBar, isRoll } =
+  const {syncState} = useContext(PouchContext);
+  const { showStats, note, sideBar, setSideBar, isRoll, storage } =
     useContext(EditorContext);
   const [fullScreen, setFullScreen] = useState(false);
 
@@ -101,14 +116,15 @@ const StatusBar = ({
         >
           <BiFullscreen />
         </Button>
-        <div className="hidden md:flex items-center px-1 space-x-1 h-full">
-          <span className="opacity-50 text-xs">
-            Note is auto saved locally!
-          </span>
-          {/* <Button lite className="h-full rounded-none">
-            <BiX />
-          </Button> */}
-        </div>
+        <Button
+          lite={sideBar !== "storage"}
+          className="rounded-none"
+          onClick={() =>
+            setSideBar((b) => (b === "storage" ? undefined : "storage"))
+          }
+        >
+          <SyncIcon state={syncState} />
+        </Button>
       </div>
       <div className="flex justify-end h-full">
         {!isRoll && <Delete />}

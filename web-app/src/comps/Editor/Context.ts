@@ -5,6 +5,7 @@ import { isLinked } from "../../Note";
 import { LinkSuggestion, getLinkSuggestions } from "./Suggestion";
 import { PersistedState } from "./usePersistedState";
 import { Theme, Themes } from "./Theme";
+import { MyPouch, PouchContextType } from "./PouchDB";
 
 type StateSetter<T> = React.Dispatch<React.SetStateAction<T>>;
 type CountStatType = "words" | "readTime";
@@ -84,8 +85,10 @@ const { hook: useThemeName } = PersistedState<Theme>("themeName");
 
 export const useEditor = ({
   storage,
+  pdb,
 }: {
   storage: Storage;
+  pdb: PouchContextType;
 }): EditorContextType => {
   const [sideBar, setSideBar] = useSideBar<string | undefined>(undefined);
   const [activeSideMenus, setActiveSideMenus] = useActiveSideMenus<string[]>([
@@ -120,7 +123,9 @@ export const useEditor = ({
         return setNotes(hashTagNotes);
       }
       const recentNote = await storage.getRecentNote();
-      setNotes({ [recentNote.id]: recentNote });
+      if (recentNote) {
+        setNotes({ [recentNote.id]: recentNote });
+      }
     })();
   }, []);
 
@@ -175,7 +180,12 @@ export const useEditor = ({
           })) as NoteSummary[]
       );
     })();
-  }, [storage.notes, searchTerm, note]);
+  }, [
+    storage.notes,
+    searchTerm,
+    (note?.text.length || 0) <= 50 ? storage.lastSavedAt : undefined,
+    pdb.nSync > 0,
+  ]);
 
   useEffect(() => {
     if (note) {
@@ -250,14 +260,16 @@ export const useEditor = ({
   };
 
   const deleteNote = async (noteId: string) => {
-    storage.delete(noteId);
+    await storage.delete(noteId);
     if (notes[noteId]) {
       const newNotes = { ...notes };
       delete newNotes[noteId];
 
       if (Object.keys(newNotes).length === 0) {
         const recentNote = await storage.getRecentNote();
-        newNotes[recentNote.id] = recentNote;
+        if (recentNote) {
+          newNotes[recentNote.id] = recentNote;
+        }
       }
 
       setNotes(newNotes);

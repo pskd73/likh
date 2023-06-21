@@ -75,11 +75,11 @@ export const useEditorPaste = ({
         if (uri.length > LIMIT_KB * 1000) {
           return alert(`Cannot upload more than ${LIMIT_KB}kb images!`);
         }
-        let imgText = `![](${uri})`;
-        const savedImg = await handleSaveImg({
-          uri,
-        });
-        imgText = `![Image](image://${savedImg.id})`;
+        // let imgText = `![](${uri})`;
+        // const savedImg = await handleSaveImg({
+        //   uri,
+        // });
+        const imgText = `![Image](${uri})`;
         Transforms.insertText(editor, imgText);
       }
     };

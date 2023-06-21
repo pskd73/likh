@@ -1,45 +1,72 @@
 import { useEffect, useMemo, useState } from "react";
 import { NoteMeta, SavedNote } from "./type";
 import { INTRO_TEXT } from "./Intro";
+import * as Pouch from "./PouchDB";
 
-const getNoteMetas = (): Promise<NoteMeta[]> => {
-  return JSON.parse(localStorage.getItem("notes") || "[]");
-};
+const lastSaved: Record<string, { time: number; timeout?: NodeJS.Timeout }> =
+  {};
 
-const setNoteMetas = (notes: NoteMeta[]) => {
-  localStorage.setItem("notes", JSON.stringify(notes));
-};
-
-const saveNote = (note: SavedNote) => {
-  localStorage.setItem(`note/${note.id}`, JSON.stringify(note));
-};
-
-const getNote = (id: string): Promise<SavedNote | undefined> => {
-  const raw = localStorage.getItem(`note/${id}`);
-  if (raw) {
-    return Promise.resolve(JSON.parse(raw));
+const shouldSave = (id: string) => {
+  if (!lastSaved[id]) {
+    return true;
   }
-  return Promise.resolve(undefined);
+  if (new Date().getTime() - lastSaved[id].time > 4 * 1000) {
+    return true;
+  }
 };
 
 export type Storage = {
   notes: NoteMeta[];
   newNote: (text: string, date?: number) => SavedNote;
   getNote: (id: string) => Promise<SavedNote | undefined>;
-  getRecentNote: () => Promise<SavedNote>;
+  getRecentNote: () => Promise<SavedNote | undefined>;
   saveNote: (note: SavedNote) => void;
   search: (text: string) => Promise<SavedNote[]>;
-  delete: (id: string) => void;
+  delete: (id: string) => Promise<void>;
+  pouch: Pouch.MyPouch;
+  lastSavedAt: number;
 };
 
-const useStorage = (): Storage => {
+const useStorage = (pouch: Pouch.MyPouch): Storage => {
   const [notes, setNotes] = useState<NoteMeta[]>([]);
+  const [lastSavedAt, setLastSavedAt] = useState(new Date().getTime());
 
   useEffect(() => {
     (async () => {
-      setNotes(await getNoteMetas());
+      setNotes((await pouch.all()).rows);
     })();
   }, []);
+
+  const saveNoteImmediate = (note: SavedNote) => {
+    pouch.put(note.id, (doc) => {
+      if (doc === undefined) {
+        return { ...note, _id: note.id };
+      }
+      return {
+        ...doc,
+        text: note.text,
+        serialized: note.serialized,
+        reminder: note.reminder,
+      };
+    });
+    lastSaved[note.id].time = new Date().getTime();
+    setLastSavedAt(lastSaved[note.id].time);
+  };
+
+  const saveNote = (note: SavedNote) => {
+    if (!lastSaved[note.id]) {
+      lastSaved[note.id] = { time: -1 };
+    }
+    if (lastSaved[note.id].timeout) {
+      clearTimeout(lastSaved[note.id].timeout);
+    }
+    if (shouldSave(note.id)) {
+      return saveNoteImmediate(note);
+    }
+    lastSaved[note.id].timeout = setTimeout(() => {
+      saveNoteImmediate(note);
+    }, 1.5 * 1000);
+  };
 
   const newNote = (text: string, date?: number) => {
     const id = new Date().getTime().toString();
@@ -50,28 +77,28 @@ const useStorage = (): Storage => {
         id,
       },
     ];
-    setNoteMetas(newNotes);
     saveNote(newNote);
     setNotes(newNotes);
     return newNote;
   };
 
   const getRecentNote = async () => {
-    const noteMetas = await getNoteMetas();
-    const note = noteMetas.length
-      ? await getNote(noteMetas[noteMetas.length - 1].id)
-      : undefined;
-    if (note) {
-      return note;
+    const noteMetas = (await pouch.all()).rows;
+    for (const meta of noteMetas) {
+      const note = noteMetas.length
+        ? await pouch.get<SavedNote>(meta.id)
+        : undefined;
+      if (note) {
+        return note;
+      }
     }
-    return newNote(INTRO_TEXT);
   };
 
   const search = async (text: string) => {
-    const metas = await getNoteMetas();
+    const metas = (await pouch.all()).rows;
     const notes: SavedNote[] = [];
     for (const nm of metas) {
-      const note = await getNote(nm.id);
+      const note = await pouch.get<SavedNote>(nm.id);
       if (note) {
         notes.push(note);
       }
@@ -81,23 +108,25 @@ const useStorage = (): Storage => {
     });
   };
 
-  const _delete = (id: string) => {
+  const _delete = async (id: string): Promise<void> => {
     const newNotes = [...notes];
     const idx = newNotes.findIndex((note) => note.id === id);
     if (idx === -1) return;
+    await pouch.del(id);
     newNotes.splice(idx, 1);
     setNotes(newNotes);
-    setNoteMetas(newNotes);
   };
 
   return {
     notes,
     newNote,
-    getNote,
+    getNote: pouch.get,
     getRecentNote,
     saveNote,
     search,
     delete: _delete,
+    pouch,
+    lastSavedAt,
   };
 };
 

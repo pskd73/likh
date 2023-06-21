@@ -429,7 +429,7 @@ const Editor = ({
           >
             <span
               className={classNames({
-                "py-2 text-center text-sm block opacity-50": imgUrl,
+                "py-2 text-center text-sm block opacity-50 break-all": imgUrl,
               })}
             >
               {children}

@@ -54,9 +54,9 @@ const OpenWrite = () => {
     <div className="min-h-[100vh] bg-base text-primary-700 py-10">
       <Paper>
         <div className="fixed bottom-0 right-0 p-2">
-          <Button link href="https://retronote.app">
+          {/* <Button link href="https://retronote.app">
             Sign in for more &rarr;
-          </Button>
+          </Button> */}
         </div>
         <div className="text-[20px] font-CourierPrime leading-8">
           <Editor

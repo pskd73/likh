@@ -6,27 +6,22 @@ const Button = ({
   children,
   className,
   lite,
-  link,
+  disabled,
   ...restProps
-}: (ComponentProps<"button"> | ComponentProps<"a">) & {
+}: ComponentProps<"button"> & {
   lite?: boolean;
-  link?: boolean;
 }) => {
   const _className = twMerge(
     classNames("px-2 py-1 rounded bg-primary-700 transition-all", {
-      "opacity-50 hover:opacity-100 hover:bg-opacity-10 bg-opacity-0 active:bg-opacity-20":
-        lite,
-      "bg-opacity-10 hover:bg-opacity-20 active:bg-opacity-30": !lite,
+      "opacity-50  bg-opacity-0": lite,
+      "bg-opacity-10": !lite,
+      "text-primary-700 text-opacity-50": disabled,
+      "hover:opacity-100 hover:bg-opacity-10 active:bg-opacity-20":
+        lite && !disabled,
+      "hover:bg-opacity-20 active:bg-opacity-30": !lite && !disabled,
     }),
     className
   );
-  if (link) {
-    return (
-      <a className={_className} {...(restProps as ComponentProps<"a">)}>
-        {children}
-      </a>
-    );
-  }
   return (
     <button className={_className} {...(restProps as ComponentProps<"button">)}>
       {children}

@@ -139,14 +139,14 @@ const Roll = () => {
                 )}
               >
                 <span className="opacity-10 ">•••</span>
-                <Button
+                {/* <Button
                   href={`/write/${noteState.note.id}`}
                   target="_blank"
                   lite
                   link
                 >
                   <TbExternalLink />
-                </Button>
+                </Button> */}
                 {i === noteStates.length - 1 && (
                   <Button lite onClick={handleNew}>
                     <BiPlus />
