@@ -231,7 +231,6 @@ export const useEditor = ({
   const isSideMenuActive = (key: string) => activeSideMenus.includes(key);
 
   const updateNote = (note: SavedNote, replace: boolean = true) => {
-    storage.saveNote(note);
     let updatedNotes = { ...notes };
     if (replace) {
       updatedNotes = {};

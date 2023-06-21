@@ -31,7 +31,7 @@ const EditorWindow = () => {
     (async () => {
       await init();
       setDbInitiated(true);
-      migrate(storage.pouch);
+      migrate(storage.pouch, pdb.secret);
     })();
   }, []);
 
