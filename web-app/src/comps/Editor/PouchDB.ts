@@ -109,8 +109,8 @@ export const MakePouch = (
 };
 
 const { hook: useSecret } = PersistedState("secret");
-const { hook: useUsername } = PersistedState("username");
-const { hook: usePassword } = PersistedState("password");
+const { hook: useUsername, value: sUsername } = PersistedState("username");
+const { hook: usePassword, value: sPassword } = PersistedState("password");
 
 export type PouchContextType = {
   secret: string;
@@ -130,7 +130,9 @@ export const usePouchDb = () => {
   const [secret, setSecret] = useSecret(GPW.pronounceable(10));
   const [username, setUsername] = useUsername<string | undefined>(undefined);
   const [password, setPassword] = usePassword<string | undefined>(undefined);
-  const [syncState, setSyncState] = useState("change");
+  const [syncState, setSyncState] = useState(
+    sUsername && sPassword ? "change" : "paused"
+  );
   const [nSync, setNSync] = useState(0);
   const db = useMemo(() => {
     return MakePouch(secret, {

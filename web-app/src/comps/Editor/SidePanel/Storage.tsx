@@ -65,8 +65,6 @@ const Storage = () => {
 
   const handleUPSave = () => {
     if (
-      enteredUsername &&
-      enteredPassword &&
       username !== enteredUsername &&
       password !== enteredPassword
     ) {
@@ -114,8 +112,9 @@ const Storage = () => {
           </Button>
         </div>
         <div className="text-xs opacity-60">
-          <strong>Cautious!</strong> "Secret" is used to encrypt your data.
-          Chaning it means wiping the data and starting fresh.
+          <strong>Cautious!</strong> "Secret" is used to encrypt your data. You
+          will have to use same secret, username, and passwords on your other
+          devices to keep them sync.
         </div>
       </div>
       <div>

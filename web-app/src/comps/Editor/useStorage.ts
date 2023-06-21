@@ -92,7 +92,6 @@ const useStorage = (pouch: Pouch.MyPouch): Storage => {
         return note;
       }
     }
-    return newNote(INTRO_TEXT);
   };
 
   const search = async (text: string) => {
