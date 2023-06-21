@@ -10,7 +10,7 @@ const HomeScreen = () => {
 
   return (
     <div className="h-full">
-      <div className="text-7xl text-center w-full py-20">
+      <div className="text-7xl md:text-center w-full py-20">
         Hello, <span className="italic">there!</span>
       </div>
       <div className="flex flex-col md:flex-row justify-center">
