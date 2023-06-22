@@ -49,6 +49,7 @@ import {
 } from "./Core/ContextMenu";
 import { PastedImg, SavedImg, useEditorPaste } from "./useEditorPaste";
 import { Theme, Themes } from "./Theme";
+import { isMobile } from "./device";
 
 const defaultValue = [
   {
@@ -376,7 +377,7 @@ const Editor = ({
       const style: CSSProperties = {};
       const parsed = parseListText(text);
       if (parsed) {
-        style.marginLeft = 50 * (parsed.level + 1);
+        style.marginLeft = (isMobile ? 20 : 40) * (parsed.level + 1);
       }
 
       if (element.type === "code-block") {
