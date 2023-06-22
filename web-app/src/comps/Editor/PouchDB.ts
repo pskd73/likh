@@ -3,6 +3,7 @@ import CryptoJS from "crypto-js";
 import { PersistedState } from "./usePersistedState";
 import { GPW } from "./gpw";
 import { createContext, useMemo, useState } from "react";
+import { b64toBlob } from "../../util";
 
 type PouchDoc<T> = T & PouchDB.Core.IdMeta & PouchDB.Core.GetMeta;
 
@@ -116,7 +117,7 @@ export const MakePouch = (
       id,
       attachment.id,
       doc._rev,
-      attachment.data,
+      btoa(encrypt(attachment.data)),
       attachment.type
     );
   };
@@ -125,7 +126,24 @@ export const MakePouch = (
     id: string,
     attachmentId: string
   ): Promise<Blob> => {
-    return (await db.getAttachment(id, attachmentId)) as Blob;
+    return new Promise(async (res, rej) => {
+      try {
+        const blob = (await db.getAttachment(id, attachmentId)) as Blob;
+
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = function () {
+          try {
+            const [prefix, data] = (reader.result as string).split(",");
+            res(b64toBlob(decrypt(atob(data)), blob.type));
+          } catch (e) {
+            rej(e);
+          }
+        };
+      } catch (e) {
+        rej(e);
+      }
+    });
   };
 
   return {
