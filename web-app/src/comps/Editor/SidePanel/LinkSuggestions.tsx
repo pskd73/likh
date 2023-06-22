@@ -46,8 +46,10 @@ const LinkSuggestions = () => {
               "flex items-center group"
             )}
             style={{
-              fontSize:
+              fontSize: Math.min(
                 BASE_FONT_SIZE + (suggestion.occurances - 1) * MULTIPLIER,
+                27
+              ),
             }}
           >
             <span
