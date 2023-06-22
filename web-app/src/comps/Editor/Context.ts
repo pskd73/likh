@@ -177,7 +177,7 @@ export const useEditor = ({
       setNotesToShow(
         _notes
           .filter((n) => !!n)
-          .sort((a, b) => a?.created_at || 0 - (b?.created_at || 0))
+          .sort((a, b) => (b?.created_at || 0) - (a?.created_at || 0))
           .map((note) => ({
             note,
           })) as NoteSummary[]
@@ -188,7 +188,7 @@ export const useEditor = ({
     searchTerm,
     (note?.text.length || 0) <= 50 ? storage.lastSavedAt : undefined,
     pdb.nSync > 0,
-    note?.reminder
+    note?.reminder,
   ]);
 
   useEffect(() => {
