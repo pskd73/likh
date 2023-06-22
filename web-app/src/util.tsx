@@ -23,3 +23,13 @@ export function download(data: string, filename: string, type: string) {
     window.URL.revokeObjectURL(url);
   }, 0);
 }
+
+export function blobToB64(blob: Blob): Promise<string | null | ArrayBuffer> {
+  return new Promise((res, rej) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onloadend = function () {
+      res(reader.result);
+    };
+  });
+}

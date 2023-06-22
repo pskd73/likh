@@ -14,6 +14,11 @@ export type MyPouch = {
   ) => Promise<void>;
   all: <T extends {}>() => Promise<PouchDB.Core.AllDocsResponse<T>>;
   del: (id: string) => Promise<void>;
+  attach: (
+    id: string,
+    attachment: { id: string; data: string; type: string }
+  ) => Promise<void>;
+  attachment: (id: string, attachmentId: string) => Promise<Blob>;
 };
 
 export const MakePouch = (
@@ -100,11 +105,36 @@ export const MakePouch = (
     }
   };
 
+  const attach = async (
+    id: string,
+    attachment: { id: string; data: string; type: string }
+  ) => {
+    const doc = await db.get(id);
+    if (!doc) return;
+
+    await db.putAttachment(
+      id,
+      attachment.id,
+      doc._rev,
+      attachment.data,
+      attachment.type
+    );
+  };
+
+  const attachment = async (
+    id: string,
+    attachmentId: string
+  ): Promise<Blob> => {
+    return (await db.getAttachment(id, attachmentId)) as Blob;
+  };
+
   return {
     get,
     put,
     all,
     del,
+    attach,
+    attachment,
   };
 };
 

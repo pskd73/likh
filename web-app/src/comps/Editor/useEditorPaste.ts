@@ -7,7 +7,7 @@ export type PastedImg = {
 };
 
 export type SavedImg = {
-  id: number;
+  id: string;
   uri: string;
 };
 
@@ -18,7 +18,7 @@ export const useEditorPaste = ({
 }: {
   editor: CustomEditor;
   container: HTMLElement | null;
-  handleSaveImg?: (img: PastedImg) => Promise<SavedImg>;
+  handleSaveImg?: (img: PastedImg) => Promise<SavedImg | undefined>;
 }) => {
   useEffect(() => {
     if (container) {
@@ -75,12 +75,14 @@ export const useEditorPaste = ({
         if (uri.length > LIMIT_KB * 1000) {
           return alert(`Cannot upload more than ${LIMIT_KB}kb images!`);
         }
-        // let imgText = `![](${uri})`;
-        // const savedImg = await handleSaveImg({
-        //   uri,
-        // });
-        const imgText = `![Image](${uri})`;
-        Transforms.insertText(editor, imgText);
+        let imgText = `![](${uri})`;
+        const savedImg = await handleSaveImg({
+          uri,
+        });
+        if (savedImg) {
+          imgText = `![Image](attachment://${savedImg.id})`;
+          Transforms.insertText(editor, imgText);
+        }
       }
     };
     reader.readAsDataURL(file);
