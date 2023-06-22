@@ -31,6 +31,7 @@ const EditableNote = ({
     rollHashTag,
     searchTerm,
     themeName,
+    setNote,
   } = useContext(EditorContext);
   const scroll = useMiddle(ref, [typewriterMode], {
     typeWriter: typewriterMode,
@@ -67,8 +68,7 @@ const EditableNote = ({
     const updatedNote = { ...notes[id] };
     updatedNote.text = text;
     updatedNote.serialized = serialized;
-    storage.saveNote(updatedNote);
-    updateNote(updatedNote, false);
+    updateNote(updatedNote);
 
     scroll.update();
     if (id === note?.id) {
@@ -80,7 +80,7 @@ const EditableNote = ({
     if (id) {
       const note = await storage.getNote(id);
       if (note) {
-        updateNote(note);
+        setNote(note);
         return;
       }
     }

@@ -25,7 +25,7 @@ const shortcuts: Record<string, (editor: EditorContextType) => void> = {
       ? await storage.getNote(storage.notes[idx - 1].id)
       : undefined;
     if (prevNote) {
-      editor.updateNote(prevNote);
+      editor.setNote(prevNote);
     }
   },
   ArrowRight: async (editor) => {
@@ -35,7 +35,7 @@ const shortcuts: Record<string, (editor: EditorContextType) => void> = {
       ? await storage.getNote(storage.notes[idx + 1].id)
       : undefined;
     if (nextNote) {
-      editor.updateNote(nextNote);
+      editor.setNote(nextNote);
     }
   },
   s: (editor) => editor.note && saveNote(editor.note),

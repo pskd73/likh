@@ -38,7 +38,8 @@ export type EditorContextType = {
   setCountStatType: StateSetter<CountStatType>;
 
   note: SavedNote | undefined;
-  updateNote: (note: SavedNote, replace?: boolean) => void;
+  setNote: (note: SavedNote, replace?: boolean) => void;
+  updateNote: (note: SavedNote) => void;
 
   notes: Record<string, SavedNote>;
   setNotes: StateSetter<Record<string, SavedNote>>;
@@ -187,6 +188,7 @@ export const useEditor = ({
     searchTerm,
     (note?.text.length || 0) <= 50 ? storage.lastSavedAt : undefined,
     pdb.nSync > 0,
+    note?.reminder
   ]);
 
   useEffect(() => {
@@ -232,11 +234,18 @@ export const useEditor = ({
 
   const isSideMenuActive = (key: string) => activeSideMenus.includes(key);
 
-  const updateNote = (note: SavedNote, replace: boolean = true) => {
+  const setNote = (note: SavedNote, replace: boolean = true) => {
     let updatedNotes = { ...notes };
     if (replace) {
       updatedNotes = {};
     }
+    updatedNotes[note.id] = note;
+    setNotes(updatedNotes);
+  };
+
+  const updateNote = (note: SavedNote) => {
+    storage.saveNote(note);
+    let updatedNotes = { ...notes };
     updatedNotes[note.id] = note;
     setNotes(updatedNotes);
   };
@@ -359,6 +368,7 @@ export const useEditor = ({
 
     note,
     updateNote,
+    setNote,
 
     notes,
     setNotes,

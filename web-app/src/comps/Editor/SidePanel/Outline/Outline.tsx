@@ -119,7 +119,7 @@ const List = ({
 };
 
 const Outline = () => {
-  const { note, updateNote, setOrNewNote, setSideBar } =
+  const { note, setOrNewNote, setSideBar } =
     useContext(EditorContext);
   const [timer, setTimer] = useState(new Date().getTime());
   const [linksActive, setLinksActive] = useState(false);

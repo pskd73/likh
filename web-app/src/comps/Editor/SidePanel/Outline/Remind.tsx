@@ -35,7 +35,7 @@ const Remind = () => {
     updatedNote.reminder = {
       date: date.toDate().getTime(),
     };
-    storage.saveNote(updatedNote);
+    updateNote(updatedNote);
 
     const link = getGoogleCalendarLink({
       text: `Continue writing "${textToTitle(note.text)}"`,
