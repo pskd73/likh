@@ -130,15 +130,12 @@ const EditableNote = ({
             onNoteLinkClick={handleNoteLinkClick}
             getSuggestions={getSuggestions}
             highlight={searchTerm}
-            getSavedImg={async (id, imgType) => {
+            getSavedImg={async (attachmentId, imgType) => {
               if (note && imgType === "attachment") {
-                const blob = await storage.pouch.attachment(
-                  note.id,
-                  String(id)
-                );
+                const blob = await storage.pouch.attachment(id, attachmentId);
                 const uri = await blobToB64(blob);
                 if (uri) {
-                  return { id, uri: uri as string };
+                  return { id: attachmentId, uri: uri as string };
                 }
               }
               const img = await getImage(Number(id));

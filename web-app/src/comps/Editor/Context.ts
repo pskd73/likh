@@ -64,6 +64,8 @@ export type EditorContextType = {
 
   themeName: string;
   setThemeName: StateSetter<string>;
+
+  home: () => void;
 };
 
 export const EditorContext = createContext<EditorContextType>(
@@ -381,5 +383,7 @@ export const useEditor = ({
 
     themeName,
     setThemeName,
+
+    home: () => setNotes({}),
   };
 };

@@ -6,6 +6,7 @@ import {
   BiCheckShield,
   BiError,
   BiFullscreen,
+  BiHomeSmile,
   BiLink,
   BiLoaderAlt,
   BiMenu,
@@ -34,8 +35,8 @@ const StatusBar = ({
   height: number;
   padding: number;
 }) => {
-  const {syncState} = useContext(PouchContext);
-  const { showStats, note, sideBar, setSideBar, isRoll, storage } =
+  const { syncState } = useContext(PouchContext);
+  const { showStats, note, sideBar, setSideBar, isRoll, home } =
     useContext(EditorContext);
   const [fullScreen, setFullScreen] = useState(false);
 
@@ -90,15 +91,6 @@ const StatusBar = ({
           <BiMenu />
         </Button>
         <Button
-          lite={sideBar !== "outline"}
-          className="rounded-none"
-          onClick={() =>
-            setSideBar((b) => (b === "outline" ? undefined : "outline"))
-          }
-        >
-          <BiSpreadsheet />
-        </Button>
-        <Button
           lite={sideBar !== "link-suggestions"}
           className="rounded-none"
           onClick={() =>
@@ -125,6 +117,22 @@ const StatusBar = ({
         >
           <SyncIcon state={syncState} />
         </Button>
+        {note && (
+          <Button
+            lite={sideBar !== "outline"}
+            className="rounded-none"
+            onClick={() =>
+              setSideBar((b) => (b === "outline" ? undefined : "outline"))
+            }
+          >
+            <BiSpreadsheet />
+          </Button>
+        )}
+        {note && (
+          <Button lite className="rounded-none" onClick={home}>
+            <BiHomeSmile />
+          </Button>
+        )}
       </div>
       <div className="flex justify-end h-full">
         {!isRoll && <Delete />}
