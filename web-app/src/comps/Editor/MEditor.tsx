@@ -64,8 +64,6 @@ export type Suggestion = {
   description?: string;
 };
 
-const images: Record<number, SavedImg | null | undefined> = {};
-
 function Leaf({
   attributes,
   children,
@@ -247,8 +245,8 @@ const Editor = ({
   onNoteLinkClick?: (title: string, id?: string) => void;
   getSuggestions?: (prefix: string, term: string) => Promise<Suggestion[]>;
   highlight?: string;
-  handleSaveImg?: (img: PastedImg) => Promise<SavedImg>;
-  getSavedImg?: (id: number) => Promise<SavedImg>;
+  handleSaveImg?: (img: PastedImg) => Promise<SavedImg | undefined>;
+  getSavedImg?: (id: string, imgType: string) => Promise<SavedImg>;
   theme?: Theme;
 }) => {
   theme = theme || Themes.Basic;
@@ -352,25 +350,19 @@ const Editor = ({
       // image
       const imgMatch = text.match(imageRegex);
       const imgUrl = imgMatch ? imgMatch[1] : null;
-      const localImgMatch = imgUrl?.match(/^image:\/\/(.+)$/);
+      const localImgMatch = imgUrl?.match(/^((image)|(attachment)):\/\/(.+)$/);
       let imgUri: string | undefined = undefined;
       let imgRef: HTMLImageElement | null = null;
       if (getSavedImg && localImgMatch) {
-        const imgId = Number(localImgMatch[1]);
-        if (images[imgId] === undefined) {
-          getSavedImg(imgId)
-            .then((savedImg) => {
-              images[imgId] = savedImg;
-              if (imgRef) {
-                imgRef.src = savedImg.uri;
-              }
-            })
-            .catch(() => {
-              images[imgId] = undefined;
-            });
-          images[imgId] = null;
-        }
-        imgUri = images[imgId]?.uri;
+        const imgId = Number(localImgMatch[4]);
+        const imgType = localImgMatch[1];
+        getSavedImg(imgId.toString(), imgType)
+          .then((savedImg) => {
+            if (imgRef) {
+              imgRef.src = savedImg.uri;
+            }
+          })
+          .catch((e) => {});
       }
 
       // quote

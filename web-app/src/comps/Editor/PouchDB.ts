@@ -3,6 +3,7 @@ import CryptoJS from "crypto-js";
 import { PersistedState } from "./usePersistedState";
 import { GPW } from "./gpw";
 import { createContext, useMemo, useState } from "react";
+import { b64toBlob } from "../../util";
 
 type PouchDoc<T> = T & PouchDB.Core.IdMeta & PouchDB.Core.GetMeta;
 
@@ -14,6 +15,11 @@ export type MyPouch = {
   ) => Promise<void>;
   all: <T extends {}>() => Promise<PouchDB.Core.AllDocsResponse<T>>;
   del: (id: string) => Promise<void>;
+  attach: (
+    id: string,
+    attachment: { id: string; data: string; type: string }
+  ) => Promise<void>;
+  attachment: (id: string, attachmentId: string) => Promise<Blob>;
 };
 
 export const MakePouch = (
@@ -100,11 +106,53 @@ export const MakePouch = (
     }
   };
 
+  const attach = async (
+    id: string,
+    attachment: { id: string; data: string; type: string }
+  ) => {
+    const doc = await db.get(id);
+    if (!doc) return;
+
+    await db.putAttachment(
+      id,
+      attachment.id,
+      doc._rev,
+      btoa(encrypt(attachment.data)),
+      attachment.type
+    );
+  };
+
+  const attachment = async (
+    id: string,
+    attachmentId: string
+  ): Promise<Blob> => {
+    return new Promise(async (res, rej) => {
+      try {
+        const blob = (await db.getAttachment(id, attachmentId)) as Blob;
+
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = function () {
+          try {
+            const [prefix, data] = (reader.result as string).split(",");
+            res(b64toBlob(decrypt(atob(data)), blob.type));
+          } catch (e) {
+            rej(e);
+          }
+        };
+      } catch (e) {
+        rej(e);
+      }
+    });
+  };
+
   return {
     get,
     put,
     all,
     del,
+    attach,
+    attachment,
   };
 };
 

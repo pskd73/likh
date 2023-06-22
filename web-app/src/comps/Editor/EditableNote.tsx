@@ -11,6 +11,7 @@ import Button from "../Button";
 import { scrollTo } from "./scroll";
 import { getImage, insertImage } from "./db";
 import { Themes } from "./Theme";
+import { blobToB64 } from "../../util";
 
 const EditableNote = ({
   getSuggestions,
@@ -129,15 +130,33 @@ const EditableNote = ({
             onNoteLinkClick={handleNoteLinkClick}
             getSuggestions={getSuggestions}
             highlight={searchTerm}
-            getSavedImg={async (id) => {
-              const img = await getImage(id);
+            getSavedImg={async (id, imgType) => {
+              if (note && imgType === "attachment") {
+                const blob = await storage.pouch.attachment(
+                  note.id,
+                  String(id)
+                );
+                const uri = await blobToB64(blob);
+                if (uri) {
+                  return { id, uri: uri as string };
+                }
+              }
+              const img = await getImage(Number(id));
               return { id, uri: img.uri };
             }}
             handleSaveImg={async (img) => {
-              const id = await insertImage({
-                uri: img.uri,
-              });
-              return { id, uri: img.uri };
+              if (note) {
+                const match = img.uri.match(/^data:(.+);base64,(.+)$/);
+                if (match) {
+                  const id = new Date().getTime().toString();
+                  await storage.pouch.attach(note.id, {
+                    id,
+                    data: match[2],
+                    type: match[1],
+                  });
+                  return { id, uri: img.uri };
+                }
+              }
             }}
             theme={Themes[themeName] || Themes.Basic}
           />
