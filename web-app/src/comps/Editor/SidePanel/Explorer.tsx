@@ -118,6 +118,7 @@ const Explorer = () => {
     isSideMenuActive,
     themeName,
     setThemeName,
+    storage,
   } = useContext(EditorContext);
   const { install, installable } = usePWA();
 
@@ -133,12 +134,15 @@ const Explorer = () => {
     newNote({ text });
   };
 
-  const handleNoteClick = (note: SavedNote) => {
+  const handleNoteClick = async ({ id }: SavedNote) => {
     if (isMobile) {
       setSideBar(undefined);
     }
-    updateNote(note);
-    setRollHashTag("");
+    const note = await storage.getNote(id);
+    if (note) {
+      updateNote(note);
+      setRollHashTag("");
+    }
   };
 
   const handleRoll = (

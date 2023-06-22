@@ -66,6 +66,7 @@ const EditableNote = ({
     const updatedNote = { ...notes[id] };
     updatedNote.text = text;
     updatedNote.serialized = serialized;
+    storage.saveNote(updatedNote);
     updateNote(updatedNote, false);
 
     scroll.update();
