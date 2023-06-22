@@ -31,6 +31,7 @@ const EditableNote = ({
     rollHashTag,
     searchTerm,
     themeName,
+    setNote,
   } = useContext(EditorContext);
   const scroll = useMiddle(ref, [typewriterMode], {
     typeWriter: typewriterMode,
@@ -67,8 +68,7 @@ const EditableNote = ({
     const updatedNote = { ...notes[id] };
     updatedNote.text = text;
     updatedNote.serialized = serialized;
-    storage.saveNote(updatedNote);
-    updateNote(updatedNote, false);
+    updateNote(updatedNote);
 
     scroll.update();
     if (id === note?.id) {
@@ -80,7 +80,7 @@ const EditableNote = ({
     if (id) {
       const note = await storage.getNote(id);
       if (note) {
-        updateNote(note);
+        setNote(note);
         return;
       }
     }
@@ -130,15 +130,12 @@ const EditableNote = ({
             onNoteLinkClick={handleNoteLinkClick}
             getSuggestions={getSuggestions}
             highlight={searchTerm}
-            getSavedImg={async (id, imgType) => {
+            getSavedImg={async (attachmentId, imgType) => {
               if (note && imgType === "attachment") {
-                const blob = await storage.pouch.attachment(
-                  note.id,
-                  String(id)
-                );
+                const blob = await storage.pouch.attachment(id, attachmentId);
                 const uri = await blobToB64(blob);
                 if (uri) {
-                  return { id, uri: uri as string };
+                  return { id: attachmentId, uri: uri as string };
                 }
               }
               const img = await getImage(Number(id));

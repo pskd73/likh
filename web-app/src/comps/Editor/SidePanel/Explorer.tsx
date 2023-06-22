@@ -119,6 +119,7 @@ const Explorer = () => {
     themeName,
     setThemeName,
     storage,
+    setNote,
   } = useContext(EditorContext);
   const { install, installable } = usePWA();
 
@@ -140,7 +141,7 @@ const Explorer = () => {
     }
     const note = await storage.getNote(id);
     if (note) {
-      updateNote(note);
+      setNote(note);
       setRollHashTag("");
     }
   };

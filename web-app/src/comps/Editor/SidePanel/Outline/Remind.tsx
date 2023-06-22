@@ -7,7 +7,7 @@ import { textToTitle } from "../../../../Note";
 import { EditorContext } from "../../Context";
 
 const Remind = () => {
-  const { note, updateNote } = useContext(EditorContext);
+  const { note, updateNote, storage } = useContext(EditorContext);
 
   const handleReminder: ChangeEventHandler<HTMLSelectElement> = (e) => {
     if (!e.target.value) return;
