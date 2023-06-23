@@ -209,7 +209,7 @@ export const useEditor = ({
       const hashtags = getHashtags();
       if (hashtags[rollHashTag]) {
         const notes = hashtags[rollHashTag].sort(
-          (a, b) => a.note.created_at - b.note.created_at
+          (a, b) => b.note.created_at - a.note.created_at
         );
         const notesMap: Record<string, SavedNote> = {};
         notes.forEach((noteSummary) => {

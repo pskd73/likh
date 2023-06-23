@@ -65,7 +65,7 @@ const HomeScreen = () => {
   return (
     <div className="pb-20 flex flex-col items-center">
       <div className="space-y-4 w-full md:w-1/3">
-        <div className="text-5xl md:text-center w-full py-20 flex md:justify-center">
+        <div className="text-5xl md:text-center w-full py-4 md:py-20 flex md:justify-center">
           <span>Hello there</span>
           <span className="mt-1">
             <BsCursorText />

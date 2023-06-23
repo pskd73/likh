@@ -123,7 +123,7 @@ const StatusBar = ({
         )}
       </div>
       <div className="flex justify-end h-full">
-        {!isRoll && <Delete />}
+        {note && !isRoll && <Delete />}
         {note && (
           <Button className="rounded-none" lite onClick={handleSave}>
             <BiSave />
