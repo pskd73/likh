@@ -177,6 +177,12 @@ export const checkbox: CustomGrammarValue = {
   },
 };
 
+export const hashtag: CustomGrammarValue = {
+  pattern: /\B(#[a-zA-Z_]+\b)(?!;)/m,
+  greedy: true,
+  inside: {},
+};
+
 export const listRegex = /^( *)(([-*\+])|(([0-9]+).)) (.*)$/m;
 export const list: CustomGrammarValue = {
   pattern: listRegex,
@@ -190,8 +196,15 @@ export const list: CustomGrammarValue = {
     checkbox,
     inlineCode,
     mdLink,
+    hashtag,
   },
   greedy: true,
+  payload: {
+    checked: (token: any) =>
+      token.content[1] &&
+      token.content[1].type === "checkbox" &&
+      token.content[1].content[1] === "x",
+  },
 };
 
 export const quoteRegex = /^\> .*$/m;
@@ -206,12 +219,6 @@ export const quote: CustomGrammarValue = {
     notelink,
     mdLink,
   },
-};
-
-export const hashtag: CustomGrammarValue = {
-  pattern: /\B(#[a-zA-Z_]+\b)(?!;)/m,
-  greedy: true,
-  inside: {},
 };
 
 export const imageRegex = /^\!\[.*\]\(([^\)\[\"\']+)( ".*")?\)$/m;

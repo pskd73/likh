@@ -74,7 +74,8 @@ const hidable: string[] = [
   "notelink",
   "inlineCode",
   "mdLink",
-  "image"
+  "image",
+  "checkbox"
 ];
 
 export function getTokensRanges(
