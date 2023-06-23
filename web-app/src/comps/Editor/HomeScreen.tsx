@@ -103,7 +103,7 @@ const HomeScreen = () => {
             )}
           </div>
           {notesToShow.length > 0 && (
-            <div>
+            <div className="md:max-w-sm">
               <Title>Latest</Title>
               <ListContainer>
                 <List>

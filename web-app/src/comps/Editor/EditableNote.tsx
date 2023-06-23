@@ -138,8 +138,8 @@ const EditableNote = ({
                   return { id: attachmentId, uri: uri as string };
                 }
               }
-              const img = await getImage(Number(id));
-              return { id, uri: img.uri };
+              const img = await getImage(Number(attachmentId));
+              return { id: attachmentId, uri: img.uri };
             }}
             handleSaveImg={async (img) => {
               if (note) {
