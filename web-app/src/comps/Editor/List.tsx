@@ -39,7 +39,11 @@ const Item = ({
 };
 
 const Description = ({ children }: PropsWithChildren) => {
-  return <div className="text-xs py-1 ml-5 opacity-50">{children}</div>;
+  return (
+    <div className="text-xs py-1 ml-5 opacity-50 overflow-hidden">
+      {children}
+    </div>
+  );
 };
 
 const Icon = ({ children }: PropsWithChildren) => {
