@@ -1,4 +1,5 @@
 import { BiFile, BiHash, BiPlus } from "react-icons/bi";
+import { BsCursorText } from "react-icons/bs";
 import List from "./List";
 import { PropsWithChildren, useContext, useMemo } from "react";
 import { EditorContext, NoteSummary } from "./Context";
@@ -34,15 +35,18 @@ const HomeScreen = () => {
 
   return (
     <div className="h-full">
-      <div className="text-5xl md:text-center w-full py-20">Hello there!</div>
+      <div className="text-5xl md:text-center w-full py-20 flex md:justify-center">
+        <span>Hello there</span>
+        <span className="mt-1"><BsCursorText /></span>
+      </div>
       <div className="flex flex-col md:flex-row justify-center">
         <div
           className={classNames(
-            "flex space-x-4 w-full justify-center",
-            "border-opacity-30"
+            "md:flex md:space-x-4 w-full justify-center",
+            "border-opacity-30 space-y-2 md:space-y-0"
           )}
         >
-          <div className="space-y-4">
+          <div className="space-y-2">
             <div>
               <Title>Quick start</Title>
               <ListContainer>
@@ -77,46 +81,49 @@ const HomeScreen = () => {
                 </List>
               </ListContainer>
             </div>
+            {Object.keys(hashtags).length > 0 && (
+              <div>
+                <Title>Journals</Title>
+                <ListContainer>
+                  {Object.keys(hashtags).map((hashtag, i) => (
+                    <List.Item
+                      key={i}
+                      withIcon
+                      onClick={() => handleHashtagClick(hashtag)}
+                      className="last:mb-0"
+                    >
+                      <List.Item.Icon>
+                        <BiHash />
+                      </List.Item.Icon>
+                      <span>{hashtag.replaceAll("#", "")}</span>
+                    </List.Item>
+                  ))}
+                </ListContainer>
+              </div>
+            )}
+          </div>
+          {notesToShow.length > 0 && (
             <div>
-              <Title>Journals</Title>
+              <Title>Latest</Title>
               <ListContainer>
-                {Object.keys(hashtags).map((hashtag, i) => (
-                  <List.Item
-                    key={i}
-                    withIcon
-                    onClick={() => handleHashtagClick(hashtag)}
-                    className="last:mb-0"
-                  >
-                    <List.Item.Icon>
-                      <BiHash />
-                    </List.Item.Icon>
-                    <span>{hashtag.replaceAll("#", "")}</span>
-                  </List.Item>
-                ))}
+                <List>
+                  {notesToShow.slice(0, 10).map((note) => (
+                    <List.Item
+                      key={note.note.id}
+                      withIcon
+                      onClick={() => handleNoteClick(note.note)}
+                      className="last:mb-0"
+                    >
+                      <List.Item.Icon>
+                        <BiFile />
+                      </List.Item.Icon>
+                      <span>{textToTitle(note.note.text)}</span>
+                    </List.Item>
+                  ))}
+                </List>
               </ListContainer>
             </div>
-          </div>
-
-          <div>
-            <Title>Latest</Title>
-            <ListContainer>
-              <List>
-                {notesToShow.slice(0, 10).map((note) => (
-                  <List.Item
-                    key={note.note.id}
-                    withIcon
-                    onClick={() => handleNoteClick(note.note)}
-                    className="last:mb-0"
-                  >
-                    <List.Item.Icon>
-                      <BiFile />
-                    </List.Item.Icon>
-                    <span>{textToTitle(note.note.text)}</span>
-                  </List.Item>
-                ))}
-              </List>
-            </ListContainer>
-          </div>
+          )}
         </div>
       </div>
     </div>
