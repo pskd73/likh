@@ -10,6 +10,7 @@ import LinkSuggestions from "./LinkSuggestions";
 import useMemoAsync from "./useMemoAsync";
 import classNames from "classnames";
 import { highlight, makeExtractor } from "./Marker";
+import Button from "../Button";
 
 const Title = ({ children }: PropsWithChildren) => {
   return <div className="mb-2 font-bold opacity-50">{children}</div>;
@@ -147,7 +148,20 @@ const HomeScreen = () => {
                   <List.Item.Icon>
                     <BiHash />
                   </List.Item.Icon>
-                  <span>{hashtag.replaceAll("#", "")}</span>
+                  <div className="flex items-center space-x-1">
+                    <span>{hashtag.replaceAll("#", "")}</span>
+                    <Button
+                      lite
+                      className="hover:bg-opacity-30"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setSearchTerm(hashtag);
+                      }}
+                    >
+                      <BiSearch />
+                    </Button>
+                  </div>
                 </List.Item>
               ))}
             </ListContainer>
@@ -173,20 +187,21 @@ const HomeScreen = () => {
                         </span>
                         <span>{textToTitle(summary.note.text, 20)}</span>
                       </div>
-                      {summary.summary && (
-                        <List.Item.Description>
-                          {highlight(summary.summary, [
-                            Highligher(summary.highlight || ""),
-                          ])
-                            .map((it, i) => {
-                              if (typeof it === "string") {
-                                return <span>{it}</span>;
-                              }
-                              return it;
-                            })
-                            .map((it, i) => cloneElement(it, { key: i }))}
-                        </List.Item.Description>
-                      )}
+                      {summary.summary &&
+                        (!searchTerm || !searchTerm.startsWith("#")) && (
+                          <List.Item.Description>
+                            {highlight(summary.summary, [
+                              Highligher(summary.highlight || ""),
+                            ])
+                              .map((it, i) => {
+                                if (typeof it === "string") {
+                                  return <span>{it}</span>;
+                                }
+                                return it;
+                              })
+                              .map((it, i) => cloneElement(it, { key: i }))}
+                          </List.Item.Description>
+                        )}
                     </List.Item>
                   ))}
               </List>
