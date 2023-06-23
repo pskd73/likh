@@ -136,9 +136,11 @@ const StatusBar = ({
       </div>
       <div className="flex justify-end h-full">
         {!isRoll && <Delete />}
-        <Button className="rounded-none" lite onClick={handleSave}>
-          <BiSave />
-        </Button>
+        {note && (
+          <Button className="rounded-none" lite onClick={handleSave}>
+            <BiSave />
+          </Button>
+        )}
         {showStats && note && <TextCounter text={note.text} />}
       </div>
     </div>

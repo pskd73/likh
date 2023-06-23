@@ -109,26 +109,26 @@ export const useEditor = ({
   }, [notes]);
   const [searchTerm, setSearchTerm] = useSearchTerm<string>("");
   const [rollHashTag, setRollHashTag] = useRollHashtag<string>("");
-  const [noteId, setNoteId] = useNoteId<string | undefined>(defaultNoteId);
+  const [noteId, setNoteId] = useNoteId<string | undefined | null>(defaultNoteId);
   const [themeName, setThemeName] = useThemeName<string>("Basic");
   const [notesToShow, setNotesToShow] = useState<NoteSummary[]>([]);
 
   useEffect(() => {
     (async () => {
-      if (defaultNoteId && !defaultRollHashtag) {
+      if (defaultNoteId) {
         const _note = await storage.getNote(defaultNoteId);
         if (_note) {
           return setNotes({ [defaultNoteId]: _note });
         }
       }
-      const hashTagNotes = getHashTagNotes();
-      if (hashTagNotes) {
-        return setNotes(hashTagNotes);
-      }
-      const recentNote = await storage.getRecentNote();
-      if (recentNote) {
-        setNotes({ [recentNote.id]: recentNote });
-      }
+      // const hashTagNotes = getHashTagNotes();
+      // if (hashTagNotes) {
+      //   return setNotes(hashTagNotes);
+      // }
+      // const recentNote = await storage.getRecentNote();
+      // if (recentNote) {
+      //   setNotes({ [recentNote.id]: recentNote });
+      // }
     })();
   }, []);
 
@@ -177,7 +177,7 @@ export const useEditor = ({
       setNotesToShow(
         _notes
           .filter((n) => !!n)
-          .sort((a, b) => a?.created_at || 0 - (b?.created_at || 0))
+          .sort((a, b) => (b?.created_at || 0) - (a?.created_at || 0))
           .map((note) => ({
             note,
           })) as NoteSummary[]
@@ -188,7 +188,7 @@ export const useEditor = ({
     searchTerm,
     (note?.text.length || 0) <= 50 ? storage.lastSavedAt : undefined,
     pdb.nSync > 0,
-    note?.reminder
+    note?.reminder,
   ]);
 
   useEffect(() => {
@@ -347,6 +347,12 @@ export const useEditor = ({
     return getLinkSuggestions(notes.filter((n) => !!n) as SavedNote[]);
   };
 
+  const home = () => {
+    setNotes({});
+    setRollHashTag("");
+    setNoteId(null);
+  };
+
   return {
     storage,
 
@@ -394,6 +400,6 @@ export const useEditor = ({
     themeName,
     setThemeName,
 
-    home: () => setNotes({}),
+    home,
   };
 };
