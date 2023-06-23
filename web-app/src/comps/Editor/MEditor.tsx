@@ -269,13 +269,15 @@ const Editor = ({
 
   useEffect(() => {
     (async () => {
-      if (contextMenu.activePrefix) {
-        let _suggestions: Suggestion[] = getSuggestions
-          ? await getSuggestions(contextMenu.activePrefix, contextMenu.search)
-          : [];
+      if (contextMenu.activePrefix && getSuggestions) {
+        let _suggestions: Suggestion[] = await getSuggestions(
+          contextMenu.activePrefix,
+          contextMenu.search
+        );
         contextMenu.setCount(_suggestions.length);
         return setSuggestions(_suggestions);
       }
+      contextMenu.setCount(0);
       return setSuggestions([]);
     })();
   }, [contextMenu.search, contextMenu.activePrefix]);
@@ -500,26 +502,24 @@ const Editor = ({
           placeholder="Write your mind here ..."
           onPaste={handlePaste}
         />
-        {contextMenu.active && suggestions && suggestions.length > 0 && (
-          <ContextMenu
-            ref={contextMenu.ref}
-            style={{ top: -9999, right: -9999 }}
-            className="text-sm"
-          >
-            <ContextMenuList>
-              {suggestions.map((suggestion, i) => (
-                <ContextMenuList.Item
-                  key={i}
-                  idx={i}
-                  hover={contextMenu.index === i}
-                  onClick={(e) => contextMenu.handleItemClick(e, i)}
-                >
-                  {suggestion.title}
-                </ContextMenuList.Item>
-              ))}
-            </ContextMenuList>
-          </ContextMenu>
-        )}
+        <ContextMenu
+          ref={contextMenu.ref}
+          style={{ top: -9999, right: -9999 }}
+          className={classNames("text-sm", { hidden: !suggestions.length })}
+        >
+          <ContextMenuList>
+            {suggestions.map((suggestion, i) => (
+              <ContextMenuList.Item
+                key={i}
+                idx={i}
+                hover={contextMenu.index === i}
+                onClick={(e) => contextMenu.handleItemClick(e, i)}
+              >
+                {suggestion.title}
+              </ContextMenuList.Item>
+            ))}
+          </ContextMenuList>
+        </ContextMenu>
       </Slate>
     </div>
   );

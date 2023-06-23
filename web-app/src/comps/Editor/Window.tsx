@@ -38,8 +38,8 @@ const EditorWindow = () => {
   const getSuggestions = async (prefix: string, term: string) => {
     const suggestions: Suggestion[] = [];
     if (prefix === "[[") {
-      editorState.storage.notes.forEach(async (noteMeta, i) => {
-        if (noteMeta.id === editorState.note?.id) return;
+      for (const noteMeta of editorState.storage.notes) {
+        if (noteMeta.id === editorState.note?.id) continue;
         const note = await editorState.storage.getNote(noteMeta.id);
         if (note) {
           const title = textToTitle(note.text, 50);
@@ -52,7 +52,7 @@ const EditorWindow = () => {
             });
           }
         }
-      });
+      }
     } else if (prefix === "#") {
       Object.keys(editorState.getHashtags()).forEach((hashtag) => {
         const tag = hashtag.replace("#", "");

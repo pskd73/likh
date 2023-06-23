@@ -1,7 +1,6 @@
 import {
   ComponentProps,
   KeyboardEventHandler,
-  MouseEventHandler,
   PropsWithChildren,
   forwardRef,
   useCallback,
@@ -52,8 +51,8 @@ export function useContextMenu(
   }, [editor, prefixes]);
 
   useEffect(() => {
+    const el = ref.current;
     if (target) {
-      const el = ref.current;
       if (!ReactEditor.hasRange(editor, target)) return;
       const domRange = ReactEditor.toDOMRange(editor, target);
       const rect = domRange.getBoundingClientRect();
@@ -72,12 +71,11 @@ export function useContextMenu(
         if (top + menuHeight > window.innerHeight) {
           top -= menuHeight + lineHeight;
         }
-
         el.style.top = `${top}px`;
         el.style.left = `${left}px`;
       }
     }
-  }, [editor, index, search, target]);
+  }, [editor, index, activePrefix, search, count, target]);
 
   const handleScroll = useCallback(() => {
     setTarget(undefined);
@@ -90,7 +88,11 @@ export function useContextMenu(
     let showing = false;
 
     for (const prefix of prefixes) {
-      if (selection && Range.isCollapsed(selection)) {
+      if (
+        selection &&
+        Range.isCollapsed(selection) &&
+        editor.selection?.anchor.offset !== 0
+      ) {
         const [start] = Range.edges(selection);
         const bfr = Editor.before(editor, start, {
           distance: prefix.length,
