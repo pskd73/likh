@@ -7,7 +7,6 @@ import {
   BiError,
   BiFullscreen,
   BiHomeSmile,
-  BiLink,
   BiLoaderAlt,
   BiMenu,
   BiSave,
@@ -89,17 +88,6 @@ const StatusBar = ({
           }
         >
           <BiMenu />
-        </Button>
-        <Button
-          lite={sideBar !== "link-suggestions"}
-          className="rounded-none"
-          onClick={() =>
-            setSideBar((b) =>
-              b === "link-suggestions" ? undefined : "link-suggestions"
-            )
-          }
-        >
-          <BiLink />
         </Button>
         <Button
           lite={!fullScreen}

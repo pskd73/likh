@@ -5,7 +5,6 @@ import Explorer from "./Explorer";
 import Outline from "./Outline/Outline";
 import Shortcuts from "./Shortcuts";
 import { isMobile } from "../device";
-import LinkSuggestions from "./LinkSuggestions";
 import RollOutline from "./Outline/RollOutline";
 import Storage from "./Storage";
 
@@ -49,7 +48,6 @@ const SidePanel = () => {
             )
           ) : null}
           {sideBar === "shortcuts" && <Shortcuts />}
-          {sideBar === "link-suggestions" && <LinkSuggestions />}
           {sideBar === "storage" && <Storage />}
         </div>
       </div>
