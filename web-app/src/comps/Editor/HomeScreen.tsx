@@ -34,7 +34,7 @@ const HomeScreen = () => {
   };
 
   return (
-    <div className="h-full">
+    <div className="pb-20">
       <div className="text-5xl md:text-center w-full py-20 flex md:justify-center">
         <span>Hello there</span>
         <span className="mt-1"><BsCursorText /></span>
