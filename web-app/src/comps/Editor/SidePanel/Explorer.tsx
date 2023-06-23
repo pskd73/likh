@@ -1,7 +1,6 @@
-import { ComponentProps, cloneElement, useContext, useMemo } from "react";
+import { ComponentProps, useContext, useMemo } from "react";
 import List from "../List";
 import { EditorContext, NoteSummary } from "../Context";
-import SearchInput from "./SearchInput";
 import Collapsible from "../Collapsible";
 import { textToTitle } from "../../../Note";
 import Toggle from "../../Toggle";
@@ -21,53 +20,13 @@ import {
   BiCog,
   BiCollapseVertical,
   BiFile,
-  BiHash,
-  BiHomeSmile,
   BiInfoCircle,
   BiStats,
 } from "react-icons/bi";
 import { isMobile } from "../device";
-import { highlight, makeExtractor } from "../Marker";
 import { Themes } from "../Theme";
 import { twMerge } from "tailwind-merge";
 import moment from "moment";
-
-const Highligher = (word: string) =>
-  makeExtractor(
-    () => RegExp(word, "i"),
-    (text: string) => ({
-      type: "element",
-      content: <span className="bg-primary-700 text-white">{text}</span>,
-    })
-  );
-
-const NoteListItem = ({
-  summary,
-  ...restProps
-}: ComponentProps<"li"> & { summary: NoteSummary; active?: boolean }) => {
-  return (
-    <List.Item {...restProps}>
-      <div className="flex">
-        <span className="opacity-50 mt-1 min-w-5 w-5">
-          <BiFile />
-        </span>
-        <span>{textToTitle(summary.note.text, 20)}</span>
-      </div>
-      {summary.summary && (
-        <List.Item.Description>
-          {highlight(summary.summary, [Highligher(summary.highlight || "")])
-            .map((it, i) => {
-              if (typeof it === "string") {
-                return <span>{it}</span>;
-              }
-              return it;
-            })
-            .map((it, i) => cloneElement(it, { key: i }))}
-        </List.Item.Description>
-      )}
-    </List.Item>
-  );
-};
 
 const ThemeBox = ({
   children,
@@ -103,16 +62,13 @@ const ThemeBox = ({
 
 const Explorer = () => {
   const {
-    note,
     showStats,
     setShowStats,
     typewriterMode,
     setTypewriterMode,
     notesToShow,
     newNote,
-    updateNote,
     setSideBar,
-    getHashtags,
     setRollHashTag,
     toggleSideMenu,
     isSideMenuActive,
@@ -123,9 +79,6 @@ const Explorer = () => {
   } = useContext(EditorContext);
   const { install, installable } = usePWA();
 
-  const hashtags = useMemo<Record<string, NoteSummary[]>>(() => {
-    return getHashtags();
-  }, [notesToShow, note]);
   const reminderNotes = useMemo<NoteSummary[]>(() => {
     return notesToShow.filter((n) => !!n.note.reminder);
   }, [notesToShow]);
@@ -144,16 +97,6 @@ const Explorer = () => {
       setNote(note);
       setRollHashTag("");
     }
-  };
-
-  const handleRoll = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    hashtag: string
-  ) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setRollHashTag(hashtag);
-    setSideBar("outline");
   };
 
   return (
@@ -194,74 +137,7 @@ const Explorer = () => {
         </div>
       </div>
 
-      <SearchInput />
-
       <Collapsible>
-        {/* Notes */}
-        <Collapsible.Item
-          active={isSideMenuActive("notes")}
-          handleToggle={() => toggleSideMenu("notes")}
-        >
-          <Collapsible.Item.Label>
-            <span className="flex items-center space-x-2">
-              <span className="p-1">
-                <BiFile />
-              </span>
-              <span>All notes</span>
-            </span>
-          </Collapsible.Item.Label>
-          <Collapsible.Item.Content>
-            <List>
-              {notesToShow.map((_noteSummary, i) => (
-                <NoteListItem
-                  key={i}
-                  summary={_noteSummary}
-                  onClick={() => handleNoteClick(_noteSummary.note)}
-                  active={note?.id === _noteSummary.note.id}
-                />
-              ))}
-            </List>
-          </Collapsible.Item.Content>
-        </Collapsible.Item>
-
-        {/* Hashtags */}
-        {Object.keys(hashtags).map((hashtag, i) => {
-          const summaries = hashtags[hashtag];
-          return (
-            <Collapsible.Item
-              key={i}
-              active={isSideMenuActive(hashtag)}
-              handleToggle={() => toggleSideMenu(hashtag)}
-            >
-              <Collapsible.Item.Label>
-                <span className="flex items-center space-x-2">
-                  <Button
-                    className="p-1"
-                    onClick={(
-                      e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-                    ) => handleRoll(e, hashtag)}
-                  >
-                    <BiHash />
-                  </Button>
-                  <span>{hashtag.replace("#", "")}</span>
-                </span>
-              </Collapsible.Item.Label>
-              <Collapsible.Item.Content>
-                <List>
-                  {summaries.map((summary, i) => (
-                    <NoteListItem
-                      key={i}
-                      summary={summary}
-                      onClick={() => handleNoteClick(summary.note)}
-                      active={note?.id === summary.note.id}
-                    />
-                  ))}
-                </List>
-              </Collapsible.Item.Content>
-            </Collapsible.Item>
-          );
-        })}
-
         {/* Reminders */}
         <Collapsible.Item
           active={isSideMenuActive("reminders")}

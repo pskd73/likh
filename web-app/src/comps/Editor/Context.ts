@@ -136,7 +136,7 @@ export const useEditor = ({
     (async () => {
       if (searchTerm) {
         const results = await storage.search(searchTerm);
-        const MAX_SUMMARY_LENGTH = 50;
+        const MAX_SUMMARY_LENGTH = 30;
         const nts = results.map((note) => {
           const idx = note.text.toLowerCase().indexOf(searchTerm.toLowerCase());
           const midIdx = idx + Math.floor(searchTerm.length / 2);
