@@ -14,7 +14,11 @@ const Col = ({ children }: PropsWithChildren) => {
 };
 
 const Section = ({ children }: PropsWithChildren) => {
-  return <div className="md:flex flex-wrap md:space-x-8 my-10">{children}</div>;
+  return (
+    <div className="md:flex flex-wrap md:space-x-8 my-10 space-y-4 md:space-y-0">
+      {children}
+    </div>
+  );
 };
 
 const HomeScreen = () => {
@@ -42,7 +46,9 @@ const HomeScreen = () => {
                 className="w-12 opacity-80"
               />
             </div>
-            <span>Hello <span className="italic">there!</span></span>
+            <span>
+              Hello <span className="italic">there!</span>
+            </span>
           </div>
           <Col>
             <Search
