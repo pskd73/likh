@@ -1,4 +1,10 @@
-import { PropsWithChildren, useContext, useMemo, useState } from "react";
+import {
+  ComponentProps,
+  PropsWithChildren,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 import { EditorContext, NoteSummary } from "../Context";
 import QuickStart from "./QuickStart";
 import Journals from "./Journals";
@@ -8,9 +14,15 @@ import Reminders from "./Reminders";
 import { SavedNote } from "../type";
 import Settings from "./Settings";
 import Promotion from "./Promotion";
+import Calendar from "./HomeCalendar";
+import classNames from "classnames";
 
-const Col = ({ children }: PropsWithChildren) => {
-  return <div className="md:w-80 space-y-4">{children}</div>;
+const Col = ({ children, className, ...restProps }: ComponentProps<"div">) => {
+  return (
+    <div className={classNames(className, "md:w-80 space-y-4")} {...restProps}>
+      {children}
+    </div>
+  );
 };
 
 const Section = ({ children }: PropsWithChildren) => {
@@ -72,6 +84,9 @@ const HomeScreen = () => {
           {!searchTerm && reminderNotes.length > 0 && (
             <Reminders reminderNotes={reminderNotes} />
           )}
+        </Col>
+        <Col className="md:w-60">
+          <Calendar />
         </Col>
       </Section>
       <hr />
