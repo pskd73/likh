@@ -26,7 +26,7 @@ const Notes = ({
 
   return (
     <div>
-      {!searchTerm && !seeAll && <Title>Latest</Title>}
+      <Title>Latest</Title>
       <ListContainer>
         <List>
           {notesToShow

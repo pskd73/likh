@@ -17,6 +17,7 @@ import Promotion from "./Promotion";
 import Calendar from "./HomeCalendar";
 import classNames from "classnames";
 import Logo from "../../Logo";
+import Todos from "./Todos";
 
 const Col = ({ children, className, ...restProps }: ComponentProps<"div">) => {
   return (
@@ -35,8 +36,14 @@ const Section = ({ children }: PropsWithChildren) => {
 };
 
 const HomeScreen = () => {
-  const { notesToShow, note, getHashtags, setSearchTerm, searchTerm } =
-    useContext(EditorContext);
+  const {
+    notesToShow,
+    note,
+    getHashtags,
+    setSearchTerm,
+    searchTerm,
+    getTodoNotes,
+  } = useContext(EditorContext);
   const [seeAll, setSeeAll] = useState(false);
   const hashtags = useMemo<Record<string, NoteSummary[]>>(() => {
     return getHashtags();
@@ -45,6 +52,13 @@ const HomeScreen = () => {
     return notesToShow
       .filter((n) => !!n.note.reminder)
       .map((summary) => summary.note);
+  }, [notesToShow]);
+  const todos = useMemo(() => {
+    let _todos = getTodoNotes();
+    _todos = _todos.filter(
+      (summary) => summary.todo!.total - summary.todo!.checked > 0
+    );
+    return _todos.sort((a, b) => b.note.created_at - a.note.created_at);
   }, [notesToShow]);
 
   return (
@@ -73,12 +87,13 @@ const HomeScreen = () => {
           {notesToShow.length > 0 && (
             <Notes seeAll={seeAll} toggleSeeAll={() => setSeeAll((s) => !s)} />
           )}
+          {todos.length > 0 && <Todos summaries={todos} />}
         </Col>
         <Col>
-          {!searchTerm && !seeAll && Object.keys(hashtags).length > 0 && (
+          {!seeAll && Object.keys(hashtags).length > 0 && (
             <Journals />
           )}
-          {!searchTerm && reminderNotes.length > 0 && (
+          {reminderNotes.length > 0 && (
             <Reminders reminderNotes={reminderNotes} />
           )}
         </Col>
