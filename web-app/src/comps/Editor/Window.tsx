@@ -1,5 +1,5 @@
 import "./db";
-import { Suggestion } from "./MEditor";
+import { Suggestion } from "./Core/Slate/Editor";
 import { EditorContext, useEditor } from "./Context";
 import SidePanel from "./SidePanel/SidePanel";
 import StatusBar from "./StatusBar/StatusBar";
