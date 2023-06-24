@@ -27,18 +27,18 @@ export type Storage = {
   lastSavedAt: number;
 };
 
-const useStorage = (pouch: Pouch.MyPouch): Storage => {
+const useStorage = (pdb: Pouch.PouchContextType): Storage => {
   const [notes, setNotes] = useState<NoteMeta[]>([]);
   const [lastSavedAt, setLastSavedAt] = useState(new Date().getTime());
 
   useEffect(() => {
     (async () => {
-      setNotes((await pouch.all()).rows);
+      setNotes((await pdb.db.all()).rows);
     })();
-  }, []);
+  }, [pdb.initSync]);
 
   const saveNoteImmediate = (note: SavedNote) => {
-    pouch.put(note.id, (doc) => {
+    pdb.db.put(note.id, (doc) => {
       if (doc === undefined) {
         return { ...note, _id: note.id };
       }
@@ -83,10 +83,10 @@ const useStorage = (pouch: Pouch.MyPouch): Storage => {
   };
 
   const getRecentNote = async () => {
-    const noteMetas = (await pouch.all()).rows;
+    const noteMetas = (await pdb.db.all()).rows;
     for (const meta of noteMetas) {
       const note = noteMetas.length
-        ? await pouch.get<SavedNote>(meta.id)
+        ? await pdb.db.get<SavedNote>(meta.id)
         : undefined;
       if (note) {
         return note;
@@ -95,10 +95,10 @@ const useStorage = (pouch: Pouch.MyPouch): Storage => {
   };
 
   const search = async (text: string) => {
-    const metas = (await pouch.all()).rows;
+    const metas = (await pdb.db.all()).rows;
     const notes: SavedNote[] = [];
     for (const nm of metas) {
-      const note = await pouch.get<SavedNote>(nm.id);
+      const note = await pdb.db.get<SavedNote>(nm.id);
       if (note) {
         notes.push(note);
       }
@@ -112,7 +112,7 @@ const useStorage = (pouch: Pouch.MyPouch): Storage => {
     const newNotes = [...notes];
     const idx = newNotes.findIndex((note) => note.id === id);
     if (idx === -1) return;
-    await pouch.del(id);
+    await pdb.db.del(id);
     newNotes.splice(idx, 1);
     setNotes(newNotes);
   };
@@ -120,12 +120,12 @@ const useStorage = (pouch: Pouch.MyPouch): Storage => {
   return {
     notes,
     newNote,
-    getNote: pouch.get,
+    getNote: pdb.db.get,
     getRecentNote,
     saveNote,
     search,
     delete: _delete,
-    pouch,
+    pouch: pdb.db,
     lastSavedAt,
   };
 };

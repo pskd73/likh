@@ -20,7 +20,7 @@ const STATUS_BAR_HEIGHT = 30;
 
 const EditorWindow = () => {
   const pdb = PouchDB.usePouchDb();
-  const storage = useStorage(pdb.db);
+  const storage = useStorage(pdb);
   const editorState = useEditor({ storage, pdb });
   const statusBarPadding = useMemo(() => (iOS() ? 20 : 0), []);
   const [dbInitiated, setDbInitiated] = useState(false);

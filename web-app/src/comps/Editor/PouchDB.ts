@@ -170,6 +170,7 @@ export type PouchContextType = {
   db: MyPouch;
   syncState: string;
   nSync: number;
+  initSync: boolean;
 };
 
 export const PouchContext = createContext({} as PouchContextType);
@@ -207,5 +208,6 @@ export const usePouchDb = () => {
     db,
     syncState,
     nSync,
+    initSync: nSync > 0,
   };
 };

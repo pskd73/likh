@@ -112,7 +112,7 @@ export const useEditor = ({
         }
       }
     })();
-  }, []);
+  }, [pdb.initSync]);
 
   useEffect(() => {
     (async () => {
@@ -169,7 +169,7 @@ export const useEditor = ({
     storage.notes,
     searchTerm,
     (note?.text.length || 0) <= 50 ? storage.lastSavedAt : undefined,
-    pdb.nSync > 0,
+    pdb.initSync,
     note?.reminder,
   ]);
 
