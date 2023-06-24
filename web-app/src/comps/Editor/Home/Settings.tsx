@@ -22,9 +22,9 @@ const ThemeBox = ({
       className={twMerge(
         classNames(
           theme.font.base,
-          "px-3 h-8 border-primary-700 border-2 cursor-pointer",
+          "px-3 h-8 border-primary border-2 cursor-pointer",
           "rounded flex justify-center items-center",
-          "hover:bg-primary-700 hover:bg-opacity-5 active:bg-opacity-10",
+          "hover:bg-primary hover:bg-opacity-5 active:bg-opacity-10",
           "transition-all",
           {
             "border-opacity-30": !active,
@@ -40,6 +40,26 @@ const ThemeBox = ({
   );
 };
 
+const ColorTheme = ({
+  theme,
+  active,
+  ...restProps
+}: ComponentProps<"div"> & { theme: string; active: boolean }) => {
+  return (
+    <div
+      className={classNames(
+        "w-10 h-10 rounded-full flex overflow-hidden border-2 border-primary",
+        "cursor-pointer",
+        { "border-opacity-100": active, "border-opacity-0": !active }
+      )}
+      {...restProps}
+    >
+      <div className={classNames("w-1/2 bg-base", theme)} />
+      <div className={classNames("w-1/2 bg-primary", theme)} />
+    </div>
+  );
+};
+
 const Settings = () => {
   const {
     showStats,
@@ -48,7 +68,11 @@ const Settings = () => {
     setTypewriterMode,
     themeName,
     setThemeName,
+    colorTheme,
+    setColorTheme,
   } = useContext(EditorContext);
+
+  const themes = ["base", "dark", "accent", "secondary"];
 
   return (
     <div>
@@ -97,6 +121,17 @@ const Settings = () => {
                   >
                     Serif
                   </ThemeBox>
+                </div>
+                <div className="flex space-x-4 py-4">
+                  {themes.map((theme) => (
+                    <div key={theme}>
+                      <ColorTheme
+                        theme={`theme-${theme}`}
+                        active={colorTheme === theme}
+                        onClick={() => setColorTheme(theme)}
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

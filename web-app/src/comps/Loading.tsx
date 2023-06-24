@@ -20,7 +20,7 @@ const TextBlock = ({
     >
       <div
         className={classNames("shine w-full bg-opacity-10 rounded-md mb-1", {
-          "bg-primary-700": !empty,
+          "bg-primary": !empty,
         })}
         style={{ height }}
       />

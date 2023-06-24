@@ -22,17 +22,17 @@ const SidePanel = () => {
       )}
       {isMobile && sideBar && (
         <div
-          className="bg-primary-700 bg-opacity-70 w-[100vw] h-[100vh] fixed top-0 left-0 z-20"
+          className="bg-primary bg-opacity-70 w-[100vw] h-[100vh] fixed top-0 left-0 z-20"
           onClick={() => setSideBar(undefined)}
         />
       )}
       <div
         className={classNames(
-          "transition-all shadow-xl z-30 h-[100vh] overflow-y-scroll scrollbar-hide",
-          "bg-white border-r border-primary-700 border-opacity-20",
+          "transition-all shadow-lg rounded-r-lg z-30 h-[100vh] overflow-y-scroll scrollbar-hide",
+          "bg-base bg-opacity-100 border-r border-primary border-opacity-20",
           "fixed top-0",
           {
-            "w-[0px]": !sideBar,
+            "w-[0px] -left-1": !sideBar,
             "w-[300px]": sideBar,
           }
         )}

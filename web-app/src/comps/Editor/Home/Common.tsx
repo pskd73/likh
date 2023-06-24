@@ -6,6 +6,6 @@ export const Title = ({ children }: PropsWithChildren) => {
 
 export const ListContainer = ({ children }: PropsWithChildren) => {
   return (
-    <div className="bg-primary-700 bg-opacity-5 p-2 rounded">{children}</div>
+    <div className="bg-primary bg-opacity-5 p-2 rounded">{children}</div>
   );
 };

@@ -59,22 +59,22 @@ function Leaf({
     "opacity-30 inline-flex justify-end pr-[4px]": leaf.bullet,
 
     // checkbox
-    "bg-primary-700 bg-opacity-20  w-[20px] h-[20px] font-bold":
+    "bg-primary bg-opacity-20  w-[20px] h-[20px] font-bold":
       leaf.checkbox && !leaf.punctuation,
     "inline-flex justify-center items-center mx-1 cursor-pointer":
       leaf.checkbox && !leaf.punctuation,
-    "rounded border-primary-700 border-opacity-30":
+    "rounded border-primary border-opacity-30":
       leaf.checkbox && !leaf.punctuation,
     border: leaf.checkbox && !leaf.punctuation && leaf.text === " ",
     "opacity-70": leaf.checkbox && !leaf.punctuation && leaf.text === "x",
-    "line-through text-primary-700 text-opacity-50":
+    "line-through text-primary text-opacity-50":
       leaf.list && !leaf.checkbox && !leaf.bullet && leaf.payload.checked,
 
     // link
     "underline cursor-pointer": leaf.link,
 
     // hashtag
-    "bg-primary-700 bg-opacity-20 p-1 px-3 rounded-full": leaf.hashtag,
+    "bg-primary bg-opacity-20 p-1 px-3 rounded-full": leaf.hashtag,
 
     // notelink
     "underline cursor-pointer nl": leaf.notelink && !leaf.punctuation,
@@ -82,14 +82,14 @@ function Leaf({
     "opacity-30 nl": leaf.notelink && leaf.notelinkId,
 
     // inlineCode
-    "font-CourierPrime bg-primary-700 bg-opacity-20 px-1 rounded inline-flex items-center":
+    "font-CourierPrime bg-primary bg-opacity-20 px-1 rounded inline-flex items-center":
       leaf.inlineCode && !leaf.punctuation,
 
     // mdLink
     "mdLink underline cursor-pointer": leaf.mdLink,
 
     // highlight
-    "highlight bg-primary-700 bg-opacity-20": leaf.highlight,
+    "highlight bg-primary bg-opacity-20": leaf.highlight,
 
     // image
     "hidden image": leaf.image && !leaf.alt && !leaf.focused,

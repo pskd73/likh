@@ -13,7 +13,7 @@ const Key = ({ children }: PropsWithChildren) => {
     <div className="flex justify-center items-center">
       <span
         className={classNames(
-          "text-sm font-CourierPrime bg-primary-700 bg-opacity-20 rounded",
+          "text-sm font-CourierPrime bg-primary bg-opacity-20 rounded",
           "flex justify-center items-center w-6 h-6"
         )}
       >
