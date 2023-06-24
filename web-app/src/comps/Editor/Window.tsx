@@ -75,7 +75,7 @@ const EditorWindow = () => {
   return (
     <PouchDB.PouchContext.Provider value={pdb}>
       <EditorContext.Provider value={editorState}>
-        <div className="min-h-[100vh] bg-base text-primary flex">
+        <div className="min-h-[100vh] bg-base text-primary flex theme-base">
           <SidePanel />
           <div
             style={{

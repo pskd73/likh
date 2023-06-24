@@ -158,7 +158,8 @@ const Outline = () => {
                 {links.map((link, i) => (
                   <ListWidget.Item
                     key={i}
-                    className="cursor-auto hover:bg-white flex items-center text-sm space-x-2"
+                    noHover
+                    className="flex items-center text-sm space-x-2"
                   >
                     <span
                       className="hover:underline cursor-pointer"
