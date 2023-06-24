@@ -191,7 +191,6 @@ const Editor = ({
       const imgUrl = imgMatch ? imgMatch[1] : null;
       const localImgMatch = imgUrl?.match(/^((image)|(attachment)):\/\/(.+)$/);
       let imgUri: string | undefined = undefined;
-      let imgRef: HTMLImageElement | null = null;
       if (getSavedImg && localImgMatch) {
         const imgId = Number(localImgMatch[4]);
         const imgType = localImgMatch[1];
@@ -223,7 +222,7 @@ const Editor = ({
           attributes={attributes}
           children={children}
           element={element}
-          img={{ url: imgUrl || undefined, uri: imgUri, ref: imgRef }}
+          img={{ url: imgUrl || undefined, uri: imgUri }}
           title={{ slug: titleSlug, level: titleLavel }}
           list={{ level: listLevel }}
           quote={!!quote}
