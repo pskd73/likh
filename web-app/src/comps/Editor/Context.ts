@@ -319,6 +319,7 @@ export const useEditor = ({
     setNotes({});
     setRollHashTag("");
     setNoteId(null);
+    setSideBar(undefined);
   };
 
   return {
