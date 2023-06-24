@@ -4,8 +4,8 @@ import { NewNote, SavedNote } from "./type";
 import { isLinked } from "../../Note";
 import { LinkSuggestion, getLinkSuggestions } from "./Suggestion";
 import { PersistedState } from "./usePersistedState";
-import { Theme, Themes } from "./Theme";
-import { MyPouch, PouchContextType } from "./PouchDB";
+import { Theme } from "./Theme";
+import { PouchContextType } from "./PouchDB";
 
 type StateSetter<T> = React.Dispatch<React.SetStateAction<T>>;
 type CountStatType = "words" | "readTime";
@@ -79,8 +79,6 @@ const { hook: useTypewriterMode } = PersistedState("typewriterMode");
 const { hook: useShowStats } = PersistedState("showStats");
 const { hook: useNoteId, value: defaultNoteId } =
   PersistedState<string>("noteId");
-const { hook: useRollHashtag, value: defaultRollHashtag } =
-  PersistedState<string>("rollHashtag");
 const { hook: useActiveSideMenus } = PersistedState("activeSideMenus");
 const { hook: useCountStatType } =
   PersistedState<CountStatType>("countStatType");
@@ -108,8 +106,10 @@ export const useEditor = ({
     return notes[ids[ids.length - 1]];
   }, [notes]);
   const [searchTerm, setSearchTerm] = useSearchTerm<string>("");
-  const [rollHashTag, setRollHashTag] = useRollHashtag<string>("");
-  const [noteId, setNoteId] = useNoteId<string | undefined | null>(defaultNoteId);
+  const [rollHashTag, setRollHashTag] = useState<string>("");
+  const [noteId, setNoteId] = useNoteId<string | undefined | null>(
+    defaultNoteId
+  );
   const [themeName, setThemeName] = useThemeName<string>("Basic");
   const [notesToShow, setNotesToShow] = useState<NoteSummary[]>([]);
 
@@ -121,14 +121,6 @@ export const useEditor = ({
           return setNotes({ [defaultNoteId]: _note });
         }
       }
-      // const hashTagNotes = getHashTagNotes();
-      // if (hashTagNotes) {
-      //   return setNotes(hashTagNotes);
-      // }
-      // const recentNote = await storage.getRecentNote();
-      // if (recentNote) {
-      //   setNotes({ [recentNote.id]: recentNote });
-      // }
     })();
   }, []);
 

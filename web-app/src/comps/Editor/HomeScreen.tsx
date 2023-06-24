@@ -1,7 +1,21 @@
-import { BiFile, BiHash, BiPlus, BiSearch, BiX } from "react-icons/bi";
+import {
+  BiArrowFromBottom,
+  BiArrowFromTop,
+  BiFile,
+  BiHash,
+  BiPlus,
+  BiSearch,
+  BiX,
+} from "react-icons/bi";
 import { BsCursorText } from "react-icons/bs";
 import List from "./List";
-import { PropsWithChildren, cloneElement, useContext, useMemo } from "react";
+import {
+  PropsWithChildren,
+  cloneElement,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 import { EditorContext, NoteSummary } from "./Context";
 import { INTRO_TEXT } from "./Intro";
 import { textToTitle } from "../../Note";
@@ -44,6 +58,7 @@ const HomeScreen = () => {
     searchTerm,
     storage,
   } = useContext(EditorContext);
+  const [seeAll, setSeeAll] = useState(false);
   const hashtags = useMemo<Record<string, NoteSummary[]>>(() => {
     return getHashtags();
   }, [notesToShow, note]);
@@ -98,7 +113,7 @@ const HomeScreen = () => {
             <BiSearch />
           </div>
         </div>
-        {!searchTerm && (
+        {!searchTerm && !seeAll && (
           <div>
             <Title>Quick start</Title>
             <ListContainer>
@@ -134,7 +149,7 @@ const HomeScreen = () => {
             </ListContainer>
           </div>
         )}
-        {!searchTerm && Object.keys(hashtags).length > 0 && (
+        {!searchTerm && !seeAll && Object.keys(hashtags).length > 0 && (
           <div>
             <Title>Journals</Title>
             <ListContainer>
@@ -169,17 +184,17 @@ const HomeScreen = () => {
         )}
         {notesToShow.length > 0 && (
           <div>
-            {!searchTerm && <Title>Latest</Title>}
+            {!searchTerm && !seeAll && <Title>Latest</Title>}
             <ListContainer>
               <List>
                 {notesToShow
-                  .slice(0, searchTerm ? notesToShow.length : 5)
+                  .slice(0, searchTerm || seeAll ? notesToShow.length : 5)
                   .map((summary) => (
                     <List.Item
                       key={summary.note.id}
                       withIcon
                       onClick={() => handleNoteClick(summary.note)}
-                      className="last:mb-0 flex-col"
+                      className="flex-col"
                     >
                       <div className="flex">
                         <span className="opacity-50 mt-1 min-w-5 w-5">
@@ -204,16 +219,30 @@ const HomeScreen = () => {
                         )}
                     </List.Item>
                   ))}
+                <List.Item
+                  withIcon
+                  noHover
+                  className="last:mb-0 opacity-30 hover:underline cursor-pointer"
+                  onClick={() => setSeeAll((s) => !s)}
+                >
+                  <List.Item.Icon>
+                    {seeAll ? <BiArrowFromBottom /> : <BiArrowFromTop />}
+                  </List.Item.Icon>
+                  <span>[{seeAll ? "Collapse" : "See all"}]</span>
+                </List.Item>
               </List>
             </ListContainer>
           </div>
         )}
-        {!searchTerm && suggestions && (suggestions.length || 0) > 0 && (
-          <div>
-            <Title>Your topics</Title>
-            <LinkSuggestions suggestions={suggestions} />
-          </div>
-        )}
+        {!searchTerm &&
+          !seeAll &&
+          suggestions &&
+          (suggestions.length || 0) > 0 && (
+            <div>
+              <Title>Your topics</Title>
+              <LinkSuggestions suggestions={suggestions} />
+            </div>
+          )}
       </div>
     </div>
   );

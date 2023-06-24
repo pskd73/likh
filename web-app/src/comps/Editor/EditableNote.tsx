@@ -9,7 +9,7 @@ import moment from "moment";
 import { BiPlus } from "react-icons/bi";
 import Button from "../Button";
 import { scrollTo } from "./scroll";
-import { getImage, insertImage } from "./db";
+import { getImage } from "./db";
 import { Themes } from "./Theme";
 import { blobToB64 } from "../../util";
 
@@ -99,66 +99,76 @@ const EditableNote = ({
 
   return (
     <div ref={ref} style={{ ...scroll.style }} className="space-y-6 md:px-20">
-      {Object.keys(notes).map((id) => (
-        <div
-          className={classNames(
-            `note-date-${moment(notes[id].created_at).format("YYYY-MM-DD")}`,
-            `note-${id}`,
-            "pt-2"
-          )}
-          key={id}
-        >
-          {isRoll && (
+      {Object.values(notes)
+        .sort((a, b) => a.created_at - b.created_at)
+        .map((_note) => {
+          const id = _note.id;
+          return (
             <div
               className={classNames(
-                "flex justify-end text-sm",
-                "border-b border-primary-700 mb-4 pb-2",
-                "border-opacity-10 opacity-50"
+                `note-date-${moment(notes[id].created_at).format(
+                  "YYYY-MM-DD"
+                )}`,
+                `note-${id}`,
+                "pt-2"
               )}
+              key={id}
             >
-              {moment(new Date(notes[id].created_at)).format(
-                "MMMM Do YYYY, h:mm:ss a"
+              {isRoll && (
+                <div
+                  className={classNames(
+                    "flex justify-end text-sm",
+                    "border-b border-primary-700 mb-4 pb-2",
+                    "border-opacity-10 opacity-50"
+                  )}
+                >
+                  {moment(new Date(notes[id].created_at)).format(
+                    "MMMM Do YYYY, h:mm:ss a"
+                  )}
+                </div>
               )}
+              <Editor
+                key={id}
+                containerClassName={`note-${id}`}
+                onChange={(v) => handleChange(id, v)}
+                initValue={notes[id].serialized}
+                initText={notes[id].text}
+                onNoteLinkClick={handleNoteLinkClick}
+                getSuggestions={getSuggestions}
+                highlight={searchTerm}
+                getSavedImg={async (attachmentId, imgType) => {
+                  if (note && imgType === "attachment") {
+                    const blob = await storage.pouch.attachment(
+                      id,
+                      attachmentId
+                    );
+                    const uri = await blobToB64(blob);
+                    if (uri) {
+                      return { id: attachmentId, uri: uri as string };
+                    }
+                  }
+                  const img = await getImage(Number(attachmentId));
+                  return { id: attachmentId, uri: img.uri };
+                }}
+                handleSaveImg={async (img) => {
+                  if (note) {
+                    const match = img.uri.match(/^data:(.+);base64,(.+)$/);
+                    if (match) {
+                      const id = new Date().getTime().toString();
+                      await storage.pouch.attach(note.id, {
+                        id,
+                        data: match[2],
+                        type: match[1],
+                      });
+                      return { id, uri: img.uri };
+                    }
+                  }
+                }}
+                theme={Themes[themeName] || Themes.Basic}
+              />
             </div>
-          )}
-          <Editor
-            key={id}
-            containerClassName={`note-${id}`}
-            onChange={(v) => handleChange(id, v)}
-            initValue={notes[id].serialized}
-            initText={notes[id].text}
-            onNoteLinkClick={handleNoteLinkClick}
-            getSuggestions={getSuggestions}
-            highlight={searchTerm}
-            getSavedImg={async (attachmentId, imgType) => {
-              if (note && imgType === "attachment") {
-                const blob = await storage.pouch.attachment(id, attachmentId);
-                const uri = await blobToB64(blob);
-                if (uri) {
-                  return { id: attachmentId, uri: uri as string };
-                }
-              }
-              const img = await getImage(Number(attachmentId));
-              return { id: attachmentId, uri: img.uri };
-            }}
-            handleSaveImg={async (img) => {
-              if (note) {
-                const match = img.uri.match(/^data:(.+);base64,(.+)$/);
-                if (match) {
-                  const id = new Date().getTime().toString();
-                  await storage.pouch.attach(note.id, {
-                    id,
-                    data: match[2],
-                    type: match[1],
-                  });
-                  return { id, uri: img.uri };
-                }
-              }
-            }}
-            theme={Themes[themeName] || Themes.Basic}
-          />
-        </div>
-      ))}
+          );
+        })}
       {isRoll && (
         <div>
           <Button
