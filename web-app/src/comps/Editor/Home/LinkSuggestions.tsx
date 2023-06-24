@@ -35,7 +35,7 @@ const LinkSuggestions = ({
         <li
           key={i}
           className={classNames(
-            "bg-primary-700 bg-opacity-10 px-4 py-1 rounded-lg inline-block space-x-2",
+            "bg-primary bg-opacity-10 px-4 py-1 rounded-lg inline-block space-x-2",
             "flex items-center group w-full"
           )}
           style={{

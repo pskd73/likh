@@ -6,7 +6,7 @@ import { Header } from "../comps/Typo";
 const TextBlock = ({ height }: { height: number }) => {
   return (
     <div
-      className="w-full bg-primary-700 bg-opacity-30 rounded-md"
+      className="w-full bg-primary bg-opacity-30 rounded-md"
       style={{ height }}
     />
   );
@@ -24,7 +24,7 @@ const GoalOption = ({
   return (
     <div
       className={classNames(
-        "w-[70px] h-[70px] bg-primary-700 bg-opacity-10 rounded p-2 flex flex-col justify-between text-xs items-center",
+        "w-[70px] h-[70px] bg-primary bg-opacity-10 rounded p-2 flex flex-col justify-between text-xs items-center",
         "cursor-pointer",
         { "outline outline-2": active }
       )}

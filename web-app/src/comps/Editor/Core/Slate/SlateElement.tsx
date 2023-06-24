@@ -37,7 +37,7 @@ const SlateElement = ({
     return (
       <pre
         {...attributes}
-        className="mb-4 bg-primary-700 bg-opacity-5 p-4 rounded-md whitespace-break-spaces"
+        className="mb-4 bg-primary bg-opacity-5 p-4 rounded-md whitespace-break-spaces"
         spellCheck={false}
       >
         {children}
@@ -63,8 +63,8 @@ const SlateElement = ({
       <p
         {...attributes}
         className={classNames({
-          "px-6 bg-primary-700 bg-opacity-10 py-2 italic": quote,
-          "border-l-4 border-primary-700 border-opacity-30": quote,
+          "px-6 bg-primary bg-opacity-10 py-2 italic": quote,
+          "border-l-4 border-primary border-opacity-30": quote,
           "pb-10": img?.url,
           "mb-2": !quote,
         })}

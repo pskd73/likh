@@ -29,11 +29,11 @@ const Input = ({
       disabled={disabled}
       className={twMerge(
         classNames(
-          "mt-1 w-full rounded-md border border-primary-700",
+          "mt-1 w-full rounded-md border border-primary",
           "border-opacity-30 sm:text-sm p-2",
           {
             "shadow-sm": !disabled,
-            "bg-primary-700 bg-opacity-20 opacity-50": disabled,
+            "bg-primary bg-opacity-20 opacity-50": disabled,
           }
         ),
         className

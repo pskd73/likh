@@ -21,9 +21,9 @@ const GoalTracker = ({ note }: { note: Note }) => {
 
   return pct !== undefined ? (
     <div className="flex items-center">
-      <div className="w-[100px] bg-primary-700 bg-opacity-10 h-2 rounded overflow-hidden">
+      <div className="w-[100px] bg-primary bg-opacity-10 h-2 rounded overflow-hidden">
         <div
-          className="h-full bg-primary-700 bg-opacity-30 rounded"
+          className="h-full bg-primary bg-opacity-30 rounded"
           style={{ width: `${pct}%` }}
         />
       </div>

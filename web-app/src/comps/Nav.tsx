@@ -46,7 +46,7 @@ export const Nav = () => {
               to="/"
               className="flex items-center space-x-2 opacity-100"
             >
-              <div className="fill-primary-700 w-8 max-h-full">
+              <div className="fill-primary w-8 max-h-full">
                 <Logo />
               </div>
               {/* <span className="block -mb-2">Retro Note</span> */}

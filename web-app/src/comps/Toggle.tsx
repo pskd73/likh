@@ -19,7 +19,7 @@ const Toggle = ({
         onChange={onChange}
       />
 
-      <span className="absolute inset-0 rounded-full bg-gray-300 transition peer-checked:bg-primary-700"></span>
+      <span className="absolute inset-0 rounded-full bg-gray-300 transition peer-checked:bg-primary"></span>
 
       <span className="absolute inset-y-0 start-0 m-1 h-3 w-3 rounded-full bg-white transition-all peer-checked:start-3"></span>
     </label>

@@ -12,14 +12,14 @@ module.exports = {
         CrimsonText: ["'Crimson Text'", "serif"]
       },
       colors: {
-        "primary-700": "#6C6327",
+        "primary": "#6C6327",
         "base": "#FFFEF8"
       },
       typography: (theme) => ({
         DEFAULT: {
           css: {
             "*": {
-              color: theme("colors.primary-700")
+              color: theme("colors.primary")
             },
           }
         }

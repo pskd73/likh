@@ -236,7 +236,7 @@ export const ContextMenu = forwardRef<HTMLDivElement, ComponentProps<"div">>(
         {...restProps}
       >
         {children}
-        <div className="bg-primary-700 opacity-50 bg-opacity-20 py-1 px-2 text-xs">
+        <div className="bg-primary opacity-50 bg-opacity-20 py-1 px-2 text-xs">
           Use &larr; &uarr; &rarr; &darr; ↵ Esc
         </div>
       </div>
@@ -266,9 +266,9 @@ const Item = ({
     <li
       id={`suggestion-item-${idx}`}
       className={classNames(
-        "p-2 hover:bg-primary-700 hover:bg-opacity-5 cursor-pointer active:bg-opacity-10",
-        "border-b border-primary-700 border-opacity-10 last:border-b-0",
-        { "bg-primary-700 bg-opacity-5": hover }
+        "p-2 hover:bg-primary hover:bg-opacity-5 cursor-pointer active:bg-opacity-10",
+        "border-b border-primary border-opacity-10 last:border-b-0",
+        { "bg-primary bg-opacity-5": hover }
       )}
       {...restProps}
     >

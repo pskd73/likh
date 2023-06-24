@@ -11,7 +11,7 @@ export const Paper = ({
 }: ComponentProps<"div">) => {
   return (
     <div
-      className={twMerge("flex justify-center text-primary-700", className)}
+      className={twMerge("flex justify-center text-primary", className)}
       {...restProps}
     >
       <div className="w-[860px] p-4 md:p-0">{children}</div>

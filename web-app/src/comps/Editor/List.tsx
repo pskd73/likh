@@ -24,7 +24,7 @@ const Item = ({
         classNames("py-1 px-2", "rounded text-sm", {
           "bg-opacity-10": active,
           "bg-opacity-0": !active,
-          "bg-primary-700  transition-colors cursor-pointer": !noHover,
+          "bg-primary transition-colors cursor-pointer": !noHover,
           "hover:bg-opacity-10 active:bg-opacity-20": !noHover,
           "flex space-x-1": withIcon,
         }),

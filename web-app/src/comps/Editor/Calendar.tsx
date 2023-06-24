@@ -90,8 +90,8 @@ const Calendar = ({
                 key={j}
                 style={{ width: `${100 / 7}%` }}
                 className={classNames(
-                  "bg-primary-700 bg-opacity-10 rounded-md p-1 hover:shadow-md",
-                  "cursor-pointer border-2 border-primary-700 transition-shadow",
+                  "bg-primary bg-opacity-10 rounded-md p-1 hover:shadow-md",
+                  "cursor-pointer border-2 border-primary transition-shadow",
                   "w-10 h-10 flex flex-col justify-between",
                   {
                     "opacity-40": cell.otherMonth,
@@ -107,7 +107,7 @@ const Calendar = ({
                   {[...Array(cell.count || 0)].map((_, i) => (
                     <span
                       key={i}
-                      className="inline-block bg-opacity-80 rounded-full bg-primary-700"
+                      className="inline-block bg-opacity-80 rounded-full bg-primary"
                       style={{
                         width: 3,
                         height: 3,

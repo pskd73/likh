@@ -12,7 +12,7 @@ const Search = ({
     <div
       className={classNames(
         "flex justify-between items-center text-2xl",
-        "border rounded-full border-primary-700 border-opacity-20",
+        "border rounded-full border-primary border-opacity-20",
         "overflow-hidden p-2 px-4 shadow"
       )}
     >
@@ -20,7 +20,7 @@ const Search = ({
         type="text"
         placeholder="Search here"
         className={classNames(
-          "placeholder-primary-700 placeholder-opacity-40",
+          "placeholder-primary placeholder-opacity-40",
           "outline-none bg-base w-full"
         )}
         onChange={(e) => onChange(e.target.value)}

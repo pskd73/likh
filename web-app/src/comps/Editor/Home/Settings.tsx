@@ -22,9 +22,9 @@ const ThemeBox = ({
       className={twMerge(
         classNames(
           theme.font.base,
-          "px-3 h-8 border-primary-700 border-2 cursor-pointer",
+          "px-3 h-8 border-primary border-2 cursor-pointer",
           "rounded flex justify-center items-center",
-          "hover:bg-primary-700 hover:bg-opacity-5 active:bg-opacity-10",
+          "hover:bg-primary hover:bg-opacity-5 active:bg-opacity-10",
           "transition-all",
           {
             "border-opacity-30": !active,
