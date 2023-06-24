@@ -1,5 +1,5 @@
 import { Descendant } from "slate";
-import Editor, { Suggestion } from "./MEditor";
+import Editor, { Suggestion } from "./Core/Slate/Editor";
 import { useContext, useEffect, useRef } from "react";
 import { EditorContext } from "./Context";
 import { useMiddle } from "../useMiddle";

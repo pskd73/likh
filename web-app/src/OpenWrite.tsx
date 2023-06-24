@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { Paper } from "./comps/Layout";
-import Editor from "./comps/Editor/MEditor";
+import Editor from "./comps/Editor/Core/Slate/Editor";
 import Event from "./components/Event";
 import { Descendant } from "slate";
 import Button from "./comps/Button";
