@@ -189,11 +189,9 @@ export const usePouchDb = () => {
       onStateChange: (state) => {
         setSyncState(state);
         if (state === "paused") {
-          setTimeout(() => {
-            setNSync((n) => {
-              return n + 1;
-            });
-          }, 1000);
+          setNSync((n) => {
+            return n + 1;
+          });
         }
       },
     });

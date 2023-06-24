@@ -14,7 +14,7 @@ import EditableNote from "./EditableNote";
 import { init } from "./db";
 import { migrate } from "./localStorage";
 import * as PouchDB from "./PouchDB";
-import HomeScreen from "./HomeScreen";
+import HomeScreen from "./Home/HomeScreen";
 
 const STATUS_BAR_HEIGHT = 30;
 

@@ -21,7 +21,7 @@ const Item = ({
   return (
     <li
       className={twMerge(
-        classNames("py-1 px-2", "rounded text-sm last:mb-4", {
+        classNames("py-1 px-2", "rounded text-sm", {
           "bg-opacity-10": active,
           "bg-opacity-0": !active,
           "bg-primary-700  transition-colors cursor-pointer": !noHover,

@@ -23,11 +23,6 @@ export type EditorContextType = {
   sideBar: string | undefined;
   setSideBar: StateSetter<string | undefined>;
 
-  activeSideMenus: string[];
-  toggleSideMenu: (key: string) => void;
-  isSideMenuActive: (key: string) => boolean;
-  setActiveSideMenus: StateSetter<string[]>;
-
   showStats: boolean;
   setShowStats: StateSetter<boolean>;
 
@@ -79,7 +74,6 @@ const { hook: useTypewriterMode } = PersistedState("typewriterMode");
 const { hook: useShowStats } = PersistedState("showStats");
 const { hook: useNoteId, value: defaultNoteId } =
   PersistedState<string>("noteId");
-const { hook: useActiveSideMenus } = PersistedState("activeSideMenus");
 const { hook: useCountStatType } =
   PersistedState<CountStatType>("countStatType");
 const { hook: useThemeName } = PersistedState<Theme>("themeName");
@@ -92,10 +86,6 @@ export const useEditor = ({
   pdb: PouchContextType;
 }): EditorContextType => {
   const [sideBar, setSideBar] = useSideBar<string | undefined>(undefined);
-  const [activeSideMenus, setActiveSideMenus] = useActiveSideMenus<string[]>([
-    "notes",
-    "settings",
-  ]);
   const [showStats, setShowStats] = useShowStats(true);
   const [typewriterMode, setTypewriterMode] = useTypewriterMode(false);
   const [countStatType, setCountStatType] =
@@ -211,20 +201,6 @@ export const useEditor = ({
       }
     }
   };
-
-  const toggleSideMenu = (key: string) => {
-    setActiveSideMenus((items) => {
-      const _items = [...items];
-      if (_items.includes(key)) {
-        _items.splice(items.indexOf(key), 1);
-      } else {
-        _items.push(key);
-      }
-      return _items;
-    });
-  };
-
-  const isSideMenuActive = (key: string) => activeSideMenus.includes(key);
 
   const setNote = (note: SavedNote, replace: boolean = true) => {
     let updatedNotes = { ...notes };
@@ -350,11 +326,6 @@ export const useEditor = ({
 
     sideBar,
     setSideBar,
-
-    activeSideMenus,
-    toggleSideMenu,
-    isSideMenuActive,
-    setActiveSideMenus,
 
     showStats,
     setShowStats,

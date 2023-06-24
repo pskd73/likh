@@ -8,7 +8,6 @@ import {
   BiFullscreen,
   BiHomeSmile,
   BiLoaderAlt,
-  BiMenu,
   BiSave,
   BiSpreadsheet,
 } from "react-icons/bi";
@@ -80,15 +79,6 @@ const StatusBar = ({
       style={{ height: height + padding, paddingBottom: padding }}
     >
       <div className="flex justify-start h-full">
-        <Button
-          lite={sideBar !== "explorer"}
-          className="rounded-none"
-          onClick={() =>
-            setSideBar((b) => (b === "explorer" ? undefined : "explorer"))
-          }
-        >
-          <BiMenu />
-        </Button>
         <Button
           lite={!fullScreen}
           className="rounded-none"
