@@ -85,7 +85,7 @@ const HomeScreen = () => {
             <Reminders reminderNotes={reminderNotes} />
           )}
         </Col>
-        <Col className="md:w-60">
+        <Col className="flex-1">
           <Calendar />
         </Col>
       </Section>
