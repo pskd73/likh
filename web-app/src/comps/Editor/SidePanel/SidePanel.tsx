@@ -1,7 +1,6 @@
 import classNames from "classnames";
 import { useContext } from "react";
 import { EditorContext } from "../Context";
-import Explorer from "./Explorer";
 import Outline from "./Outline/Outline";
 import Shortcuts from "./Shortcuts";
 import { isMobile } from "../device";
@@ -39,7 +38,6 @@ const SidePanel = () => {
         )}
       >
         <div className="max-w-full overflow-hidden p-2">
-          {sideBar === "explorer" && <Explorer />}
           {sideBar === "outline" ? (
             isRoll ? (
               <RollOutline />

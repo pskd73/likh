@@ -4,9 +4,16 @@ import { ListContainer, Title } from "./Common";
 import { EditorContext } from "../Context";
 import { BiFile, BiPlus } from "react-icons/bi";
 import { INTRO_TEXT } from "../Intro";
+import { FiUpload } from "react-icons/fi";
+import { openFile } from "../File";
 
 const QuickStart = () => {
   const { newNote } = useContext(EditorContext);
+
+  const handleOpen = async () => {
+    const text = (await openFile()) as string;
+    newNote({ text });
+  };
 
   return (
     <div>
@@ -39,6 +46,12 @@ const QuickStart = () => {
               <BiFile />
             </List.Item.Icon>
             <span>Create sample note</span>
+          </List.Item>
+          <List.Item withIcon onClick={handleOpen}>
+            <List.Item.Icon>
+              <FiUpload />
+            </List.Item.Icon>
+            <span>Open .md</span>
           </List.Item>
         </List>
       </ListContainer>

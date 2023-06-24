@@ -1,89 +1,83 @@
-import { BiSearch, BiX } from "react-icons/bi";
-import { BsCursorText } from "react-icons/bs";
-import { useContext, useMemo, useState } from "react";
+import { PropsWithChildren, useContext, useMemo, useState } from "react";
 import { EditorContext, NoteSummary } from "../Context";
-import LinkSuggestions from "./LinkSuggestions";
-import useMemoAsync from "../useMemoAsync";
-import classNames from "classnames";
 import QuickStart from "./QuickStart";
 import Journals from "./Journals";
 import Notes from "./Notes";
-import { Title } from "./Common";
+import Search from "./Search";
+import Reminders from "./Reminders";
+import { SavedNote } from "../type";
+import Settings from "./Settings";
+import Promotion from "./Promotion";
+
+const Col = ({ children }: PropsWithChildren) => {
+  return <div className="md:w-80 space-y-4">{children}</div>;
+};
+
+const Section = ({ children }: PropsWithChildren) => {
+  return <div className="md:flex flex-wrap md:space-x-8 my-10">{children}</div>;
+};
 
 const HomeScreen = () => {
-  const {
-    notesToShow,
-    note,
-    getHashtags,
-    getLinkSuggestions,
-    setSearchTerm,
-    searchTerm,
-    storage,
-  } = useContext(EditorContext);
+  const { notesToShow, note, getHashtags, setSearchTerm, searchTerm } =
+    useContext(EditorContext);
   const [seeAll, setSeeAll] = useState(false);
   const hashtags = useMemo<Record<string, NoteSummary[]>>(() => {
     return getHashtags();
   }, [notesToShow, note]);
-
-  const suggestions = useMemoAsync(async () => {
-    let links = await getLinkSuggestions();
-    links = links.sort((a, b) => b.occurances - a.occurances);
-    return links.splice(0, 5);
-  }, [storage.notes, note?.id]);
+  const reminderNotes = useMemo<SavedNote[]>(() => {
+    return notesToShow
+      .filter((n) => !!n.note.reminder)
+      .map((summary) => summary.note);
+  }, [notesToShow]);
 
   return (
-    <div className="pb-20 flex flex-col items-center">
-      <div className="space-y-4 w-full md:w-1/3">
-        <div className="text-5xl md:text-center w-full py-4 md:py-20 flex md:justify-center">
-          <span>Hello there</span>
-          <span className="mt-1">
-            <BsCursorText />
-          </span>
-        </div>
-        <div
-          className={classNames(
-            "flex justify-between items-center text-2xl",
-            "border rounded border-primary-700 border-opacity-20",
-            "overflow-hidden p-2 px-4 shadow"
-          )}
-        >
-          <input
-            type="text"
-            placeholder="Search here"
-            className={classNames(
-              "placeholder-primary-700 placeholder-opacity-60",
-              "outline-none bg-base font-semibold w-full"
-            )}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            value={searchTerm}
-          />
-          <div className="ml-2 opacity-50 flex space-x-2">
-            {searchTerm && (
-              <BiX
-                onClick={() => setSearchTerm("")}
-                className="cursor-pointer"
-              />
-            )}
-            <BiSearch />
-          </div>
-        </div>
-        {!searchTerm && !seeAll && <QuickStart />}
-        {!searchTerm && !seeAll && Object.keys(hashtags).length > 0 && (
-          <Journals />
-        )}
-        {notesToShow.length > 0 && (
-          <Notes seeAll={seeAll} toggleSeeAll={() => setSeeAll((s) => !s)} />
-        )}
-        {!searchTerm &&
-          !seeAll &&
-          suggestions &&
-          (suggestions.length || 0) > 0 && (
+    <div className="pb-20">
+      <div className="flex flex-col">
+        <div className="space-y-4 w-full">
+          <div className="text-5xl w-full flex items-center space-x-4 font-CrimsonText">
             <div>
-              <Title>Your topics</Title>
-              <LinkSuggestions suggestions={suggestions} />
+              <img
+                src="/icons/icon-128x128.png"
+                alt="Retro Note"
+                className="w-12 opacity-80"
+              />
             </div>
-          )}
+            <span>Hello <span className="italic">there!</span></span>
+          </div>
+          <Col>
+            <Search
+              searchTerm={searchTerm}
+              onChange={(term) => setSearchTerm(term)}
+            />
+          </Col>
+        </div>
       </div>
+      <Section>
+        <Col>
+          {!searchTerm && !seeAll && <QuickStart />}
+          {notesToShow.length > 0 && (
+            <Notes seeAll={seeAll} toggleSeeAll={() => setSeeAll((s) => !s)} />
+          )}
+        </Col>
+        <Col>
+          {!searchTerm && !seeAll && Object.keys(hashtags).length > 0 && (
+            <Journals />
+          )}
+          {!searchTerm && reminderNotes.length > 0 && (
+            <Reminders reminderNotes={reminderNotes} />
+          )}
+        </Col>
+      </Section>
+      <hr />
+      <Section>
+        <Col>
+          <Settings />
+        </Col>
+      </Section>
+      <hr />
+      <Section>
+        <Promotion />
+      </Section>
     </div>
   );
 };
