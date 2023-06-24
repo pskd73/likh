@@ -15,6 +15,10 @@ export type NoteSummary = {
   start?: number;
   end?: number;
   highlight?: string;
+  todo?: {
+    total: number;
+    checked: number;
+  };
 };
 
 export type EditorContextType = {
@@ -64,6 +68,8 @@ export type EditorContextType = {
   home: () => void;
   colorTheme: string;
   setColorTheme: StateSetter<string>;
+
+  getTodoNotes: () => NoteSummary[];
 };
 
 export const EditorContext = createContext<EditorContextType>(
@@ -308,6 +314,27 @@ export const useEditor = ({
     return hashtags;
   };
 
+  const getTodoNotes = () => {
+    const summaries: NoteSummary[] = [];
+    for (const summary of notesToShow) {
+      let [total, checked] = [0, 0];
+      for (const match of Array.from(
+        summary.note.text.matchAll(/\n? *- \[([ x])\].*/g)
+      )) {
+        checked += match[1] === "x" ? 1 : 0;
+        total += 1;
+      }
+      if (total) {
+        summary.todo = {
+          total,
+          checked,
+        };
+        summaries.push(summary);
+      }
+    }
+    return summaries;
+  };
+
   const _getLinkSuggestions = async () => {
     const notes: SavedNote[] = [];
     for (const meta of storage.notes) {
@@ -371,5 +398,7 @@ export const useEditor = ({
     home,
     colorTheme,
     setColorTheme,
+
+    getTodoNotes,
   };
 };
