@@ -16,6 +16,7 @@ import Settings from "./Settings";
 import Promotion from "./Promotion";
 import Calendar from "./HomeCalendar";
 import classNames from "classnames";
+import Logo from "../../Logo";
 
 const Col = ({ children, className, ...restProps }: ComponentProps<"div">) => {
   return (
@@ -51,12 +52,8 @@ const HomeScreen = () => {
       <div className="flex flex-col">
         <div className="space-y-4 w-full">
           <div className="text-5xl w-full flex items-center space-x-4 font-CrimsonText">
-            <div>
-              <img
-                src="/icons/icon-128x128.png"
-                alt="Retro Note"
-                className="w-12 opacity-80"
-              />
+            <div className="fill-primary w-12 max-h-full">
+              <Logo />
             </div>
             <span>
               Hello <span className="italic">there!</span>
