@@ -40,6 +40,26 @@ const ThemeBox = ({
   );
 };
 
+const ColorTheme = ({
+  theme,
+  active,
+  ...restProps
+}: ComponentProps<"div"> & { theme: string; active: boolean }) => {
+  return (
+    <div
+      className={classNames(
+        "w-10 h-10 rounded-full flex overflow-hidden border-2 border-primary",
+        "cursor-pointer",
+        { "border-opacity-100": active, "border-opacity-0": !active }
+      )}
+      {...restProps}
+    >
+      <div className={classNames("w-1/2 bg-base", theme)} />
+      <div className={classNames("w-1/2 bg-primary", theme)} />
+    </div>
+  );
+};
+
 const Settings = () => {
   const {
     showStats,
@@ -48,7 +68,11 @@ const Settings = () => {
     setTypewriterMode,
     themeName,
     setThemeName,
+    colorTheme,
+    setColorTheme,
   } = useContext(EditorContext);
+
+  const themes = ["base", "dark", "accent", "secondary"];
 
   return (
     <div>
@@ -97,6 +121,17 @@ const Settings = () => {
                   >
                     Serif
                   </ThemeBox>
+                </div>
+                <div className="flex space-x-4 py-4">
+                  {themes.map((theme) => (
+                    <div key={theme}>
+                      <ColorTheme
+                        theme={`theme-${theme}`}
+                        active={colorTheme === theme}
+                        onClick={() => setColorTheme(theme)}
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

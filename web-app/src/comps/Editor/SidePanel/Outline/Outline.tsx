@@ -1,5 +1,4 @@
 import {
-  ChangeEventHandler,
   useContext,
   useEffect,
   useMemo,
@@ -12,11 +11,8 @@ import ListWidget from "../../List";
 import Button from "../../../Button";
 import { TbExternalLink } from "react-icons/tb";
 import { isMobile } from "../../device";
-import { BiAlarm, BiLink } from "react-icons/bi";
+import { BiLink } from "react-icons/bi";
 import { scrollTo } from "../../scroll";
-import { getGoogleCalendarLink } from "../../Reminder";
-import { textToTitle } from "../../../../Note";
-import moment from "moment";
 import Remind from "./Remind";
 
 type OutlineTitle = {

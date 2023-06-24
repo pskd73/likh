@@ -62,6 +62,8 @@ export type EditorContextType = {
   setThemeName: StateSetter<string>;
 
   home: () => void;
+  colorTheme: string;
+  setColorTheme: StateSetter<string>;
 };
 
 export const EditorContext = createContext<EditorContextType>(
@@ -77,6 +79,7 @@ const { hook: useNoteId, value: defaultNoteId } =
 const { hook: useCountStatType } =
   PersistedState<CountStatType>("countStatType");
 const { hook: useThemeName } = PersistedState<Theme>("themeName");
+const { hook: useColorTheme } = PersistedState<Theme>("colorTheme");
 
 export const useEditor = ({
   storage,
@@ -101,6 +104,7 @@ export const useEditor = ({
     defaultNoteId
   );
   const [themeName, setThemeName] = useThemeName<string>("Basic");
+  const [colorTheme, setColorTheme] = useColorTheme<string>("base");
   const [notesToShow, setNotesToShow] = useState<NoteSummary[]>([]);
 
   useEffect(() => {
@@ -365,5 +369,7 @@ export const useEditor = ({
     setThemeName,
 
     home,
+    colorTheme,
+    setColorTheme,
   };
 };

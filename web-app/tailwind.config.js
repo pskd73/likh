@@ -34,6 +34,14 @@ module.exports = {
         primary: "#FFFFFA",
         base: "#0A1128",
       },
+      accent: {
+        primary: "#1F2041",
+        base: "#e9e9ec"
+      },
+      secondary: {
+        primary: "#fffffa",
+        base: "#486aa0"
+      }
     }),
   ],
 };

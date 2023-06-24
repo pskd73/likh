@@ -75,7 +75,14 @@ const EditorWindow = () => {
   return (
     <PouchDB.PouchContext.Provider value={pdb}>
       <EditorContext.Provider value={editorState}>
-        <div className="min-h-[100vh] bg-base text-primary flex theme-base">
+        <div
+          className={classNames("min-h-[100vh] bg-base text-primary flex", {
+            "theme-base": editorState.colorTheme === "base",
+            "theme-dark": editorState.colorTheme === "dark",
+            "theme-accent": editorState.colorTheme === "accent",
+            "theme-secondary": editorState.colorTheme === "secondary",
+          })}
+        >
           <SidePanel />
           <div
             style={{
