@@ -9,7 +9,7 @@ export const textToTitle = (text: string, max?: number) => {
   if (titleMatch) {
     cleaned = titleMatch[1];
   }
-  cleaned = cleaned.replaceAll(/\B(#[a-zA-Z_]+\b)(?!;)/g, "");
+  cleaned = cleaned.replaceAll(/\B(#[a-zA-Z_/]+)(?!;)/g, "");
   cleaned = cleaned.trim().split("\n")[0];
   return (
     cleaned.replaceAll("\n", " ").substring(0, max) +
