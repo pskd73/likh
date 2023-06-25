@@ -81,8 +81,6 @@ const { hook: useSideBar } = PersistedState("sideBar");
 const { hook: useSearchTerm } = PersistedState("searchTerm");
 const { hook: useTypewriterMode } = PersistedState("typewriterMode");
 const { hook: useShowStats } = PersistedState("showStats");
-const { hook: useNoteId, value: defaultNoteId } =
-  PersistedState<string>("noteId");
 const { hook: useCountStatType } =
   PersistedState<CountStatType>("countStatType");
 const { hook: useThemeName } = PersistedState<Theme>("themeName");
@@ -107,23 +105,9 @@ export const useEditor = ({
   }, [notes]);
   const [searchTerm, setSearchTerm] = useSearchTerm<string>("");
   const [rollHashTag, setRollHashTag] = useState<string>("");
-  const [noteId, setNoteId] = useNoteId<string | undefined | null>(
-    defaultNoteId
-  );
   const [themeName, setThemeName] = useThemeName<string>("Basic");
   const [colorTheme, setColorTheme] = useColorTheme<string>("base");
   const [notesToShow, setNotesToShow] = useState<NoteSummary[]>([]);
-
-  useEffect(() => {
-    (async () => {
-      if (defaultNoteId) {
-        const _note = await storage.getNote(defaultNoteId);
-        if (_note) {
-          return setNotes({ [defaultNoteId]: _note });
-        }
-      }
-    })();
-  }, [pdb.initSync]);
 
   useEffect(() => {
     (async () => {
@@ -183,12 +167,6 @@ export const useEditor = ({
     pdb.initSync,
     note?.reminder,
   ]);
-
-  useEffect(() => {
-    if (note) {
-      setNoteId(note.id);
-    }
-  }, [note]);
 
   useEffect(() => {
     const _notes = getHashTagNotes();
@@ -353,7 +331,6 @@ export const useEditor = ({
   const home = () => {
     setNotes({});
     setRollHashTag("");
-    setNoteId(null);
     setSideBar(undefined);
   };
 
