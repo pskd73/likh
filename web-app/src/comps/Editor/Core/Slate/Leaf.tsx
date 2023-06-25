@@ -155,6 +155,7 @@ function Leaf({
           onCheckboxToggle(leaf.path);
         }
       }}
+      spellCheck={!leaf.hashtag}
     >
       {children}
     </span>

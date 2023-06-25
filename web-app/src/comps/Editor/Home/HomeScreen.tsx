@@ -7,7 +7,7 @@ import {
 } from "react";
 import { EditorContext, NoteSummary } from "../Context";
 import QuickStart from "./QuickStart";
-import Journals from "./Journals";
+import Browse from "./Browse";
 import Notes from "./Notes";
 import Search from "./Search";
 import Reminders from "./Reminders";
@@ -90,8 +90,8 @@ const HomeScreen = () => {
           {todos.length > 0 && <Todos summaries={todos} />}
         </Col>
         <Col>
-          {!seeAll && Object.keys(hashtags).length > 0 && (
-            <Journals />
+          {Object.keys(hashtags).length > 0 && (
+            <Browse />
           )}
           {reminderNotes.length > 0 && (
             <Reminders reminderNotes={reminderNotes} />

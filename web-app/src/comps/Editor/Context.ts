@@ -6,6 +6,7 @@ import { LinkSuggestion, getLinkSuggestions } from "./Suggestion";
 import { PersistedState } from "./usePersistedState";
 import { Theme } from "./Theme";
 import { PouchContextType } from "./PouchDB";
+import { hashtag } from "./grammer";
 
 type StateSetter<T> = React.Dispatch<React.SetStateAction<T>>;
 type CountStatType = "words" | "readTime";
@@ -297,7 +298,8 @@ export const useEditor = ({
   const getHashtags = () => {
     const hashtagsMap: Record<string, Record<string, NoteSummary>> = {};
     for (const summary of notesToShow) {
-      const matches = summary.note.text.match(/\B\#\w\w+\b/g);
+      const re = new RegExp((hashtag as any).pattern, "g");
+      const matches = summary.note.text.match(re);
       if (matches) {
         for (const hashtag of matches) {
           if (!hashtagsMap[hashtag]) {
