@@ -178,7 +178,7 @@ export const checkbox: CustomGrammarValue = {
 };
 
 export const hashtag: CustomGrammarValue = {
-  pattern: /\B(#[a-zA-Z_]+\b)(?!;)/m,
+  pattern: /\B(#[a-zA-Z_/]+)(?!;)/m,
   greedy: true,
   inside: {},
 };
