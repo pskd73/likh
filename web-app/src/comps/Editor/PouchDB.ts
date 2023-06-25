@@ -27,7 +27,10 @@ export const MakePouch = (
   config: {
     username?: string;
     password?: string;
-    onStateChange?: (state: string) => void;
+    onStateChange?: (
+      state: string,
+      extra: { changeInfo?: PouchDB.Replication.SyncResult<{}> }
+    ) => void;
   }
 ): MyPouch => {
   const onStateChange = config.onStateChange || (() => {});
@@ -41,22 +44,22 @@ export const MakePouch = (
     );
     db.sync(remote, { live: true })
       .on("change", function (info) {
-        onStateChange("change");
+        onStateChange("change", { changeInfo: info });
       })
       .on("paused", function (err) {
-        onStateChange("paused");
+        onStateChange("paused", {});
       })
       .on("active", function () {
-        onStateChange("active");
+        onStateChange("active", {});
       })
       .on("denied", function (err) {
-        onStateChange("denied");
+        onStateChange("denied", {});
       })
       .on("complete", function (info) {
-        onStateChange("complete");
+        onStateChange("complete", {});
       })
       .on("error", function (err) {
-        onStateChange("error");
+        onStateChange("error", {});
       });
   }
 
@@ -171,6 +174,7 @@ export type PouchContextType = {
   syncState: string;
   nSync: number;
   initSync: boolean;
+  pulled?: string;
 };
 
 export const PouchContext = createContext({} as PouchContextType);
@@ -183,13 +187,21 @@ export const usePouchDb = () => {
     sUsername && sPassword ? "change" : "paused"
   );
   const [nSync, setNSync] = useState(0);
+  const [pulled, setPulled] = useState<string>();
   const db = useMemo(() => {
+    let pulled: string | undefined = undefined;
     return MakePouch(secret, {
       username,
       password,
-      onStateChange: (state) => {
+      onStateChange: (state, extra) => {
         setSyncState(state);
+        if (state === "change" && extra.changeInfo?.direction === "pull") {
+          pulled = extra.changeInfo.change.docs.map((d) => d._id).join(",");
+          setPulled(undefined);
+        }
         if (state === "paused") {
+          setPulled(pulled);
+          pulled = undefined;
           setNSync((n) => {
             return n + 1;
           });
@@ -209,5 +221,6 @@ export const usePouchDb = () => {
     syncState,
     nSync,
     initSync: nSync > 0,
+    pulled,
   };
 };

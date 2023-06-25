@@ -12,7 +12,6 @@ import { scrollTo } from "./scroll";
 import { getImage } from "./db";
 import { Themes } from "./Theme";
 import { blobToB64 } from "../../util";
-import { PouchContext } from "./PouchDB";
 import { textToTitle } from "../../Note";
 
 const dtToIso = (dt: Date) => {
@@ -36,7 +35,6 @@ const EditableNote = () => {
     setNote,
     getHashtags,
   } = useContext(EditorContext);
-  const { initSync } = useContext(PouchContext);
   const scroll = useMiddle(ref, [typewriterMode], {
     typeWriter: typewriterMode,
   });
@@ -199,7 +197,6 @@ const EditableNote = () => {
                 </div>
               )}
               <Editor
-                key={`${id}_${initSync}`}
                 containerClassName={`note-${id}`}
                 onChange={(v) => handleChange(id, v)}
                 initValue={notes[id].serialized}

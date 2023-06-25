@@ -1,5 +1,4 @@
 import "./db";
-import { Suggestion } from "./Core/Slate/Editor";
 import { EditorContext, useEditor } from "./Context";
 import SidePanel from "./SidePanel/SidePanel";
 import StatusBar from "./StatusBar/StatusBar";
@@ -8,7 +7,6 @@ import { useEffect, useMemo, useState } from "react";
 import useShortcuts from "./useShortcuts";
 import classNames from "classnames";
 import "./Core/test";
-import { textToTitle } from "../../Note";
 import { iOS, isMobile } from "./device";
 import EditableNote from "./EditableNote";
 import { init } from "./db";
