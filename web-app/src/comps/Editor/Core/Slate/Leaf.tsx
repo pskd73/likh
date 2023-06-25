@@ -3,6 +3,7 @@ import { Theme } from "../../Theme";
 import { ParsedListText, parseListText } from "../List";
 import classNames from "classnames";
 import slugify from "slugify";
+import moment from "moment";
 
 function Leaf({
   attributes,
@@ -93,7 +94,26 @@ function Leaf({
 
     // image
     "hidden image": leaf.image && !leaf.alt && !leaf.focused,
+
+    // datetime
+    "bg-primary bg-opacity-20 px-3 py-1 rounded-full text-sm": leaf.datetime,
   });
+
+  if (leaf.datetime) {
+    return (
+      <span {...attributes} className={className}>
+        {!leaf.punctuation && (
+          <span contentEditable={false} style={{ userSelect: "none" }}>
+            {moment(leaf.text).fromNow()}
+            {leaf.focused && " - "}
+          </span>
+        )}
+        <span className={classNames("opacity-50", { hidden: !leaf.focused })}>
+          {children}
+        </span>
+      </span>
+    );
+  }
 
   if (leaf.code) {
     const { text, code, ...rest } = leaf;
