@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from "react";
+import { ReactElement, useContext, useMemo, useState } from "react";
 import List from "../List";
 import { ListContainer, Title } from "./Common";
 import { EditorContext, NoteSummary } from "../Context";
@@ -8,6 +8,7 @@ import {
   BiFolderOpen,
   BiMinus,
   BiPlus,
+  BiBook,
 } from "react-icons/bi";
 import Button from "../../Button";
 import { textToTitle } from "../../../Note";
@@ -55,11 +56,13 @@ const Folders = <T extends unknown>({
   prefix,
   onFileClick,
   toTitle,
+  inject,
 }: {
   map: Record<string, T[]>;
   prefix: string;
   onFileClick: (file: T) => void;
   toTitle: (file: T) => string;
+  inject: (prefix: string, hashtag: string) => ReactElement | null;
 }) => {
   const [expanded, setExpanded] = useState<string[]>([]);
 
@@ -94,11 +97,13 @@ const Folders = <T extends unknown>({
             </div>
             {exp && (
               <div className="ml-2 pl-2 border-l border-primary border-opacity-30">
+                {inject(prefix, hashtag)}
                 <Folders
                   onFileClick={onFileClick}
                   map={map}
                   prefix={prefix + hashtag + "/"}
                   toTitle={toTitle}
+                  inject={inject}
                 />
                 <Files
                   onClick={onFileClick}
@@ -115,10 +120,15 @@ const Folders = <T extends unknown>({
 };
 
 const Browse = () => {
-  const { notesToShow, note, getHashtags, setNote } = useContext(EditorContext);
+  const { notesToShow, note, getHashtags, setNote, setRollHashTag } =
+    useContext(EditorContext);
   const hashtags = useMemo<Record<string, NoteSummary[]>>(() => {
     return getHashtags();
   }, [notesToShow, note]);
+
+  const handleJournal = (hashtag: string) => {
+    setRollHashTag(hashtag);
+  };
 
   return (
     <div>
@@ -129,6 +139,26 @@ const Browse = () => {
           map={hashtags}
           prefix={""}
           toTitle={(summary) => textToTitle(summary.note.text, 20)}
+          inject={(prefix, hashtag) => {
+            if (prefix === "#journal/") {
+              return (
+                <List>
+                  <List.Item
+                    withIcon
+                    onClick={() => handleJournal(prefix + hashtag)}
+                  >
+                    <List.Item.Icon>
+                      <BiBook />
+                    </List.Item.Icon>
+                    <span className="font-CrimsonText italic">
+                      Journal it &rarr;
+                    </span>
+                  </List.Item>
+                </List>
+              );
+            }
+            return null;
+          }}
         />
       </ListContainer>
     </div>
