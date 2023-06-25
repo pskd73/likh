@@ -228,8 +228,8 @@ export const ContextMenu = forwardRef<HTMLDivElement, ComponentProps<"div">>(
         className={twMerge(
           className,
           classNames(
-            "absolute shadow-lg rounded-lg overflow-hidden",
-            "z-10 bg-base"
+            "absolute shadow-md rounded-lg overflow-hidden",
+            "z-10 bg-base border border-primary border-opacity-10"
           )
         )}
         style={{ width: MENU_WIDTH, ...style }}

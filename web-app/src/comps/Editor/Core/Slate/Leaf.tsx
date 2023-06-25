@@ -96,7 +96,7 @@ function Leaf({
     "hidden image": leaf.image && !leaf.alt && !leaf.focused,
 
     // datetime
-    "bg-primary bg-opacity-20 px-3 py-1 rounded-full text-sm": leaf.datetime,
+    "bg-primary bg-opacity-20 px-3 py-1 rounded-full inline-block mb-1 text-sm": leaf.datetime,
   });
 
   if (leaf.datetime) {
