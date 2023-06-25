@@ -18,7 +18,8 @@ const folderize = (paths: string[], prefix: string) => {
     .map((path) => {
       const suffix = path.replace(prefix, "");
       return suffix.split("/")[0];
-    });
+    })
+    .filter((val, i, arr) => arr.indexOf(val) === i);
 };
 
 const Files = <T extends unknown>({
