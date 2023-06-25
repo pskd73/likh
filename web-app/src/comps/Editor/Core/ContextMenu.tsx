@@ -13,6 +13,7 @@ import { Range, Editor } from "slate";
 import { ReactEditor } from "slate-react";
 import { twMerge } from "tailwind-merge";
 import classNames from "classnames";
+import { getCurrentWord } from "./Word";
 
 escape.matchOperatorsRe = /[|\\{}()[\]^$+*?.]/g;
 function escape(str: string) {
@@ -93,51 +94,19 @@ export function useContextMenu(
         Range.isCollapsed(selection) &&
         editor.selection?.anchor.offset !== 0
       ) {
-        const [start] = Range.edges(selection);
-        const bfr = Editor.before(editor, start, {
-          distance: prefix.length,
-          unit: "character",
-        });
-        const bfrRange = bfr && Editor.range(editor, bfr, start);
-        const bfrText = bfrRange && Editor.string(editor, bfrRange);
+        const { currentWord, currentRange } = getCurrentWord(editor);
 
-        if (bfrText === prefix) {
-          setTarget(bfrRange);
+        const beforeMatch =
+          currentWord &&
+          currentWord.match(new RegExp(`^${escape(prefix)}(.*)$`));
+
+        if (beforeMatch) {
+          setTarget(currentRange);
           setIndex(0);
-          setSearch("");
-          setActivePrefix(prefix);
           showing = true;
+          setActivePrefix(prefix);
+          setSearch(beforeMatch[1]);
           break;
-        } else {
-          const wordBefore = Editor.before(editor, start, { unit: "word" });
-          const before =
-            wordBefore &&
-            Editor.before(editor, wordBefore, {
-              distance: prefix.length,
-              unit: "character",
-            });
-          const beforeRange = before && Editor.range(editor, before, start);
-          const beforeText = beforeRange && Editor.string(editor, beforeRange);
-          const beforeMatch =
-            beforeText &&
-            beforeText.match(new RegExp(`^${escape(prefix)}(\\w*)$`));
-
-          if (beforeMatch) {
-            setTarget(beforeRange);
-            setIndex(0);
-            showing = true;
-            setActivePrefix(prefix);
-
-            const after = Editor.after(editor, start);
-            const afterRange = Editor.range(editor, start, after);
-            const afterText = Editor.string(editor, afterRange);
-            const afterMatch = afterText.match(/^(\s|$)/);
-
-            if (afterMatch) {
-              setSearch(beforeMatch[1]);
-            }
-            break;
-          }
         }
       }
     }

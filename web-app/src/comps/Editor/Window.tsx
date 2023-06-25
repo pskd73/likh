@@ -35,39 +35,6 @@ const EditorWindow = () => {
     })();
   }, []);
 
-  const getSuggestions = async (prefix: string, term: string) => {
-    const suggestions: Suggestion[] = [];
-    if (prefix === "[[") {
-      for (const noteMeta of editorState.storage.notes) {
-        if (noteMeta.id === editorState.note?.id) continue;
-        const note = await editorState.storage.getNote(noteMeta.id);
-        if (note) {
-          const title = textToTitle(note.text, 50);
-          if (title.toLowerCase().includes(term.toLowerCase())) {
-            const cleanedTitle = title.trim();
-            suggestions.push({
-              title: cleanedTitle,
-              id: note.id,
-              replace: `[[${cleanedTitle}]](${note.id}) `,
-            });
-          }
-        }
-      }
-    } else if (prefix === "#") {
-      Object.keys(editorState.getHashtags()).forEach((hashtag) => {
-        const tag = hashtag.replace("#", "");
-        if (term === tag) return;
-        if (tag.toLowerCase().includes(term.toLocaleLowerCase())) {
-          suggestions.push({
-            title: `${hashtag}`,
-            replace: `${hashtag} `,
-          });
-        }
-      });
-    }
-    return suggestions;
-  };
-
   if (!dbInitiated) {
     return null;
   }
@@ -104,9 +71,7 @@ const EditorWindow = () => {
               <div
                 className={classNames("w-full max-w-[1000px] md:w-[1000px]")}
               >
-                {editorState.note && (
-                  <EditableNote getSuggestions={getSuggestions} />
-                )}
+                {editorState.note && <EditableNote />}
                 {!editorState.note && <HomeScreen />}
               </div>
             </div>

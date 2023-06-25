@@ -13,12 +13,13 @@ import { getImage } from "./db";
 import { Themes } from "./Theme";
 import { blobToB64 } from "../../util";
 import { PouchContext } from "./PouchDB";
+import { textToTitle } from "../../Note";
 
-const EditableNote = ({
-  getSuggestions,
-}: {
-  getSuggestions: (prefix: string, term: string) => Promise<Suggestion[]>;
-}) => {
+const dtToIso = (dt: Date) => {
+  return moment(dt).format("YYYY-MM-DDThh:mm:ss");
+};
+
+const EditableNote = () => {
   const ref = useRef<HTMLDivElement>(null);
   const {
     notes,
@@ -33,6 +34,7 @@ const EditableNote = ({
     searchTerm,
     themeName,
     setNote,
+    getHashtags,
   } = useContext(EditorContext);
   const { initSync } = useContext(PouchContext);
   const scroll = useMiddle(ref, [typewriterMode], {
@@ -99,6 +101,73 @@ const EditableNote = ({
     scrollTo({ noteId: savedNote.id });
   };
 
+  const getSuggestions = async (prefix: string, term: string) => {
+    const suggestions: Suggestion[] = [];
+    if (prefix === "[[") {
+      for (const noteMeta of storage.notes) {
+        if (noteMeta.id === note?.id) continue;
+        const _note = await storage.getNote(noteMeta.id);
+        if (_note) {
+          const title = textToTitle(_note.text, 50);
+          if (title.toLowerCase().includes(term.toLowerCase())) {
+            const cleanedTitle = title.trim();
+            suggestions.push({
+              title: cleanedTitle,
+              id: _note.id,
+              replace: `[[${cleanedTitle}]](${_note.id}) `,
+            });
+          }
+        }
+      }
+    } else if (prefix === "#") {
+      Object.keys(getHashtags([note!.id])).forEach((hashtag) => {
+        const tag = hashtag.replace("#", "");
+        if (term === tag) return;
+        if (tag.toLowerCase().includes(term.toLocaleLowerCase())) {
+          suggestions.push({
+            title: `${hashtag}`,
+            replace: `${hashtag} `,
+          });
+        }
+      });
+    } else if (prefix === "@") {
+      const amPmMatch = term.match(/(\d+)([ap]m)/);
+      if (amPmMatch) {
+        let tfHour = Number(amPmMatch[1]);
+        if (amPmMatch[2] === "pm") {
+          tfHour += 12;
+        }
+        const now = new Date();
+        let dt = moment(now).hour(tfHour).minute(0).second(0);
+        if (dt.isBefore(now)) {
+          dt = dt.add(1, "days");
+        }
+        const iso = dtToIso(dt.toDate());
+        suggestions.push({
+          title: `Next ${term}`,
+          replace: `${iso} `,
+        });
+      }
+      if ("tomorrow".startsWith(term.toLowerCase())) {
+        const dt = moment(new Date()).add(1, "day");
+        const iso = dtToIso(dt.toDate());
+        suggestions.push({
+          title: `Tomorrow - ${iso}`,
+          replace: `${iso} `,
+        });
+      }
+      if (term.match(/\d{4}\-\d{2}\-\d{2}/)) {
+        const dt = moment(term, "YYYY-MM-DD");
+        const iso = dtToIso(dt.toDate());
+        suggestions.push({
+          title: `${iso}`,
+          replace: `${iso} `,
+        });
+      }
+    }
+    return suggestions;
+  };
+
   return (
     <div ref={ref} style={{ ...scroll.style }} className="space-y-6 md:px-20">
       {Object.values(notes)
@@ -138,6 +207,7 @@ const EditableNote = ({
                 onNoteLinkClick={handleNoteLinkClick}
                 getSuggestions={getSuggestions}
                 highlight={searchTerm}
+                contextMenuPrefixes={["[[", "#", "@"]}
                 getSavedImg={async (attachmentId, imgType) => {
                   if (note && imgType === "attachment") {
                     const blob = await storage.pouch.attachment(

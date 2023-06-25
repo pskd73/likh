@@ -55,7 +55,7 @@ export type EditorContextType = {
   getNoteByTitle: (title: string) => void;
   setOrNewNote: (title: string) => void;
 
-  getHashtags: () => Record<string, NoteSummary[]>;
+  getHashtags: (exclude?: string[]) => Record<string, NoteSummary[]>;
 
   getLinkSuggestions: () => Promise<LinkSuggestion[]>;
 
@@ -295,9 +295,11 @@ export const useEditor = ({
     });
   };
 
-  const getHashtags = () => {
+  const getHashtags = (exclude?: string[]) => {
+    exclude = exclude || [];
     const hashtagsMap: Record<string, Record<string, NoteSummary>> = {};
     for (const summary of notesToShow) {
+      if (exclude.includes(summary.note.id)) continue;
       const re = new RegExp((hashtag as any).pattern, "g");
       const matches = summary.note.text.match(re);
       if (matches) {

@@ -67,6 +67,7 @@ const Editor = ({
   getSavedImg,
   containerClassName,
   theme,
+  contextMenuPrefixes,
 }: {
   onChange: (val: {
     value: Descendant[];
@@ -84,6 +85,7 @@ const Editor = ({
   handleSaveImg?: (img: PastedImg) => Promise<SavedImg | undefined>;
   getSavedImg?: (id: string, imgType: string) => Promise<SavedImg>;
   theme?: Theme;
+  contextMenuPrefixes?: string[];
 }) => {
   theme = theme || Themes.Basic;
 
@@ -93,7 +95,7 @@ const Editor = ({
   );
   const contextMenu = useContextMenu(
     editor,
-    ["[[", "#"],
+    contextMenuPrefixes || [],
     ({ index, target, prefix }) => {
       handleContextMenuSelect(index, target, prefix);
     }
