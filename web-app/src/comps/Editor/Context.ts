@@ -164,7 +164,6 @@ export const useEditor = ({
     storage.notes,
     searchTerm,
     (note?.text.length || 0) <= 50 ? storage.lastSavedAt : undefined,
-    pdb.initSync,
     note?.reminder,
   ]);
 
@@ -174,6 +173,24 @@ export const useEditor = ({
       setNotes(_notes);
     }
   }, [rollHashTag]);
+
+  useEffect(() => {
+    if (pdb.pulled) {
+      const pulledIds = pdb.pulled.split(",");
+      const currentIds = Object.keys(notes);
+      const intersection = pulledIds.filter((id) => currentIds.includes(id));
+      if (intersection.length) {
+        const newNotes: Record<string, SavedNote> = {};
+        Object.keys(notes).forEach(async (id) => {
+          const _note = await storage.getNote(id);
+          if (_note) {
+            newNotes[id] = _note;
+          }
+        });
+        setNotes(newNotes);
+      }
+    }
+  }, [pdb.pulled]);
 
   const getHashTagNotes = () => {
     if (rollHashTag) {

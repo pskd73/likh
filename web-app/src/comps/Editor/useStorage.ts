@@ -35,7 +35,7 @@ const useStorage = (pdb: Pouch.PouchContextType): Storage => {
     (async () => {
       setNotes((await pdb.db.all()).rows);
     })();
-  }, [pdb.initSync]);
+  }, [pdb.pulled]);
 
   const saveNoteImmediate = (note: SavedNote) => {
     pdb.db.put(note.id, (doc) => {
