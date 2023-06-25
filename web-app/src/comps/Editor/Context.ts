@@ -38,7 +38,7 @@ export type EditorContextType = {
   setCountStatType: StateSetter<CountStatType>;
 
   note: SavedNote | undefined;
-  setNote: (note: SavedNote, replace?: boolean) => void;
+  setNote: (note: SavedNote, replace?: boolean) => Promise<void>;
   updateNote: (note: SavedNote) => void;
 
   notes: Record<string, SavedNote>;
@@ -191,12 +191,14 @@ export const useEditor = ({
     }
   };
 
-  const setNote = (note: SavedNote, replace: boolean = true) => {
+  const setNote = async (note: SavedNote, replace: boolean = true) => {
+    const _note = await storage.getNote(note.id);
+    if (!_note) return;
     let updatedNotes = { ...notes };
     if (replace) {
       updatedNotes = {};
     }
-    updatedNotes[note.id] = note;
+    updatedNotes[note.id] = _note;
     setNotes(updatedNotes);
   };
 
