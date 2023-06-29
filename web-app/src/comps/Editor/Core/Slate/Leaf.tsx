@@ -4,6 +4,7 @@ import { ParsedListText, parseListText } from "../List";
 import classNames from "classnames";
 import slugify from "slugify";
 import moment from "moment";
+import { BiTimeFive } from "react-icons/bi";
 
 function Leaf({
   attributes,
@@ -96,16 +97,25 @@ function Leaf({
     "hidden image": leaf.image && !leaf.alt && !leaf.focused,
 
     // datetime
-    "bg-primary bg-opacity-20 px-3 py-1 rounded-full inline-block mb-1 text-sm": leaf.datetime,
+    "bg-primary bg-opacity-20 px-3 py-1 rounded-full inline-block mb-1 text-sm":
+      leaf.datetime,
+    "inline-flex items-center": leaf.datetime,
   });
 
   if (leaf.datetime) {
     return (
       <span {...attributes} className={className}>
         {!leaf.punctuation && (
-          <span contentEditable={false} style={{ userSelect: "none" }}>
-            {moment(leaf.text).fromNow()}
-            {leaf.focused && " - "}
+          <span
+            contentEditable={false}
+            style={{ userSelect: "none" }}
+            className="inline-flex items-center space-x-1"
+          >
+            <BiTimeFive />
+            <span>
+              {moment(leaf.text).fromNow()}
+              {leaf.focused && " - "}
+            </span>
           </span>
         )}
         <span className={classNames("opacity-50", { hidden: !leaf.focused })}>
