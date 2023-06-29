@@ -65,7 +65,6 @@ const SlateElement = ({
         className={classNames({
           "px-6 bg-primary bg-opacity-10 py-2 italic": quote,
           "border-l-4 border-primary border-opacity-30": quote,
-          "pb-10": img?.url,
           "mb-2": !quote,
         })}
         style={style}

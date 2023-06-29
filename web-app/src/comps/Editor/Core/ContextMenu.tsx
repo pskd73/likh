@@ -139,6 +139,9 @@ export function useContextMenu(
           case "Escape":
             e.preventDefault();
             setTarget(undefined);
+            setActivePrefix(undefined);
+            setSearch("");
+            setIndex(0);
             break;
         }
       }
@@ -162,11 +165,16 @@ export function useContextMenu(
     const targetLi = document.getElementById(`suggestion-item-${idx}`);
 
     if (list && targetLi) {
-      if (
-        list.scrollTop + MENU_HEIGHT - 20 < targetLi.offsetTop ||
-        list.scrollTop > targetLi.offsetTop
-      ) {
-        list.scrollTop = targetLi.offsetTop;
+      const targetRect = targetLi?.getBoundingClientRect();
+
+      const after =
+        targetLi.offsetTop + targetRect.height - (list.scrollTop + MENU_HEIGHT);
+      const before = targetLi.offsetTop - list.scrollTop;
+
+      if (after > 0) {
+        list.scrollTop += after;
+      } else if (before < 0) {
+        list.scrollTop += before;
       }
     }
   };
