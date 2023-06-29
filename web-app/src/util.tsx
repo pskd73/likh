@@ -53,3 +53,8 @@ export function b64toBlob(b64Data: string, contentType = "", sliceSize = 512) {
   const blob = new Blob(byteArrays, { type: contentType });
   return blob;
 }
+
+escape.matchOperatorsRe = /[|\\{}()[\]^$+*?.]/g;
+export function escape(str: string) {
+  return str.replace(escape.matchOperatorsRe, "\\$&");
+}

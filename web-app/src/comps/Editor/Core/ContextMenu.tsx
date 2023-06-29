@@ -9,16 +9,12 @@ import {
   useState,
 } from "react";
 import { CustomEditor } from "./Core";
-import { Range, Editor } from "slate";
+import { Range } from "slate";
 import { ReactEditor } from "slate-react";
 import { twMerge } from "tailwind-merge";
 import classNames from "classnames";
 import { getCurrentWord } from "./Word";
-
-escape.matchOperatorsRe = /[|\\{}()[\]^$+*?.]/g;
-function escape(str: string) {
-  return str.replace(escape.matchOperatorsRe, "\\$&");
-}
+import { escape } from "../../../util";
 
 const MENU_WIDTH = 300;
 const MENU_HEIGHT = 300;

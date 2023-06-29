@@ -5,10 +5,11 @@ import List from "../List";
 import { BiArrowFromBottom, BiArrowFromTop, BiFile } from "react-icons/bi";
 import { textToTitle } from "../../../Note";
 import { highlight, makeExtractor } from "../Marker";
+import { escape } from "../../../util";
 
 const Highligher = (word: string) =>
   makeExtractor(
-    () => RegExp(word, "i"),
+    () => RegExp(escape(word), "i"),
     (text: string) => ({
       type: "element",
       content: <span className="bg-primary text-base text-xs">{text}</span>,
