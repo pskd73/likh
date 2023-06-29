@@ -90,9 +90,7 @@ const HomeScreen = () => {
           {todos.length > 0 && <Todos summaries={todos} />}
         </Col>
         <Col>
-          {Object.keys(hashtags).length > 0 && (
-            <Browse />
-          )}
+          {Object.keys(hashtags).length > 0 && <Browse />}
           {reminderNotes.length > 0 && (
             <Reminders reminderNotes={reminderNotes} />
           )}
