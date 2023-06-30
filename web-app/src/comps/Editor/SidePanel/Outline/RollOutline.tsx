@@ -82,7 +82,7 @@ const RollOutline = () => {
           <span>
             <BiHash />
           </span>
-          <span>{rollHashTag.replace(/^#+/, "")}</span>
+          <span>{rollHashTag.replace(/^#+/, "").split("/").pop()}</span>
         </span>
         <hr />
       </div>

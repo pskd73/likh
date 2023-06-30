@@ -28,8 +28,9 @@ const SidePanel = () => {
       )}
       <div
         className={classNames(
-          "transition-all shadow-lg rounded-r-lg z-30 h-[100vh] overflow-y-scroll scrollbar-hide",
-          "bg-base bg-opacity-100 border-r border-primary border-opacity-20",
+          "transition-all z-30 h-[100vh] overflow-y-scroll scrollbar-hide",
+          "bg-primary bg-opacity-10",
+          "border-r-2 border-primary border-opacity-20",
           "fixed top-0",
           {
             "w-[0px] -left-1": !sideBar,
