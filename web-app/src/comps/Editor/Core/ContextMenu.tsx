@@ -75,6 +75,7 @@ export function useContextMenu(
   }, [editor, index, activePrefix, search, count, target]);
 
   const handleScroll = useCallback(() => {
+    setActivePrefix(undefined);
     setTarget(undefined);
     setSearch("");
     setIndex(0);

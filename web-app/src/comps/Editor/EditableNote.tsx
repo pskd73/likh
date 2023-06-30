@@ -142,8 +142,8 @@ const EditableNote = () => {
         }
         const iso = dtToIso(dt.toDate());
         suggestions.push({
-          title: `Next ${term}`,
-          replace: `${iso} `,
+          title: `Next ${term} - ${iso}`,
+          replace: `@${iso} `,
         });
       }
       if ("tomorrow".startsWith(term.toLowerCase())) {
@@ -151,7 +151,7 @@ const EditableNote = () => {
         const iso = dtToIso(dt.toDate());
         suggestions.push({
           title: `Tomorrow - ${iso}`,
-          replace: `${iso} `,
+          replace: `@${iso} `,
         });
       }
       if (term.match(/\d{4}\-\d{2}\-\d{2}/)) {
@@ -159,7 +159,7 @@ const EditableNote = () => {
         const iso = dtToIso(dt.toDate());
         suggestions.push({
           title: `${iso}`,
-          replace: `${iso} `,
+          replace: `@${iso} `,
         });
       }
     }

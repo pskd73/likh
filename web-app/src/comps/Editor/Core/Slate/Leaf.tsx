@@ -113,7 +113,7 @@ function Leaf({
           >
             <BiTimeFive />
             <span>
-              {moment(leaf.text).fromNow()}
+              {moment(leaf.text.replace("@", "")).fromNow()}
               {leaf.focused && " - "}
             </span>
           </span>
