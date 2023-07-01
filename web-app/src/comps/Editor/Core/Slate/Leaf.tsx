@@ -4,7 +4,7 @@ import { ParsedListText, parseListText } from "../List";
 import classNames from "classnames";
 import slugify from "slugify";
 import moment from "moment";
-import { BiTimeFive } from "react-icons/bi";
+import { BiFolder, BiTimeFive } from "react-icons/bi";
 
 function Leaf({
   attributes,
@@ -75,9 +75,6 @@ function Leaf({
     // link
     "underline cursor-pointer": leaf.link,
 
-    // hashtag
-    "bg-primary bg-opacity-20 p-1 px-3 rounded-full": leaf.hashtag,
-
     // notelink
     "underline cursor-pointer nl": leaf.notelink && !leaf.punctuation,
     notelink: leaf.notelink && !leaf.punctuation && !leaf.notelinkId,
@@ -96,10 +93,10 @@ function Leaf({
     // image
     "hidden image": leaf.image && !leaf.alt && !leaf.focused,
 
-    // datetime
+    // datetime and hashtag
     "bg-primary bg-opacity-20 px-3 py-1 rounded-full inline-block mb-1 text-sm":
-      leaf.datetime,
-    "inline-flex items-center": leaf.datetime,
+      leaf.datetime || leaf.hashtag,
+    "inline-flex items-center text-xs": leaf.datetime || leaf.hashtag,
   });
 
   if (leaf.datetime) {
@@ -111,7 +108,9 @@ function Leaf({
             style={{ userSelect: "none" }}
             className="inline-flex items-center space-x-1"
           >
-            <BiTimeFive />
+            <span>
+              <BiTimeFive />
+            </span>
             <span>
               {moment(leaf.text.replace("@", "")).fromNow()}
               {leaf.focused && " - "}
@@ -121,6 +120,25 @@ function Leaf({
         <span className={classNames("opacity-50", { hidden: !leaf.focused })}>
           {children}
         </span>
+      </span>
+    );
+  }
+
+  if (leaf.hashtag) {
+    return (
+      <span {...attributes} className={className}>
+        {!leaf.punctuation && (
+          <span
+            contentEditable={false}
+            style={{ userSelect: "none" }}
+            className="inline-flex items-center mr-1"
+          >
+            <span>
+              <BiFolder />
+            </span>
+          </span>
+        )}
+        <span>{children}</span>
       </span>
     );
   }
