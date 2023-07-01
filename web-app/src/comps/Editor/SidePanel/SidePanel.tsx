@@ -6,14 +6,19 @@ import Shortcuts from "./Shortcuts";
 import { isMobile } from "../device";
 import RollOutline from "./RollOutline";
 import Storage from "./Storage";
-import { BiChevronLeft, BiChevronRight, BiSidebar } from "react-icons/bi";
+import {
+  BiChevronLeft,
+  BiChevronRight,
+  BiHomeSmile,
+  BiSidebar,
+} from "react-icons/bi";
 import Button from "../../Button";
 import Browse from "../Home/Browse";
 import Links from "./Links";
 import { WithTitle } from "./Common";
 
 const SidePanel = () => {
-  const { sideBar, setSideBar, isRoll } = useContext(EditorContext);
+  const { sideBar, setSideBar, isRoll, home, note } = useContext(EditorContext);
 
   return (
     <>
@@ -45,33 +50,63 @@ const SidePanel = () => {
           }
         )}
       >
-        <div className="flex p-2 text-xl justify-end border-b border-primary border-opacity-10">
-          <Button lite>
-            <BiChevronLeft />
-          </Button>
-          <Button lite>
-            <BiChevronRight />
-          </Button>
-          <Button lite>
-            <BiSidebar />
-          </Button>
-        </div>
-        <div
-          style={{ maxHeight: "calc(100vh - 50px)" }}
-          className="overflow-scroll scrollbar-hide"
-        >
-          <div className={classNames("max-w-full overflow-hidden")}>
-            <Outline />
-            <Links />
-            {isRoll && <RollOutline />}
-            {sideBar === "shortcuts" && <Shortcuts />}
-            {sideBar === "storage" && <Storage />}
+        {/* Minimized */}
+        {!sideBar && (
+          <div className="flex justify-end">
+            <div className="w-[30px]">
+              <Button
+                lite
+                className="py-2"
+                onClick={() => setSideBar("outline")}
+              >
+                <BiSidebar />
+              </Button>
+              {note && (
+                <Button lite className="py-2" onClick={home}>
+                  <BiHomeSmile />
+                </Button>
+              )}
+            </div>
           </div>
+        )}
 
-          <WithTitle title="Browse">
-            <Browse lite />
-          </WithTitle>
-        </div>
+        {/* Expanded */}
+        {sideBar && (
+          <div>
+            <div
+              className={classNames(
+                "flex p-2 text-xl justify-end",
+                "border-b border-primary border-opacity-10"
+              )}
+            >
+              <Button lite>
+                <BiChevronLeft />
+              </Button>
+              <Button lite>
+                <BiChevronRight />
+              </Button>
+              <Button lite onClick={() => setSideBar(undefined)}>
+                <BiSidebar />
+              </Button>
+            </div>
+            <div
+              style={{ maxHeight: "calc(100vh - 50px)" }}
+              className="overflow-scroll scrollbar-hide"
+            >
+              <div className={classNames("max-w-full overflow-hidden")}>
+                <Outline />
+                <Links />
+                {isRoll && <RollOutline />}
+                {sideBar === "shortcuts" && <Shortcuts />}
+                {sideBar === "storage" && <Storage />}
+              </div>
+
+              <WithTitle title="Browse">
+                <Browse lite />
+              </WithTitle>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

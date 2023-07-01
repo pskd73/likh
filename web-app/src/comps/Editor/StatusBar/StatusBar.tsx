@@ -78,14 +78,8 @@ const StatusBar = ({
       )}
       style={{ height: height + padding, paddingBottom: padding }}
     >
+      {/* Left */}
       <div className="flex justify-start h-full">
-        <Button
-          lite={!fullScreen}
-          className="rounded-none"
-          onClick={handleFullScreen}
-        >
-          <BiFullscreen />
-        </Button>
         <Button
           lite={sideBar !== "storage"}
           className="rounded-none"
@@ -95,23 +89,9 @@ const StatusBar = ({
         >
           <SyncIcon state={syncState} />
         </Button>
-        {note && (
-          <Button
-            lite={sideBar !== "outline"}
-            className="rounded-none"
-            onClick={() =>
-              setSideBar((b) => (b === "outline" ? undefined : "outline"))
-            }
-          >
-            <BiSpreadsheet />
-          </Button>
-        )}
-        {note && (
-          <Button lite className="rounded-none" onClick={home}>
-            <BiHomeSmile />
-          </Button>
-        )}
       </div>
+
+      {/* Right */}
       <div className="flex justify-end h-full">
         {note && !isRoll && <Delete />}
         {note && (
@@ -120,6 +100,13 @@ const StatusBar = ({
           </Button>
         )}
         {showStats && note && <TextCounter text={note.text} />}
+        <Button
+          lite={!fullScreen}
+          className="rounded-none"
+          onClick={handleFullScreen}
+        >
+          <BiFullscreen />
+        </Button>
       </div>
     </div>
   );
