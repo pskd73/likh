@@ -46,7 +46,7 @@ const Links = () => {
             <span>
               <BiLink />
             </span>
-            <span className="hover:underline cursor-pointer">{link.text}</span>
+            <span>{link.text}</span>
           </List.Item>
         ))}
       </List>

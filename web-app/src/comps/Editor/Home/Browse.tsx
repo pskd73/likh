@@ -13,6 +13,7 @@ import {
 import Button from "../../Button";
 import { textToTitle } from "../../../Note";
 import classNames from "classnames";
+import { SavedNote } from "../type";
 
 const folderize = (paths: string[], prefix: string) => {
   return paths
@@ -120,7 +121,13 @@ const Folders = <T extends unknown>({
   );
 };
 
-const Browse = ({ lite }: { lite?: boolean }) => {
+const Browse = ({
+  lite,
+  onNoteClick,
+}: {
+  lite?: boolean;
+  onNoteClick?: (noteSummary: NoteSummary) => void;
+}) => {
   const { notesToShow, note, getHashtags, setNote, setRollHashTag } =
     useContext(EditorContext);
   const hashtags = useMemo<Record<string, NoteSummary[]>>(() => {
@@ -131,12 +138,17 @@ const Browse = ({ lite }: { lite?: boolean }) => {
     setRollHashTag(hashtag);
   };
 
+  const handleNoteClick = (summary: NoteSummary) => {
+    setNote(summary.note);
+    onNoteClick && onNoteClick(summary);
+  };
+
   return (
     <div>
       {!lite && <Title>Browse</Title>}
       <ListContainer className={classNames({ "bg-opacity-0 p-0": lite })}>
         <Folders
-          onFileClick={(summary) => setNote(summary.note)}
+          onFileClick={handleNoteClick}
           map={hashtags}
           prefix={""}
           toTitle={(summary) => textToTitle(summary.note.text, 20)}

@@ -26,7 +26,8 @@ const SidePanel = () => {
         <div>
           <div
             className={classNames("transition-all", {
-              "w-[30px]": !sideBar,
+              "w-[30px]": !sideBar && !isMobile,
+              "w-[0px]": !sideBar && isMobile,
               "w-[300px]": sideBar,
             })}
           />
@@ -45,7 +46,8 @@ const SidePanel = () => {
           "md:border-r border-primary border-opacity-10",
           "fixed top-0 w-[300px]",
           {
-            "-left-[270px]": !sideBar,
+            "-left-[270px]": !sideBar && !isMobile,
+            "-left-[300px]": !sideBar && isMobile,
             "left-0": sideBar,
           }
         )}
@@ -109,7 +111,10 @@ const SidePanel = () => {
               </div>
 
               <WithTitle title="Browse">
-                <Browse lite />
+                <Browse
+                  lite
+                  onNoteClick={() => isMobile && setSideBar(undefined)}
+                />
               </WithTitle>
             </div>
           </div>

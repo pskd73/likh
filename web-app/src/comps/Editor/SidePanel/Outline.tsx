@@ -64,7 +64,7 @@ const TitleList = ({
   const { setSideBar } = useContext(EditorContext);
 
   return (
-    <ul className={classNames("space-y-1", { "pl-2": !root })}>
+    <ul className={classNames("space-y-1", { "pl-4": !root })}>
       {titles.map((title, i) => (
         <li key={i}>
           <span

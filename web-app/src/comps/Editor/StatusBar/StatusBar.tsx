@@ -9,12 +9,14 @@ import {
   BiHomeSmile,
   BiLoaderAlt,
   BiSave,
+  BiSidebar,
   BiSpreadsheet,
 } from "react-icons/bi";
 import { saveNote } from "../File";
 import Delete from "./Delete";
 import classNames from "classnames";
 import { PouchContext } from "../PouchDB";
+import { isMobile } from "../device";
 
 const SyncIcon = ({ state }: { state: string }) => {
   if (state === "paused" || state === "init") {
@@ -80,6 +82,17 @@ const StatusBar = ({
     >
       {/* Left */}
       <div className="flex justify-start h-full">
+        {isMobile && (
+          <Button
+            lite={sideBar !== "storage"}
+            className="rounded-none"
+            onClick={() =>
+              setSideBar((b) => (b === "outline" ? undefined : "outline"))
+            }
+          >
+            <BiSidebar />
+          </Button>
+        )}
         <Button
           lite={sideBar !== "storage"}
           className="rounded-none"
