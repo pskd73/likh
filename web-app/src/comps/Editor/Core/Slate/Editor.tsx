@@ -68,6 +68,7 @@ const Editor = ({
   containerClassName,
   theme,
   contextMenuPrefixes,
+  onDatetimeClick,
 }: {
   onChange: (val: {
     value: Descendant[];
@@ -86,6 +87,7 @@ const Editor = ({
   getSavedImg?: (id: string, imgType: string) => Promise<SavedImg>;
   theme?: Theme;
   contextMenuPrefixes?: string[];
+  onDatetimeClick?: (date: Date, text?: string) => void;
 }) => {
   theme = theme || Themes.Basic;
 
@@ -129,6 +131,7 @@ const Editor = ({
         {...props}
         onCheckboxToggle={(path) => toggleCheckbox(editor, path)}
         onNoteLinkClick={onNoteLinkClick || (() => {})}
+        onDatetimeClick={onDatetimeClick || (() => {})}
         theme={theme}
       />
     ),

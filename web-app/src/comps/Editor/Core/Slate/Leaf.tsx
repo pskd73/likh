@@ -1,10 +1,10 @@
 import { CSSProperties } from "react";
 import { Theme } from "../../Theme";
-import { ParsedListText, parseListText } from "../List";
+import { ParsedListText, parseCheckbox, parseListText } from "../List";
 import classNames from "classnames";
 import slugify from "slugify";
 import moment from "moment";
-import { BiFolder, BiTimeFive } from "react-icons/bi";
+import { BiBell, BiFolder, BiTimeFive } from "react-icons/bi";
 
 function Leaf({
   attributes,
@@ -12,6 +12,7 @@ function Leaf({
   leaf,
   onCheckboxToggle,
   onNoteLinkClick,
+  onDatetimeClick,
   text,
   theme,
 }: {
@@ -20,7 +21,8 @@ function Leaf({
   leaf: Record<string, any>;
   onCheckboxToggle(path: number[]): void;
   onNoteLinkClick(title: string, id?: string): void;
-  text: string;
+  onDatetimeClick(date: Date, text?: string): void;
+  text: { text: string };
   theme: Theme;
 }) {
   const title = leaf.title1 || leaf.title2 || leaf.title3;
@@ -94,12 +96,14 @@ function Leaf({
     "hidden image": leaf.image && !leaf.alt && !leaf.focused,
 
     // datetime and hashtag
-    "bg-primary bg-opacity-20 px-3 py-1 rounded-full inline-block mb-1 text-sm":
+    "bg-primary bg-opacity-20 px-3 py-1 rounded-full inline-block mb-1 text-xs":
       leaf.datetime || leaf.hashtag,
-    "inline-flex items-center text-xs": leaf.datetime || leaf.hashtag,
+    "inline-flex items-center": leaf.datetime || leaf.hashtag,
   });
 
   if (leaf.datetime) {
+    const dt = moment(leaf.text.replace("@", ""));
+    const future = dt.isAfter(new Date());
     return (
       <span {...attributes} className={className}>
         {!leaf.punctuation && (
@@ -108,11 +112,32 @@ function Leaf({
             style={{ userSelect: "none" }}
             className="inline-flex items-center space-x-1"
           >
-            <span>
-              <BiTimeFive />
+            <span
+              className={classNames("text-primary text-opacity-50", {
+                "cursor-pointer hover:text-opacity-100 transition-all": future,
+              })}
+              onClick={
+                future
+                  ? () => {
+                      console.log(text);
+                      const parsed = parseListText(text.text);
+                      onDatetimeClick(
+                        dt.toDate(),
+                        parsed?.checkbox
+                          ? text.text
+                              .replace("- [ ] ", "")
+                              .replace("- [x] ", "")
+                          : undefined
+                      );
+                      console.log(text);
+                    }
+                  : undefined
+              }
+            >
+              {future ? <BiBell /> : <BiTimeFive />}
             </span>
             <span>
-              {moment(leaf.text.replace("@", "")).fromNow()}
+              {dt.fromNow()}
               {leaf.focused && " - "}
             </span>
           </span>
@@ -126,7 +151,7 @@ function Leaf({
 
   if (leaf.hashtag) {
     return (
-      <span {...attributes} className={className}>
+      <span {...attributes} className={className} spellCheck={false}>
         {!leaf.punctuation && (
           <span
             contentEditable={false}
