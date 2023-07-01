@@ -167,10 +167,11 @@ const EditableNote = () => {
     return suggestions;
   };
 
-  const handleDatetimeClick = (date: Date) => {
+  const handleDatetimeClick = (date: Date, text?: string) => {
     if (note) {
+      text = text || `Continue writing "${textToTitle(note.text)}"`;
       const link = getGoogleCalendarLink({
-        text: `Continue writing "${textToTitle(note.text)}"`,
+        text,
         date: date,
         location: "https://app.retronote.app/write",
       });

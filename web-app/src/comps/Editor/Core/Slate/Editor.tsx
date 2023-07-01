@@ -87,7 +87,7 @@ const Editor = ({
   getSavedImg?: (id: string, imgType: string) => Promise<SavedImg>;
   theme?: Theme;
   contextMenuPrefixes?: string[];
-  onDatetimeClick?: (date: Date) => void;
+  onDatetimeClick?: (date: Date, text?: string) => void;
 }) => {
   theme = theme || Themes.Basic;
 

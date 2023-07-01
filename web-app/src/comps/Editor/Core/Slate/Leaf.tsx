@@ -1,6 +1,6 @@
 import { CSSProperties } from "react";
 import { Theme } from "../../Theme";
-import { ParsedListText, parseListText } from "../List";
+import { ParsedListText, parseCheckbox, parseListText } from "../List";
 import classNames from "classnames";
 import slugify from "slugify";
 import moment from "moment";
@@ -21,8 +21,8 @@ function Leaf({
   leaf: Record<string, any>;
   onCheckboxToggle(path: number[]): void;
   onNoteLinkClick(title: string, id?: string): void;
-  onDatetimeClick(date: Date): void;
-  text: string;
+  onDatetimeClick(date: Date, text?: string): void;
+  text: { text: string };
   theme: Theme;
 }) {
   const title = leaf.title1 || leaf.title2 || leaf.title3;
@@ -96,7 +96,7 @@ function Leaf({
     "hidden image": leaf.image && !leaf.alt && !leaf.focused,
 
     // datetime and hashtag
-    "bg-primary bg-opacity-20 px-3 py-1 rounded-full inline-block mb-1 text-sm":
+    "bg-primary bg-opacity-20 px-3 py-1 rounded-full inline-block mb-1 text-xs":
       leaf.datetime || leaf.hashtag,
     "inline-flex items-center": leaf.datetime || leaf.hashtag,
   });
@@ -116,7 +116,23 @@ function Leaf({
               className={classNames("text-primary text-opacity-50", {
                 "cursor-pointer hover:text-opacity-100 transition-all": future,
               })}
-              onClick={future ? () => onDatetimeClick(dt.toDate()) : undefined}
+              onClick={
+                future
+                  ? () => {
+                      console.log(text);
+                      const parsed = parseListText(text.text);
+                      onDatetimeClick(
+                        dt.toDate(),
+                        parsed?.checkbox
+                          ? text.text
+                              .replace("- [ ] ", "")
+                              .replace("- [x] ", "")
+                          : undefined
+                      );
+                      console.log(text);
+                    }
+                  : undefined
+              }
             >
               {future ? <BiBell /> : <BiTimeFive />}
             </span>
@@ -135,7 +151,7 @@ function Leaf({
 
   if (leaf.hashtag) {
     return (
-      <span {...attributes} className={className}>
+      <span {...attributes} className={className} spellCheck={false}>
         {!leaf.punctuation && (
           <span
             contentEditable={false}
