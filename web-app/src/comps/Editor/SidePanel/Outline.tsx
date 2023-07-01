@@ -1,9 +1,10 @@
-import { useContext, useMemo } from "react";
+import { useContext, useMemo, useState } from "react";
 import { EditorContext } from "../Context";
 import classNames from "classnames";
 import { isMobile } from "../device";
 import { scrollTo } from "../scroll";
 import { WithTitle } from "./Common";
+import useDelayedEffect from "../useDelayedEffect";
 
 type OutlineTitle = {
   text: string | null;
@@ -95,9 +96,11 @@ const TitleList = ({
 
 const Outline = () => {
   const { note } = useContext(EditorContext);
-  const titles = useMemo(() => {
+  const [titles, setTitles] = useState<OutlineTitle[]>([]);
+
+  useDelayedEffect(() => {
     const titles = generateTitles();
-    return nested(titles, 0).children;
+    setTitles(nested(titles, 0).children);
   }, [note]);
 
   if (titles.length === 0) return null;
