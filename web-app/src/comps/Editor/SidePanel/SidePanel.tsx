@@ -85,6 +85,9 @@ const SidePanel = () => {
               <Button lite>
                 <BiChevronRight />
               </Button>
+              <Button lite onClick={home}>
+                <BiHomeSmile />
+              </Button>
               <Button lite onClick={() => setSideBar(undefined)}>
                 <BiSidebar />
               </Button>
@@ -94,9 +97,13 @@ const SidePanel = () => {
               className="overflow-scroll scrollbar-hide"
             >
               <div className={classNames("max-w-full overflow-hidden")}>
+                {isRoll && (
+                  <div className="p-4">
+                    <RollOutline />
+                  </div>
+                )}
                 <Outline />
                 <Links />
-                {isRoll && <RollOutline />}
                 {sideBar === "shortcuts" && <Shortcuts />}
                 {sideBar === "storage" && <Storage />}
               </div>

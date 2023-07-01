@@ -76,7 +76,7 @@ const RollOutline = () => {
   };
 
   return (
-    <div className="text-sm p-2">
+    <div className="text-sm">
       <div className="mb-4 text-2xl">
         <span className="pb-2 flex space-x-2 items-center font-bold">
           <span>

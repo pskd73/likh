@@ -52,7 +52,7 @@ const generateTitles = () => {
   return titles;
 };
 
-const List = ({
+const TitleList = ({
   titles,
   root,
   prefix = "",
@@ -81,7 +81,10 @@ const List = ({
           </span>
           {title.children && (
             <div className="mb-1">
-              <List titles={title.children} prefix={`${prefix}${i + 1}.`} />
+              <TitleList
+                titles={title.children}
+                prefix={`${prefix}${i + 1}.`}
+              />
             </div>
           )}
         </li>
@@ -101,7 +104,7 @@ const Outline = () => {
 
   return (
     <WithTitle title="Outline">
-      {titles && <List titles={titles} root />}
+      {titles && <TitleList titles={titles} root />}
     </WithTitle>
   );
 };
