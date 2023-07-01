@@ -1,11 +1,12 @@
 import { TbExternalLink } from "react-icons/tb";
 import List from "../List";
 import Button from "../../Button";
-import { useContext, useMemo } from "react";
+import { useContext, useMemo, useState } from "react";
 import { EditorContext } from "../Context";
 import { isMobile } from "../device";
 import { WithTitle } from "./Common";
 import { BiLink } from "react-icons/bi";
+import useDelayedEffect from "../useDelayedEffect";
 
 type NoteLink = {
   text: string;
@@ -22,9 +23,11 @@ const generateLinks = () => {
 };
 
 const Links = () => {
-  const { note, setSideBar, setOrNewNote } = useContext(EditorContext);
-  const links = useMemo(() => {
-    return generateLinks();
+  const { note, setSideBar } = useContext(EditorContext);
+  const [links, setLinks] = useState<NoteLink[]>([]);
+
+  useDelayedEffect(() => {
+    setLinks(generateLinks());
   }, [note]);
 
   if (links.length === 0) return null;
