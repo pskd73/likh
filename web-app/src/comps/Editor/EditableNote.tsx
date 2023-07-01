@@ -13,6 +13,7 @@ import { getImage } from "./db";
 import { Themes } from "./Theme";
 import { blobToB64 } from "../../util";
 import { textToTitle } from "../../Note";
+import { getGoogleCalendarLink } from "./Reminder";
 
 const dtToIso = (dt: Date) => {
   return moment(dt).format("YYYY-MM-DDThh:mm:ss");
@@ -166,6 +167,17 @@ const EditableNote = () => {
     return suggestions;
   };
 
+  const handleDatetimeClick = (date: Date) => {
+    if (note) {
+      const link = getGoogleCalendarLink({
+        text: `Continue writing "${textToTitle(note.text)}"`,
+        date: date,
+        location: "https://app.retronote.app/write",
+      });
+      window.open(link, "_blank");
+    }
+  };
+
   return (
     <div ref={ref} style={{ ...scroll.style }} className="space-y-6 md:px-20">
       {Object.values(notes)
@@ -234,6 +246,7 @@ const EditableNote = () => {
                   }
                 }}
                 theme={Themes[themeName] || Themes.Basic}
+                onDatetimeClick={handleDatetimeClick}
               />
             </div>
           );

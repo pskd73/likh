@@ -4,7 +4,7 @@ import { ParsedListText, parseListText } from "../List";
 import classNames from "classnames";
 import slugify from "slugify";
 import moment from "moment";
-import { BiFolder, BiTimeFive } from "react-icons/bi";
+import { BiBell, BiFolder, BiTimeFive } from "react-icons/bi";
 
 function Leaf({
   attributes,
@@ -12,6 +12,7 @@ function Leaf({
   leaf,
   onCheckboxToggle,
   onNoteLinkClick,
+  onDatetimeClick,
   text,
   theme,
 }: {
@@ -20,6 +21,7 @@ function Leaf({
   leaf: Record<string, any>;
   onCheckboxToggle(path: number[]): void;
   onNoteLinkClick(title: string, id?: string): void;
+  onDatetimeClick(date: Date): void;
   text: string;
   theme: Theme;
 }) {
@@ -96,10 +98,12 @@ function Leaf({
     // datetime and hashtag
     "bg-primary bg-opacity-20 px-3 py-1 rounded-full inline-block mb-1 text-sm":
       leaf.datetime || leaf.hashtag,
-    "inline-flex items-center text-xs": leaf.datetime || leaf.hashtag,
+    "inline-flex items-center": leaf.datetime || leaf.hashtag,
   });
 
   if (leaf.datetime) {
+    const dt = moment(leaf.text.replace("@", ""));
+    const future = dt.isAfter(new Date());
     return (
       <span {...attributes} className={className}>
         {!leaf.punctuation && (
@@ -108,11 +112,16 @@ function Leaf({
             style={{ userSelect: "none" }}
             className="inline-flex items-center space-x-1"
           >
-            <span>
-              <BiTimeFive />
+            <span
+              className={classNames("text-primary text-opacity-50", {
+                "cursor-pointer hover:text-opacity-100 transition-all": future,
+              })}
+              onClick={future ? () => onDatetimeClick(dt.toDate()) : undefined}
+            >
+              {future ? <BiBell /> : <BiTimeFive />}
             </span>
             <span>
-              {moment(leaf.text.replace("@", "")).fromNow()}
+              {dt.fromNow()}
               {leaf.focused && " - "}
             </span>
           </span>
