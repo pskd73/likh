@@ -2,8 +2,12 @@ import classNames from "classnames";
 import { ComponentProps, PropsWithChildren } from "react";
 import { twMerge } from "tailwind-merge";
 
-const List = ({ children }: PropsWithChildren) => {
-  return <ul>{children}</ul>;
+const List = ({ children, className, ...restProps }: ComponentProps<"ul">) => {
+  return (
+    <ul className={className} {...restProps}>
+      {children}
+    </ul>
+  );
 };
 
 const Item = ({
@@ -30,7 +34,6 @@ const Item = ({
         }),
         className
       )}
-      style={{ marginTop: 2 }}
       {...restProps}
     >
       {children}

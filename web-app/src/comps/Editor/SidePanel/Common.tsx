@@ -6,7 +6,7 @@ export const WithTitle = ({
 }: PropsWithChildren & { title: string }) => {
   return (
     <div className="p-4">
-      <div className="text-xs font-bold text-primary text-opacity-40">
+      <div className="text-xs font-bold text-primary text-opacity-40 mb-2">
         {title.toUpperCase()}
       </div>
       <div>{children}</div>

@@ -64,7 +64,7 @@ const List = ({
   const { setSideBar } = useContext(EditorContext);
 
   return (
-    <ul className={classNames("", { "pl-2": !root })}>
+    <ul className={classNames("space-y-1", { "pl-2": !root })}>
       {titles.map((title, i) => (
         <li key={i}>
           <span
@@ -80,7 +80,7 @@ const List = ({
             {i + 1}. {title.text}
           </span>
           {title.children && (
-            <div>
+            <div className="mb-1">
               <List titles={title.children} prefix={`${prefix}${i + 1}.`} />
             </div>
           )}

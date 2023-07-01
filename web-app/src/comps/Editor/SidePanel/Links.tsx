@@ -5,6 +5,7 @@ import { useContext, useMemo } from "react";
 import { EditorContext } from "../Context";
 import { isMobile } from "../device";
 import { WithTitle } from "./Common";
+import { BiLink } from "react-icons/bi";
 
 type NoteLink = {
   text: string;
@@ -34,25 +35,18 @@ const Links = () => {
         {links.map((link, i) => (
           <List.Item
             key={i}
-            noHover
-            className="flex items-center text-sm space-x-2 p-0"
+            className="flex items-center text-sm space-x-2"
+            onClick={() => {
+              if (isMobile) {
+                setSideBar(undefined);
+              }
+              (window.location as any).href = `#${link.id}`;
+            }}
           >
-            <span
-              className="hover:underline cursor-pointer"
-              onClick={() => {
-                if (isMobile) {
-                  setSideBar(undefined);
-                }
-                (window.location as any).href = `#${link.id}`;
-              }}
-            >
-              {link.text}
+            <span>
+              <BiLink />
             </span>
-            <div>
-              <Button lite onClick={() => setOrNewNote(link.text)}>
-                <TbExternalLink />
-              </Button>
-            </div>
+            <span className="hover:underline cursor-pointer">{link.text}</span>
           </List.Item>
         ))}
       </List>
