@@ -1,10 +1,10 @@
 import { BiAlarm, BiAlarmExclamation } from "react-icons/bi";
-import List from "../../List";
+import List from "../List";
 import moment from "moment";
 import { ChangeEventHandler, useContext } from "react";
-import { getGoogleCalendarLink } from "../../Reminder";
-import { textToTitle } from "../../../../Note";
-import { EditorContext } from "../../Context";
+import { getGoogleCalendarLink } from "../Reminder";
+import { textToTitle } from "../../../Note";
+import { EditorContext } from "../Context";
 
 const Remind = () => {
   const { note, updateNote, storage } = useContext(EditorContext);

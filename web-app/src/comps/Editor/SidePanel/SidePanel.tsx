@@ -1,11 +1,16 @@
 import classNames from "classnames";
-import { useContext } from "react";
+import { PropsWithChildren, useContext } from "react";
 import { EditorContext } from "../Context";
-import Outline from "./Outline/Outline";
+import Outline from "./Outline";
 import Shortcuts from "./Shortcuts";
 import { isMobile } from "../device";
-import RollOutline from "./Outline/RollOutline";
+import RollOutline from "./RollOutline";
 import Storage from "./Storage";
+import { BiChevronLeft, BiChevronRight, BiSidebar } from "react-icons/bi";
+import Button from "../../Button";
+import Browse from "../Home/Browse";
+import Links from "./Links";
+import { WithTitle } from "./Common";
 
 const SidePanel = () => {
   const { sideBar, setSideBar, isRoll } = useContext(EditorContext);
@@ -13,12 +18,14 @@ const SidePanel = () => {
   return (
     <>
       {!isMobile && (
-        <div
-          className={classNames({
-            "w-[0px]": !sideBar,
-            "w-[300px] md:w-[300px] transition-all": sideBar,
-          })}
-        />
+        <div>
+          <div
+            className={classNames("transition-all", {
+              "w-[30px]": !sideBar,
+              "w-[300px]": sideBar,
+            })}
+          />
+        </div>
       )}
       {isMobile && sideBar && (
         <div
@@ -29,25 +36,41 @@ const SidePanel = () => {
       <div
         className={classNames(
           "transition-all z-30 h-[100vh] overflow-y-scroll scrollbar-hide",
-          "bg-primary bg-opacity-10",
-          "border-r-2 border-primary border-opacity-20",
-          "fixed top-0",
+          "bg-base md:bg-primary md:bg-opacity-5",
+          "md:border-r border-primary border-opacity-10",
+          "fixed top-0 w-[300px]",
           {
-            "w-[0px] -left-1": !sideBar,
-            "w-[300px]": sideBar,
+            "-left-[270px]": !sideBar,
+            "left-0": sideBar,
           }
         )}
       >
-        <div className="max-w-full overflow-hidden p-2">
-          {sideBar === "outline" ? (
-            isRoll ? (
-              <RollOutline />
-            ) : (
-              <Outline />
-            )
-          ) : null}
-          {sideBar === "shortcuts" && <Shortcuts />}
-          {sideBar === "storage" && <Storage />}
+        <div className="flex p-2 text-xl justify-end border-b border-primary border-opacity-10">
+          <Button lite>
+            <BiChevronLeft />
+          </Button>
+          <Button lite>
+            <BiChevronRight />
+          </Button>
+          <Button lite>
+            <BiSidebar />
+          </Button>
+        </div>
+        <div
+          style={{ maxHeight: "calc(100vh - 50px)" }}
+          className="overflow-scroll scrollbar-hide"
+        >
+          <div className={classNames("max-w-full overflow-hidden")}>
+            <Outline />
+            <Links />
+            {isRoll && <RollOutline />}
+            {sideBar === "shortcuts" && <Shortcuts />}
+            {sideBar === "storage" && <Storage />}
+          </div>
+
+          <WithTitle title="Browse">
+            <Browse lite />
+          </WithTitle>
         </div>
       </div>
     </>

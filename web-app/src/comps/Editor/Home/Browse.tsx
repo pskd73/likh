@@ -12,6 +12,7 @@ import {
 } from "react-icons/bi";
 import Button from "../../Button";
 import { textToTitle } from "../../../Note";
+import classNames from "classnames";
 
 const folderize = (paths: string[], prefix: string) => {
   return paths
@@ -83,7 +84,7 @@ const Folders = <T extends unknown>({
       {folderize(Object.keys(map), prefix).map((hashtag, i) => {
         const exp = expanded.includes(hashtag);
         return (
-          <List.Item key={i} noHover className="last:mb-0">
+          <List.Item key={i} noHover className="px-0">
             <div className="flex items-center space-x-1">
               <Button
                 lite={!exp}
@@ -119,7 +120,7 @@ const Folders = <T extends unknown>({
   );
 };
 
-const Browse = () => {
+const Browse = ({ lite }: { lite?: boolean }) => {
   const { notesToShow, note, getHashtags, setNote, setRollHashTag } =
     useContext(EditorContext);
   const hashtags = useMemo<Record<string, NoteSummary[]>>(() => {
@@ -132,8 +133,8 @@ const Browse = () => {
 
   return (
     <div>
-      <Title>Browse</Title>
-      <ListContainer>
+      {!lite && <Title>Browse</Title>}
+      <ListContainer className={classNames({ "bg-opacity-0 p-0": lite })}>
         <Folders
           onFileClick={(summary) => setNote(summary.note)}
           map={hashtags}
