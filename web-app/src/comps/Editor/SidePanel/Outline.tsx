@@ -81,7 +81,7 @@ const TitleList = ({
             {i + 1}. {title.text}
           </span>
           {title.children && (
-            <div className="mb-1">
+            <div className="my-1">
               <TitleList
                 titles={title.children}
                 prefix={`${prefix}${i + 1}.`}
