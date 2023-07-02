@@ -1,5 +1,7 @@
 import { Note } from "./type";
 
+const MAX_FOCUS_LENGTH = 30;
+
 export const textToTitle = (text: string, max?: number) => {
   const MAX_LENGTH = 100;
   max = max || MAX_LENGTH;
@@ -39,4 +41,22 @@ export const titleCase = (text: string) => {
       splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
   }
   return splitStr.join(" ");
+};
+
+export const focus = (text: string, idx: number, term: string, max?: number) => {
+  max = max || MAX_FOCUS_LENGTH;
+  const midIdx = idx + Math.floor(term.length / 2);
+  const start = Math.max(0, midIdx - Math.floor(max / 2));
+  const end = Math.min(
+    text.length - 1,
+    midIdx + Math.floor(max / 2)
+  );
+  let focused = text.substring(start, end);
+  if (start !== 0) {
+    focused = "... " + focused;
+  }
+  if (end !== text.length - 1) {
+    focused += " ...";
+  }
+  return { focused, start, end };
 };

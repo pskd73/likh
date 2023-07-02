@@ -1,14 +1,16 @@
 import moment from "moment";
 import { NoteSummary } from "./Context";
 import { ParsedListText, parseListText } from "./Core/List";
+import { focus } from "../../Note";
 
 export type TimelineItem = {
   summary: NoteSummary;
   date: Date;
-  type: "note" | "refer";
+  type: "note" | "mention";
   future: boolean;
   text?: string;
   listParsed?: ParsedListText;
+  dateStr?: string;
 };
 
 export type HeatmapStrip = {
@@ -59,20 +61,26 @@ export const getTimeline = (summaries: NoteSummary[]) => {
     )) {
       if (match.index !== undefined) {
         const para = getPara(summary.note.text, match.index);
-        let text = para;
         const listParsed = parseListText(para);
-        if (listParsed) {
-          text = listParsed.content;
-        }
+
+        const { focused } = focus(
+          summary.note.text,
+          match.index,
+          match[0],
+          400
+        );
+
+        console.log(match[1]);
 
         const date = moment(match[1]).toDate();
         items.push({
           summary,
           date,
-          type: "refer",
+          type: "mention",
           future: isFuture(date),
-          text,
+          text: focused,
           listParsed,
+          dateStr: match[1],
         });
       }
     }

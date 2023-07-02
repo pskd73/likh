@@ -1,7 +1,7 @@
 import { createContext, useEffect, useMemo, useState } from "react";
 import { Storage } from "./useStorage";
 import { NewNote, SavedNote } from "./type";
-import { isLinked } from "../../Note";
+import { isLinked, focus } from "../../Note";
 import { LinkSuggestion, getLinkSuggestions } from "./Suggestion";
 import { PersistedState } from "./usePersistedState";
 import { Theme } from "./Theme";
@@ -114,25 +114,13 @@ export const useEditor = ({
     (async () => {
       if (searchTerm) {
         const results = await storage.search(searchTerm);
-        const MAX_SUMMARY_LENGTH = 30;
         const nts = results.map((note) => {
           const idx = note.text.toLowerCase().indexOf(searchTerm.toLowerCase());
-          const midIdx = idx + Math.floor(searchTerm.length / 2);
-          const start = Math.max(
-            0,
-            midIdx - Math.floor(MAX_SUMMARY_LENGTH / 2)
-          );
-          const end = Math.min(
-            note.text.length - 1,
-            midIdx + Math.floor(MAX_SUMMARY_LENGTH / 2)
-          );
-          let summary = note.text.substring(start, end);
-          if (start !== 0) {
-            summary = "... " + summary;
-          }
-          if (end !== note.text.length - 1) {
-            summary += " ...";
-          }
+          const {
+            focused: summary,
+            start,
+            end,
+          } = focus(note.text, idx, searchTerm);
           return {
             note,
             summary,
