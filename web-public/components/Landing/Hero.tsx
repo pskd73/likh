@@ -281,7 +281,6 @@ function AllFeatures() {
       </li>
       <li>
         <FeatureItem>
-          <FeatureItem.Soon />
           <FeatureItem.Icon>
             <BiDevices />
           </FeatureItem.Icon>
