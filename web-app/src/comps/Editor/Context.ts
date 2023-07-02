@@ -7,6 +7,7 @@ import { PersistedState } from "./usePersistedState";
 import { Theme } from "./Theme";
 import { PouchContextType } from "./PouchDB";
 import { hashtag } from "./grammer";
+import { isMobile } from "./device";
 
 type StateSetter<T> = React.Dispatch<React.SetStateAction<T>>;
 type CountStatType = "words" | "readTime";
@@ -350,7 +351,9 @@ export const useEditor = ({
   const home = () => {
     setNotes({});
     setRollHashTag("");
-    setSideBar(undefined);
+    if (isMobile) {
+      setSideBar(undefined);
+    }
   };
 
   return {
