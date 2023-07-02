@@ -51,6 +51,7 @@ const Timeline = () => {
             className="border-b last:border-b-0 border-primary border-opacity-10 py-4"
           >
             <div className="flex items-center justify-between mb-2">
+              {/* Top section */}
               <span className="text-xs text-primary text-opacity-50 font-bold">
                 {moment(item.date).format("YYYY-MM-DD")}
               </span>
@@ -63,6 +64,8 @@ const Timeline = () => {
                 {item.type === "note" ? <BiFile /> : <BiTimeFive />}
               </span>
             </div>
+
+            {/* Mention */}
             {item.text && (
               <div className="text-normal">
                 {highlight(item.text, [Highligher(item.dateStr || "")])
@@ -75,6 +78,8 @@ const Timeline = () => {
                   .map((it, i) => cloneElement(it, { key: i }))}
               </div>
             )}
+
+            {/* Footer */}
             <div
               className={classNames(
                 "mt-2 flex items-center space-x-1",

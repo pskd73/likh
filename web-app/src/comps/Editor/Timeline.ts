@@ -61,16 +61,13 @@ export const getTimeline = (summaries: NoteSummary[]) => {
     )) {
       if (match.index !== undefined) {
         const para = getPara(summary.note.text, match.index);
+
+        let { focused } = focus(summary.note.text, match.index, match[0], 400);
+
         const listParsed = parseListText(para);
-
-        const { focused } = focus(
-          summary.note.text,
-          match.index,
-          match[0],
-          400
-        );
-
-        console.log(match[1]);
+        if (listParsed) {
+          focused = listParsed.content;
+        }
 
         const date = moment(match[1]).toDate();
         items.push({
