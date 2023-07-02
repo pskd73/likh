@@ -143,7 +143,7 @@ const Timeline = () => {
             >
               <div className="flex items-center justify-between mb-2">
                 {/* Top section */}
-                <span className="text-xs text-primary text-opacity-50 font-bold">
+                <span className="text-primary text-opacity-50 font-bold">
                   {moment(item.date).format("YYYY-MM-DD")}
                 </span>
                 <span
@@ -157,7 +157,7 @@ const Timeline = () => {
               </div>
 
               {/* Images */}
-              <div className="flex space-x-2 mb-2">
+              <div className="flex gap-2 mb-2 flex-wrap">
                 {imgAddresses.map((addr, i) => (
                   <div
                     key={i}
