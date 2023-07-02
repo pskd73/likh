@@ -127,7 +127,7 @@ const Timeline = () => {
       <div
         ref={focusDtRef}
         className={classNames(
-          "inline-block sticky top-0 bg-primary text-xl font-bold text-white",
+          "inline-block sticky top-0 bg-primary text-xl font-bold text-base",
           "px-3 py-1 rounded-full shadow-lg transition-all",
           { hidden: !focusDt }
         )}
