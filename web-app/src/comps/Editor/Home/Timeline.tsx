@@ -41,7 +41,7 @@ const Timeline = () => {
             >
               <span>In - </span>
               <BiFile />
-              <span>{textToTitle(item.summary.note.text)}</span>
+              <span>{textToTitle(item.summary.note.text, 20)}</span>
             </div>
           </li>
         ))}
