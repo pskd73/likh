@@ -1,4 +1,11 @@
-import { cloneElement, useContext, useEffect, useMemo, useState } from "react";
+import {
+  cloneElement,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { EditorContext } from "../Context";
 import { getImageAddresses, getTimeline } from "../Timeline";
 import { textToTitle } from "../../../Note";
@@ -34,12 +41,17 @@ const Highligher = (word: string) =>
 const Timeline = () => {
   const navigate = useNavigate();
   const { notesToShow, storage } = useContext(EditorContext);
-  const timeline = useMemo(() => {
-    return getTimeline(notesToShow);
-  }, [notesToShow]);
   const [scrollElem, setScrollElem] = useState<Element>();
   const [timelineElems, setTimelineElems] = useState<Element[]>([]);
   const [focusDt, setFocusDt] = useState<string>();
+  const focusDtRef = useRef<HTMLDivElement>(null);
+  const timeline = useMemo(() => {
+    const timeline = getTimeline(notesToShow);
+    if (timeline.length) {
+      setFocusDt(moment(timeline[0].date).format("YYYY MMMM DD"));
+    }
+    return timeline;
+  }, [notesToShow]);
 
   useEffect(() => {
     document
@@ -62,6 +74,13 @@ const Timeline = () => {
     1000
   );
 
+  useEffect(() => {
+    focusDtRef.current && (focusDtRef.current.style.scale = "1.2");
+    setTimeout(() => {
+      focusDtRef.current && (focusDtRef.current.style.scale = "1");
+    }, 200);
+  }, [focusDt]);
+
   const handleNoteClick = (note: SavedNote) => {
     navigate(`/write/note/${note.id}`);
   };
@@ -83,11 +102,7 @@ const Timeline = () => {
   };
 
   const getCurrentElem = () => {
-    // const scrollElem = document.getElementById("editor-container");
-    // const elems = document.querySelectorAll("li.timeline");
-    // console.log("getCur")
     for (const elem of timelineElems) {
-      // console.log("here1");
       if ((elem as any).offsetTop >= (scrollElem?.scrollTop || 0)) {
         setFocusDt(elem.getAttribute("data-date-str") || undefined);
         break;
@@ -96,7 +111,6 @@ const Timeline = () => {
   };
 
   const handleScroll = () => {
-    // console.log("scrollend");
     setTimeout(getCurrentElem, 0);
   };
 
@@ -104,16 +118,16 @@ const Timeline = () => {
 
   return (
     <div>
-      {focusDt && (
-        <div
-          className={classNames(
-            "inline-block sticky top-0 bg-primary text-xl font-bold text-white",
-            "px-3 py-1 rounded-full shadow-lg"
-          )}
-        >
-          {focusDt}
-        </div>
-      )}
+      <div
+        ref={focusDtRef}
+        className={classNames(
+          "inline-block sticky top-0 bg-primary text-xl font-bold text-white",
+          "px-3 py-1 rounded-full shadow-lg transition-all",
+          { hidden: !focusDt }
+        )}
+      >
+        {focusDt}
+      </div>
       <ul className="space-y-2 pb-10">
         {timeline.map((item, i) => {
           const imgAddresses = getImageAddresses(item.summary.note.text);
