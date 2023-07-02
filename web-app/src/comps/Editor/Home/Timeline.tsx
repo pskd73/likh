@@ -57,10 +57,16 @@ const Timeline = () => {
     document
       .getElementById("editor-container")
       ?.addEventListener("scrollend", handleScroll);
+    document
+      .getElementById("editor-container")
+      ?.addEventListener("touchend", handleScroll);
     return () => {
       document
         .getElementById("editor-container")
         ?.removeEventListener("scrollend", handleScroll);
+      document
+        .getElementById("editor-container")
+        ?.removeEventListener("touchend", handleScroll);
     };
   }, [timelineElems]);
 
