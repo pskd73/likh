@@ -14,6 +14,8 @@ import { Themes } from "./Theme";
 import { blobToB64 } from "../../util";
 import { textToTitle } from "../../Note";
 import { getGoogleCalendarLink } from "./Reminder";
+import { FiExternalLink } from "react-icons/fi";
+import { SavedNote } from "./type";
 
 const dtToIso = (dt: Date) => {
   return moment(dt).format("YYYY-MM-DDThh:mm:ss");
@@ -35,6 +37,7 @@ const EditableNote = () => {
     themeName,
     setNote,
     getHashtags,
+    setRollHashTag,
   } = useContext(EditorContext);
   const scroll = useMiddle(ref, [typewriterMode], {
     typeWriter: typewriterMode,
@@ -179,6 +182,11 @@ const EditableNote = () => {
     }
   };
 
+  const handleExpand = (note: SavedNote) => {
+    setNote(note, true);
+    setRollHashTag("");
+  };
+
   return (
     <div ref={ref} style={{ ...scroll.style }} className="space-y-6 md:px-20">
       {Object.values(notes)
@@ -199,14 +207,19 @@ const EditableNote = () => {
               {isRoll && (
                 <div
                   className={classNames(
-                    "flex justify-end text-sm",
+                    "flex items-center justify-end text-sm",
                     "border-b border-primary mb-4 pb-2",
-                    "border-opacity-10 opacity-50"
+                    "border-opacity-10 opacity-50 space-x-2"
                   )}
                 >
-                  {moment(new Date(notes[id].created_at)).format(
-                    "MMMM Do YYYY, h:mm:ss a"
-                  )}
+                  <Button lite onClick={() => handleExpand(_note)}>
+                    <FiExternalLink />
+                  </Button>
+                  <span>
+                    {moment(new Date(notes[id].created_at)).format(
+                      "MMMM Do YYYY, h:mm:ss a"
+                    )}
+                  </span>
                 </div>
               )}
               <Editor
