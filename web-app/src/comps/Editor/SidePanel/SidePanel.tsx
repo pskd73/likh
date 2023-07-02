@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { PropsWithChildren, useContext } from "react";
+import { useContext } from "react";
 import { EditorContext } from "../Context";
 import Outline from "./Outline";
 import Shortcuts from "./Shortcuts";
@@ -16,9 +16,17 @@ import Button from "../../Button";
 import Browse from "../Home/Browse";
 import Links from "./Links";
 import { WithTitle } from "./Common";
+import { useNavigate } from "react-router-dom";
+import { TbTimelineEvent } from "react-icons/tb";
 
 const SidePanel = () => {
+  const navigate = useNavigate();
   const { sideBar, setSideBar, isRoll, home, note } = useContext(EditorContext);
+
+  const handleHome = () => {
+    home();
+    navigate("/write");
+  };
 
   return (
     <>
@@ -81,13 +89,10 @@ const SidePanel = () => {
                 "border-b border-primary border-opacity-10"
               )}
             >
-              <Button lite>
-                <BiChevronLeft />
+              <Button lite onClick={() => navigate("/write/timeline")}>
+                <TbTimelineEvent />
               </Button>
-              <Button lite>
-                <BiChevronRight />
-              </Button>
-              <Button lite onClick={home}>
+              <Button lite onClick={handleHome}>
                 <BiHomeSmile />
               </Button>
               <Button lite onClick={() => setSideBar(undefined)}>

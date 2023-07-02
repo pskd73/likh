@@ -18,26 +18,6 @@ const shortcuts: Record<string, (editor: EditorContextType) => void> = {
     editor.newNote({ text: "New note" });
     editor.setRollHashTag("");
   },
-  ArrowLeft: async (editor) => {
-    const { storage } = editor;
-    const idx = storage.notes.findIndex((note) => editor.note?.id === note.id);
-    const prevNote = storage.notes[idx - 1]
-      ? await storage.getNote(storage.notes[idx - 1].id)
-      : undefined;
-    if (prevNote) {
-      editor.setNote(prevNote);
-    }
-  },
-  ArrowRight: async (editor) => {
-    const { storage } = editor;
-    const idx = storage.notes.findIndex((note) => editor.note?.id === note.id);
-    const nextNote = storage.notes[idx + 1]
-      ? await storage.getNote(storage.notes[idx + 1].id)
-      : undefined;
-    if (nextNote) {
-      editor.setNote(nextNote);
-    }
-  },
   s: (editor) => editor.note && saveNote(editor.note),
   o: async (editor) => {
     const text = (await openFile()) as string;

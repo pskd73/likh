@@ -13,7 +13,7 @@ import {
 import Button from "../../Button";
 import { textToTitle } from "../../../Note";
 import classNames from "classnames";
-import { SavedNote } from "../type";
+import { useNavigate } from "react-router-dom";
 
 const folderize = (paths: string[], prefix: string) => {
   return paths
@@ -128,19 +128,18 @@ const Browse = ({
   lite?: boolean;
   onNoteClick?: (noteSummary: NoteSummary) => void;
 }) => {
-  const { notesToShow, note, getHashtags, setNote, setRollHashTag } =
-    useContext(EditorContext);
+  const navigate = useNavigate();
+  const { notesToShow, note, getHashtags } = useContext(EditorContext);
   const hashtags = useMemo<Record<string, NoteSummary[]>>(() => {
     return getHashtags();
   }, [notesToShow, note]);
 
   const handleJournal = (hashtag: string) => {
-    setRollHashTag(hashtag);
+    navigate(`/write/journal/${encodeURIComponent(hashtag)}`);
   };
 
   const handleNoteClick = (summary: NoteSummary) => {
-    setNote(summary.note);
-    onNoteClick && onNoteClick(summary);
+    navigate(`/write/note/${summary.note.id}`);
   };
 
   return (

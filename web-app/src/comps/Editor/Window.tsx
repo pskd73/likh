@@ -8,11 +8,10 @@ import useShortcuts from "./useShortcuts";
 import classNames from "classnames";
 import "./Core/test";
 import { iOS, isMobile } from "./device";
-import EditableNote from "./EditableNote";
 import { init } from "./db";
 import { migrate } from "./localStorage";
 import * as PouchDB from "./PouchDB";
-import HomeScreen from "./Home/HomeScreen";
+import { Outlet } from "react-router-dom";
 
 const STATUS_BAR_HEIGHT = 30;
 
@@ -69,8 +68,7 @@ const EditorWindow = () => {
               <div
                 className={classNames("w-full max-w-[1000px] md:w-[1000px]")}
               >
-                {editorState.note && <EditableNote />}
-                {!editorState.note && <HomeScreen />}
+                <Outlet />
               </div>
             </div>
             <StatusBar height={STATUS_BAR_HEIGHT} padding={statusBarPadding} />

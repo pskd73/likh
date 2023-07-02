@@ -6,15 +6,17 @@ import { textToTitle } from "../../../Note";
 import moment from "moment";
 import { BiFile } from "react-icons/bi";
 import { SavedNote } from "../type";
+import { useNavigate } from "react-router-dom";
 
 const Timeline = () => {
-  const { notesToShow, setNote } = useContext(EditorContext);
+  const navigate = useNavigate();
+  const { notesToShow } = useContext(EditorContext);
   const timeline = useMemo(() => {
     return getTimeline(notesToShow);
   }, [notesToShow]);
 
   const handleNoteClick = (note: SavedNote) => {
-    setNote(note);
+    navigate(`/write/note/${note.id}`);
   };
 
   if (!timeline) return null;
@@ -22,7 +24,7 @@ const Timeline = () => {
   return (
     <div>
       <Title>Timeline</Title>
-      <ul className="space-y-2 max-h-[300px] overflow-y-scroll scrollbar-hide">
+      <ul className="space-y-2 pb-10">
         {timeline.map((item, i) => (
           <li
             key={i}

@@ -1,19 +1,24 @@
-import { EditorContext, NoteSummary } from "../Context";
+import { NoteSummary } from "../Context";
 import List from "../List";
 import { ListContainer, Title } from "./Common";
 import { textToTitle } from "../../../Note";
 import { MdRadioButtonUnchecked } from "react-icons/md";
-import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Todos = ({ summaries }: { summaries: NoteSummary[] }) => {
-  const { setNote } = useContext(EditorContext);
+  const navigate = useNavigate();
+
   return (
     <div>
       <Title>Todos</Title>
       <ListContainer>
         <List>
           {summaries.map((summary, i) => (
-            <List.Item withIcon key={i} onClick={() => setNote(summary.note)}>
+            <List.Item
+              withIcon
+              key={i}
+              onClick={() => navigate(`/write/note/${summary.note.id}`)}
+            >
               <List.Item.Icon>
                 <MdRadioButtonUnchecked />
               </List.Item.Icon>

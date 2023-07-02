@@ -6,9 +6,10 @@ import { useContext, useMemo } from "react";
 import { EditorContext, NoteSummary } from "../Context";
 import { SavedNote } from "../type";
 import { ListContainer, Title } from "./Common";
+import { useNavigate } from "react-router-dom";
 
 const Reminders = ({ reminderNotes }: { reminderNotes: SavedNote[] }) => {
-  const { setNote } = useContext(EditorContext);
+  const navigate = useNavigate();
 
   return (
     <div>
@@ -19,7 +20,7 @@ const Reminders = ({ reminderNotes }: { reminderNotes: SavedNote[] }) => {
             <List.Item
               key={i}
               className="text-sm"
-              onClick={() => setNote(note)}
+              onClick={() => navigate(`/write/note/${note.id}`)}
             >
               <div className="flex">
                 <span className="opacity-50 mt-1 min-w-5 w-5">

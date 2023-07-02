@@ -6,6 +6,7 @@ import { BiArrowFromBottom, BiArrowFromTop, BiFile } from "react-icons/bi";
 import { textToTitle } from "../../../Note";
 import { highlight, makeExtractor } from "../Marker";
 import { escape } from "../../../util";
+import { useNavigate } from "react-router-dom";
 
 const Highligher = (word: string) =>
   makeExtractor(
@@ -23,7 +24,8 @@ const Notes = ({
   toggleSeeAll: () => void;
   seeAll: boolean;
 }) => {
-  const { notesToShow, setNote, searchTerm } = useContext(EditorContext);
+  const navigate = useNavigate();
+  const { notesToShow, searchTerm } = useContext(EditorContext);
 
   return (
     <div>
@@ -36,7 +38,7 @@ const Notes = ({
               <List.Item
                 key={summary.note.id}
                 withIcon
-                onClick={() => setNote(summary.note)}
+                onClick={() => navigate(`/write/note/${summary.note.id}`)}
                 className="flex-col"
               >
                 <div className="flex">

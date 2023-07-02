@@ -18,7 +18,6 @@ import Calendar from "./HomeCalendar";
 import classNames from "classnames";
 import Logo from "../../Logo";
 import Todos from "./Todos";
-import Timeline from "./Timeline";
 
 const Col = ({ children, className, ...restProps }: ComponentProps<"div">) => {
   return (
@@ -98,7 +97,6 @@ const HomeScreen = () => {
         </Col>
         <Col className="flex-1">
           <Calendar />
-          <Timeline />
         </Col>
       </Section>
       <hr />

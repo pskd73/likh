@@ -39,7 +39,7 @@ export type EditorContextType = {
   setCountStatType: StateSetter<CountStatType>;
 
   note: SavedNote | undefined;
-  setNote: (note: SavedNote, replace?: boolean) => Promise<void>;
+  setNote: (note: { id: string }, replace?: boolean) => Promise<void>;
   updateNote: (note: SavedNote) => void;
 
   notes: Record<string, SavedNote>;
@@ -54,7 +54,7 @@ export type EditorContextType = {
   deleteNote: (noteId: string) => void;
 
   getNoteByTitle: (title: string) => void;
-  setOrNewNote: (title: string) => void;
+  setOrNewNote: (title: string) => Promise<SavedNote>;
 
   getHashtags: (exclude?: string[]) => Record<string, NoteSummary[]>;
 
@@ -209,7 +209,7 @@ export const useEditor = ({
     }
   };
 
-  const setNote = async (note: SavedNote, replace: boolean = true) => {
+  const setNote = async (note: { id: string }, replace: boolean = true) => {
     const _note = await storage.getNote(note.id);
     if (!_note) return;
     let updatedNotes = { ...notes };
@@ -284,11 +284,12 @@ export const useEditor = ({
         if (isLinked(title, note.text)) {
           const updatedNotes = { ...notes };
           updatedNotes[note.id] = note;
-          return setNotes(updatedNotes);
+          setNotes(updatedNotes);
+          return note;
         }
       }
     }
-    newNote({
+    return newNote({
       text: `# ${title}\nWrite more here`,
     });
   };

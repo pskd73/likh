@@ -15,6 +15,9 @@ import { Private } from "./comps/Layout";
 import WriteV2 from "./Write";
 import Roll from "./Write/Roll";
 import Landing from "./Landing";
+import Timeline from "./comps/Editor/Home/Timeline";
+import HomeScreen from "./comps/Editor/Home/HomeScreen";
+import EditableNote from "./comps/Editor/EditableNote";
 
 const router = createBrowserRouter([
   {
@@ -22,12 +25,26 @@ const router = createBrowserRouter([
     element: <Landing />,
   },
   {
-    path: "/open-write",
-    element: <WriteV2 />,
-  },
-  {
     path: "/write",
     element: <WriteV2 />,
+    children: [
+      {
+        index: true,
+        element: <HomeScreen />,
+      },
+      {
+        path: "timeline",
+        element: <Timeline />,
+      },
+      {
+        path: "note/:noteId",
+        element: <EditableNote />,
+      },
+      {
+        path: "journal/:hashtag",
+        element: <EditableNote />,
+      },
+    ],
   },
   {
     path: "/note",

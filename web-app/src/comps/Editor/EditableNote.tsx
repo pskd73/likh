@@ -16,12 +16,15 @@ import { textToTitle } from "../../Note";
 import { getGoogleCalendarLink } from "./Reminder";
 import { FiExternalLink } from "react-icons/fi";
 import { SavedNote } from "./type";
+import { useNavigate, useParams } from "react-router-dom";
 
 const dtToIso = (dt: Date) => {
   return moment(dt).format("YYYY-MM-DDThh:mm:ss");
 };
 
 const EditableNote = () => {
+  const { noteId, hashtag } = useParams();
+  const navigate = useNavigate();
   const ref = useRef<HTMLDivElement>(null);
   const {
     notes,
@@ -42,6 +45,16 @@ const EditableNote = () => {
   const scroll = useMiddle(ref, [typewriterMode], {
     typeWriter: typewriterMode,
   });
+
+  useEffect(() => {
+    if (noteId) {
+      setRollHashTag("");
+      setNote({ id: noteId });
+    }
+    if (hashtag) {
+      setRollHashTag(decodeURIComponent(hashtag));
+    }
+  }, [noteId, hashtag]);
 
   useEffect(() => {
     if (searchTerm) {
@@ -86,11 +99,12 @@ const EditableNote = () => {
     if (id) {
       const note = await storage.getNote(id);
       if (note) {
-        setNote(note);
+        navigate(`/write/note/${note.id}`);
         return;
       }
     }
-    setOrNewNote(title);
+    const note = await setOrNewNote(title);
+    navigate(`/write/note/${note.id}`);
   };
 
   const handleNewRollNote = () => {
@@ -183,8 +197,7 @@ const EditableNote = () => {
   };
 
   const handleExpand = (note: SavedNote) => {
-    setNote(note, true);
-    setRollHashTag("");
+    navigate(`/write/note/${note.id}`);
   };
 
   return (

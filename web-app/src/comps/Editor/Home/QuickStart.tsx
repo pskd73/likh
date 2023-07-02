@@ -8,16 +8,33 @@ import { FiUpload } from "react-icons/fi";
 import { openFile } from "../File";
 import { PersistedState } from "../usePersistedState";
 import WhatsNew from "./WhatsNew";
+import { useNavigate } from "react-router-dom";
 
 const { hook: useViewedHelp } = PersistedState<string[]>("viewedHelp");
 
 const QuickStart = () => {
+  const navigate = useNavigate();
   const { newNote } = useContext(EditorContext);
   const [viewedHelp, setViewedHelp] = useViewedHelp<string[]>([]);
 
   const handleOpen = async () => {
     const text = (await openFile()) as string;
-    newNote({ text });
+    const note = newNote({ text });
+    navigate(`/write/note/${note.id}`);
+  };
+
+  const handleSampleNote = () => {
+    const note = newNote({
+      text: INTRO_TEXT,
+    });
+    navigate(`/write/note/${note.id}`);
+  };
+
+  const handleNewNote = () => {
+    const note = newNote({
+      text: `# A title for the note\nWrite your mind here ...`,
+    });
+    navigate(`/write/note/${note.id}`);
   };
 
   return (
@@ -27,14 +44,7 @@ const QuickStart = () => {
         <Title>Quick start</Title>
         <ListContainer>
           <List>
-            <List.Item
-              withIcon
-              onClick={() =>
-                newNote({
-                  text: `# A title for the note\nWrite your mind here ...`,
-                })
-              }
-            >
+            <List.Item withIcon onClick={handleNewNote}>
               <List.Item.Icon>
                 <BiPlus />
               </List.Item.Icon>
@@ -43,11 +53,7 @@ const QuickStart = () => {
             <List.Item
               withIcon
               className="last:mb-0"
-              onClick={() => {
-                newNote({
-                  text: INTRO_TEXT,
-                });
-              }}
+              onClick={handleSampleNote}
             >
               <List.Item.Icon>
                 <BiFile />
