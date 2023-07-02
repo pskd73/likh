@@ -84,3 +84,9 @@ export const getTimeline = (summaries: NoteSummary[]) => {
   }
   return items.sort((a, b) => a.date.getTime() - b.date.getTime());
 };
+
+export const getImageAddresses = (text: string) => {
+  return Array.from(
+    text.matchAll(/\!\[.*\]\(attachment\:\/\/([^\)\[\"\']+)( ".*")?\)/g)
+  ).map((m) => m[1]);
+};
