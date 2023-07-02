@@ -1,4 +1,4 @@
-import { cloneElement, useContext, useMemo } from "react";
+import { cloneElement, useContext, useEffect, useMemo, useState } from "react";
 import { EditorContext } from "../Context";
 import { getImageAddresses, getTimeline } from "../Timeline";
 import { textToTitle } from "../../../Note";
@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import classNames from "classnames";
 import { highlight, makeExtractor } from "../Marker";
 import { blobToB64, escape } from "../../../util";
+import useDelayedEffect from "../useDelayedEffect";
 
 const cachedImages: Record<string, any> = {};
 
@@ -36,6 +37,30 @@ const Timeline = () => {
   const timeline = useMemo(() => {
     return getTimeline(notesToShow);
   }, [notesToShow]);
+  const [scrollElem, setScrollElem] = useState<Element>();
+  const [timelineElems, setTimelineElems] = useState<Element[]>([]);
+  const [focusDt, setFocusDt] = useState<string>();
+
+  useEffect(() => {
+    document
+      .getElementById("editor-container")
+      ?.addEventListener("scrollend", handleScroll);
+    return () => {
+      document
+        .getElementById("editor-container")
+        ?.removeEventListener("scrollend", handleScroll);
+    };
+  }, [timelineElems]);
+
+  useDelayedEffect(
+    () => {
+      setScrollElem(document.getElementById("editor-container")!);
+      const elems = document.querySelectorAll("li.timeline");
+      setTimelineElems(Array.from(elems));
+    },
+    [],
+    1000
+  );
 
   const handleNoteClick = (note: SavedNote) => {
     navigate(`/write/note/${note.id}`);
@@ -57,10 +82,38 @@ const Timeline = () => {
     }
   };
 
+  const getCurrentElem = () => {
+    // const scrollElem = document.getElementById("editor-container");
+    // const elems = document.querySelectorAll("li.timeline");
+    // console.log("getCur")
+    for (const elem of timelineElems) {
+      // console.log("here1");
+      if ((elem as any).offsetTop >= (scrollElem?.scrollTop || 0)) {
+        setFocusDt(elem.getAttribute("data-date-str") || undefined);
+        break;
+      }
+    }
+  };
+
+  const handleScroll = () => {
+    // console.log("scrollend");
+    setTimeout(getCurrentElem, 0);
+  };
+
   if (!timeline) return null;
 
   return (
     <div>
+      {focusDt && (
+        <div
+          className={classNames(
+            "inline-block sticky top-0 bg-primary text-xl font-bold text-white",
+            "px-3 py-1 rounded-full shadow-lg"
+          )}
+        >
+          {focusDt}
+        </div>
+      )}
       <ul className="space-y-2 pb-10">
         {timeline.map((item, i) => {
           const imgAddresses = getImageAddresses(item.summary.note.text);
@@ -68,7 +121,11 @@ const Timeline = () => {
           return (
             <li
               key={i}
-              className="border-b last:border-b-0 border-primary border-opacity-10 py-4"
+              data-date-str={moment(item.date).format("YYYY MMMM DD")}
+              className={classNames(
+                "border-b last:border-b-0 border-primary border-opacity-10 py-4",
+                "timeline"
+              )}
             >
               <div className="flex items-center justify-between mb-2">
                 {/* Top section */}
@@ -91,7 +148,7 @@ const Timeline = () => {
                   <div
                     key={i}
                     className={classNames(
-                      "w-20 h-20 overflow-hidden rounded-md",
+                      "w-40 h-40 overflow-hidden rounded-md",
                       "border border-primary border-opacity-10"
                     )}
                   >
@@ -101,6 +158,7 @@ const Timeline = () => {
                         "object-cover",
                         "w-full h-full"
                       )}
+                      src={cachedImages[`${item.summary.note.id}-${addr}`]}
                       alt="Retro Note"
                     />
                   </div>
@@ -132,10 +190,8 @@ const Timeline = () => {
                 )}
                 onClick={() => handleNoteClick(item.summary.note)}
               >
-                {item.type === "mention" && <span>Mentioned in - </span>}
-                {item.type === "note" && <span>Wrote </span>}
                 <BiFile />
-                <span>{textToTitle(item.summary.note.text, 40)}</span>
+                <span>{textToTitle(item.summary.note.text, 20)}</span>
               </div>
             </li>
           );
