@@ -21,7 +21,7 @@ import Todos from "./Todos";
 
 const Col = ({ children, className, ...restProps }: ComponentProps<"div">) => {
   return (
-    <div className={classNames(className, "md:w-80 space-y-4")} {...restProps}>
+    <div className={classNames(className, "flex-1 min-w-fit space-y-4")} {...restProps}>
       {children}
     </div>
   );
@@ -29,7 +29,7 @@ const Col = ({ children, className, ...restProps }: ComponentProps<"div">) => {
 
 const Section = ({ children }: PropsWithChildren) => {
   return (
-    <div className="md:flex flex-wrap md:space-x-8 my-10 space-y-4 md:space-y-0">
+    <div className="my-10 flex gap-8 flex-wrap">
       {children}
     </div>
   );
