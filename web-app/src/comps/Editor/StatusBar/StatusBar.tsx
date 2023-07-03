@@ -36,7 +36,7 @@ const StatusBar = ({
   padding: number;
 }) => {
   const { syncState } = useContext(PouchContext);
-  const { showStats, note, sideBar, setSideBar, isRoll, home } =
+  const { showStats, note, sideBar, setSideBar, isRoll, storage } =
     useContext(EditorContext);
   const [fullScreen, setFullScreen] = useState(false);
 
@@ -96,9 +96,7 @@ const StatusBar = ({
         <Button
           lite={sideBar !== "storage"}
           className="rounded-none"
-          onClick={() =>
-            setSideBar((b) => (b === "storage" ? undefined : "storage"))
-          }
+          onClick={storage.pouch.sync}
         >
           <SyncIcon state={syncState} />
         </Button>

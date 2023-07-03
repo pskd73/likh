@@ -18,6 +18,7 @@ import Landing from "./Landing";
 import Timeline from "./comps/Editor/Home/Timeline";
 import HomeScreen from "./comps/Editor/Home/HomeScreen";
 import EditableNote from "./comps/Editor/EditableNote";
+import Storage from "./comps/Editor/SidePanel/Storage";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
       {
         path: "journal/:hashtag",
         element: <EditableNote />,
+      },
+      {
+        path: "settings/sync",
+        element: <Storage />,
       },
     ],
   },

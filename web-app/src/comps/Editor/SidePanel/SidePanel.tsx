@@ -9,6 +9,7 @@ import Storage from "./Storage";
 import {
   BiChevronLeft,
   BiChevronRight,
+  BiCog,
   BiHomeSmile,
   BiSidebar,
 } from "react-icons/bi";
@@ -72,7 +73,7 @@ const SidePanel = () => {
                 <BiSidebar />
               </Button>
               {note && (
-                <Button lite className="py-2" onClick={home}>
+                <Button lite className="py-2" onClick={handleHome}>
                   <BiHomeSmile />
                 </Button>
               )}
@@ -89,6 +90,9 @@ const SidePanel = () => {
                 "border-b border-primary border-opacity-10"
               )}
             >
+              <Button lite onClick={() => navigate("/write/settings/sync")}>
+                <BiCog />
+              </Button>
               <Button lite onClick={() => navigate("/write/timeline")}>
                 <TbTimelineEvent />
               </Button>

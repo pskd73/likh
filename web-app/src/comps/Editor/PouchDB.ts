@@ -20,6 +20,7 @@ export type MyPouch = {
     attachment: { id: string; data: string; type: string }
   ) => Promise<void>;
   attachment: (id: string, attachmentId: string) => Promise<Blob>;
+  sync: () => void;
 };
 
 export const MakePouch = (
@@ -38,30 +39,34 @@ export const MakePouch = (
   const db: PouchDB.Database = new PouchDB(localName);
   let remote: PouchDB.Database | undefined = undefined;
 
-  if (config.username && config.password) {
-    remote = new PouchDB(
-      `https://${config.username}:${config.password}@sync.retronote.app:6984/notes_${config.username}`
-    );
-    db.sync(remote, { live: true })
-      .on("change", function (info) {
-        onStateChange("change", { changeInfo: info });
-      })
-      .on("paused", function (err) {
-        onStateChange("paused", {});
-      })
-      .on("active", function () {
-        onStateChange("active", {});
-      })
-      .on("denied", function (err) {
-        onStateChange("denied", {});
-      })
-      .on("complete", function (info) {
-        onStateChange("complete", {});
-      })
-      .on("error", function (err) {
-        onStateChange("error", {});
-      });
+  function sync() {
+    if (config.username && config.password) {
+      remote = new PouchDB(
+        `https://${config.username}:${config.password}@sync.retronote.app:6984/notes_${config.username}`
+      );
+      db.sync(remote, { live: true })
+        .on("change", function (info) {
+          onStateChange("change", { changeInfo: info });
+        })
+        .on("paused", function (err) {
+          onStateChange("paused", {});
+        })
+        .on("active", function () {
+          onStateChange("active", {});
+        })
+        .on("denied", function (err) {
+          onStateChange("denied", {});
+        })
+        .on("complete", function (info) {
+          onStateChange("complete", {});
+        })
+        .on("error", function (err) {
+          onStateChange("error", {});
+        });
+    }
   }
+
+  sync();
 
   function encrypt<T>(obj: T) {
     return CryptoJS.AES.encrypt(JSON.stringify(obj), secret).toString();
@@ -156,6 +161,7 @@ export const MakePouch = (
     del,
     attach,
     attachment,
+    sync,
   };
 };
 
