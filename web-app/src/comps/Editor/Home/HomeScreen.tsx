@@ -21,7 +21,7 @@ import Todos from "./Todos";
 
 const Col = ({ children, className, ...restProps }: ComponentProps<"div">) => {
   return (
-    <div className={classNames(className, "flex-1 min-w-fit space-y-4")} {...restProps}>
+    <div className={classNames(className, "w-full md:w-72 space-y-4")} {...restProps}>
       {children}
     </div>
   );
@@ -63,6 +63,7 @@ const HomeScreen = () => {
 
   return (
     <div className="pb-20">
+      {/* Header */}
       <div className="flex flex-col">
         <div className="space-y-4 w-full">
           <div className="text-5xl w-full flex items-center space-x-4 font-CrimsonText">
@@ -81,6 +82,8 @@ const HomeScreen = () => {
           </Col>
         </div>
       </div>
+
+      {/* Body */}
       <Section>
         <Col>
           {!searchTerm && !seeAll && <QuickStart />}
@@ -95,7 +98,7 @@ const HomeScreen = () => {
             <Reminders reminderNotes={reminderNotes} />
           )}
         </Col>
-        <Col className="flex-1">
+        <Col>
           <Calendar />
         </Col>
       </Section>
