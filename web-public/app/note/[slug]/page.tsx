@@ -111,6 +111,16 @@ export default async function Note({ params }: { params: { slug: string } }) {
                           </span>
                         );
                       },
+                      code({ node, className, children, ...props }) {
+                        return (
+                          <code
+                            {...props}
+                            className={className + " text-white"}
+                          >
+                            {children}
+                          </code>
+                        );
+                      },
                     }}
                   >
                     {publicNote.note.text}
