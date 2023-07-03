@@ -105,20 +105,11 @@ const SidePanel = () => {
             </div>
             <div
               style={{ maxHeight: "calc(100vh - 50px)" }}
-              className="overflow-scroll scrollbar-hide"
+              className="overflow-scroll scrollbar-hide py-4 space-y-2"
             >
-              <div className={classNames("max-w-full overflow-hidden")}>
-                {isRoll && (
-                  <div className="p-4">
-                    <RollOutline />
-                  </div>
-                )}
-                <Outline />
-                <Links />
-                {sideBar === "shortcuts" && <Shortcuts />}
-                {sideBar === "storage" && <Storage />}
-              </div>
-
+              {isRoll && <RollOutline />}
+              <Outline />
+              <Links />
               <WithTitle title="Browse">
                 <Browse
                   lite
