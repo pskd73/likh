@@ -2,13 +2,9 @@ import classNames from "classnames";
 import { useContext } from "react";
 import { EditorContext } from "../Context";
 import Outline from "./Outline";
-import Shortcuts from "./Shortcuts";
 import { isMobile } from "../device";
 import RollOutline from "./RollOutline";
-import Storage from "./Storage";
 import {
-  BiChevronLeft,
-  BiChevronRight,
   BiCog,
   BiHomeSmile,
   BiSidebar,
