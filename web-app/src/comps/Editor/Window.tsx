@@ -66,7 +66,7 @@ const EditorWindow = () => {
               }}
             >
               <div
-                className={classNames("w-full max-w-[1000px] md:w-[1000px]")}
+                className={classNames("w-full max-w-[1000px]")}
               >
                 <Outlet />
               </div>

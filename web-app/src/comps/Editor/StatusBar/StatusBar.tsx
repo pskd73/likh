@@ -1,22 +1,21 @@
-import { useContext, useState } from "react";
+import { ComponentProps, useContext, useState } from "react";
 import { EditorContext } from "../Context";
 import TextCounter from "./TextCounter";
-import Button from "../../Button";
+import BaseButton from "../../Button";
 import {
   BiCheckShield,
   BiError,
   BiFullscreen,
-  BiHomeSmile,
   BiLoaderAlt,
   BiSave,
   BiSidebar,
-  BiSpreadsheet,
 } from "react-icons/bi";
 import { saveNote } from "../File";
 import Delete from "./Delete";
 import classNames from "classnames";
 import { PouchContext } from "../PouchDB";
 import { isMobile } from "../device";
+import { twMerge } from "tailwind-merge";
 
 const SyncIcon = ({ state }: { state: string }) => {
   if (state === "paused" || state === "init") {
@@ -26,6 +25,18 @@ const SyncIcon = ({ state }: { state: string }) => {
     return <BiError />;
   }
   return <BiLoaderAlt className="animate-spin" />;
+};
+
+const Button = ({
+  children,
+  className,
+  ...restProps
+}: ComponentProps<"button"> & { lite: boolean }) => {
+  return (
+    <BaseButton {...restProps} className={twMerge(className, "md:text-lg")}>
+      {children}
+    </BaseButton>
+  );
 };
 
 const StatusBar = ({
@@ -113,7 +124,7 @@ const StatusBar = ({
         {showStats && note && <TextCounter text={note.text} />}
         <Button
           lite={!fullScreen}
-          className="rounded-none"
+          className="rounded-none hidden md:block"
           onClick={handleFullScreen}
         >
           <BiFullscreen />

@@ -48,7 +48,7 @@ const SidePanel = () => {
         className={classNames(
           "transition-all z-30 h-[100vh] overflow-y-scroll scrollbar-hide",
           "bg-base md:bg-primary md:bg-opacity-5",
-          "md:border-r border-primary border-opacity-10",
+          "border-r border-primary border-opacity-10",
           "fixed top-0 w-[300px]",
           {
             "-left-[270px]": !sideBar && !isMobile,
