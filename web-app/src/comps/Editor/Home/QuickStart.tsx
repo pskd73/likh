@@ -42,6 +42,7 @@ const QuickStart = () => {
   };
 
   const handleNewNote = () => {
+    Event.track("new_note");
     const note = newNote({
       text: `# A title for the note\nWrite your mind here ...`,
     });

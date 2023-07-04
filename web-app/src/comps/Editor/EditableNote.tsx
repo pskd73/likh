@@ -17,6 +17,7 @@ import { getGoogleCalendarLink } from "./Reminder";
 import { FiExternalLink } from "react-icons/fi";
 import { SavedNote } from "./type";
 import { useNavigate, useParams } from "react-router-dom";
+import Event from "../../components/Event";
 
 const dtToIso = (dt: Date) => {
   return moment(dt).format("YYYY-MM-DDThh:mm:ss");
@@ -96,6 +97,7 @@ const EditableNote = () => {
   };
 
   const handleNoteLinkClick = async (title: string, id?: string) => {
+    Event.track("new_linked_note");
     if (id) {
       const note = await storage.getNote(id);
       if (note) {
@@ -108,6 +110,7 @@ const EditableNote = () => {
   };
 
   const handleNewRollNote = () => {
+    Event.track("new_roll_note");
     const savedNote = newNote(
       {
         text: `${rollHashTag}\nWrite your journal ...`,

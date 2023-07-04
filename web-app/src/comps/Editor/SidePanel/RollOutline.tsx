@@ -8,6 +8,7 @@ import List from "../List";
 import { SavedNote } from "../type";
 import { scrollTo } from "../scroll";
 import { textToTitle } from "../../../Note";
+import Event from "../../../components/Event";
 
 const RollOutline = () => {
   const { notes, newNote, rollHashTag } = useContext(EditorContext);
@@ -48,6 +49,7 @@ const RollOutline = () => {
   };
 
   const handleNew = () => {
+    Event.track("new_roll_note");
     const savedNote = newNote(
       {
         text: `${rollHashTag}\nWrite your day ...`,
@@ -119,9 +121,7 @@ const RollOutline = () => {
                 <BiFile />
               </span>
               <span>
-                {moment(new Date(note.created_at)).format(
-                  "h:mm:ss a"
-                )}
+                {moment(new Date(note.created_at)).format("h:mm:ss a")}
               </span>
             </div>
             <List.Item.Description>
