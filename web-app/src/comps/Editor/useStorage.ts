@@ -16,7 +16,7 @@ const shouldSave = (id: string) => {
 
 export type Storage = {
   notes: NoteMeta[];
-  newNote: (text: string, date?: number) => SavedNote;
+  newNote: (text: string, date?: number, id?: string) => SavedNote;
   getNote: (id: string) => Promise<SavedNote | undefined>;
   getRecentNote: () => Promise<SavedNote | undefined>;
   saveNote: (note: SavedNote) => void;
@@ -67,17 +67,11 @@ const useStorage = (pdb: Pouch.PouchContextType): Storage => {
     }, 1.5 * 1000);
   };
 
-  const newNote = (text: string, date?: number) => {
-    const id = new Date().getTime().toString();
+  const newNote = (text: string, date?: number, id?: string) => {
+    id = id || new Date().getTime().toString();
     const newNote = { id, text, created_at: date || new Date().getTime() };
-    const newNotes = [
-      ...notes,
-      {
-        id,
-      },
-    ];
     saveNote(newNote);
-    setNotes(newNotes);
+    setNotes((_notes) => [..._notes, { id: id! }]);
     return newNote;
   };
 

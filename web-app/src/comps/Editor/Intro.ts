@@ -77,3 +77,28 @@ You can add images to your notes with basic __markdown__. All you need is the _U
 ![Superb Fairywren](https://cdn.pixabay.com/photo/2023/05/22/11/22/superb-fairywren-8010454_1280.jpg "Superb Fairywren")
 ![Insect Beetle Soft](https://cdn.pixabay.com/photo/2023/05/22/18/17/insect-8011258_1280.jpg "Insect Beetle Soft")
 Here is the syntax for it - https://cdn.pixabay.com/photo/2023/05/22/18/17/insect-8011258_1280.jpg`
+
+export const SAMPLE_MAIN = `# 😇 Sample note
+#sample/intro
+Everything is a note here. Use __markdown__ to _style_ them.
+> Simplicity, control are the core values of this app. No ~~overwhelming~~
+
+1. Navigate to [[😎 More tips]]
+2. More on [[🧵 Journaling]]`
+
+export const SAMPLE_MORE_TIPS = `# 😎 More tips
+#sample/tips
+- [ ] You can manage your to-dos here
+- [x] No procrastination
+- Add in-note timestamps. Example: Retro Note is first released @2023-06-01T12:00:00 
+- Go to [Timeline](/write/timeline) and see your re-live your past and prepare for future!
+- Save your notes any time as _.md_ file by just clicking save button bottom right`
+
+export const SAMPLE_JOURNALING = `# 🧵 Journaling
+#sample/tips
+- Move all your notes to a folder inside \`journal\`. For example #journal/sample
+- Make use of __Calendar__ view.
+- Use timestamps for tagging incidents either past or future. 
+    - Example: I graduated @2014-07-12T12:00:00 
+- Scroll through your [Timeline](/write/timeline)`
+

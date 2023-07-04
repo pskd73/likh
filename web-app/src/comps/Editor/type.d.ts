@@ -1,6 +1,7 @@
 export type NewNote = {
   text: string;
   created_at?: number;
+  id?: string;
 }
 
 export type NoteMeta = {

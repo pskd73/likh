@@ -3,12 +3,13 @@ import List from "../List";
 import { ListContainer, Title } from "./Common";
 import { EditorContext } from "../Context";
 import { BiBulb, BiFile, BiPlus } from "react-icons/bi";
-import { INTRO_TEXT } from "../Intro";
+import { SAMPLE_JOURNALING, SAMPLE_MAIN, SAMPLE_MORE_TIPS } from "../Intro";
 import { FiUpload } from "react-icons/fi";
 import { openFile } from "../File";
 import { PersistedState } from "../usePersistedState";
 import WhatsNew from "./WhatsNew";
 import { useNavigate } from "react-router-dom";
+import Event from "../../../components/Event";
 
 const { hook: useViewedHelp } = PersistedState<string[]>("viewedHelp");
 
@@ -23,11 +24,21 @@ const QuickStart = () => {
     navigate(`/write/note/${note.id}`);
   };
 
-  const handleSampleNote = () => {
-    const note = newNote({
-      text: INTRO_TEXT,
+  const handleSampleNote = async () => {
+    Event.track("sample_note");
+    newNote({
+      text: SAMPLE_JOURNALING,
+      id: "sample_journaling",
     });
-    navigate(`/write/note/${note.id}`);
+    newNote({
+      text: SAMPLE_MORE_TIPS,
+      id: "sample_tips",
+    });
+    newNote({
+      text: SAMPLE_MAIN,
+      id: "sample",
+    });
+    navigate(`/write/note/sample`);
   };
 
   const handleNewNote = () => {
