@@ -56,5 +56,5 @@ export function b64toBlob(b64Data: string, contentType = "", sliceSize = 512) {
 
 escape.matchOperatorsRe = /[|\\{}()[\]^$+*?.]/g;
 export function escape(str: string) {
-  return str.replace(escape.matchOperatorsRe, "\\$&");
+  return str.replaceAll(escape.matchOperatorsRe, "\\$&");
 }
