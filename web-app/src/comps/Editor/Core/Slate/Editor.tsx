@@ -40,6 +40,7 @@ import { PastedImg, SavedImg, useEditorPaste } from "../../useEditorPaste";
 import { Theme, Themes } from "../../Theme";
 import Leaf from "./Leaf";
 import SlateElement from "./SlateElement";
+import { escape } from "../../../../util";
 
 const defaultValue = [
   {
@@ -152,12 +153,12 @@ const Editor = ({
             inside: {
               ...(newGrammer[key] as any).inside,
               highlight: {
-                pattern: RegExp(highlight, "i"),
+                pattern: RegExp(escape(highlight), "i"),
               },
             },
           };
         }
-        newGrammer.highlight = { pattern: RegExp(highlight, "i"), inside: {} };
+        newGrammer.highlight = { pattern: RegExp(escape(highlight), "i"), inside: {} };
       }
       const tokens = Prism.tokenize(node.text, newGrammer);
 
