@@ -123,7 +123,7 @@ const cards: Record<
     content: (
       <p>
         Thoughts are always interconnected. You can link one note from other
-        just be typeing <strong>[[</strong>
+        just by typing <strong>[[</strong>
       </p>
     ),
   },

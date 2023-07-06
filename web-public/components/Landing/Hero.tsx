@@ -130,7 +130,7 @@ function AllFeatures() {
           <FeatureItem.Body>
             <FeatureItem.Title>Journaling</FeatureItem.Title>
             <FeatureItem.Description>
-              Write your dairies or any chronological notes
+              Write your diaries or any chronological notes
             </FeatureItem.Description>
           </FeatureItem.Body>
         </FeatureItem>
