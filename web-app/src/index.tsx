@@ -19,6 +19,7 @@ import Timeline from "./comps/Editor/Home/Timeline";
 import HomeScreen from "./comps/Editor/Home/HomeScreen";
 import EditableNote from "./comps/Editor/EditableNote";
 import Storage from "./comps/Editor/SidePanel/Storage";
+import Shared from "./comps/Editor/Shared";
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
       {
         path: "settings/sync",
         element: <Storage />,
+      },
+      {
+        path: "shared/:noteId",
+        element: <Shared />,
       },
     ],
   },
