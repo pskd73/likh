@@ -64,10 +64,7 @@ const Storage = () => {
   };
 
   const handleUPSave = () => {
-    if (
-      username !== enteredUsername &&
-      password !== enteredPassword
-    ) {
+    if (username !== enteredUsername && password !== enteredPassword) {
       setUsername(enteredUsername);
       setPassword(enteredPassword);
       alert("Updated!");
@@ -161,8 +158,21 @@ const Storage = () => {
             </Button>
           </div>
           <div className="text-xs opacity-60">
-            <strong>Username & passwords</strong> are used to sync your data
-            across the devices. Make sure they are valid before saving them.
+            <strong>
+              Username & passwords are provided by the maker{" "}
+              <a
+                href="https://twitter.com/pramodk73"
+                className="hover:underline italic"
+                target="_blank"
+                rel="noreferrer"
+              >
+                @pramodk73
+              </a>
+              . It is manual just to fight against spam :). Please DM him to get
+              them.
+            </strong>{" "}
+            They are used to sync your data across the devices. Make sure they
+            are valid before saving them.
           </div>
         </div>
       </div>
