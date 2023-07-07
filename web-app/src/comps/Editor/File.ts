@@ -1,7 +1,6 @@
 import JSZip from "jszip";
 import { textToTitle } from "../../Note";
 import { blobToB64, download } from "../../util";
-import { getImage } from "./db";
 import { NoteMeta, SavedNote } from "./type";
 import saveAs from "file-saver";
 import { MyPouch } from "./PouchDB";
@@ -11,6 +10,16 @@ export type DownloadableNote = {
   filename: string;
   mime: string;
 };
+
+function cleanFileName(text: string) {
+  return text
+    .replace(
+      /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g,
+      ""
+    )
+    .replace(/\s+/g, " ")
+    .trim();
+}
 
 export async function getDownloadableNote(
   note: SavedNote,
@@ -24,12 +33,12 @@ export async function getDownloadableNote(
     const blob = await pouch.attachment(note.id, id);
     const uri = await blobToB64(blob);
     if (uri) {
-      // text = text.replaceAll(match[0], uri as string);
+      text = text.replaceAll(match[0], uri as string);
     }
   }
 
   const title = textToTitle(note.text, 30).replace(/\.+$/, "");
-  const filename = `${title}-${new Date().getTime()}.md`.replaceAll("/", "");
+  const filename = `${title}.md`.replaceAll("/", "");
 
   return { text, filename, mime: "plain/text" };
 }
@@ -71,17 +80,10 @@ export async function zipIt(
   var zip = new JSZip();
 
   zip.file("notes", JSON.stringify(noteMeta));
-  let i = 0;
-  const limit = (window as any).limit || 10000;
-  console.log(Object.keys(notes))
   for (const id of Object.keys(notes)) {
     const savedNote = notes[id];
     const downloadableNote = await getDownloadableNote(savedNote, pouch);
     zip.file(downloadableNote.filename, downloadableNote.text);
-    if (i >= limit) {
-      break;
-    }
-    i++;
   }
   zip.file(
     "meta",
