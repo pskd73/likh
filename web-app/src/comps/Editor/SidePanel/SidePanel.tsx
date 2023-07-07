@@ -4,25 +4,37 @@ import { EditorContext } from "../Context";
 import Outline from "./Outline";
 import { isMobile } from "../device";
 import RollOutline from "./RollOutline";
-import {
-  BiCog,
-  BiHomeSmile,
-  BiSidebar,
-} from "react-icons/bi";
+import { BiCog, BiHomeSmile, BiSidebar } from "react-icons/bi";
 import Button from "../../Button";
 import Browse from "../Home/Browse";
 import Links from "./Links";
 import { WithTitle } from "./Common";
 import { useNavigate } from "react-router-dom";
 import { TbTimelineEvent } from "react-icons/tb";
+import { TiDownload } from "react-icons/ti";
+import { zipIt } from "../File";
+import { SavedNote } from "../type";
 
 const SidePanel = () => {
   const navigate = useNavigate();
-  const { sideBar, setSideBar, isRoll, home, note } = useContext(EditorContext);
+  const { sideBar, setSideBar, isRoll, home, note, storage } =
+    useContext(EditorContext);
 
   const handleHome = () => {
     home();
     navigate("/write");
+  };
+
+  const handleZip = async () => {
+    const notes: Record<string, SavedNote> = {};
+    for (const meta of storage.notes) {
+      const id = meta.id;
+      const savedNote = await storage.getNote(id);
+      if (savedNote) {
+        notes[id] = savedNote;
+      }
+    }
+    zipIt(storage.notes, notes, storage.pouch);
   };
 
   return (
@@ -86,6 +98,9 @@ const SidePanel = () => {
                 "border-b border-primary border-opacity-10"
               )}
             >
+              <Button lite onClick={handleZip}>
+                <TiDownload />
+              </Button>
               <Button lite onClick={() => navigate("/write/settings/sync")}>
                 <BiCog />
               </Button>
