@@ -29,7 +29,7 @@ export async function getDownloadableNote(
   }
 
   const title = textToTitle(note.text, 30).replace(/\.+$/, "");
-  const filename = `${title}-${new Date().getTime()}.md`;
+  const filename = `${title}-${new Date().getTime()}.md`.replaceAll("/", "");
 
   return { text, filename, mime: "plain/text" };
 }
