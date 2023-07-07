@@ -24,7 +24,7 @@ export async function getDownloadableNote(
     const blob = await pouch.attachment(note.id, id);
     const uri = await blobToB64(blob);
     if (uri) {
-      text = text.replaceAll(match[0], uri as string);
+      // text = text.replaceAll(match[0], uri as string);
     }
   }
 
