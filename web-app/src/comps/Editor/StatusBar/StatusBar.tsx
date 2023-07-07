@@ -53,7 +53,7 @@ const StatusBar = ({
 
   const handleSave = () => {
     if (note) {
-      saveNote(note);
+      saveNote(note, storage.pouch);
     }
   };
 

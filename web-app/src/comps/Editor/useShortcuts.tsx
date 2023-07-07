@@ -18,7 +18,7 @@ const shortcuts: Record<string, (editor: EditorContextType) => void> = {
     editor.newNote({ text: "New note" });
     editor.setRollHashTag("");
   },
-  s: (editor) => editor.note && saveNote(editor.note),
+  s: (editor) => editor.note && saveNote(editor.note, editor.storage.pouch),
   o: async (editor) => {
     const text = (await openFile()) as string;
     editor.newNote({ text });
@@ -32,7 +32,7 @@ const shortcuts: Record<string, (editor: EditorContextType) => void> = {
         notes[id] = savedNote;
       }
     }
-    zipIt(editor.storage.notes, notes);
+    zipIt(editor.storage.notes, notes, editor.storage.pouch);
   },
 };
 

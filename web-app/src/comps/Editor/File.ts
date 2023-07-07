@@ -1,9 +1,10 @@
 import JSZip from "jszip";
 import { textToTitle } from "../../Note";
-import { download } from "../../util";
+import { blobToB64, download } from "../../util";
 import { getImage } from "./db";
 import { NoteMeta, SavedNote } from "./type";
 import saveAs from "file-saver";
+import { MyPouch } from "./PouchDB";
 
 export type DownloadableNote = {
   text: string;
@@ -12,15 +13,19 @@ export type DownloadableNote = {
 };
 
 export async function getDownloadableNote(
-  note: SavedNote
+  note: SavedNote,
+  pouch: MyPouch
 ): Promise<DownloadableNote> {
   let text = note.text;
 
-  const imagesMatch = text.matchAll(/image:\/\/([0-9]+)/g) || [];
+  const imagesMatch = text.matchAll(/attachment:\/\/([0-9]+)/g) || [];
   for (const match of Array.from(imagesMatch)) {
-    const id = Number(match[1]);
-    const img = await getImage(id);
-    text = text.replaceAll(match[0], img.uri);
+    const id = match[1];
+    const blob = await pouch.attachment(note.id, id);
+    const uri = await blobToB64(blob);
+    if (uri) {
+      text = text.replaceAll(match[0], uri as string);
+    }
   }
 
   const title = textToTitle(note.text, 30).replace(/\.+$/, "");
@@ -29,8 +34,8 @@ export async function getDownloadableNote(
   return { text, filename, mime: "plain/text" };
 }
 
-export async function saveNote(note: SavedNote) {
-  const { text, filename, mime } = await getDownloadableNote(note);
+export async function saveNote(note: SavedNote, pouch: MyPouch) {
+  const { text, filename, mime } = await getDownloadableNote(note, pouch);
   download(text, filename, mime);
 }
 
@@ -60,17 +65,16 @@ export function openFile(): Promise<string | null | ArrayBuffer> {
 
 export async function zipIt(
   noteMeta: NoteMeta[],
-  notes: Record<string, SavedNote>
+  notes: Record<string, SavedNote>,
+  pouch: MyPouch
 ) {
   var zip = new JSZip();
 
   zip.file("notes", JSON.stringify(noteMeta));
   for (const id of Object.keys(notes)) {
     const savedNote = notes[id];
-    const downloadableNote = await getDownloadableNote(savedNote);
-    savedNote.text = downloadableNote.text;
-    const text = JSON.stringify(savedNote);
-    zip.file(id, text);
+    const downloadableNote = await getDownloadableNote(savedNote, pouch);
+    zip.file(downloadableNote.filename, downloadableNote.text);
   }
   zip.file(
     "meta",
