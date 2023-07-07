@@ -73,6 +73,7 @@ export async function zipIt(
   zip.file("notes", JSON.stringify(noteMeta));
   let i = 0;
   const limit = (window as any).limit || 10000;
+  console.log(Object.keys(notes))
   for (const id of Object.keys(notes)) {
     const savedNote = notes[id];
     const downloadableNote = await getDownloadableNote(savedNote, pouch);
