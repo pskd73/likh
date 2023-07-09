@@ -30,10 +30,10 @@ const Input = ({
       className={twMerge(
         classNames(
           "mt-1 w-full rounded-md border border-primary",
-          "border-opacity-30 sm:text-sm p-2",
+          "border-opacity-30 sm:text-sm p-2 bg-primary",
           {
-            "shadow-sm": !disabled,
-            "bg-primary bg-opacity-20 opacity-50": disabled,
+            "bg-opacity-0 shadow-sm": !disabled,
+            "bg-opacity-20 opacity-50": disabled,
           }
         ),
         className
@@ -127,10 +127,10 @@ const Storage = () => {
             />
           </div>
           <div className="w-full">
-            <Label>Password</Label>
+            <Label>Sync key</Label>
             <Input
               value={enteredPassword}
-              type="password"
+              type="text"
               placeholder="Password for sync"
               disabled={!enabled.includes("password")}
               onChange={(e) => setEnteredPassword(e.target.value)}
@@ -159,7 +159,7 @@ const Storage = () => {
           </div>
           <div className="text-xs opacity-60">
             <strong>
-              Username & passwords are provided by the maker{" "}
+              Username & Sync keys are provided by the maker{" "}
               <a
                 href="https://twitter.com/pramodk73"
                 className="hover:underline italic"
