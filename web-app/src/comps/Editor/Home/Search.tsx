@@ -17,6 +17,7 @@ const Search = ({
       )}
     >
       <input
+        id="search"
         type="text"
         placeholder="Search here"
         className={classNames(

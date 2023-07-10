@@ -2,6 +2,7 @@ import { useCallback, useEffect } from "react";
 import { EditorContextType } from "./Context";
 import { openFile, saveNote, zipIt } from "./File";
 import { SavedNote } from "./type";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 
 const isWindowShortcut = (e: KeyboardEvent) => {
   const mac = e.metaKey && e.ctrlKey;
@@ -9,19 +10,23 @@ const isWindowShortcut = (e: KeyboardEvent) => {
   return mac;
 };
 
-const shortcuts: Record<string, (editor: EditorContextType) => void> = {
+const shortcuts: Record<
+  string,
+  (editor: EditorContextType, navigate: NavigateFunction) => void
+> = {
   l: (editor) =>
     editor.setSideBar((b) => (b === "explorer" ? undefined : "explorer")),
-  i: (editor) =>
-    editor.setSideBar((b) => (b === "outline" ? undefined : "outline")),
-  n: (editor) => {
-    editor.newNote({ text: "New note" });
-    editor.setRollHashTag("");
+  n: (editor, navigate) => {
+    const note = editor.newNote({
+      text: `# A title for the note\nWrite your mind here ...`,
+    });
+    navigate(`/write/note/${note.id}`);
   },
   s: (editor) => editor.note && saveNote(editor.note, editor.storage.pouch),
-  o: async (editor) => {
+  o: async (editor, navigate) => {
     const text = (await openFile()) as string;
-    editor.newNote({ text });
+    const note = editor.newNote({ text });
+    navigate(`/write/note/${note.id}`);
   },
   b: async (editor) => {
     const notes: Record<string, SavedNote> = {};
@@ -34,16 +39,25 @@ const shortcuts: Record<string, (editor: EditorContextType) => void> = {
     }
     zipIt(editor.storage.notes, notes, editor.storage.pouch);
   },
+  h: (editor, navigate) => navigate("/write"),
+  v: (editor) => {
+    editor.setSideBar((b) => "explorer");
+    setTimeout(() => {
+      document.getElementById("search")?.focus();
+    }, 200);
+  },
 };
 
 const useShortcuts = (editor: EditorContextType) => {
+  const navigate = useNavigate();
+
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (isWindowShortcut(e)) {
         if (shortcuts[e.key]) {
           e.preventDefault();
           e.stopPropagation();
-          shortcuts[e.key](editor);
+          shortcuts[e.key](editor, navigate);
         }
       }
     },

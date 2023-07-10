@@ -84,7 +84,8 @@ Everything is a note here. Use __markdown__ to _style_ them.
 > Simplicity, control are the core values of this app. No ~~overwhelming~~
 
 1. Navigate to [[😎 More tips]]
-2. More on [[🧵 Journaling]]`
+2. More on [[🧵 Journaling]]
+3. Check [[⌨️ Retro Note Shortcuts]]`
 
 export const SAMPLE_MORE_TIPS = `# 😎 More tips
 #sample/tips
@@ -102,3 +103,13 @@ export const SAMPLE_JOURNALING = `# 🧵 Journaling
     - Example: I graduated @2014-07-12T12:00:00 
 - Scroll through your [Timeline](/write/timeline)`
 
+export const SAMPLE_SHORTCUTS = `# ⌨️ Retro Note Shortcuts
+All following shortcuts are with \`command ⌘\` + \`control ⌃\`
+1. \`l\` - toggle side menu
+2. \`n\` - create new note
+3. \`s\` - save current note as __.md__ to local PC
+4. \`o\` - import local __.md__ file to _Retro Note_
+5. \`b\` - take backup of your entire collection as a __zip__ of __.md__ files
+6. \`h\` - navigate to home
+7. \`v\` - global search
+`
