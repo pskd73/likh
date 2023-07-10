@@ -74,12 +74,6 @@ const HomeScreen = () => {
               Hello <span className="italic">there!</span>
             </span>
           </div>
-          <Col>
-            <Search
-              searchTerm={searchTerm}
-              onChange={(term) => setSearchTerm(term)}
-            />
-          </Col>
         </div>
       </div>
 

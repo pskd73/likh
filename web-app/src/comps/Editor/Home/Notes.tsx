@@ -2,7 +2,12 @@ import { cloneElement, useContext, useState } from "react";
 import { EditorContext } from "../Context";
 import { ListContainer, Title } from "./Common";
 import List from "../List";
-import { BiArrowFromBottom, BiArrowFromTop, BiFile } from "react-icons/bi";
+import {
+  BiArrowFromBottom,
+  BiArrowFromTop,
+  BiFile,
+  BiInfoCircle,
+} from "react-icons/bi";
 import { textToTitle } from "../../../Note";
 import { highlight, makeExtractor } from "../Marker";
 import { escape } from "../../../util";
@@ -20,17 +25,29 @@ const Highligher = (word: string) =>
 const Notes = ({
   toggleSeeAll,
   seeAll,
+  noToggle,
+  noTitle,
 }: {
   toggleSeeAll: () => void;
   seeAll: boolean;
+  noToggle?: boolean;
+  noTitle?: boolean;
 }) => {
   const navigate = useNavigate();
   const { notesToShow, searchTerm } = useContext(EditorContext);
 
   return (
     <div>
-      <Title>Latest</Title>
+      {!noTitle && <Title>Notes</Title>}
       <ListContainer>
+        {Object.keys(notesToShow).length === 0 && (
+          <div className="text-sm p-2 flex items-center space-x-2">
+            <span className="opacity-50">
+              <BiInfoCircle />
+            </span>
+            <span>No notes!</span>
+          </div>
+        )}
         <List>
           {notesToShow
             .slice(0, searchTerm || seeAll ? notesToShow.length : 5)
@@ -64,17 +81,19 @@ const Notes = ({
                   )}
               </List.Item>
             ))}
-          <List.Item
-            withIcon
-            noHover
-            className="last:mb-0 opacity-30 hover:underline cursor-pointer"
-            onClick={toggleSeeAll}
-          >
-            <List.Item.Icon>
-              {seeAll ? <BiArrowFromBottom /> : <BiArrowFromTop />}
-            </List.Item.Icon>
-            <span>[{seeAll ? "Collapse" : "See all"}]</span>
-          </List.Item>
+          {!noToggle && (
+            <List.Item
+              withIcon
+              noHover
+              className="last:mb-0 opacity-30 hover:underline cursor-pointer"
+              onClick={toggleSeeAll}
+            >
+              <List.Item.Icon>
+                {seeAll ? <BiArrowFromBottom /> : <BiArrowFromTop />}
+              </List.Item.Icon>
+              <span>[{seeAll ? "Collapse" : "See all"}]</span>
+            </List.Item>
+          )}
         </List>
       </ListContainer>
     </div>
