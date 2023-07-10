@@ -1,5 +1,6 @@
-export const INTRO_TEXT = "" +
-`# 💡 Retro Note - Philosophy
+export const INTRO_TEXT =
+  "" +
+  `# 💡 Retro Note - Philosophy
 #introduction
 
 Writing is not just framing some random words. It is giving shape and structure our vague thoughts. Writing is thinking. Being good at writing makes one good at __articulating thoughts__ which is very fundamental instrument in building human societies. __Retro Note__ is a place where you can write your mind and build better writing habits.
@@ -76,7 +77,7 @@ You can take full advantage of checkbox support in __markdown__ and create your 
 You can add images to your notes with basic __markdown__. All you need is the _URL_ of the link you want to insert in your notes. Currently, we don't support upload directly to notes which will be coming soon. Here are few examples.
 ![Superb Fairywren](https://cdn.pixabay.com/photo/2023/05/22/11/22/superb-fairywren-8010454_1280.jpg "Superb Fairywren")
 ![Insect Beetle Soft](https://cdn.pixabay.com/photo/2023/05/22/18/17/insect-8011258_1280.jpg "Insect Beetle Soft")
-Here is the syntax for it - https://cdn.pixabay.com/photo/2023/05/22/18/17/insect-8011258_1280.jpg`
+Here is the syntax for it - https://cdn.pixabay.com/photo/2023/05/22/18/17/insect-8011258_1280.jpg`;
 
 export const SAMPLE_MAIN = `# 😇 Sample note
 #sample/intro
@@ -85,7 +86,7 @@ Everything is a note here. Use __markdown__ to _style_ them.
 
 1. Navigate to [[😎 More tips]]
 2. More on [[🧵 Journaling]]
-3. Check [[⌨️ Retro Note Shortcuts]]`
+3. Check [[⌨️ Retro Note Shortcuts]]`;
 
 export const SAMPLE_MORE_TIPS = `# 😎 More tips
 #sample/tips
@@ -93,7 +94,7 @@ export const SAMPLE_MORE_TIPS = `# 😎 More tips
 - [x] No procrastination
 - Add in-note timestamps. Example: Retro Note is first released @2023-06-01T12:00:00 
 - Go to [Timeline](/write/timeline) and see your re-live your past and prepare for future!
-- Save your notes any time as _.md_ file by just clicking save button bottom right`
+- Save your notes any time as _.md_ file by just clicking save button bottom right`;
 
 export const SAMPLE_JOURNALING = `# 🧵 Journaling
 #sample/tips
@@ -101,7 +102,7 @@ export const SAMPLE_JOURNALING = `# 🧵 Journaling
 - Make use of __Calendar__ view.
 - Use timestamps for tagging incidents either past or future. 
     - Example: I graduated @2014-07-12T12:00:00 
-- Scroll through your [Timeline](/write/timeline)`
+- Scroll through your [Timeline](/write/timeline)`;
 
 export const SAMPLE_SHORTCUTS = `# ⌨️ Retro Note Shortcuts
 #sample/tips
@@ -113,4 +114,8 @@ All following shortcuts are with \`command ⌘\` + \`control ⌃\`
 5. \`b\` - take backup of your entire collection as a __zip__ of __.md__ files
 6. \`h\` - navigate to home
 7. \`v\` - global search
-`
+
+## 🧭 Navigation
+All following shortcuts are with \`command ⌘\`
+1. \`Left arrow\` - previous (page/note)
+2. \`Right arrow\` - next (page/note)`;
