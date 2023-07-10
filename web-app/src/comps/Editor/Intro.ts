@@ -104,6 +104,7 @@ export const SAMPLE_JOURNALING = `# 🧵 Journaling
 - Scroll through your [Timeline](/write/timeline)`
 
 export const SAMPLE_SHORTCUTS = `# ⌨️ Retro Note Shortcuts
+#sample/tips
 All following shortcuts are with \`command ⌘\` + \`control ⌃\`
 1. \`l\` - toggle side menu
 2. \`n\` - create new note
