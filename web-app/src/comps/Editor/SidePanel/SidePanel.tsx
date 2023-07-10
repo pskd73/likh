@@ -14,11 +14,21 @@ import { TbTimelineEvent } from "react-icons/tb";
 import { TiDownload } from "react-icons/ti";
 import { zipIt } from "../File";
 import { SavedNote } from "../type";
+import Search from "../Home/Search";
+import Notes from "../Home/Notes";
 
 const SidePanel = () => {
   const navigate = useNavigate();
-  const { sideBar, setSideBar, isRoll, home, note, storage } =
-    useContext(EditorContext);
+  const {
+    sideBar,
+    setSideBar,
+    isRoll,
+    home,
+    note,
+    storage,
+    searchTerm,
+    setSearchTerm,
+  } = useContext(EditorContext);
 
   const handleHome = () => {
     home();
@@ -118,6 +128,14 @@ const SidePanel = () => {
               style={{ maxHeight: "calc(100vh - 50px)" }}
               className="overflow-scroll scrollbar-hide py-4 space-y-2"
             >
+              <div className="p-4">
+                <Search searchTerm={searchTerm} onChange={setSearchTerm} />
+                {searchTerm && (
+                  <div className="mt-4">
+                    <Notes noToggle seeAll noTitle toggleSeeAll={() => {}} />
+                  </div>
+                )}
+              </div>
               {isRoll && <RollOutline />}
               <Outline />
               <Links />
