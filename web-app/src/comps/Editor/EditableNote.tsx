@@ -117,7 +117,7 @@ const EditableNote = () => {
       },
       false
     );
-    scrollTo({ noteId: savedNote.id });
+    scrollTo({ noteId: savedNote!.id });
   };
 
   const getSuggestions = async (prefix: string, term: string) => {

@@ -21,18 +21,17 @@ import Todos from "./Todos";
 
 const Col = ({ children, className, ...restProps }: ComponentProps<"div">) => {
   return (
-    <div className={classNames(className, "w-full md:w-72 space-y-4")} {...restProps}>
+    <div
+      className={classNames(className, "w-full md:w-72 space-y-4")}
+      {...restProps}
+    >
       {children}
     </div>
   );
 };
 
 const Section = ({ children }: PropsWithChildren) => {
-  return (
-    <div className="my-10 flex gap-8 flex-wrap">
-      {children}
-    </div>
-  );
+  return <div className="my-10 flex gap-8 flex-wrap">{children}</div>;
 };
 
 const HomeScreen = () => {
@@ -80,7 +79,7 @@ const HomeScreen = () => {
       {/* Body */}
       <Section>
         <Col>
-          {!searchTerm && !seeAll && <QuickStart />}
+          <QuickStart />
           {notesToShow.length > 0 && (
             <Notes seeAll={seeAll} toggleSeeAll={() => setSeeAll((s) => !s)} />
           )}

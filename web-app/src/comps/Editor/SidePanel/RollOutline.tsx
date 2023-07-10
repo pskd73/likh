@@ -58,7 +58,7 @@ const RollOutline = () => {
       false
     );
     setTimeout(() => {
-      scrollTo({ noteId: savedNote.id });
+      scrollTo({ noteId: savedNote!.id });
     }, 100);
   };
 

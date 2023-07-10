@@ -20,13 +20,13 @@ const shortcuts: Record<
     const note = editor.newNote({
       text: `# A title for the note\nWrite your mind here ...`,
     });
-    navigate(`/write/note/${note.id}`);
+    navigate(`/write/note/${note!.id}`);
   },
   s: (editor) => editor.note && saveNote(editor.note, editor.storage.pouch),
   o: async (editor, navigate) => {
     const text = (await openFile()) as string;
     const note = editor.newNote({ text });
-    navigate(`/write/note/${note.id}`);
+    navigate(`/write/note/${note!.id}`);
   },
   b: async (editor) => {
     const notes: Record<string, SavedNote> = {};

@@ -49,7 +49,7 @@ export type EditorContextType = {
   setSearchTerm: StateSetter<string>;
 
   notesToShow: NoteSummary[];
-  newNote: (note: NewNote, replace?: boolean) => SavedNote;
+  newNote: (note: NewNote, replace?: boolean) => SavedNote | undefined;
 
   deleteNote: (noteId: string) => void;
 
@@ -217,6 +217,7 @@ export const useEditor = ({
 
   const newNote = (note: NewNote, replace: boolean = true) => {
     const savedNote = storage.newNote(note.text, note.created_at, note.id);
+    if (!savedNote) return;
     let updatedNotes = { ...notes };
     if (replace) {
       updatedNotes = {};
@@ -279,7 +280,7 @@ export const useEditor = ({
     }
     return newNote({
       text: `# ${title}\nWrite more here`,
-    });
+    })!;
   };
 
   const getHashtags = (exclude?: string[]) => {

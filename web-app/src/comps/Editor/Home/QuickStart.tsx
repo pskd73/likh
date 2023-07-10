@@ -26,7 +26,7 @@ const QuickStart = () => {
   const handleOpen = async () => {
     const text = (await openFile()) as string;
     const note = newNote({ text });
-    navigate(`/write/note/${note.id}`);
+    navigate(`/write/note/${note!.id}`);
   };
 
   const handleSampleNote = async () => {
@@ -55,7 +55,7 @@ const QuickStart = () => {
     const note = newNote({
       text: `# A title for the note\nWrite your mind here ...`,
     });
-    navigate(`/write/note/${note.id}`);
+    navigate(`/write/note/${note!.id}`);
   };
 
   return (
