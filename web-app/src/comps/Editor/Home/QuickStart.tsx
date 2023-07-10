@@ -3,7 +3,12 @@ import List from "../List";
 import { ListContainer, Title } from "./Common";
 import { EditorContext } from "../Context";
 import { BiBulb, BiFile, BiPlus } from "react-icons/bi";
-import { SAMPLE_JOURNALING, SAMPLE_MAIN, SAMPLE_MORE_TIPS } from "../Intro";
+import {
+  SAMPLE_JOURNALING,
+  SAMPLE_MAIN,
+  SAMPLE_MORE_TIPS,
+  SAMPLE_SHORTCUTS,
+} from "../Intro";
 import { FiUpload } from "react-icons/fi";
 import { openFile } from "../File";
 import { PersistedState } from "../usePersistedState";
@@ -33,6 +38,10 @@ const QuickStart = () => {
     newNote({
       text: SAMPLE_MORE_TIPS,
       id: "sample_tips",
+    });
+    newNote({
+      text: SAMPLE_SHORTCUTS,
+      id: "sample_shortcuts",
     });
     newNote({
       text: SAMPLE_MAIN,
