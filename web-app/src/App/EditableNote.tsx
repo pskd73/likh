@@ -20,7 +20,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Event from "src/components/Event";
 
 const dtToIso = (dt: Date) => {
-  return moment(dt).format("YYYY-MM-DDThh:mm:ss");
+  return moment(dt).format("YYYY-MM-DDTHH:mm:ss");
 };
 
 const EditableNote = () => {

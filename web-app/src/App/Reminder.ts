@@ -24,9 +24,7 @@ export const getGoogleCalendarLink = ({
   location: string;
   recur?: boolean;
 }) => {
-  const dayStart = date;
-  dayStart.setHours(0, 0, 0, 0);
-  const start = dayStart.getTime() + 21 * 60 * 60 * 1000;
+  const start = date.getTime();
   const end = start + 60 * 60 * 1000;
 
   const parts = [

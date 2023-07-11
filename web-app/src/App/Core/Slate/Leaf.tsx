@@ -119,7 +119,6 @@ function Leaf({
               onClick={
                 future
                   ? () => {
-                      console.log(text);
                       const parsed = parseListText(text.text);
                       onDatetimeClick(
                         dt.toDate(),
@@ -129,7 +128,6 @@ function Leaf({
                               .replace("- [x] ", "")
                           : undefined
                       );
-                      console.log(text);
                     }
                   : undefined
               }
