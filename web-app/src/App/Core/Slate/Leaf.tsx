@@ -10,6 +10,7 @@ export type LeafMaker = (props: {
   children: any;
   leaf: Record<string, any>;
   text: { text: string };
+  className: string;
 }) => ReactElement | undefined;
 
 function Leaf({
@@ -108,7 +109,7 @@ function Leaf({
   });
 
   for (const maker of leafMakers || []) {
-    const element = maker({ attributes, leaf, text, children });
+    const element = maker({ attributes, leaf, text, children, className });
     if (element) {
       return element;
     }

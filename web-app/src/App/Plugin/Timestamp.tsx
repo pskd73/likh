@@ -32,6 +32,7 @@ const handleClick = (date: Date, text?: string) => {
 };
 
 export const TimestampPlugin: RNPluginCreator = () => ({
+  version: 1,
   name: "Timestamp",
   suggestions: {
     "@": {
@@ -87,7 +88,7 @@ export const TimestampPlugin: RNPluginCreator = () => ({
       },
     },
   },
-  leafMaker: ({ attributes, children, leaf, text }) => {
+  leafMaker: ({ attributes, children, leaf, text, className }) => {
     if (leaf.datetime) {
       const dt = moment(leaf.text.replace("@", ""));
       const future = dt.isAfter(new Date());
@@ -95,6 +96,7 @@ export const TimestampPlugin: RNPluginCreator = () => ({
         <span
           {...attributes}
           className={classNames(
+            className,
             "bg-primary bg-opacity-20 px-3 py-1 rounded-full inline-block mb-1 text-xs",
             "inline-flex items-center"
           )}
