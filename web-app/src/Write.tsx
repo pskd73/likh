@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import EditorWindow from "./comps/Editor/Window";
+import EditorWindow from "./App/Window";
 import Event from "./components/Event";
 
 const Write = () => {

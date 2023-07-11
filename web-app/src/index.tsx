@@ -15,10 +15,10 @@ import { Private } from "./comps/Layout";
 import WriteV2 from "./Write";
 import Roll from "./Write/Roll";
 import Landing from "./Landing";
-import Timeline from "./comps/Editor/Home/Timeline";
-import HomeScreen from "./comps/Editor/Home/HomeScreen";
-import EditableNote from "./comps/Editor/EditableNote";
-import Storage from "./comps/Editor/SidePanel/Storage";
+import Timeline from "./App/Home/Timeline";
+import HomeScreen from "./App/Home/HomeScreen";
+import EditableNote from "./App/EditableNote";
+import Storage from "./App/SidePanel/Storage";
 
 const router = createBrowserRouter([
   {

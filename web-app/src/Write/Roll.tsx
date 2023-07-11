@@ -15,7 +15,7 @@ import { createEditor } from "slate";
 import Button from "../comps/Button";
 import { TbExternalLink } from "react-icons/tb";
 import { BiPlus } from "react-icons/bi";
-import { CustomEditor } from "../comps/Editor/Core/Core";
+import { CustomEditor } from "../App/Core/Core";
 
 const getEditor = () => withHistory(withReact(createEditor()));
 
