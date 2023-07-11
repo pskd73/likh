@@ -1,7 +1,7 @@
 import { DependencyList, RefObject, useEffect, useMemo, useState } from "react";
 import { BaseEditor, Editor } from "slate";
 import { ReactEditor } from "slate-react";
-import { CustomEditor } from "./Editor/Core/Core";
+import { CustomEditor } from "../App/Core/Core";
 
 const isCursorAtEnd = (editor: BaseEditor & ReactEditor) => {
   const { selection } = editor;
