@@ -1,7 +1,7 @@
-import { ReactElement } from "react";
 import { Suggestion } from "../Core/Slate/Editor";
 import { CustomGrammarValue } from "../grammer";
 import { SavedNote } from "../type";
+import { LeafMaker } from "../Core/Slate/Leaf";
 
 export type SuggestionConfig = {
   suggest: (prefix: string, word: string, note: SavedNote) => Suggestion[];
@@ -13,12 +13,7 @@ export type RNPlugin = {
   onNoteChange?: (note: SavedNote) => void;
   suggestions?: Record<string, SuggestionConfig>;
   grammer?: Record<string, CustomGrammarValue>;
-  leafElement?: (props: {
-    attributes: any;
-    children: any;
-    leaf: Record<string, any>;
-    text: { text: string };
-  }) => ReactElement | undefined;
+  leafMaker?: LeafMaker;
 };
 
 export type RNPluginCreator = () => RNPlugin;

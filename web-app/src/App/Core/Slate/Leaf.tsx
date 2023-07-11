@@ -1,9 +1,16 @@
-import { CSSProperties } from "react";
+import { CSSProperties, ReactElement } from "react";
 import { Theme } from "src/App/Theme";
 import { ParsedListText, parseListText } from "src/App/Core/List";
 import classNames from "classnames";
 import slugify from "slugify";
 import { BiFolder } from "react-icons/bi";
+
+export type LeafMaker = (props: {
+  attributes: any;
+  children: any;
+  leaf: Record<string, any>;
+  text: { text: string };
+}) => ReactElement | undefined;
 
 function Leaf({
   attributes,
@@ -13,6 +20,7 @@ function Leaf({
   onNoteLinkClick,
   text,
   theme,
+  leafMakers,
 }: {
   attributes: any;
   children: any;
@@ -21,6 +29,7 @@ function Leaf({
   onNoteLinkClick(title: string, id?: string): void;
   text: { text: string };
   theme: Theme;
+  leafMakers: LeafMaker[];
 }) {
   const title = leaf.title1 || leaf.title2 || leaf.title3;
 
@@ -97,6 +106,13 @@ function Leaf({
       leaf.hashtag,
     "inline-flex items-center": leaf.hashtag,
   });
+
+  for (const maker of leafMakers || []) {
+    const element = maker({ attributes, leaf, text, children });
+    if (element) {
+      return element;
+    }
+  }
 
   if (leaf.hashtag) {
     return (

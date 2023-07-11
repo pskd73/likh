@@ -52,7 +52,7 @@ import {
 } from "src/App/Core/ContextMenu";
 import { PastedImg, SavedImg, useEditorPaste } from "src/App/useEditorPaste";
 import { Theme, Themes } from "src/App/Theme";
-import Leaf from "src/App/Core/Slate/Leaf";
+import Leaf, { LeafMaker } from "src/App/Core/Slate/Leaf";
 import SlateElement from "src/App/Core/Slate/SlateElement";
 import { escape } from "src/util";
 
@@ -84,7 +84,7 @@ const Editor = ({
   theme,
   contextMenuPrefixes,
   grammer: passedGrammer,
-  leafElements,
+  leafMakers,
 }: {
   onChange: (val: {
     value: Descendant[];
@@ -104,14 +104,7 @@ const Editor = ({
   theme?: Theme;
   contextMenuPrefixes?: string[];
   grammer?: Record<string, CustomGrammarValue>;
-  leafElements?: Array<
-    (props: {
-      attributes: any;
-      children: any;
-      leaf: Record<string, any>;
-      text: { text: string };
-    }) => ReactElement | undefined
-  >;
+  leafMakers?: LeafMaker[];
 }) => {
   theme = theme || Themes.Basic;
 
@@ -149,22 +142,18 @@ const Editor = ({
     container: document.querySelector(`.${containerClassName}`),
   });
 
-  const renderLeaf = useCallback((props: any) => {
-    for (const leafElement of leafElements || []) {
-      const element = leafElement(props);
-      if (element) {
-        return element;
-      }
-    }
-    return (
+  const renderLeaf = useCallback(
+    (props: any) => (
       <Leaf
         {...props}
         onCheckboxToggle={(path) => toggleCheckbox(editor, path)}
         onNoteLinkClick={onNoteLinkClick || (() => {})}
         theme={theme}
+        leafMakers={leafMakers}
       />
-    );
-  }, []);
+    ),
+    []
+  );
 
   const decorate = useCallback(
     ([node, path]: NodeEntry) => {

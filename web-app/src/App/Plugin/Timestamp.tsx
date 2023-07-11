@@ -87,7 +87,7 @@ export const TimestampPlugin: RNPluginCreator = () => ({
       },
     },
   },
-  leafElement: ({ attributes, children, leaf, text }) => {
+  leafMaker: ({ attributes, children, leaf, text }) => {
     if (leaf.datetime) {
       const dt = moment(leaf.text.replace("@", ""));
       const future = dt.isAfter(new Date());

@@ -251,9 +251,9 @@ const EditableNote = () => {
                   .filter((p) => p.grammer)
                   .map((p) => p.grammer!)
                   .reduce((prev, cur) => ({ ...prev, ...cur }), {})}
-                leafElements={plugins
-                  .filter((p) => p.leafElement)
-                  .map((p) => p.leafElement!)}
+                leafMakers={plugins
+                  .filter((p) => p.leafMaker)
+                  .map((p) => p.leafMaker!)}
               />
             </div>
           );
