@@ -13,7 +13,6 @@ import { getImage } from "src/App/db";
 import { Themes } from "src/App/Theme";
 import { blobToB64 } from "src/util";
 import { textToTitle } from "src/Note";
-import { getGoogleCalendarLink } from "src/App/Reminder";
 import { FiExternalLink } from "react-icons/fi";
 import { SavedNote } from "src/App/type";
 import { useNavigate, useParams } from "react-router-dom";
@@ -164,18 +163,6 @@ const EditableNote = () => {
     return suggestions;
   };
 
-  const handleDatetimeClick = (date: Date, text?: string) => {
-    if (note) {
-      text = text || `Continue writing "${textToTitle(note.text)}"`;
-      const link = getGoogleCalendarLink({
-        text,
-        date: date,
-        location: "https://app.retronote.app/write",
-      });
-      window.open(link, "_blank");
-    }
-  };
-
   const handleExpand = (note: SavedNote) => {
     navigate(`/write/note/${note.id}`);
   };
@@ -229,7 +216,7 @@ const EditableNote = () => {
                   ...plugins
                     .filter((p) => p.suggestions)
                     .map((p) => Object.keys(p.suggestions!))
-                    .reduce((prev, cur) => [...prev, ...cur]),
+                    .reduce((prev, cur) => [...prev, ...cur], []),
                 ]}
                 getSavedImg={async (attachmentId, imgType) => {
                   if (note && imgType === "attachment") {
@@ -260,7 +247,13 @@ const EditableNote = () => {
                   }
                 }}
                 theme={Themes[themeName] || Themes.Basic}
-                onDatetimeClick={handleDatetimeClick}
+                grammer={plugins
+                  .filter((p) => p.grammer)
+                  .map((p) => p.grammer!)
+                  .reduce((prev, cur) => ({ ...prev, ...cur }), {})}
+                leafElements={plugins
+                  .filter((p) => p.leafElement)
+                  .map((p) => p.leafElement!)}
               />
             </div>
           );

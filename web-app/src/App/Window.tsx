@@ -30,7 +30,7 @@ const EditorWindow = () => {
   useEffect(() => {
     (async () => {
       await init();
-      plugins.forEach((plugin) => plugin.init());
+      plugins.forEach((plugin) => plugin.init && plugin.init());
       setDbInitiated(true);
       migrate(storage.pouch, pdb.secret);
     })();

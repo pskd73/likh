@@ -3,8 +3,7 @@ import { Theme } from "src/App/Theme";
 import { ParsedListText, parseListText } from "src/App/Core/List";
 import classNames from "classnames";
 import slugify from "slugify";
-import moment from "moment";
-import { BiBell, BiFolder, BiTimeFive } from "react-icons/bi";
+import { BiFolder } from "react-icons/bi";
 
 function Leaf({
   attributes,
@@ -12,7 +11,6 @@ function Leaf({
   leaf,
   onCheckboxToggle,
   onNoteLinkClick,
-  onDatetimeClick,
   text,
   theme,
 }: {
@@ -21,7 +19,6 @@ function Leaf({
   leaf: Record<string, any>;
   onCheckboxToggle(path: number[]): void;
   onNoteLinkClick(title: string, id?: string): void;
-  onDatetimeClick(date: Date, text?: string): void;
   text: { text: string };
   theme: Theme;
 }) {
@@ -95,57 +92,11 @@ function Leaf({
     // image
     "hidden image": leaf.image && !leaf.alt && !leaf.focused,
 
-    // datetime and hashtag
+    // hashtag
     "bg-primary bg-opacity-20 px-3 py-1 rounded-full inline-block mb-1 text-xs":
-      leaf.datetime || leaf.hashtag,
-    "inline-flex items-center": leaf.datetime || leaf.hashtag,
+      leaf.hashtag,
+    "inline-flex items-center": leaf.hashtag,
   });
-
-  if (leaf.datetime) {
-    const dt = moment(leaf.text.replace("@", ""));
-    const future = dt.isAfter(new Date());
-    return (
-      <span {...attributes} className={className}>
-        {!leaf.punctuation && (
-          <span
-            contentEditable={false}
-            style={{ userSelect: "none" }}
-            className="inline-flex items-center space-x-1"
-          >
-            <span
-              className={classNames("text-primary text-opacity-50", {
-                "cursor-pointer hover:text-opacity-100 transition-all": future,
-              })}
-              onClick={
-                future
-                  ? () => {
-                      const parsed = parseListText(text.text);
-                      onDatetimeClick(
-                        dt.toDate(),
-                        parsed?.checkbox
-                          ? text.text
-                              .replace("- [ ] ", "")
-                              .replace("- [x] ", "")
-                          : undefined
-                      );
-                    }
-                  : undefined
-              }
-            >
-              {future ? <BiBell /> : <BiTimeFive />}
-            </span>
-            <span>
-              {dt.fromNow()}
-              {leaf.focused && " - "}
-            </span>
-          </span>
-        )}
-        <span className={classNames("opacity-50", { hidden: !leaf.focused })}>
-          {children}
-        </span>
-      </span>
-    );
-  }
 
   if (leaf.hashtag) {
     return (

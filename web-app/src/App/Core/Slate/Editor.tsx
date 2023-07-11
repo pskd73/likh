@@ -2,6 +2,7 @@ import classNames from "classnames";
 import Prism from "prismjs";
 import {
   KeyboardEventHandler,
+  ReactElement,
   useCallback,
   useEffect,
   useMemo,
@@ -17,9 +18,18 @@ import {
 } from "slate";
 import { withHistory } from "slate-history";
 import { Slate, Editable, withReact } from "slate-react";
-import grammer, { imageRegex, quoteRegex } from "src/App/grammer";
+import grammer, {
+  CustomGrammarValue,
+  imageRegex,
+  quoteRegex,
+} from "src/App/grammer";
 import slugify from "slugify";
-import { CustomEditor, CustomElement, serialize, deserialize } from "src/App/Core/Core";
+import {
+  CustomEditor,
+  CustomElement,
+  serialize,
+  deserialize,
+} from "src/App/Core/Core";
 import {
   handleEnterForList,
   intend,
@@ -35,7 +45,11 @@ import {
   handleTabForCode,
 } from "src/App/Core/Code";
 import { getTokensRanges } from "src/App/Core/Range";
-import { ContextMenu, ContextMenuList, useContextMenu } from "src/App/Core/ContextMenu";
+import {
+  ContextMenu,
+  ContextMenuList,
+  useContextMenu,
+} from "src/App/Core/ContextMenu";
 import { PastedImg, SavedImg, useEditorPaste } from "src/App/useEditorPaste";
 import { Theme, Themes } from "src/App/Theme";
 import Leaf from "src/App/Core/Slate/Leaf";
@@ -69,7 +83,8 @@ const Editor = ({
   containerClassName,
   theme,
   contextMenuPrefixes,
-  onDatetimeClick,
+  grammer: passedGrammer,
+  leafElements,
 }: {
   onChange: (val: {
     value: Descendant[];
@@ -88,7 +103,15 @@ const Editor = ({
   getSavedImg?: (id: string, imgType: string) => Promise<SavedImg>;
   theme?: Theme;
   contextMenuPrefixes?: string[];
-  onDatetimeClick?: (date: Date, text?: string) => void;
+  grammer?: Record<string, CustomGrammarValue>;
+  leafElements?: Array<
+    (props: {
+      attributes: any;
+      children: any;
+      leaf: Record<string, any>;
+      text: { text: string };
+    }) => ReactElement | undefined
+  >;
 }) => {
   theme = theme || Themes.Basic;
 
@@ -126,25 +149,29 @@ const Editor = ({
     container: document.querySelector(`.${containerClassName}`),
   });
 
-  const renderLeaf = useCallback(
-    (props: any) => (
+  const renderLeaf = useCallback((props: any) => {
+    for (const leafElement of leafElements || []) {
+      const element = leafElement(props);
+      if (element) {
+        return element;
+      }
+    }
+    return (
       <Leaf
         {...props}
         onCheckboxToggle={(path) => toggleCheckbox(editor, path)}
         onNoteLinkClick={onNoteLinkClick || (() => {})}
-        onDatetimeClick={onDatetimeClick || (() => {})}
         theme={theme}
       />
-    ),
-    []
-  );
+    );
+  }, []);
 
   const decorate = useCallback(
     ([node, path]: NodeEntry) => {
       if (!Text.isText(node)) {
         return [];
       }
-      const newGrammer = Object.assign({}, grammer);
+      const newGrammer = Object.assign({}, { ...grammer, ...passedGrammer });
       if (highlight) {
         for (const key of Object.keys(newGrammer)) {
           if (["hashtag"].includes(key)) continue;
@@ -158,7 +185,10 @@ const Editor = ({
             },
           };
         }
-        newGrammer.highlight = { pattern: RegExp(escape(highlight), "i"), inside: {} };
+        newGrammer.highlight = {
+          pattern: RegExp(escape(highlight), "i"),
+          inside: {},
+        };
       }
       const tokens = Prism.tokenize(node.text, newGrammer);
 
