@@ -17,15 +17,15 @@ import {
 } from "slate";
 import { withHistory } from "slate-history";
 import { Slate, Editable, withReact } from "slate-react";
-import grammer, { imageRegex, quoteRegex } from "App/grammer";
+import grammer, { imageRegex, quoteRegex } from "src/App/grammer";
 import slugify from "slugify";
-import { CustomEditor, CustomElement, serialize, deserialize } from "App/Core/Core";
+import { CustomEditor, CustomElement, serialize, deserialize } from "src/App/Core/Core";
 import {
   handleEnterForList,
   intend,
   parseListText,
   toggleCheckbox,
-} from "App/Core/List";
+} from "src/App/Core/List";
 import {
   codify,
   getCodeRanges,
@@ -33,13 +33,13 @@ import {
   handleBackspaceForCode,
   handleEnterForCode,
   handleTabForCode,
-} from "App/Core/Code";
-import { getTokensRanges } from "App/Core/Range";
-import { ContextMenu, ContextMenuList, useContextMenu } from "App/Core/ContextMenu";
-import { PastedImg, SavedImg, useEditorPaste } from "App/useEditorPaste";
-import { Theme, Themes } from "App/Theme";
-import Leaf from "./Leaf";
-import SlateElement from "./SlateElement";
+} from "src/App/Core/Code";
+import { getTokensRanges } from "src/App/Core/Range";
+import { ContextMenu, ContextMenuList, useContextMenu } from "src/App/Core/ContextMenu";
+import { PastedImg, SavedImg, useEditorPaste } from "src/App/useEditorPaste";
+import { Theme, Themes } from "src/App/Theme";
+import Leaf from "src/App/Core/Slate/Leaf";
+import SlateElement from "src/App/Core/Slate/SlateElement";
 import { escape } from "src/util";
 
 const defaultValue = [

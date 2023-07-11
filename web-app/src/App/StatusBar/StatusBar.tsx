@@ -1,7 +1,7 @@
 import { ComponentProps, useContext, useState } from "react";
-import { EditorContext } from "App/Context";
-import TextCounter from "./TextCounter";
-import BaseButton from "Comps/Button";
+import { EditorContext } from "src/App/Context";
+import TextCounter from "src/App/StatusBar/TextCounter";
+import BaseButton from "src/comps/Button";
 import {
   BiCheckShield,
   BiError,
@@ -10,11 +10,11 @@ import {
   BiSave,
   BiSidebar,
 } from "react-icons/bi";
-import { saveNote } from "App/File";
-import Delete from "./Delete";
+import { saveNote } from "src/App/File";
+import Delete from "src/App/StatusBar/Delete";
 import classNames from "classnames";
-import { PouchContext } from "App/PouchDB";
-import { isMobile } from "App/device";
+import { PouchContext } from "src/App/PouchDB";
+import { isMobile } from "src/App/device";
 import { twMerge } from "tailwind-merge";
 
 const SyncIcon = ({ state }: { state: string }) => {

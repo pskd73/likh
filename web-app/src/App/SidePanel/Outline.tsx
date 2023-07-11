@@ -1,10 +1,10 @@
 import { useContext, useState } from "react";
-import { EditorContext } from "App/Context";
+import { EditorContext } from "src/App/Context";
 import classNames from "classnames";
-import { isMobile } from "App/device";
-import { scrollTo } from "App/scroll";
-import { WithTitle } from "./Common";
-import useDelayedEffect from "App/useDelayedEffect";
+import { isMobile } from "src/App/device";
+import { scrollTo } from "src/App/scroll";
+import { WithTitle } from "src/App/SidePanel/Common";
+import useDelayedEffect from "src/App/useDelayedEffect";
 
 type OutlineTitle = {
   text: string | null;

@@ -1,12 +1,12 @@
 import { BiBrush, BiCollapseVertical, BiStats } from "react-icons/bi";
-import List from "App/List";
-import { ListContainer, Title } from "./Common";
-import Toggle from "Comps/Toggle";
+import List from "src/App/List";
+import { ListContainer, Title } from "src/App/Home/Common";
+import Toggle from "src/comps/Toggle";
 import { ComponentProps, useContext } from "react";
 import { twMerge } from "tailwind-merge";
-import { Themes } from "App/Theme";
+import { Themes } from "src/App/Theme";
 import classNames from "classnames";
-import { EditorContext } from "App/Context";
+import { EditorContext } from "src/App/Context";
 
 const ThemeBox = ({
   children,

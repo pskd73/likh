@@ -1,7 +1,7 @@
 import { cloneElement, useContext } from "react";
-import { EditorContext } from "App/Context";
-import { ListContainer, Title } from "./Common";
-import List from "App/List";
+import { EditorContext } from "src/App/Context";
+import { ListContainer, Title } from "src/App/Home/Common";
+import List from "src/App/List";
 import {
   BiArrowFromBottom,
   BiArrowFromTop,
@@ -9,7 +9,7 @@ import {
   BiInfoCircle,
 } from "react-icons/bi";
 import { textToTitle } from "src/Note";
-import { highlight, makeExtractor } from "App/Marker";
+import { highlight, makeExtractor } from "src/App/Marker";
 import { escape } from "src/util";
 import { useNavigate } from "react-router-dom";
 

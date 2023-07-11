@@ -6,17 +6,17 @@ import {
   useRef,
   useState,
 } from "react";
-import { EditorContext } from "App/Context";
-import { getImageAddresses, getTimeline } from "App/Timeline";
+import { EditorContext } from "src/App/Context";
+import { getImageAddresses, getTimeline } from "src/App/Timeline";
 import { textToTitle } from "src/Note";
 import moment from "moment";
 import { BiFile, BiTimeFive } from "react-icons/bi";
-import { SavedNote } from "App/type";
+import { SavedNote } from "src/App/type";
 import { useNavigate } from "react-router-dom";
 import classNames from "classnames";
-import { highlight, makeExtractor } from "App/Marker";
+import { highlight, makeExtractor } from "src/App/Marker";
 import { blobToB64, escape } from "src/util";
-import useDelayedEffect from "App/useDelayedEffect";
+import useDelayedEffect from "src/App/useDelayedEffect";
 
 const cachedImages: Record<string, any> = {};
 

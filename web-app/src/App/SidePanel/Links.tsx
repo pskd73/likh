@@ -1,10 +1,10 @@
-import List from "App/List";
+import List from "src/App/List";
 import { useContext, useState } from "react";
-import { EditorContext } from "App/Context";
-import { isMobile } from "App/device";
-import { WithTitle } from "./Common";
+import { EditorContext } from "src/App/Context";
+import { isMobile } from "src/App/device";
+import { WithTitle } from "src/App/SidePanel/Common";
 import { BiLink } from "react-icons/bi";
-import useDelayedEffect from "App/useDelayedEffect";
+import useDelayedEffect from "src/App/useDelayedEffect";
 
 type NoteLink = {
   text: string;

@@ -1,8 +1,8 @@
 import classNames from "classnames";
 import { ComponentProps, useContext, useState } from "react";
 import { twMerge } from "tailwind-merge";
-import Button from "Comps/Button";
-import { PouchContext } from "App/PouchDB";
+import Button from "src/comps/Button";
+import { PouchContext } from "src/App/PouchDB";
 
 const Label = ({
   className,

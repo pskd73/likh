@@ -1,9 +1,9 @@
 import { BiAlarmExclamation, BiFile } from "react-icons/bi";
 import { textToTitle } from "src/Note";
-import List from "App/List";
+import List from "src/App/List";
 import moment from "moment";
-import { SavedNote } from "App/type";
-import { ListContainer, Title } from "./Common";
+import { SavedNote } from "src/App/type";
+import { ListContainer, Title } from "src/App/Home/Common";
 import { useNavigate } from "react-router-dom";
 
 const Reminders = ({ reminderNotes }: { reminderNotes: SavedNote[] }) => {

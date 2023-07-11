@@ -1,18 +1,18 @@
 import { useContext } from "react";
-import List from "App/List";
-import { ListContainer, Title } from "./Common";
-import { EditorContext } from "App/Context";
+import List from "src/App/List";
+import { ListContainer, Title } from "src/App/Home/Common";
+import { EditorContext } from "src/App/Context";
 import { BiBulb, BiFile, BiPlus } from "react-icons/bi";
 import {
   SAMPLE_JOURNALING,
   SAMPLE_MAIN,
   SAMPLE_MORE_TIPS,
   SAMPLE_SHORTCUTS,
-} from "App/Intro";
+} from "src/App/Intro";
 import { FiUpload } from "react-icons/fi";
-import { openFile } from "App/File";
-import { PersistedState } from "App/usePersistedState";
-import WhatsNew from "./WhatsNew";
+import { openFile } from "src/App/File";
+import { PersistedState } from "src/App/usePersistedState";
+import WhatsNew from "src/App/Home/WhatsNew";
 import { useNavigate } from "react-router-dom";
 import Event from "src/components/Event";
 

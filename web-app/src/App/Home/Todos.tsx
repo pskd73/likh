@@ -1,6 +1,6 @@
-import { NoteSummary } from "App/Context";
-import List from "App/List";
-import { ListContainer, Title } from "./Common";
+import { NoteSummary } from "src/App/Context";
+import List from "src/App/List";
+import { ListContainer, Title } from "src/App/Home/Common";
 import { textToTitle } from "src/Note";
 import { MdRadioButtonUnchecked } from "react-icons/md";
 import { useNavigate } from "react-router-dom";

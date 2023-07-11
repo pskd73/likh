@@ -1,7 +1,7 @@
 import { BiBulb, BiX } from "react-icons/bi";
 import classNames from "classnames";
 import { PropsWithChildren, ReactElement, useMemo } from "react";
-import Button from "Comps/Button";
+import Button from "src/comps/Button";
 
 const Card = ({
   icon,

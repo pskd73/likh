@@ -5,18 +5,18 @@ import {
   useMemo,
   useState,
 } from "react";
-import { EditorContext, NoteSummary } from "App/Context";
-import QuickStart from "./QuickStart";
-import Browse from "./Browse";
-import Notes from "./Notes";
-import Reminders from "./Reminders";
-import { SavedNote } from "App/type";
-import Settings from "./Settings";
-import Promotion from "./Promotion";
-import Calendar from "./HomeCalendar";
+import { EditorContext, NoteSummary } from "src/App/Context";
+import QuickStart from "src/App/Home/QuickStart";
+import Browse from "src/App/Home/Browse";
+import Notes from "src/App/Home/Notes";
+import Reminders from "src/App/Home/Reminders";
+import { SavedNote } from "src/App/type";
+import Settings from "src/App/Home/Settings";
+import Promotion from "src/App/Home/Promotion";
+import Calendar from "src/App/Home/HomeCalendar";
 import classNames from "classnames";
-import Logo from "Comps/Logo";
-import Todos from "./Todos";
+import Logo from "src/comps/Logo";
+import Todos from "src/App/Home/Todos";
 
 const Col = ({ children, className, ...restProps }: ComponentProps<"div">) => {
   return (

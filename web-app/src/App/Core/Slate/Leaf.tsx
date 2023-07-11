@@ -1,6 +1,6 @@
 import { CSSProperties } from "react";
-import { Theme } from "App/Theme";
-import { ParsedListText, parseListText } from "App/Core/List";
+import { Theme } from "src/App/Theme";
+import { ParsedListText, parseListText } from "src/App/Core/List";
 import classNames from "classnames";
 import slugify from "slugify";
 import moment from "moment";

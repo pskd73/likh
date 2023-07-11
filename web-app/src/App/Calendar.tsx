@@ -2,7 +2,7 @@ import classNames from "classnames";
 import moment from "moment";
 import { useMemo, useState } from "react";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
-import Button from "Comps/Button";
+import Button from "src/comps/Button";
 
 export type CalenderDay = {
   dt: Date;

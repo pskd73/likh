@@ -1,8 +1,8 @@
 import { useContext, useState } from "react";
-import Button from "Comps/Button";
+import Button from "src/comps/Button";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { BiCheck, BiX } from "react-icons/bi";
-import { EditorContext } from "App/Context";
+import { EditorContext } from "src/App/Context";
 
 const Delete = () => {
   const { deleteNote, note } = useContext(EditorContext);

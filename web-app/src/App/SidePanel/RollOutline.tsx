@@ -1,12 +1,12 @@
 import { useContext, useMemo, useState } from "react";
-import { EditorContext } from "App/Context";
+import { EditorContext } from "src/App/Context";
 import moment from "moment";
-import Calendar, { CalenderDay } from "App/Calendar";
-import Button from "Comps/Button";
+import Calendar, { CalenderDay } from "src/App/Calendar";
+import Button from "src/comps/Button";
 import { BiCalendarEvent, BiFile, BiHash, BiMap, BiPlus } from "react-icons/bi";
-import List from "App/List";
-import { SavedNote } from "App/type";
-import { scrollTo } from "App/scroll";
+import List from "src/App/List";
+import { SavedNote } from "src/App/type";
+import { scrollTo } from "src/App/scroll";
 import { textToTitle } from "src/Note";
 import Event from "src/components/Event";
 

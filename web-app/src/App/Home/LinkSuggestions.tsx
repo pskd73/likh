@@ -1,11 +1,11 @@
 import { useContext } from "react";
-import { EditorContext } from "App/Context";
+import { EditorContext } from "src/App/Context";
 import classNames from "classnames";
-import { LinkSuggestion } from "App/Suggestion";
-import { isMobile } from "App/device";
+import { LinkSuggestion } from "src/App/Suggestion";
+import { isMobile } from "src/App/device";
 import { titleCase } from "src/Note";
 import { BiSearch } from "react-icons/bi";
-import Button from "Comps/Button";
+import Button from "src/comps/Button";
 
 const BASE_FONT_SIZE = 12;
 const MULTIPLIER = 3;

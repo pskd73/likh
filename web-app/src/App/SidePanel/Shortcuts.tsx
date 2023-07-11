@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import List from "App/List";
+import List from "src/App/List";
 import {
   MdKeyboardArrowLeft,
   MdKeyboardArrowRight,

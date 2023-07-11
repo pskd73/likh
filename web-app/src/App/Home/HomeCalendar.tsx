@@ -1,7 +1,7 @@
 import { useContext, useMemo } from "react";
-import Calendar from "App/Calendar";
-import { SavedNote } from "App/type";
-import { EditorContext } from "App/Context";
+import Calendar from "src/App/Calendar";
+import { SavedNote } from "src/App/type";
+import { EditorContext } from "src/App/Context";
 import moment from "moment";
 
 const HomeCalendar = () => {

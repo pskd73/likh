@@ -1,8 +1,8 @@
 import classNames from "classnames";
 import { getNWords } from "src/util";
-import Button from "Comps/Button";
+import Button from "src/comps/Button";
 import { useContext } from "react";
-import { EditorContext } from "App/Context";
+import { EditorContext } from "src/App/Context";
 import { VscWholeWord } from "react-icons/vsc";
 import { BiTimeFive } from "react-icons/bi";
 

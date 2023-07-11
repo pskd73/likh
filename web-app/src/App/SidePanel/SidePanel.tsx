@@ -1,21 +1,21 @@
 import classNames from "classnames";
 import { useContext } from "react";
-import { EditorContext } from "App/Context";
-import Outline from "./Outline";
-import { isMobile } from "App/device";
+import { EditorContext } from "src/App/Context";
+import Outline from "src/App/SidePanel/Outline";
+import { isMobile } from "src/App/device";
 import RollOutline from "./RollOutline";
 import { BiCog, BiHomeSmile, BiSidebar } from "react-icons/bi";
-import Button from "Comps/Button";
-import Browse from "App/Home/Browse";
-import Links from "./Links";
-import { WithTitle } from "./Common";
+import Button from "src/comps/Button";
+import Browse from "src/App/Home/Browse";
+import Links from "src/App/SidePanel/Links";
+import { WithTitle } from "src/App/SidePanel/Common";
 import { useNavigate } from "react-router-dom";
 import { TbTimelineEvent } from "react-icons/tb";
 import { TiDownload } from "react-icons/ti";
-import { zipIt } from "App/File";
-import { SavedNote } from "App/type";
-import Search from "App/Home/Search";
-import Notes from "App/Home/Notes";
+import { zipIt } from "src/App/File";
+import { SavedNote } from "src/App/type";
+import Search from "src/App/Home/Search";
+import Notes from "src/App/Home/Notes";
 
 const SidePanel = () => {
   const navigate = useNavigate();
