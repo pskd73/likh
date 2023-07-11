@@ -1,16 +1,16 @@
-import "./db";
-import { EditorContext, useEditor } from "./Context";
-import SidePanel from "./SidePanel/SidePanel";
-import StatusBar from "./StatusBar/StatusBar";
-import useStorage from "./useStorage";
+import "src/App/db";
+import { EditorContext, useEditor } from "src/App/Context";
+import SidePanel from "src/App/SidePanel/SidePanel";
+import StatusBar from "src/App/StatusBar/StatusBar";
+import useStorage from "src/App/useStorage";
 import { useEffect, useMemo, useState } from "react";
-import useShortcuts from "./useShortcuts";
+import useShortcuts from "src/App/useShortcuts";
 import classNames from "classnames";
-import "./Core/test";
-import { iOS, isMobile } from "./device";
-import { init } from "./db";
-import { migrate } from "./localStorage";
-import * as PouchDB from "./PouchDB";
+import "src/App/Core/test";
+import { iOS, isMobile } from "src/App/device";
+import { init } from "src/App/db";
+import { migrate } from "src/App/localStorage";
+import * as PouchDB from "src/App/PouchDB";
 import { Outlet } from "react-router-dom";
 
 const STATUS_BAR_HEIGHT = 30;
@@ -65,9 +65,7 @@ const EditorWindow = () => {
                 }px)`,
               }}
             >
-              <div
-                className={classNames("w-full max-w-[1000px]")}
-              >
+              <div className={classNames("w-full max-w-[1000px]")}>
                 <Outlet />
               </div>
             </div>
