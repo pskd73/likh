@@ -9,10 +9,6 @@ export const link = {
   inside: {},
 };
 
-export const datetime: CustomGrammarValue = {
-  pattern: /@\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/,
-};
-
 export const notelink: CustomGrammarValue = {
   pattern: /\[\[[^\[\]]+\]\](\([^\(\)]+\))?/m,
   greedy: true,
@@ -201,7 +197,6 @@ export const list: CustomGrammarValue = {
     inlineCode,
     mdLink,
     hashtag,
-    datetime,
   },
   greedy: true,
   payload: {
@@ -262,7 +257,6 @@ const grammer: CustomGrammar = {
   notelink,
   inlineCode,
   mdLink,
-  datetime,
 };
 
 export default grammer;

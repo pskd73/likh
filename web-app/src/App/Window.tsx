@@ -12,13 +12,16 @@ import { init } from "src/App/db";
 import { migrate } from "src/App/localStorage";
 import * as PouchDB from "src/App/PouchDB";
 import { Outlet } from "react-router-dom";
+import { enabledPlugins } from "./Plugin/List";
 
 const STATUS_BAR_HEIGHT = 30;
+
+const plugins = enabledPlugins.map((Plugin) => Plugin());
 
 const EditorWindow = () => {
   const pdb = PouchDB.usePouchDb();
   const storage = useStorage(pdb);
-  const editorState = useEditor({ storage, pdb });
+  const editorState = useEditor({ storage, pdb, plugins });
   const statusBarPadding = useMemo(() => (iOS() ? 20 : 0), []);
   const [dbInitiated, setDbInitiated] = useState(false);
 
@@ -27,6 +30,7 @@ const EditorWindow = () => {
   useEffect(() => {
     (async () => {
       await init();
+      plugins.forEach((plugin) => plugin.init && plugin.init(editorState));
       setDbInitiated(true);
       migrate(storage.pouch, pdb.secret);
     })();

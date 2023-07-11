@@ -8,6 +8,7 @@ import { Theme } from "./Theme";
 import { PouchContextType } from "./PouchDB";
 import { hashtag } from "./grammer";
 import { isMobile } from "./device";
+import { RNPlugin } from "./Plugin/type";
 
 type StateSetter<T> = React.Dispatch<React.SetStateAction<T>>;
 type CountStatType = "words" | "readTime";
@@ -72,6 +73,8 @@ export type EditorContextType = {
   setColorTheme: StateSetter<string>;
 
   getTodoNotes: () => NoteSummary[];
+
+  plugins: RNPlugin[];
 };
 
 export const EditorContext = createContext<EditorContextType>(
@@ -90,9 +93,11 @@ const { hook: useColorTheme } = PersistedState<Theme>("colorTheme");
 export const useEditor = ({
   storage,
   pdb,
+  plugins,
 }: {
   storage: Storage;
   pdb: PouchContextType;
+  plugins: RNPlugin[];
 }): EditorContextType => {
   const [sideBar, setSideBar] = useSideBar<string | undefined>(undefined);
   const [showStats, setShowStats] = useShowStats(true);
@@ -393,5 +398,6 @@ export const useEditor = ({
     setColorTheme,
 
     getTodoNotes,
+    plugins,
   };
 };
