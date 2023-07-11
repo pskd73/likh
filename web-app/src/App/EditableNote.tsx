@@ -19,10 +19,6 @@ import { SavedNote } from "src/App/type";
 import { useNavigate, useParams } from "react-router-dom";
 import Event from "src/components/Event";
 
-const dtToIso = (dt: Date) => {
-  return moment(dt).format("YYYY-MM-DDTHH:mm:ss");
-};
-
 const EditableNote = () => {
   const { noteId, hashtag } = useParams();
   const navigate = useNavigate();
@@ -42,6 +38,7 @@ const EditableNote = () => {
     setNote,
     getHashtags,
     setRollHashTag,
+    plugins,
   } = useContext(EditorContext);
   const scroll = useMiddle(ref, [typewriterMode], {
     typeWriter: typewriterMode,
@@ -90,6 +87,10 @@ const EditableNote = () => {
     updatedNote.serialized = serialized;
     updateNote(updatedNote);
 
+    plugins.forEach(
+      (plugin) => plugin.onNoteChange && plugin.onNoteChange(updatedNote)
+    );
+
     scroll.update();
     if (id === note?.id) {
       scroll.scroll({ editor });
@@ -122,6 +123,16 @@ const EditableNote = () => {
 
   const getSuggestions = async (prefix: string, term: string) => {
     const suggestions: Suggestion[] = [];
+
+    plugins.forEach((plugin) => {
+      if (plugin.suggestions && plugin.suggestions[prefix]) {
+        const config = plugin.suggestions[prefix];
+        for (const sugg of config.suggest(prefix, term, note!)) {
+          suggestions.push(sugg);
+        }
+      }
+    });
+
     if (prefix === "[[") {
       for (const noteMeta of storage.notes) {
         if (noteMeta.id === note?.id) continue;
@@ -149,40 +160,6 @@ const EditableNote = () => {
           });
         }
       });
-    } else if (prefix === "@") {
-      const amPmMatch = term.match(/(\d+)([ap]m)/);
-      if (amPmMatch) {
-        let tfHour = Number(amPmMatch[1]);
-        if (amPmMatch[2] === "pm") {
-          tfHour += 12;
-        }
-        const now = new Date();
-        let dt = moment(now).hour(tfHour).minute(0).second(0);
-        if (dt.isBefore(now)) {
-          dt = dt.add(1, "days");
-        }
-        const iso = dtToIso(dt.toDate());
-        suggestions.push({
-          title: `Next ${term} - ${iso}`,
-          replace: `@${iso} `,
-        });
-      }
-      if ("tomorrow".startsWith(term.toLowerCase())) {
-        const dt = moment(new Date()).add(1, "day");
-        const iso = dtToIso(dt.toDate());
-        suggestions.push({
-          title: `Tomorrow - ${iso}`,
-          replace: `@${iso} `,
-        });
-      }
-      if (term.match(/\d{4}\-\d{2}\-\d{2}/)) {
-        const dt = moment(term, "YYYY-MM-DD");
-        const iso = dtToIso(dt.toDate());
-        suggestions.push({
-          title: `${iso}`,
-          replace: `@${iso} `,
-        });
-      }
     }
     return suggestions;
   };
@@ -246,7 +223,14 @@ const EditableNote = () => {
                 onNoteLinkClick={handleNoteLinkClick}
                 getSuggestions={getSuggestions}
                 highlight={searchTerm}
-                contextMenuPrefixes={["[[", "#", "@"]}
+                contextMenuPrefixes={[
+                  "[[",
+                  "#",
+                  ...plugins
+                    .filter((p) => p.suggestions)
+                    .map((p) => Object.keys(p.suggestions!))
+                    .reduce((prev, cur) => [...prev, ...cur]),
+                ]}
                 getSavedImg={async (attachmentId, imgType) => {
                   if (note && imgType === "attachment") {
                     const blob = await storage.pouch.attachment(
