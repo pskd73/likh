@@ -16,6 +16,7 @@ import { zipIt } from "src/App/File";
 import { SavedNote } from "src/App/type";
 import Search from "src/App/Home/Search";
 import Notes from "src/App/Home/Notes";
+import Tooltip from "src/comps/Tooltip";
 
 const SidePanel = () => {
   const navigate = useNavigate();
@@ -101,28 +102,38 @@ const SidePanel = () => {
 
         {/* Expanded */}
         {sideBar && (
-          <div>
+          <>
             <div
               className={classNames(
                 "flex p-2 text-xl justify-end",
                 "border-b border-primary border-opacity-10"
               )}
             >
-              <Button lite onClick={handleZip}>
-                <TiDownload />
-              </Button>
-              <Button lite onClick={() => navigate("/write/settings/sync")}>
-                <BiCog />
-              </Button>
-              <Button lite onClick={() => navigate("/write/timeline")}>
-                <TbTimelineEvent />
-              </Button>
-              <Button lite onClick={handleHome}>
-                <BiHomeSmile />
-              </Button>
-              <Button lite onClick={() => setSideBar(undefined)}>
-                <BiSidebar />
-              </Button>
+              <Tooltip tip={"Take backup"}>
+                <Button lite onClick={handleZip}>
+                  <TiDownload />
+                </Button>
+              </Tooltip>
+              <Tooltip tip={"Settings"}>
+                <Button lite onClick={() => navigate("/write/settings/sync")}>
+                  <BiCog />
+                </Button>
+              </Tooltip>
+              <Tooltip tip={"Timeline"}>
+                <Button lite onClick={() => navigate("/write/timeline")}>
+                  <TbTimelineEvent />
+                </Button>
+              </Tooltip>
+              <Tooltip tip={"Home"}>
+                <Button lite onClick={handleHome}>
+                  <BiHomeSmile />
+                </Button>
+              </Tooltip>
+              <Tooltip tip={"Toggle sidemenu"}>
+                <Button lite onClick={() => setSideBar(undefined)}>
+                  <BiSidebar />
+                </Button>
+              </Tooltip>
             </div>
             <div
               style={{ maxHeight: "calc(100vh - 50px)" }}
@@ -146,7 +157,7 @@ const SidePanel = () => {
                 />
               </WithTitle>
             </div>
-          </div>
+          </>
         )}
       </div>
     </>
