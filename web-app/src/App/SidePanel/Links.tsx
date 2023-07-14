@@ -36,7 +36,7 @@ const Links = () => {
         {links.map((link, i) => (
           <List.Item
             key={i}
-            className="flex items-center text-sm space-x-2"
+            withIcon
             onClick={() => {
               if (isMobile) {
                 setSideBar(undefined);
@@ -44,9 +44,9 @@ const Links = () => {
               (window.location as any).href = `#${link.id}`;
             }}
           >
-            <span>
+            <List.Item.Icon>
               <BiLink />
-            </span>
+            </List.Item.Icon>
             <span>{link.text}</span>
           </List.Item>
         ))}
