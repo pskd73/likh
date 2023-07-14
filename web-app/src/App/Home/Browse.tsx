@@ -85,7 +85,7 @@ const Folders = <T extends unknown>({
               </div>
             </List.Item>
             {exp && (
-              <div className="ml-2 pl-2 border-l border-primary border-opacity-30">
+              <div className="ml-3 pl-1 border-l border-primary border-opacity-30">
                 {inject(prefix, hashtag)}
                 <Folders
                   onFileClick={onFileClick}
@@ -109,10 +109,8 @@ const Folders = <T extends unknown>({
 };
 
 const Browse = ({
-  lite,
   onNoteClick,
 }: {
-  lite?: boolean;
   onNoteClick?: (noteSummary: NoteSummary) => void;
 }) => {
   const navigate = useNavigate();
@@ -130,37 +128,32 @@ const Browse = ({
   };
 
   return (
-    <div>
-      {!lite && <Title>Browse</Title>}
-      <ListContainer className={classNames({ "bg-opacity-0 p-0": lite })}>
-        <Folders
-          onFileClick={handleNoteClick}
-          map={hashtags}
-          prefix={""}
-          toTitle={(summary) => textToTitle(summary.note.text, 20)}
-          inject={(prefix, hashtag) => {
-            if (prefix === "#journal/") {
-              return (
-                <List>
-                  <List.Item
-                    withIcon
-                    onClickKind={() => handleJournal(prefix + hashtag)}
-                  >
-                    <List.Item.Icon>
-                      <BiBook />
-                    </List.Item.Icon>
-                    <span className="font-CrimsonText italic">
-                      Journal it &rarr;
-                    </span>
-                  </List.Item>
-                </List>
-              );
-            }
-            return null;
-          }}
-        />
-      </ListContainer>
-    </div>
+    <Folders
+      onFileClick={handleNoteClick}
+      map={hashtags}
+      prefix={""}
+      toTitle={(summary) => textToTitle(summary.note.text, 20)}
+      inject={(prefix, hashtag) => {
+        if (prefix === "#journal/") {
+          return (
+            <List>
+              <List.Item
+                withIcon
+                onClickKind={() => handleJournal(prefix + hashtag)}
+              >
+                <List.Item.Icon>
+                  <BiBook />
+                </List.Item.Icon>
+                <span className="font-CrimsonText italic">
+                  Journal it &rarr;
+                </span>
+              </List.Item>
+            </List>
+          );
+        }
+        return null;
+      }}
+    />
   );
 };
 

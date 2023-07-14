@@ -16,7 +16,7 @@ export const WithTitle = ({
       <div
         className={classNames(
           "text-xs font-bold text-primary text-opacity-40",
-          "mb-1 flex items-center space-x-1"
+          "mb-1 flex items-center space-x-1 mx-2"
         )}
       >
         <span>{title.toUpperCase()}</span>

@@ -12,17 +12,17 @@ import {
   BiSidebar,
 } from "react-icons/bi";
 import Button from "src/comps/Button";
-import Browse from "src/App/Home/Browse";
 import Links from "src/App/SidePanel/Links";
-import { WithTitle } from "src/App/SidePanel/Common";
 import { useNavigate } from "react-router-dom";
 import { TiDownload } from "react-icons/ti";
 import { zipIt } from "src/App/File";
 import { SavedNote } from "src/App/type";
-import Search from "src/App/Home/Search";
+import Search from "src/App/SidePanel/Search";
 import Notes from "src/App/Home/Notes";
 import Tooltip from "src/comps/Tooltip";
 import { getShortcutText } from "../useShortcuts";
+import SidePanelBrowse from "./SidePanelBrowse";
+import Settings from "./Settings";
 
 const SidePanel = () => {
   const navigate = useNavigate();
@@ -216,9 +216,9 @@ const SidePanel = () => {
             </div>
             <div
               style={{ maxHeight: "calc(100vh - 50px)" }}
-              className="overflow-scroll scrollbar-hide py-4 space-y-2"
+              className="overflow-scroll scrollbar-hide py-4 space-y-4"
             >
-              <div className="p-4">
+              <div className="px-4 mb-4">
                 <Search searchTerm={searchTerm} onChange={setSearchTerm} />
                 {searchTerm && (
                   <div className="mt-4">
@@ -229,12 +229,8 @@ const SidePanel = () => {
               {isRoll && <RollOutline />}
               <Outline />
               <Links />
-              <WithTitle title="Browse">
-                <Browse
-                  lite
-                  onNoteClick={() => isMobile && setSideBar(undefined)}
-                />
-              </WithTitle>
+              <SidePanelBrowse />
+              <Settings />
             </div>
           </>
         )}
