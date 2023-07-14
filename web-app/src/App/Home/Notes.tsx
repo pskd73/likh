@@ -55,7 +55,7 @@ const Notes = ({
               <List.Item
                 key={summary.note.id}
                 withIcon
-                onClick={() => navigate(`/write/note/${summary.note.id}`)}
+                onClickKind={() => navigate(`/write/note/${summary.note.id}`)}
                 className="flex-col"
               >
                 <div className="flex">
@@ -84,9 +84,8 @@ const Notes = ({
           {!noToggle && (
             <List.Item
               withIcon
-              noHover
-              className="last:mb-0 opacity-30 hover:underline cursor-pointer"
-              onClick={toggleSeeAll}
+              className="last:mb-0 opacity-30"
+              onClickKind={toggleSeeAll}
             >
               <List.Item.Icon>
                 {seeAll ? <BiArrowFromBottom /> : <BiArrowFromTop />}

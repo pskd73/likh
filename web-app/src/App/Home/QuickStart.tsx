@@ -65,7 +65,7 @@ const QuickStart = () => {
         <Title>Quick start</Title>
         <ListContainer>
           <List>
-            <List.Item withIcon onClick={handleNewNote}>
+            <List.Item withIcon onClickKind={handleNewNote}>
               <List.Item.Icon>
                 <BiPlus />
               </List.Item.Icon>
@@ -74,20 +74,20 @@ const QuickStart = () => {
             <List.Item
               withIcon
               className="last:mb-0"
-              onClick={handleSampleNote}
+              onClickKind={handleSampleNote}
             >
               <List.Item.Icon>
                 <BiFile />
               </List.Item.Icon>
               <span>Create sample note</span>
             </List.Item>
-            <List.Item withIcon onClick={handleOpen}>
+            <List.Item withIcon onClickKind={handleOpen}>
               <List.Item.Icon>
                 <FiUpload />
               </List.Item.Icon>
               <span>Open .md</span>
             </List.Item>
-            <List.Item withIcon onClick={() => setViewedHelp([])}>
+            <List.Item withIcon onClickKind={() => setViewedHelp([])}>
               <List.Item.Icon>
                 <BiBulb />
               </List.Item.Icon>

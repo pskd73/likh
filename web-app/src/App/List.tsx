@@ -1,5 +1,10 @@
 import classNames from "classnames";
-import { ComponentProps, PropsWithChildren } from "react";
+import {
+  ComponentProps,
+  KeyboardEventHandler,
+  MouseEventHandler,
+  PropsWithChildren,
+} from "react";
 import { twMerge } from "tailwind-merge";
 
 const List = ({ children, className, ...restProps }: ComponentProps<"ul">) => {
@@ -16,20 +21,40 @@ const Item = ({
   active,
   noHover,
   withIcon,
+  onClickKind,
   ...restProps
 }: ComponentProps<"li"> & {
   active?: boolean;
   noHover?: boolean;
   withIcon?: boolean;
+  onClickKind?: (
+    type: "click" | "keyup",
+    clickEvent?: React.MouseEvent<HTMLLIElement, MouseEvent>,
+    keyUpEvent?: React.KeyboardEvent<HTMLLIElement>
+  ) => void;
 }) => {
+  const handleClick: MouseEventHandler<HTMLLIElement> = (e) => {
+    onClickKind && onClickKind("click", e);
+  };
+
+  const handleKeyUp: KeyboardEventHandler<HTMLLIElement> = (e) => {
+    if (e.key === "Enter" || e.key === "Space") {
+      onClickKind && onClickKind("keyup", undefined, e);
+    }
+  };
+
   return (
     <li
+      onClick={handleClick}
+      onKeyUp={handleKeyUp}
+      tabIndex={0}
       className={twMerge(
-        classNames("py-1 px-2", "rounded text-sm", {
+        classNames("py-1 px-2", "rounded text-sm outline-none", {
           "bg-opacity-10": active,
           "bg-opacity-0": !active,
           "bg-primary transition-colors cursor-pointer": !noHover,
-          "hover:bg-opacity-10 active:bg-opacity-20": !noHover,
+          "hover:bg-opacity-10 focus:bg-opacity-10 active:bg-opacity-20":
+            !noHover,
           "flex space-x-1": withIcon,
         }),
         className

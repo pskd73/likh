@@ -64,18 +64,24 @@ const TitleList = ({
 }) => {
   const { setSideBar } = useContext(EditorContext);
 
+  const handleClick = (title: OutlineTitle) => {
+    if (isMobile) {
+      setSideBar(undefined);
+    }
+    scrollTo({ title: title.slug });
+  };
+
   return (
     <ul className={classNames("space-y-1", { "pl-4": !root })}>
       {titles.map((title, i) => (
         <li key={i}>
           <span
-            className={classNames("hover:underline cursor-pointer text-sm")}
-            onClick={() => {
-              if (isMobile) {
-                setSideBar(undefined);
-              }
-              scrollTo({ title: title.slug });
-            }}
+            tabIndex={0}
+            className={classNames(
+              "hover:underline focus:underline outline-none cursor-pointer text-sm"
+            )}
+            onClick={() => handleClick(title)}
+            onKeyUp={(e) => e.key === "Enter" && handleClick(title)}
           >
             {prefix}
             {i + 1}. {title.text}

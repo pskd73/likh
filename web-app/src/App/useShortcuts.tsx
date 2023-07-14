@@ -48,6 +48,9 @@ const shortcuts: Record<
       document.getElementById("search")?.focus();
     }, 200);
   },
+  Enter: (editor) => {
+    editor.setEditorFocus(new Date().getTime());
+  },
 };
 
 const useShortcuts = (editor: EditorContextType) => {
