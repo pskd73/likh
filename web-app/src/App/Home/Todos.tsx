@@ -17,7 +17,7 @@ const Todos = ({ summaries }: { summaries: NoteSummary[] }) => {
             <List.Item
               withIcon
               key={i}
-              onClick={() => navigate(`/write/note/${summary.note.id}`)}
+              onClickKind={() => navigate(`/write/note/${summary.note.id}`)}
             >
               <List.Item.Icon>
                 <MdRadioButtonUnchecked />
