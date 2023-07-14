@@ -85,18 +85,13 @@ const Folders = <T extends unknown>({
       {folderize(Object.keys(map), prefix).map((hashtag, i) => {
         const exp = expanded.includes(hashtag);
         return (
-          <List.Item key={i} noHover className="px-0">
-            <div className="flex items-center space-x-1">
-              <Button
-                lite={!exp}
-                onClick={(e) => toggle(hashtag)}
-                className="w-4 h-4 p-0 flex justify-center items-center"
-              >
-                {exp ? <BiMinus /> : <BiPlus />}
-              </Button>
-              {exp ? <BiFolderOpen /> : <BiFolder />}
-              <span>{hashtag.replaceAll("#", "")}</span>
-            </div>
+          <>
+            <List.Item key={i} onClick={() => toggle(hashtag)}>
+              <div className="flex items-center space-x-1">
+                {exp ? <BiFolderOpen /> : <BiFolder />}
+                <span>{hashtag.replaceAll("#", "")}</span>
+              </div>
+            </List.Item>
             {exp && (
               <div className="ml-2 pl-2 border-l border-primary border-opacity-30">
                 {inject(prefix, hashtag)}
@@ -114,7 +109,7 @@ const Folders = <T extends unknown>({
                 />
               </div>
             )}
-          </List.Item>
+          </>
         );
       })}
     </List>
