@@ -85,7 +85,7 @@ const Folders = <T extends unknown>({
               </div>
             </List.Item>
             {exp && (
-              <div className="ml-2 pl-2 border-l border-primary border-opacity-30">
+              <div className="ml-3 pl-1 border-l border-primary border-opacity-30">
                 {inject(prefix, hashtag)}
                 <Folders
                   onFileClick={onFileClick}

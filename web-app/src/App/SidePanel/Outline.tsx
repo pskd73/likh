@@ -73,15 +73,16 @@ const TitleList = ({
   };
 
   return (
-    <List className={classNames({ "pl-4": !root })}>
+    <List className={classNames({ })}>
       {titles.map((title, i) => (
         <Fragment key={i}>
           <List.Item onClickKind={() => handleClick(title)}>
-            {prefix}
-            {i + 1}. {title.text}
+            {/* {prefix}
+            {i + 1}. {title.text} */}
+            {title.text}
           </List.Item>
           {title.children && (
-            <div>
+            <div className="ml-3 pl-1 border-l border-primary border-opacity-30">
               <TitleList
                 titles={title.children}
                 prefix={`${prefix}${i + 1}.`}

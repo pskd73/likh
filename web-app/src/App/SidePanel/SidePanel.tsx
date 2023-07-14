@@ -22,6 +22,7 @@ import Notes from "src/App/Home/Notes";
 import Tooltip from "src/comps/Tooltip";
 import { getShortcutText } from "../useShortcuts";
 import SidePanelBrowse from "./SidePanelBrowse";
+import Settings from "./Settings";
 
 const SidePanel = () => {
   const navigate = useNavigate();
@@ -229,6 +230,7 @@ const SidePanel = () => {
               <Outline />
               <Links />
               <SidePanelBrowse />
+              <Settings />
             </div>
           </>
         )}

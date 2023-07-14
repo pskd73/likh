@@ -11,7 +11,6 @@ import Browse from "src/App/Home/Browse";
 import Notes from "src/App/Home/Notes";
 import Reminders from "src/App/Home/Reminders";
 import { SavedNote } from "src/App/type";
-import Settings from "src/App/Home/Settings";
 import Promotion from "src/App/Home/Promotion";
 import Calendar from "src/App/Home/HomeCalendar";
 import classNames from "classnames";
@@ -98,15 +97,7 @@ const HomeScreen = () => {
             <Reminders reminderNotes={reminderNotes} />
           )}
         </Col>
-        <Col>
-          <Calendar />
-        </Col>
-      </Section>
-      <hr />
-      <Section>
-        <Col>
-          <Settings />
-        </Col>
+        <Col>{notesToShow.length > 3 && <Calendar />}</Col>
       </Section>
       <hr />
       <Section>
