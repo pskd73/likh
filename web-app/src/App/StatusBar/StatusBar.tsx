@@ -16,6 +16,7 @@ import classNames from "classnames";
 import { PouchContext } from "src/App/PouchDB";
 import { isMobile } from "src/App/device";
 import { twMerge } from "tailwind-merge";
+import Tooltip from "src/comps/Tooltip";
 
 const SyncIcon = ({ state }: { state: string }) => {
   if (state === "paused" || state === "init") {
@@ -94,41 +95,54 @@ const StatusBar = ({
       {/* Left */}
       <div className="flex justify-start h-full">
         {isMobile && (
+          <Tooltip tip={"Toggle sidemenu"}>
+            <Button
+              lite={sideBar !== "storage"}
+              className="rounded-none"
+              onClick={() =>
+                setSideBar((b) => (b === "outline" ? undefined : "outline"))
+              }
+            >
+              <BiSidebar />
+            </Button>
+          </Tooltip>
+        )}
+        <Tooltip direction="top" tip={"Sync"}>
           <Button
             lite={sideBar !== "storage"}
             className="rounded-none"
-            onClick={() =>
-              setSideBar((b) => (b === "outline" ? undefined : "outline"))
-            }
+            onClick={storage.pouch.sync}
           >
-            <BiSidebar />
+            <SyncIcon state={syncState} />
           </Button>
-        )}
-        <Button
-          lite={sideBar !== "storage"}
-          className="rounded-none"
-          onClick={storage.pouch.sync}
-        >
-          <SyncIcon state={syncState} />
-        </Button>
+        </Tooltip>
       </div>
 
       {/* Right */}
       <div className="flex justify-end h-full">
-        {note && !isRoll && <Delete />}
+        {note && !isRoll && (
+          <Tooltip tip={"Delete"} direction="top">
+            <Delete />
+          </Tooltip>
+        )}
         {note && (
-          <Button className="rounded-none" lite onClick={handleSave}>
-            <BiSave />
-          </Button>
+          <Tooltip tip={"Save"} direction="top">
+            <Button className="rounded-none" lite onClick={handleSave}>
+              <BiSave />
+            </Button>
+          </Tooltip>
         )}
         {showStats && note && <TextCounter text={note.text} />}
-        <Button
-          lite={!fullScreen}
-          className="rounded-none hidden md:block"
-          onClick={handleFullScreen}
-        >
-          <BiFullscreen />
-        </Button>
+
+        <Tooltip tip={"Fullscreen"}>
+          <Button
+            lite={!fullScreen}
+            className="rounded-none hidden md:block"
+            onClick={handleFullScreen}
+          >
+            <BiFullscreen />
+          </Button>
+        </Tooltip>
       </div>
     </div>
   );
