@@ -99,7 +99,7 @@ const Tooltip = ({
           }
         }
       )(div),
-      0
+      300
     );
   };
 
