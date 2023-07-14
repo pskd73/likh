@@ -4,13 +4,12 @@ import { EditorContext } from "src/App/Context";
 import Outline from "src/App/SidePanel/Outline";
 import { isMobile } from "src/App/device";
 import RollOutline from "./RollOutline";
-import { BiCog, BiHomeSmile, BiSidebar } from "react-icons/bi";
+import { BiCalendarHeart, BiCog, BiHomeSmile, BiSidebar } from "react-icons/bi";
 import Button from "src/comps/Button";
 import Browse from "src/App/Home/Browse";
 import Links from "src/App/SidePanel/Links";
 import { WithTitle } from "src/App/SidePanel/Common";
 import { useNavigate } from "react-router-dom";
-import { TbTimelineEvent } from "react-icons/tb";
 import { TiDownload } from "react-icons/ti";
 import { zipIt } from "src/App/File";
 import { SavedNote } from "src/App/type";
@@ -84,17 +83,21 @@ const SidePanel = () => {
         {!sideBar && (
           <div className="flex justify-end">
             <div className="w-[30px]">
-              <Button
-                lite
-                className="py-2"
-                onClick={() => setSideBar("outline")}
-              >
-                <BiSidebar />
-              </Button>
-              {note && (
-                <Button lite className="py-2" onClick={handleHome}>
-                  <BiHomeSmile />
+              <Tooltip tip={"Toggle sidemenu"}>
+                <Button
+                  lite
+                  className="py-2"
+                  onClick={() => setSideBar("outline")}
+                >
+                  <BiSidebar />
                 </Button>
+              </Tooltip>
+              {note && (
+                <Tooltip tip={"Home"}>
+                  <Button lite className="py-2" onClick={handleHome}>
+                    <BiHomeSmile />
+                  </Button>
+                </Tooltip>
               )}
             </div>
           </div>
@@ -121,7 +124,7 @@ const SidePanel = () => {
               </Tooltip>
               <Tooltip tip={"Timeline"}>
                 <Button lite onClick={() => navigate("/write/timeline")}>
-                  <TbTimelineEvent />
+                  <BiCalendarHeart />
                 </Button>
               </Tooltip>
               <Tooltip tip={"Home"}>

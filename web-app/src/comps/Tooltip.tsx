@@ -71,29 +71,31 @@ const Tooltip = ({
       (
         (target: HTMLDivElement): any =>
         () => {
-          const pos = getPosition(
-            target.getBoundingClientRect(),
-            ref.current!.getBoundingClientRect()
-          );
-          setPos({
-            left: pos.left,
-            top: pos.direction === "bottom" ? pos.top + 6 : pos.top - 6,
-            direction: pos.direction,
-          });
+          if (ref.current) {
+            const pos = getPosition(
+              target.getBoundingClientRect(),
+              ref.current!.getBoundingClientRect()
+            );
+            setPos({
+              left: pos.left,
+              top: pos.direction === "bottom" ? pos.top + 6 : pos.top - 6,
+              direction: pos.direction,
+            });
 
-          const triPos = getPosition(
-            target.getBoundingClientRect(),
-            {
-              width: 12,
-              height: 6,
-            },
-            pos.direction
-          );
-          setTrianglePos({
-            left: triPos.left,
-            top: triPos.top,
-            direction: pos.direction,
-          });
+            const triPos = getPosition(
+              target.getBoundingClientRect(),
+              {
+                width: 12,
+                height: 6,
+              },
+              pos.direction
+            );
+            setTrianglePos({
+              left: triPos.left,
+              top: triPos.top,
+              direction: pos.direction,
+            });
+          }
         }
       )(e.currentTarget),
       500
@@ -122,7 +124,7 @@ const Tooltip = ({
           "w-0 h-0 border-l-[6px] border-l-transparent",
           "border-b-[6px] border-b-primary",
           "border-r-[6px] border-r-transparent",
-          "mx-auto fixed"
+          "mx-auto fixed z-50"
         )}
         style={{
           top: triangePos.top,
@@ -134,7 +136,7 @@ const Tooltip = ({
         ref={ref}
         className={classNames(
           "fixed text-xs bg-primary text-base rounded px-2 py-1 text-center",
-          "shadow-md"
+          "shadow-md z-50"
         )}
         style={{ top: pos.top, left: pos.left }}
       >
