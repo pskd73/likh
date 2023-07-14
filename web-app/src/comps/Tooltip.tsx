@@ -37,7 +37,8 @@ const Tooltip = ({
 
   const getPosition = (
     rect: DOMRect,
-    popup: { width: number; height: number }
+    popup: { width: number; height: number },
+    preferredDirection?: "bottom" | "top"
   ): Position => {
     let top = rect.top + rect.height;
     let left = rect.left;
@@ -54,7 +55,10 @@ const Tooltip = ({
       left -= left + popup.width - window.innerWidth + 4;
     }
 
-    if (top + popup.height > window.innerHeight - 4) {
+    if (
+      preferredDirection === "top" ||
+      top + popup.height > window.innerHeight - 4
+    ) {
       direction = "top";
       top = rect.top - popup.height;
     }
@@ -63,27 +67,37 @@ const Tooltip = ({
   };
 
   const handleEnter: MouseEventHandler<HTMLDivElement> = (e) => {
-    timeout.current = setTimeout(((target: HTMLDivElement): any => () => {
-      const pos = getPosition(
-        target.getBoundingClientRect(),
-        ref.current!.getBoundingClientRect()
-      );
-      setPos({
-        left: pos.left,
-        top: pos.direction === "bottom" ? pos.top + 6 : pos.top - 6,
-        direction: pos.direction,
-      });
+    timeout.current = setTimeout(
+      (
+        (target: HTMLDivElement): any =>
+        () => {
+          const pos = getPosition(
+            target.getBoundingClientRect(),
+            ref.current!.getBoundingClientRect()
+          );
+          setPos({
+            left: pos.left,
+            top: pos.direction === "bottom" ? pos.top + 6 : pos.top - 6,
+            direction: pos.direction,
+          });
 
-      const triPos = getPosition(target.getBoundingClientRect(), {
-        width: 12,
-        height: 6,
-      });
-      setTrianglePos({
-        left: triPos.left,
-        top: triPos.top,
-        direction: pos.direction,
-      });
-    })(e.currentTarget), 500);
+          const triPos = getPosition(
+            target.getBoundingClientRect(),
+            {
+              width: 12,
+              height: 6,
+            },
+            pos.direction
+          );
+          setTrianglePos({
+            left: triPos.left,
+            top: triPos.top,
+            direction: pos.direction,
+          });
+        }
+      )(e.currentTarget),
+      500
+    );
   };
 
   const handleLeave = () => {
