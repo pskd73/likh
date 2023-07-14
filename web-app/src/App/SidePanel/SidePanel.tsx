@@ -4,7 +4,13 @@ import { EditorContext } from "src/App/Context";
 import Outline from "src/App/SidePanel/Outline";
 import { isMobile } from "src/App/device";
 import RollOutline from "./RollOutline";
-import { BiCalendarHeart, BiCog, BiHomeSmile, BiSidebar } from "react-icons/bi";
+import {
+  BiCalendarHeart,
+  BiCog,
+  BiHomeSmile,
+  BiPlus,
+  BiSidebar,
+} from "react-icons/bi";
 import Button from "src/comps/Button";
 import Browse from "src/App/Home/Browse";
 import Links from "src/App/SidePanel/Links";
@@ -29,6 +35,7 @@ const SidePanel = () => {
     storage,
     searchTerm,
     setSearchTerm,
+    newNote,
   } = useContext(EditorContext);
 
   const handleHome = () => {
@@ -46,6 +53,13 @@ const SidePanel = () => {
       }
     }
     zipIt(storage.notes, notes, storage.pouch);
+  };
+
+  const handleNew = async () => {
+    const note = newNote({
+      text: `# A title for the note\nWrite your mind here ...`,
+    });
+    navigate(`/write/note/${note!.id}`);
   };
 
   return (
@@ -98,6 +112,18 @@ const SidePanel = () => {
                   onClick={() => setSideBar("outline")}
                 >
                   <BiSidebar />
+                </Button>
+              </Tooltip>
+              <Tooltip
+                tip={
+                  <span>
+                    New
+                    <Tooltip.Shortcut>{getShortcutText("N")}</Tooltip.Shortcut>
+                  </span>
+                }
+              >
+                <Button lite className="py-2" onClick={handleNew}>
+                  <BiPlus />
                 </Button>
               </Tooltip>
               {note && (
@@ -161,6 +187,18 @@ const SidePanel = () => {
               >
                 <Button lite onClick={handleHome}>
                   <BiHomeSmile />
+                </Button>
+              </Tooltip>
+              <Tooltip
+                tip={
+                  <span>
+                    New
+                    <Tooltip.Shortcut>{getShortcutText("N")}</Tooltip.Shortcut>
+                  </span>
+                }
+              >
+                <Button lite onClick={handleNew}>
+                  <BiPlus />
                 </Button>
               </Tooltip>
               <Tooltip
