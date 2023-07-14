@@ -117,7 +117,7 @@ const SidePanel = () => {
               <Tooltip
                 tip={
                   <span>
-                    New
+                    New note
                     <Tooltip.Shortcut>{getShortcutText("N")}</Tooltip.Shortcut>
                   </span>
                 }
@@ -192,7 +192,7 @@ const SidePanel = () => {
               <Tooltip
                 tip={
                   <span>
-                    New
+                    New note
                     <Tooltip.Shortcut>{getShortcutText("N")}</Tooltip.Shortcut>
                   </span>
                 }

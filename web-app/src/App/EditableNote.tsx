@@ -17,8 +17,10 @@ import { FiExternalLink } from "react-icons/fi";
 import { SavedNote } from "src/App/type";
 import { useNavigate, useParams } from "react-router-dom";
 import Event from "src/components/Event";
+import { useTitle } from "src/comps/useTitle";
 
 const EditableNote = () => {
+  const { setTitle } = useTitle();
   const { noteId, hashtag } = useParams();
   const navigate = useNavigate();
   const ref = useRef<HTMLDivElement>(null);
@@ -52,6 +54,14 @@ const EditableNote = () => {
       setRollHashTag(decodeURIComponent(hashtag));
     }
   }, [noteId, hashtag]);
+
+  useEffect(() => {
+    if (hashtag) {
+      setTitle(hashtag);
+    } else if (note) {
+      setTitle(textToTitle(note.text));
+    }
+  }, [note, hashtag]);
 
   useEffect(() => {
     if (searchTerm) {
