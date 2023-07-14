@@ -76,8 +76,7 @@ export const getShortcutText = (key: string) => {
   let prefix = "";
   if (isMac()) {
     prefix = "⌘⌃";
-  }
-  if (isWindows()) {
+  } else {
     prefix = "Ctrl Alt ";
   }
   return prefix + key.toUpperCase();
