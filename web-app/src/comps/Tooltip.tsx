@@ -1,11 +1,14 @@
 import classNames from "classnames";
 import {
   ComponentProps,
+  MouseEventHandler,
   ReactElement,
   useRef,
   useState,
 } from "react";
 import { twMerge } from "tailwind-merge";
+
+type Position = { top: number; left: number; direction: "bottom" | "top" };
 
 const Tooltip = ({
   className,
@@ -19,19 +22,75 @@ const Tooltip = ({
   direction?: "top" | "bottom";
   multiline?: boolean;
 }) => {
-  const [active, setActive] = useState(true);
-  const ref = useRef<NodeJS.Timeout>();
+  const ref = useRef<HTMLDivElement>(null);
+  const timeout = useRef<NodeJS.Timeout>();
+  const [pos, setPos] = useState<Position>({
+    top: -9999,
+    left: -9999,
+    direction: "bottom",
+  });
+  const [triangePos, setTrianglePos] = useState<Position>({
+    top: -9999,
+    left: -9999,
+    direction: "bottom",
+  });
 
-  const handleEnter = () => {
-    ref.current = setTimeout(() => {
-      setActive(true);
-    }, 500);
+  const getPosition = (
+    rect: DOMRect,
+    popup: { width: number; height: number }
+  ): Position => {
+    let top = rect.top + rect.height;
+    let left = rect.left;
+    let direction: "bottom" | "top" = "bottom";
+
+    const targetCenter = left + rect.width / 2;
+    const halfWidthTarget = popup.width / 2;
+
+    left = targetCenter - halfWidthTarget;
+    if (left < 0) {
+      left = 4;
+    }
+    if (left + popup.width > window.innerWidth - 4) {
+      left -= left + popup.width - window.innerWidth + 4;
+    }
+
+    if (top + popup.height > window.innerHeight - 4) {
+      direction = "top";
+      top = rect.top - popup.height;
+    }
+
+    return { top, left, direction };
+  };
+
+  const handleEnter: MouseEventHandler<HTMLDivElement> = (e) => {
+    timeout.current = setTimeout(((target: HTMLDivElement): any => () => {
+      const pos = getPosition(
+        target.getBoundingClientRect(),
+        ref.current!.getBoundingClientRect()
+      );
+      setPos({
+        left: pos.left,
+        top: pos.direction === "bottom" ? pos.top + 6 : pos.top - 6,
+        direction: pos.direction,
+      });
+
+      const triPos = getPosition(target.getBoundingClientRect(), {
+        width: 12,
+        height: 6,
+      });
+      setTrianglePos({
+        left: triPos.left,
+        top: triPos.top,
+        direction: pos.direction,
+      });
+    })(e.currentTarget), 500);
   };
 
   const handleLeave = () => {
-    setActive(false);
-    if (ref.current) {
-      clearTimeout(ref.current);
+    setPos({ top: -9999, left: -9999, direction: "bottom" });
+    setTrianglePos({ top: -9999, left: -9999, direction: "bottom" });
+    if (timeout.current) {
+      clearTimeout(timeout.current);
     }
   };
 
@@ -46,50 +105,26 @@ const Tooltip = ({
       </div>
       <div
         className={classNames(
-          "absolute left-1/2 -translate-x-1/2",
-          "-my-1 mx-auto z-40",
-          {
-            "inline-block": active,
-            hidden: !active,
-          },
-          {
-            "top-full mt-1": direction === "bottom",
-            "bottom-full mb-1": direction === "top",
-          }
+          "w-0 h-0 border-l-[6px] border-l-transparent",
+          "border-b-[6px] border-b-primary",
+          "border-r-[6px] border-r-transparent",
+          "mx-auto fixed"
         )}
+        style={{
+          top: triangePos.top,
+          left: triangePos.left,
+          rotate: triangePos.direction === "bottom" ? "0deg" : "180deg",
+        }}
+      />
+      <div
+        ref={ref}
+        className={classNames(
+          "fixed text-xs bg-primary text-base rounded px-2 py-1 text-center",
+          "shadow-md"
+        )}
+        style={{ top: pos.top, left: pos.left }}
       >
-        {direction === "bottom" && (
-          <div
-            className={classNames(
-              "w-0 h-0 border-l-[6px] border-l-transparent",
-              "border-b-[6px] border-b-primary",
-              "border-r-[6px] border-r-transparent",
-              "mx-auto"
-            )}
-          />
-        )}
-        <div
-          className={classNames(
-            "text-xs bg-primary text-base rounded px-2 py-1 text-center",
-            "shadow-md max-w-[150px]",
-            {
-              "whitespace-nowrap": !multiline,
-              "w-32": multiline,
-            }
-          )}
-        >
-          {tip}
-        </div>
-        {direction === "top" && (
-          <div
-            className={classNames(
-              "w-0 h-0 border-l-[6px] border-l-transparent",
-              "border-b-[6px] border-b-primary",
-              "border-r-[6px] border-r-transparent",
-              "mx-auto rotate-180"
-            )}
-          />
-        )}
+        {tip}
       </div>
     </div>
   );

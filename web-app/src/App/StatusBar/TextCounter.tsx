@@ -5,6 +5,7 @@ import { useContext } from "react";
 import { EditorContext } from "src/App/Context";
 import { VscWholeWord } from "react-icons/vsc";
 import { BiTimeFive } from "react-icons/bi";
+import Tooltip from "src/comps/Tooltip";
 
 const READ_WORDS_PER_MIN = 245;
 
@@ -34,20 +35,22 @@ const Count = ({ text }: { text: string }) => {
 const TextCounter = ({ text }: { text: string }) => {
   const { countStatType, setCountStatType } = useContext(EditorContext);
   return (
-    <Button
-      lite
-      className={classNames(
-        "flex items-center space-x-2 justify-center rounded-none"
-      )}
-      onClick={() =>
-        setCountStatType((old) => (old === "words" ? "readTime" : "words"))
-      }
-    >
-      {countStatType === "words" ? <VscWholeWord /> : <BiTimeFive />}{" "}
-      <span className="text-xs">
-        <Count text={text} />
-      </span>
-    </Button>
+    <Tooltip tip={countStatType === "words" ? "Word count" : "Read time"}>
+      <Button
+        lite
+        className={classNames(
+          "flex items-center space-x-2 justify-center rounded-none"
+        )}
+        onClick={() =>
+          setCountStatType((old) => (old === "words" ? "readTime" : "words"))
+        }
+      >
+        {countStatType === "words" ? <VscWholeWord /> : <BiTimeFive />}{" "}
+        <span className="text-xs">
+          <Count text={text} />
+        </span>
+      </Button>
+    </Tooltip>
   );
 };
 
