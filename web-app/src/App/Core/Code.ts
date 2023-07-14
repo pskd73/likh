@@ -220,5 +220,6 @@ export function handleTabForCode(
   e.preventDefault();
   if (!e.shiftKey) {
     Transforms.insertText(editor, "    ");
+    return true;
   }
 }

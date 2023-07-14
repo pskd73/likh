@@ -1,4 +1,4 @@
-import { ReactElement, useContext, useMemo, useState } from "react";
+import { Fragment, ReactElement, useContext, useMemo, useState } from "react";
 import List from "src/App/List";
 import { ListContainer, Title } from "src/App/Home/Common";
 import { EditorContext, NoteSummary } from "src/App/Context";
@@ -33,7 +33,7 @@ const Files = <T extends unknown>({
           key={i}
           withIcon
           className="last:mb-0"
-          onClick={() => onClick(file)}
+          onClickKind={() => onClick(file)}
         >
           <List.Item.Icon>
             <BiFile />
@@ -77,8 +77,8 @@ const Folders = <T extends unknown>({
       {folderize(Object.keys(map), prefix).map((hashtag, i) => {
         const exp = expanded.includes(hashtag);
         return (
-          <>
-            <List.Item key={i} onClick={() => toggle(hashtag)}>
+          <Fragment key={i}>
+            <List.Item key={i} onClickKind={() => toggle(hashtag)}>
               <div className="flex items-center space-x-1">
                 {exp ? <BiFolderOpen /> : <BiFolder />}
                 <span>{hashtag.replaceAll("#", "")}</span>
@@ -101,7 +101,7 @@ const Folders = <T extends unknown>({
                 />
               </div>
             )}
-          </>
+          </Fragment>
         );
       })}
     </List>
@@ -144,7 +144,7 @@ const Browse = ({
                 <List>
                   <List.Item
                     withIcon
-                    onClick={() => handleJournal(prefix + hashtag)}
+                    onClickKind={() => handleJournal(prefix + hashtag)}
                   >
                     <List.Item.Icon>
                       <BiBook />

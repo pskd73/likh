@@ -29,6 +29,7 @@ import {
   CustomElement,
   serialize,
   deserialize,
+  focusEnd,
 } from "src/App/Core/Core";
 import {
   handleEnterForList,
@@ -85,6 +86,7 @@ const Editor = ({
   contextMenuPrefixes,
   grammer: passedGrammer,
   leafMakers,
+  focus,
 }: {
   onChange: (val: {
     value: Descendant[];
@@ -105,6 +107,7 @@ const Editor = ({
   contextMenuPrefixes?: string[];
   grammer?: Record<string, CustomGrammarValue>;
   leafMakers?: LeafMaker[];
+  focus?: number;
 }) => {
   theme = theme || Themes.Basic;
 
@@ -141,6 +144,12 @@ const Editor = ({
     handleSaveImg,
     container: document.querySelector(`.${containerClassName}`),
   });
+
+  useEffect(() => {
+    if (focus) {
+      focusEnd(editor);
+    }
+  }, [focus]);
 
   const renderLeaf = useCallback(
     (props: any) => (
@@ -283,9 +292,12 @@ const Editor = ({
       handleEnterForCode(editor, e);
       handleEnterForList(editor, e);
     } else if (e.key === "Tab") {
-      e.preventDefault();
-      intend(editor, !e.shiftKey);
-      handleTabForCode(editor, e);
+      let handled: boolean | undefined = false;
+      handled = intend(editor, !e.shiftKey);
+      handled = handleTabForCode(editor, e);
+      if (handled) {
+        e.preventDefault();
+      }
     } else if (e.key === "Backspace") {
       handleBackspaceForCode(editor, e);
     }

@@ -1,9 +1,9 @@
 import { Descendant } from "slate";
 import Editor, { Suggestion } from "src/App/Core/Slate/Editor";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { EditorContext } from "src/App/Context";
 import { useMiddle } from "src/comps/useMiddle";
-import { CustomEditor } from "src/App/Core/Core";
+import { CustomEditor, focusEnd } from "src/App/Core/Core";
 import classNames from "classnames";
 import moment from "moment";
 import { BiPlus } from "react-icons/bi";
@@ -40,6 +40,7 @@ const EditableNote = () => {
     getHashtags,
     setRollHashTag,
     plugins,
+    editorFocus,
   } = useContext(EditorContext);
   const scroll = useMiddle(ref, [typewriterMode], {
     typeWriter: typewriterMode,
@@ -220,6 +221,7 @@ const EditableNote = () => {
                 onNoteLinkClick={handleNoteLinkClick}
                 getSuggestions={getSuggestions}
                 highlight={searchTerm}
+                focus={Number(note?.id) + (editorFocus || 0)}
                 contextMenuPrefixes={[
                   "[[",
                   "#",

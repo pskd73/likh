@@ -67,7 +67,7 @@ const Tooltip = ({
     return { top, left, direction };
   };
 
-  const handleEnter: MouseEventHandler<HTMLDivElement> = (e) => {
+  const handleEnter = (div: HTMLDivElement) => {
     timeout.current = setTimeout(
       (
         (target: HTMLDivElement): any =>
@@ -98,8 +98,8 @@ const Tooltip = ({
             });
           }
         }
-      )(e.currentTarget),
-      500
+      )(div),
+      0
     );
   };
 
@@ -114,8 +114,10 @@ const Tooltip = ({
   return (
     <div className={twMerge(className, "group relative")} {...restProps}>
       <div
-        onMouseEnter={handleEnter}
+        onMouseEnter={(e) => handleEnter(e.currentTarget)}
         onMouseLeave={handleLeave}
+        onFocus={(e) => handleEnter(e.currentTarget)}
+        onBlur={handleLeave}
         className="flex h-full"
       >
         {children}

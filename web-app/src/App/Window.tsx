@@ -68,6 +68,7 @@ const EditorWindow = () => {
                   STATUS_BAR_HEIGHT + statusBarPadding
                 }px)`,
               }}
+              tabIndex={-1}
             >
               <div className={classNames("w-full max-w-[1000px]")}>
                 <Outlet />

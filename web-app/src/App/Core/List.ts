@@ -192,6 +192,7 @@ export function intend(editor: CustomEditor, asc = true) {
     }
 
     Transforms.setSelection(editor, { anchor, focus });
+    return true;
   }
 }
 

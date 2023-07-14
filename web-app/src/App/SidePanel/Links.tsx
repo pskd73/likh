@@ -31,13 +31,13 @@ const Links = () => {
   if (links.length === 0) return null;
 
   return (
-    <WithTitle title="Linked notes" active={false}>
+    <WithTitle title="Linked notes">
       <List>
         {links.map((link, i) => (
           <List.Item
             key={i}
             withIcon
-            onClick={() => {
+            onClickKind={() => {
               if (isMobile) {
                 setSideBar(undefined);
               }

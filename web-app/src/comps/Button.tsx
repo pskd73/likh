@@ -16,7 +16,7 @@ const Button = ({
       "opacity-50  bg-opacity-0": lite,
       "bg-opacity-10": !lite,
       "text-primary text-opacity-50": disabled,
-      "hover:opacity-100 hover:bg-opacity-10 active:bg-opacity-20":
+      "hover:opacity-100 hover:bg-opacity-10 focus:bg-opacity-10 active:bg-opacity-20":
         lite && !disabled,
       "hover:bg-opacity-20 active:bg-opacity-30": !lite && !disabled,
     }),

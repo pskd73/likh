@@ -75,6 +75,9 @@ export type EditorContextType = {
   getTodoNotes: () => NoteSummary[];
 
   plugins: RNPlugin[];
+
+  editorFocus?: number;
+  setEditorFocus: StateSetter<number | undefined>;
 };
 
 export const EditorContext = createContext<EditorContextType>(
@@ -114,6 +117,7 @@ export const useEditor = ({
   const [themeName, setThemeName] = useThemeName<string>("Basic");
   const [colorTheme, setColorTheme] = useColorTheme<string>("base");
   const [notesToShow, setNotesToShow] = useState<NoteSummary[]>([]);
+  const [editorFocus, setEditorFocus] = useState<number>();
 
   useEffect(() => {
     (async () => {
@@ -399,5 +403,8 @@ export const useEditor = ({
 
     getTodoNotes,
     plugins,
+
+    editorFocus,
+    setEditorFocus,
   };
 };

@@ -29,7 +29,12 @@ const Search = ({
       />
       <div className="ml-2 opacity-50 flex space-x-2">
         {searchTerm && (
-          <BiX onClick={() => onChange("")} className="cursor-pointer" />
+          <BiX
+            onClick={() => onChange("")}
+            onKeyUp={(e) => e.key === "Enter" && onChange("")}
+            className="cursor-pointer"
+            tabIndex={0}
+          />
         )}
         <BiSearch />
       </div>
