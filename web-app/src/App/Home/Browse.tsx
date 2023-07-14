@@ -2,15 +2,7 @@ import { ReactElement, useContext, useMemo, useState } from "react";
 import List from "src/App/List";
 import { ListContainer, Title } from "src/App/Home/Common";
 import { EditorContext, NoteSummary } from "src/App/Context";
-import {
-  BiFile,
-  BiFolder,
-  BiFolderOpen,
-  BiMinus,
-  BiPlus,
-  BiBook,
-} from "react-icons/bi";
-import Button from "src/comps/Button";
+import { BiFile, BiFolder, BiFolderOpen, BiBook } from "react-icons/bi";
 import { textToTitle } from "src/Note";
 import classNames from "classnames";
 import { useNavigate } from "react-router-dom";
