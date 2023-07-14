@@ -31,7 +31,7 @@ const Links = () => {
   if (links.length === 0) return null;
 
   return (
-    <WithTitle title="Linked notes" active>
+    <WithTitle title="Linked notes" active={false}>
       <List>
         {links.map((link, i) => (
           <List.Item

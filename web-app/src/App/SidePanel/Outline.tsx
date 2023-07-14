@@ -73,7 +73,7 @@ const TitleList = ({
   };
 
   return (
-    <List className={classNames({ })}>
+    <List>
       {titles.map((title, i) => (
         <Fragment key={i}>
           <List.Item onClickKind={() => handleClick(title)}>
@@ -107,7 +107,7 @@ const Outline = () => {
   if (titles.length === 0) return null;
 
   return (
-    <WithTitle title="Outline" active>
+    <WithTitle title="Outline" active={false}>
       {titles && <TitleList titles={titles} root />}
     </WithTitle>
   );

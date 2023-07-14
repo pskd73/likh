@@ -80,7 +80,15 @@ const HomeScreen = () => {
         <Col>
           <QuickStart />
           {notesToShow.length > 0 && (
-            <Notes seeAll={seeAll} toggleSeeAll={() => setSeeAll((s) => !s)} />
+            <div>
+              <Title>Notes</Title>
+              <ListContainer>
+                <Notes
+                  seeAll={seeAll}
+                  toggleSeeAll={() => setSeeAll((s) => !s)}
+                />
+              </ListContainer>
+            </div>
           )}
           {todos.length > 0 && <Todos summaries={todos} />}
         </Col>

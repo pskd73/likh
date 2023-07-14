@@ -37,65 +37,62 @@ const Notes = ({
   const { notesToShow, searchTerm } = useContext(EditorContext);
 
   return (
-    <div>
-      {!noTitle && <Title>Notes</Title>}
-      <ListContainer>
-        {Object.keys(notesToShow).length === 0 && (
-          <div className="text-sm p-2 flex items-center space-x-2">
-            <span className="opacity-50">
-              <BiInfoCircle />
-            </span>
-            <span>No notes!</span>
-          </div>
-        )}
-        <List>
-          {notesToShow
-            .slice(0, searchTerm || seeAll ? notesToShow.length : 5)
-            .map((summary) => (
-              <List.Item
-                key={summary.note.id}
-                withIcon
-                onClickKind={() => navigate(`/write/note/${summary.note.id}`)}
-                className="flex-col"
-              >
-                <div className="flex">
-                  <span className="opacity-50 mt-1 min-w-5 w-5">
-                    <BiFile />
-                  </span>
-                  <span>{textToTitle(summary.note.text, 20)}</span>
-                </div>
-                {summary.summary &&
-                  (!searchTerm || !searchTerm.startsWith("#")) && (
-                    <List.Item.Description>
-                      {highlight(summary.summary, [
-                        Highligher(summary.highlight || ""),
-                      ])
-                        .map((it, i) => {
-                          if (typeof it === "string") {
-                            return <span>{it}</span>;
-                          }
-                          return it;
-                        })
-                        .map((it, i) => cloneElement(it, { key: i }))}
-                    </List.Item.Description>
-                  )}
-              </List.Item>
-            ))}
-          {!noToggle && (
+    <>
+      {Object.keys(notesToShow).length === 0 && (
+        <div className="text-sm p-2 flex items-center space-x-2">
+          <span className="opacity-50">
+            <BiInfoCircle />
+          </span>
+          <span>No notes!</span>
+        </div>
+      )}
+      <List>
+        {notesToShow
+          .slice(0, searchTerm || seeAll ? notesToShow.length : 5)
+          .map((summary) => (
             <List.Item
+              key={summary.note.id}
               withIcon
-              className="last:mb-0 opacity-30"
-              onClickKind={toggleSeeAll}
+              onClickKind={() => navigate(`/write/note/${summary.note.id}`)}
+              className="flex-col"
             >
-              <List.Item.Icon>
-                {seeAll ? <BiArrowFromBottom /> : <BiArrowFromTop />}
-              </List.Item.Icon>
-              <span>[{seeAll ? "Collapse" : "See all"}]</span>
+              <div className="flex">
+                <span className="opacity-50 mt-1 min-w-5 w-5">
+                  <BiFile />
+                </span>
+                <span>{textToTitle(summary.note.text, 20)}</span>
+              </div>
+              {summary.summary &&
+                (!searchTerm || !searchTerm.startsWith("#")) && (
+                  <List.Item.Description>
+                    {highlight(summary.summary, [
+                      Highligher(summary.highlight || ""),
+                    ])
+                      .map((it, i) => {
+                        if (typeof it === "string") {
+                          return <span>{it}</span>;
+                        }
+                        return it;
+                      })
+                      .map((it, i) => cloneElement(it, { key: i }))}
+                  </List.Item.Description>
+                )}
             </List.Item>
-          )}
-        </List>
-      </ListContainer>
-    </div>
+          ))}
+        {!noToggle && (
+          <List.Item
+            withIcon
+            className="last:mb-0 opacity-30"
+            onClickKind={toggleSeeAll}
+          >
+            <List.Item.Icon>
+              {seeAll ? <BiArrowFromBottom /> : <BiArrowFromTop />}
+            </List.Item.Icon>
+            <span>[{seeAll ? "Collapse" : "See all"}]</span>
+          </List.Item>
+        )}
+      </List>
+    </>
   );
 };
 
