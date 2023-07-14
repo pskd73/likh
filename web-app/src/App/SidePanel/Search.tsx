@@ -11,9 +11,9 @@ const Search = ({
   return (
     <div
       className={classNames(
-        "flex justify-between items-center text-2xl",
-        "border rounded-lg border-primary border-opacity-20",
-        "overflow-hidden p-2 px-4 shadow bg-base"
+        "flex justify-between items-center",
+        "border rounded border-primary border-opacity-20",
+        "overflow-hidden py-1 px-2 bg-base"
       )}
     >
       <input

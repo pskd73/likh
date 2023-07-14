@@ -1,10 +1,11 @@
-import { useContext, useState } from "react";
+import { Fragment, useContext, useState } from "react";
 import { EditorContext } from "src/App/Context";
 import classNames from "classnames";
 import { isMobile } from "src/App/device";
 import { scrollTo } from "src/App/scroll";
 import { WithTitle } from "src/App/SidePanel/Common";
 import useDelayedEffect from "src/App/useDelayedEffect";
+import List from "../List";
 
 type OutlineTitle = {
   text: string | null;
@@ -72,31 +73,24 @@ const TitleList = ({
   };
 
   return (
-    <ul className={classNames("space-y-1", { "pl-4": !root })}>
+    <List className={classNames({ "pl-4": !root })}>
       {titles.map((title, i) => (
-        <li key={i}>
-          <span
-            tabIndex={0}
-            className={classNames(
-              "hover:underline focus:underline outline-none cursor-pointer text-sm"
-            )}
-            onClick={() => handleClick(title)}
-            onKeyUp={(e) => e.key === "Enter" && handleClick(title)}
-          >
+        <Fragment key={i}>
+          <List.Item onClickKind={() => handleClick(title)}>
             {prefix}
             {i + 1}. {title.text}
-          </span>
+          </List.Item>
           {title.children && (
-            <div className="my-1">
+            <div>
               <TitleList
                 titles={title.children}
                 prefix={`${prefix}${i + 1}.`}
               />
             </div>
           )}
-        </li>
+        </Fragment>
       ))}
-    </ul>
+    </List>
   );
 };
 
@@ -112,7 +106,7 @@ const Outline = () => {
   if (titles.length === 0) return null;
 
   return (
-    <WithTitle title="Outline">
+    <WithTitle title="Outline" active>
       {titles && <TitleList titles={titles} root />}
     </WithTitle>
   );

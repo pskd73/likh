@@ -3,7 +3,7 @@ import { useContext, useState } from "react";
 import { EditorContext } from "src/App/Context";
 import { isMobile } from "src/App/device";
 import { WithTitle } from "src/App/SidePanel/Common";
-import { BiLink } from "react-icons/bi";
+import { BiLink, BiNetworkChart } from "react-icons/bi";
 import useDelayedEffect from "src/App/useDelayedEffect";
 
 type NoteLink = {
@@ -31,7 +31,7 @@ const Links = () => {
   if (links.length === 0) return null;
 
   return (
-    <WithTitle title="Linked notes">
+    <WithTitle title="Linked notes" active>
       <List>
         {links.map((link, i) => (
           <List.Item
@@ -45,7 +45,7 @@ const Links = () => {
             }}
           >
             <List.Item.Icon>
-              <BiLink />
+              <BiNetworkChart />
             </List.Item.Icon>
             <span>{link.text}</span>
           </List.Item>

@@ -79,7 +79,7 @@ const RollOutline = () => {
 
   return (
     <div className="text-sm px-4">
-      <div className="mb-4 text-2xl">
+      <div className="mb-4 text-xl">
         <span className="pb-2 flex space-x-2 items-center font-bold">
           <span>
             <BiHash />
@@ -94,7 +94,7 @@ const RollOutline = () => {
         active={date.dt}
       />
       <div className="my-4 mt-10 flex items-center justify-between">
-        <div className="text-lg flex items-center space-x-2">
+        <div className="text-md flex items-center space-x-2">
           <span>
             <BiCalendarEvent />
           </span>

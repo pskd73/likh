@@ -17,6 +17,7 @@ import Calendar from "src/App/Home/HomeCalendar";
 import classNames from "classnames";
 import Logo from "src/comps/Logo";
 import Todos from "src/App/Home/Todos";
+import { ListContainer, Title } from "./Common";
 
 const Col = ({ children, className, ...restProps }: ComponentProps<"div">) => {
   return (
@@ -85,7 +86,14 @@ const HomeScreen = () => {
           {todos.length > 0 && <Todos summaries={todos} />}
         </Col>
         <Col>
-          {Object.keys(hashtags).length > 0 && <Browse />}
+          {Object.keys(hashtags).length > 0 && (
+            <div>
+              <Title>Browse</Title>
+              <ListContainer>
+                <Browse />
+              </ListContainer>
+            </div>
+          )}
           {reminderNotes.length > 0 && (
             <Reminders reminderNotes={reminderNotes} />
           )}
