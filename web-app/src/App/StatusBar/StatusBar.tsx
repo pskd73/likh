@@ -121,11 +121,7 @@ const StatusBar = ({
 
       {/* Right */}
       <div className="flex justify-end h-full">
-        {note && !isRoll && (
-          <Tooltip tip={"Delete"} direction="top">
-            <Delete />
-          </Tooltip>
-        )}
+        {note && !isRoll && <Delete />}
         {note && (
           <Tooltip
             tip={

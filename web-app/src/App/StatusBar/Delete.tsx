@@ -3,6 +3,7 @@ import Button from "src/comps/Button";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { BiCheck, BiX } from "react-icons/bi";
 import { EditorContext } from "src/App/Context";
+import Tooltip from "src/comps/Tooltip";
 
 const Delete = () => {
   const { deleteNote, note } = useContext(EditorContext);
@@ -17,9 +18,11 @@ const Delete = () => {
 
   if (!prompt) {
     return (
-      <Button className="rounded-none" lite onClick={() => setPrompt(true)}>
-        <RiDeleteBinLine />
-      </Button>
+      <Tooltip tip={"Delete"} direction="top">
+        <Button className="rounded-none" lite onClick={() => setPrompt(true)}>
+          <RiDeleteBinLine />
+        </Button>
+      </Tooltip>
     );
   }
   return (
