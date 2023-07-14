@@ -2,6 +2,7 @@ import classNames from "classnames";
 import {
   ComponentProps,
   MouseEventHandler,
+  PropsWithChildren,
   ReactElement,
   useRef,
   useState,
@@ -145,5 +146,11 @@ const Tooltip = ({
     </div>
   );
 };
+
+const Shortcut = ({ children }: PropsWithChildren) => (
+  <span className="opacity-50 ml-1 inline-block">{children}</span>
+);
+
+Tooltip.Shortcut = Shortcut;
 
 export default Tooltip;

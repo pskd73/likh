@@ -16,6 +16,7 @@ import { SavedNote } from "src/App/type";
 import Search from "src/App/Home/Search";
 import Notes from "src/App/Home/Notes";
 import Tooltip from "src/comps/Tooltip";
+import { getShortcutText } from "../useShortcuts";
 
 const SidePanel = () => {
   const navigate = useNavigate();
@@ -83,7 +84,14 @@ const SidePanel = () => {
         {!sideBar && (
           <div className="flex justify-end">
             <div className="w-[30px]">
-              <Tooltip tip={"Toggle sidemenu"}>
+              <Tooltip
+                tip={
+                  <span>
+                    Sidemenu
+                    <Tooltip.Shortcut>{getShortcutText("L")}</Tooltip.Shortcut>
+                  </span>
+                }
+              >
                 <Button
                   lite
                   className="py-2"
@@ -93,7 +101,16 @@ const SidePanel = () => {
                 </Button>
               </Tooltip>
               {note && (
-                <Tooltip tip={"Home"}>
+                <Tooltip
+                  tip={
+                    <span>
+                      Home
+                      <Tooltip.Shortcut>
+                        {getShortcutText("H")}
+                      </Tooltip.Shortcut>
+                    </span>
+                  }
+                >
                   <Button lite className="py-2" onClick={handleHome}>
                     <BiHomeSmile />
                   </Button>
@@ -112,7 +129,14 @@ const SidePanel = () => {
                 "border-b border-primary border-opacity-10"
               )}
             >
-              <Tooltip tip={"Take backup"}>
+              <Tooltip
+                tip={
+                  <span>
+                    Backup
+                    <Tooltip.Shortcut>{getShortcutText("B")}</Tooltip.Shortcut>
+                  </span>
+                }
+              >
                 <Button lite onClick={handleZip}>
                   <TiDownload />
                 </Button>
@@ -127,12 +151,26 @@ const SidePanel = () => {
                   <BiCalendarHeart />
                 </Button>
               </Tooltip>
-              <Tooltip tip={"Home"}>
+              <Tooltip
+                tip={
+                  <span>
+                    Home
+                    <Tooltip.Shortcut>{getShortcutText("H")}</Tooltip.Shortcut>
+                  </span>
+                }
+              >
                 <Button lite onClick={handleHome}>
                   <BiHomeSmile />
                 </Button>
               </Tooltip>
-              <Tooltip tip={"Toggle sidemenu"}>
+              <Tooltip
+                tip={
+                  <span>
+                    Sidemenu
+                    <Tooltip.Shortcut>{getShortcutText("L")}</Tooltip.Shortcut>
+                  </span>
+                }
+              >
                 <Button lite onClick={() => setSideBar(undefined)}>
                   <BiSidebar />
                 </Button>

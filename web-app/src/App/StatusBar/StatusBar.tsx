@@ -17,6 +17,7 @@ import { PouchContext } from "src/App/PouchDB";
 import { isMobile } from "src/App/device";
 import { twMerge } from "tailwind-merge";
 import Tooltip from "src/comps/Tooltip";
+import { getShortcutText } from "../useShortcuts";
 
 const SyncIcon = ({ state }: { state: string }) => {
   if (state === "paused" || state === "init") {
@@ -95,7 +96,7 @@ const StatusBar = ({
       {/* Left */}
       <div className="flex justify-start h-full">
         {isMobile && (
-          <Tooltip tip={"Toggle sidemenu"}>
+          <Tooltip tip={"Sidemenu"}>
             <Button
               lite={sideBar !== "storage"}
               className="rounded-none"
@@ -126,7 +127,14 @@ const StatusBar = ({
           </Tooltip>
         )}
         {note && (
-          <Tooltip tip={"Save"} direction="top">
+          <Tooltip
+            tip={
+              <span>
+                Save<Tooltip.Shortcut>{getShortcutText("S")}</Tooltip.Shortcut>
+              </span>
+            }
+            direction="top"
+          >
             <Button className="rounded-none" lite onClick={handleSave}>
               <BiSave />
             </Button>

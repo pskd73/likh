@@ -13,4 +13,12 @@ export function iOS() {
   );
 }
 
+export function isMac() {
+  return navigator.platform.toUpperCase().indexOf("MAC") >= 0;
+}
+
+export function isWindows() {
+  return navigator.platform.toUpperCase().indexOf("WIN") > -1;
+}
+
 export const isMobile = window.innerWidth < 500;

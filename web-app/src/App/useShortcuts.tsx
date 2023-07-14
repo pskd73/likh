@@ -3,11 +3,13 @@ import { EditorContextType } from "./Context";
 import { openFile, saveNote, zipIt } from "./File";
 import { SavedNote } from "./type";
 import { NavigateFunction, useNavigate } from "react-router-dom";
+import { isMac, isWindows } from "./device";
 
 const isWindowShortcut = (e: KeyboardEvent) => {
   const mac = e.metaKey && e.ctrlKey;
+  const windows = e.altKey && e.ctrlKey;
 
-  return mac;
+  return mac || windows;
 };
 
 const shortcuts: Record<
@@ -68,6 +70,17 @@ const useShortcuts = (editor: EditorContextType) => {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [editor]);
+};
+
+export const getShortcutText = (key: string) => {
+  let prefix = "";
+  if (isMac()) {
+    prefix = "⌘⌃";
+  }
+  if (isWindows()) {
+    prefix = "Ctrl Alt ";
+  }
+  return prefix + key.toUpperCase();
 };
 
 export default useShortcuts;
