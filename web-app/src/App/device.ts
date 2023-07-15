@@ -21,4 +21,8 @@ export function isWindows() {
   return navigator.platform.toUpperCase().indexOf("WIN") > -1;
 }
 
+export function isTouchDevice() {
+  return "ontouchstart" in window || navigator.maxTouchPoints > 0;
+}
+
 export const isMobile = window.innerWidth < 500;

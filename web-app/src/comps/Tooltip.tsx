@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { isTouchDevice } from "src/App/device";
 import { twMerge } from "tailwind-merge";
 
 type Position = { top: number; left: number; direction: "bottom" | "top" };
@@ -72,7 +73,7 @@ const Tooltip = ({
       (
         (target: HTMLDivElement): any =>
         () => {
-          if (ref.current) {
+          if (ref.current && !isTouchDevice()) {
             const pos = getPosition(
               target.getBoundingClientRect(),
               ref.current!.getBoundingClientRect()
