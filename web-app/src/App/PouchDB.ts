@@ -40,11 +40,11 @@ export const MakePouch = (
   let remote: PouchDB.Database | undefined = undefined;
 
   function sync() {
-    onStateChange("active", {});
     if (config.username && config.password) {
       remote = new PouchDB(
         `https://${config.username}:${config.password}@sync.retronote.app:6984/notes_${config.username}`
       );
+      onStateChange("active", {});
       db.sync(remote, { live: true })
         .on("change", function (info) {
           onStateChange("change", { changeInfo: info });

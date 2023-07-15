@@ -85,7 +85,7 @@ const QuickStart = () => {
               <List.Item.Icon>
                 <FiUpload />
               </List.Item.Icon>
-              <span>Open .md</span>
+              <span>Import .md</span>
             </List.Item>
             <List.Item withIcon onClickKind={() => setViewedHelp([])}>
               <List.Item.Icon>
