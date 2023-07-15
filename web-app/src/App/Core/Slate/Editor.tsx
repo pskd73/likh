@@ -87,6 +87,7 @@ const Editor = ({
   grammer: passedGrammer,
   leafMakers,
   focus,
+  blockPlaceholder,
 }: {
   onChange: (val: {
     value: Descendant[];
@@ -108,6 +109,7 @@ const Editor = ({
   grammer?: Record<string, CustomGrammarValue>;
   leafMakers?: LeafMaker[];
   focus?: number;
+  blockPlaceholder?: string;
 }) => {
   theme = theme || Themes.Basic;
 
@@ -251,8 +253,12 @@ const Editor = ({
       // list
       const listLevel = parseListText(text)?.level;
 
+      console.log({ attributes, children, element });
+
       return (
         <SlateElement
+          placeholder={blockPlaceholder}
+          text={text}
           attributes={attributes}
           children={children}
           element={element}
