@@ -86,7 +86,8 @@ Everything is a note here. Use __markdown__ to _style_ them.
 
 1. Navigate to [[😎 More tips]]
 2. More on [[🧵 Journaling]]
-3. Check [[⌨️ Retro Note Shortcuts]]`;
+3. Check [[⌨️ Retro Note Shortcuts]]
+`;
 
 export const SAMPLE_MORE_TIPS = `# 😎 More tips
 #GetStarted/Tips
@@ -94,7 +95,8 @@ export const SAMPLE_MORE_TIPS = `# 😎 More tips
 - [x] No procrastination
 - Add in-note timestamps. Example: Retro Note is first released @2023-06-01T12:00:00 
 - Go to [Timeline](/write/timeline) and see your re-live your past and prepare for future!
-- Save your notes any time as _.md_ file by just clicking save button bottom right`;
+- Save your notes any time as _.md_ file by just clicking save button bottom right
+`;
 
 export const SAMPLE_JOURNALING = `# 🧵 Journaling
 #GetStarted/Tips
@@ -102,7 +104,8 @@ export const SAMPLE_JOURNALING = `# 🧵 Journaling
 - Make use of __Calendar__ view.
 - Use timestamps for tagging incidents either past or future. 
     - Example: I graduated @2014-07-12T12:00:00 
-- Scroll through your [Timeline](/write/timeline)`;
+- Scroll through your [Timeline](/write/timeline)
+`;
 
 export const SAMPLE_SHORTCUTS = `# ⌨️ Retro Note Shortcuts
 #GetStarted/Tips
@@ -118,4 +121,5 @@ All following shortcuts are with \`command ⌘\` + \`control ⌃\`
 ## 🧭 Navigation
 All following shortcuts are with \`command ⌘\`
 1. \`Left arrow\` - previous (page/note)
-2. \`Right arrow\` - next (page/note)`;
+2. \`Right arrow\` - next (page/note)
+`;
