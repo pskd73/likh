@@ -78,12 +78,16 @@ export type EditorContextType = {
 
   editorFocus?: number;
   setEditorFocus: StateSetter<number | undefined>;
+
+  initiated: boolean;
+  setInitiated: StateSetter<boolean>;
 };
 
 export const EditorContext = createContext<EditorContextType>(
   {} as EditorContextType
 );
 
+const { hook: useInitiated } = PersistedState<boolean>("initiated");
 const { hook: useSideBar } = PersistedState("sideBar");
 const { hook: useSearchTerm } = PersistedState("searchTerm");
 const { hook: useTypewriterMode } = PersistedState("typewriterMode");
@@ -102,7 +106,8 @@ export const useEditor = ({
   pdb: PouchContextType;
   plugins: RNPlugin[];
 }): EditorContextType => {
-  const [sideBar, setSideBar] = useSideBar<string | undefined>(undefined);
+  const [initiated, setInitiated] = useInitiated<boolean>(false);
+  const [sideBar, setSideBar] = useSideBar<string | undefined>("outline");
   const [showStats, setShowStats] = useShowStats(true);
   const [typewriterMode, setTypewriterMode] = useTypewriterMode(false);
   const [countStatType, setCountStatType] =
@@ -249,14 +254,6 @@ export const useEditor = ({
     if (notes[noteId]) {
       const newNotes = { ...notes };
       delete newNotes[noteId];
-
-      if (Object.keys(newNotes).length === 0) {
-        const recentNote = await storage.getRecentNote();
-        if (recentNote) {
-          newNotes[recentNote.id] = recentNote;
-        }
-      }
-
       setNotes(newNotes);
     }
   };
@@ -406,5 +403,8 @@ export const useEditor = ({
 
     editorFocus,
     setEditorFocus,
+
+    initiated,
+    setInitiated,
   };
 };

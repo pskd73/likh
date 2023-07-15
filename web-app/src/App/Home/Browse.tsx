@@ -134,7 +134,7 @@ const Browse = ({
       prefix={""}
       toTitle={(summary) => textToTitle(summary.note.text, 20)}
       inject={(prefix, hashtag) => {
-        if (prefix === "#journal/") {
+        if (prefix.toLowerCase() === "#journal/") {
           return (
             <List>
               <List.Item

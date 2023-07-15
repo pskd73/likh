@@ -19,6 +19,7 @@ import Timeline from "./App/Home/Timeline";
 import HomeScreen from "./App/Home/HomeScreen";
 import EditableNote from "./App/EditableNote";
 import Storage from "./App/SidePanel/Storage";
+import Init from "./App/Init";
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
       {
         path: "settings/sync",
         element: <Storage />,
+      },
+      {
+        path: "init",
+        element: <Init />,
       },
     ],
   },

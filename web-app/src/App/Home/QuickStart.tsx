@@ -15,12 +15,14 @@ import { PersistedState } from "src/App/usePersistedState";
 import WhatsNew from "src/App/Home/WhatsNew";
 import { useNavigate } from "react-router-dom";
 import Event from "src/components/Event";
+import useSampleNote from "../useSampleNote";
 
 const { hook: useViewedHelp } = PersistedState<string[]>("viewedHelp");
 
 const QuickStart = () => {
   const navigate = useNavigate();
   const { newNote } = useContext(EditorContext);
+  const { createSampleNotes } = useSampleNote();
   const [viewedHelp, setViewedHelp] = useViewedHelp<string[]>([]);
 
   const handleOpen = async () => {
@@ -31,23 +33,8 @@ const QuickStart = () => {
 
   const handleSampleNote = async () => {
     Event.track("sample_note");
-    newNote({
-      text: SAMPLE_JOURNALING,
-      id: "sample_journaling",
-    });
-    newNote({
-      text: SAMPLE_MORE_TIPS,
-      id: "sample_tips",
-    });
-    newNote({
-      text: SAMPLE_SHORTCUTS,
-      id: "sample_shortcuts",
-    });
-    newNote({
-      text: SAMPLE_MAIN,
-      id: "sample",
-    });
-    navigate(`/write/note/sample`);
+    const noteId = createSampleNotes();
+    navigate(`/write/note/${noteId}`);
   };
 
   const handleNewNote = () => {
@@ -85,7 +72,7 @@ const QuickStart = () => {
               <List.Item.Icon>
                 <FiUpload />
               </List.Item.Icon>
-              <span>Open .md</span>
+              <span>Import .md</span>
             </List.Item>
             <List.Item withIcon onClickKind={() => setViewedHelp([])}>
               <List.Item.Icon>

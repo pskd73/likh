@@ -221,7 +221,7 @@ const EditableNote = () => {
                 onNoteLinkClick={handleNoteLinkClick}
                 getSuggestions={getSuggestions}
                 highlight={searchTerm}
-                focus={Number(note?.id) + (editorFocus || 0)}
+                focus={(note?.created_at || 0) + (editorFocus || 0)}
                 contextMenuPrefixes={[
                   "[[",
                   "#",
