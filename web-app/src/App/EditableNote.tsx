@@ -1,4 +1,4 @@
-import { Descendant } from "slate";
+import { BaseRange, Descendant } from "slate";
 import Editor, { Suggestion } from "src/App/Core/Slate/Editor";
 import { useContext, useEffect, useRef, useState } from "react";
 import { EditorContext } from "src/App/Context";
@@ -60,7 +60,7 @@ const EditableNote = () => {
     if (hashtag) {
       setTitle(hashtag);
     } else if (note) {
-      setTitle(textToTitle(note.text));
+      setTitle(textToTitle(note.text) || "Retro Note");
     }
   }, [note, hashtag]);
 
@@ -131,13 +131,17 @@ const EditableNote = () => {
     scrollTo({ noteId: savedNote!.id });
   };
 
-  const getSuggestions = async (prefix: string, term: string) => {
+  const getSuggestions = async (
+    prefix: string,
+    term: string,
+    range: BaseRange
+  ) => {
     const suggestions: Suggestion[] = [];
 
     plugins.forEach((plugin) => {
       if (plugin.suggestions && plugin.suggestions[prefix]) {
         const config = plugin.suggestions[prefix];
-        for (const sugg of config.suggest(prefix, term, note!)) {
+        for (const sugg of config.suggest(prefix, term, note!, range)) {
           suggestions.push(sugg);
         }
       }
@@ -266,6 +270,7 @@ const EditableNote = () => {
                 leafMakers={plugins
                   .filter((p) => p.leafMaker)
                   .map((p) => p.leafMaker!)}
+                blockPlaceholder={`Type "/" for options`}
               />
             </div>
           );

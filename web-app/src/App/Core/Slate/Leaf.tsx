@@ -22,6 +22,7 @@ function Leaf({
   text,
   theme,
   leafMakers,
+  placeholder,
 }: {
   attributes: any;
   children: any;
@@ -31,6 +32,7 @@ function Leaf({
   text: { text: string };
   theme: Theme;
   leafMakers: LeafMaker[];
+  placeholder?: string;
 }) {
   const title = leaf.title1 || leaf.title2 || leaf.title3;
 
@@ -58,9 +60,12 @@ function Leaf({
 
     // title
     "md:inline-flex font-semibold": title && !leaf.hashes,
-    "md:-ml-[50px] md:w-[50px] md:pr-[10px]": title && leaf.hashes,
     "md:inline-flex 1": title && leaf.hashes && leaf.focused,
-    "hidden 1": title && leaf.hashes && !leaf.focused,
+    "hidden 1":
+      title &&
+      leaf.hashes &&
+      !leaf.focused &&
+      text.text.replaceAll("#", "").trim() !== "",
     "justify-end opacity-30": title && leaf.hashes,
     [theme.font.title1]: leaf.title1,
     [theme.font.title2]: leaf.title2,
@@ -196,6 +201,14 @@ function Leaf({
       }}
       spellCheck={!leaf.hashtag}
     >
+      {placeholder && leaf.newLine && (
+        <span
+          contentEditable={false}
+          className="absolute text-primary text-opacity-40 pointer-events-none select-none"
+        >
+          {placeholder}
+        </span>
+      )}
       {children}
     </span>
   );

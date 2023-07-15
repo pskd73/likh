@@ -121,12 +121,14 @@ export function useContextMenu(
         switch (e.key) {
           case "ArrowDown":
             e.preventDefault();
+            e.stopPropagation();
             const prevIndex = index >= count - 1 ? 0 : index + 1;
             setIndex(prevIndex);
             updateListScroll(prevIndex);
             break;
           case "ArrowUp":
             e.preventDefault();
+            e.stopPropagation();
             const nextIndex = index <= 0 ? count - 1 : index - 1;
             setIndex(nextIndex);
             updateListScroll(nextIndex);
@@ -134,11 +136,13 @@ export function useContextMenu(
           case "Tab":
           case "Enter":
             e.preventDefault();
+            e.stopPropagation();
             onEnter({ index, target, search, prefix: activePrefix! });
             setTarget(undefined);
             break;
           case "Escape":
             e.preventDefault();
+            e.stopPropagation();
             setTarget(undefined);
             setActivePrefix(undefined);
             setSearch("");
@@ -190,6 +194,7 @@ export function useContextMenu(
     search,
     setCount,
     activePrefix,
+    target,
   };
 }
 

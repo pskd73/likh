@@ -87,6 +87,7 @@ const Editor = ({
   grammer: passedGrammer,
   leafMakers,
   focus,
+  blockPlaceholder,
 }: {
   onChange: (val: {
     value: Descendant[];
@@ -99,7 +100,11 @@ const Editor = ({
   initText?: string;
   editor?: CustomEditor;
   onNoteLinkClick?: (title: string, id?: string) => void;
-  getSuggestions?: (prefix: string, term: string) => Promise<Suggestion[]>;
+  getSuggestions?: (
+    prefix: string,
+    term: string,
+    range: BaseRange
+  ) => Promise<Suggestion[]>;
   highlight?: string;
   handleSaveImg?: (img: PastedImg) => Promise<SavedImg | undefined>;
   getSavedImg?: (id: string, imgType: string) => Promise<SavedImg>;
@@ -108,6 +113,7 @@ const Editor = ({
   grammer?: Record<string, CustomGrammarValue>;
   leafMakers?: LeafMaker[];
   focus?: number;
+  blockPlaceholder?: string;
 }) => {
   theme = theme || Themes.Basic;
 
@@ -126,10 +132,11 @@ const Editor = ({
 
   useEffect(() => {
     (async () => {
-      if (contextMenu.activePrefix && getSuggestions) {
+      if (contextMenu.activePrefix && contextMenu.target && getSuggestions) {
         let _suggestions: Suggestion[] = await getSuggestions(
           contextMenu.activePrefix,
-          contextMenu.search
+          contextMenu.search,
+          contextMenu.target
         );
         contextMenu.setCount(_suggestions.length);
         return setSuggestions(_suggestions);
@@ -159,6 +166,7 @@ const Editor = ({
         onNoteLinkClick={onNoteLinkClick || (() => {})}
         theme={theme}
         leafMakers={leafMakers}
+        placeholder={blockPlaceholder}
       />
     ),
     []
@@ -169,6 +177,20 @@ const Editor = ({
       if (!Text.isText(node)) {
         return [];
       }
+      let ranges: BaseRange[] = [];
+
+      // Placeholder
+      if (
+        node.text === "" &&
+        JSON.stringify(editor.selection?.anchor.path) === JSON.stringify(path)
+      ) {
+        ranges.push({
+          anchor: { path, offset: 0 },
+          focus: { path, offset: 0 },
+          newLine: true,
+        } as BaseRange);
+      }
+
       const newGrammer = Object.assign({}, { ...grammer, ...passedGrammer });
       if (highlight) {
         for (const key of Object.keys(newGrammer)) {
@@ -189,8 +211,6 @@ const Editor = ({
         };
       }
       const tokens = Prism.tokenize(node.text, newGrammer);
-
-      let ranges: BaseRange[] = [];
       const [rootCodeNode] = getRootCodeNode(editor, path);
       if (!rootCodeNode) {
         ranges = [
@@ -288,6 +308,7 @@ const Editor = ({
 
   const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = (e) => {
     contextMenu.handleKeyDown(e);
+    if (e.isPropagationStopped()) return;
     if (e.key === "Enter") {
       handleEnterForCode(editor, e);
       handleEnterForList(editor, e);
@@ -330,7 +351,6 @@ const Editor = ({
           renderLeaf={renderLeaf}
           renderElement={renderElement}
           onKeyDown={handleKeyDown}
-          placeholder="Write your mind here ..."
           onPaste={handlePaste}
         />
         <ContextMenu
@@ -347,6 +367,11 @@ const Editor = ({
                 onClick={(e) => contextMenu.handleItemClick(e, i)}
               >
                 {suggestion.title}
+                {suggestion.description && (
+                  <ContextMenuList.Item.Description>
+                    {suggestion.description}
+                  </ContextMenuList.Item.Description>
+                )}
               </ContextMenuList.Item>
             ))}
           </ContextMenuList>
