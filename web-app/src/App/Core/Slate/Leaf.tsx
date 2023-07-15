@@ -22,6 +22,7 @@ function Leaf({
   text,
   theme,
   leafMakers,
+  placeholder,
 }: {
   attributes: any;
   children: any;
@@ -31,6 +32,7 @@ function Leaf({
   text: { text: string };
   theme: Theme;
   leafMakers: LeafMaker[];
+  placeholder?: string;
 }) {
   const title = leaf.title1 || leaf.title2 || leaf.title3;
 
@@ -196,12 +198,12 @@ function Leaf({
       }}
       spellCheck={!leaf.hashtag}
     >
-      {leaf.placeholder && (
+      {placeholder && leaf.placeholder && (
         <span
           contentEditable={false}
           className="absolute text-primary text-opacity-40 pointer-events-none select-none"
         >
-          Placeholder
+          {placeholder}
         </span>
       )}
       {children}

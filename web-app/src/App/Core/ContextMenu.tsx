@@ -190,6 +190,7 @@ export function useContextMenu(
     search,
     setCount,
     activePrefix,
+    target,
   };
 }
 

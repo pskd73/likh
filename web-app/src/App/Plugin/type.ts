@@ -3,9 +3,15 @@ import { CustomGrammarValue } from "../grammer";
 import { SavedNote } from "../type";
 import { LeafMaker } from "../Core/Slate/Leaf";
 import { EditorContextType } from "../Context";
+import { BaseRange } from "slate";
 
 export type SuggestionConfig = {
-  suggest: (prefix: string, word: string, note: SavedNote) => Suggestion[];
+  suggest: (
+    prefix: string,
+    word: string,
+    note: SavedNote,
+    range: BaseRange
+  ) => Suggestion[];
 };
 
 export type RNPlugin = {

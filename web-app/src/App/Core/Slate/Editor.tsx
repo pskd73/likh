@@ -100,7 +100,11 @@ const Editor = ({
   initText?: string;
   editor?: CustomEditor;
   onNoteLinkClick?: (title: string, id?: string) => void;
-  getSuggestions?: (prefix: string, term: string) => Promise<Suggestion[]>;
+  getSuggestions?: (
+    prefix: string,
+    term: string,
+    range: BaseRange
+  ) => Promise<Suggestion[]>;
   highlight?: string;
   handleSaveImg?: (img: PastedImg) => Promise<SavedImg | undefined>;
   getSavedImg?: (id: string, imgType: string) => Promise<SavedImg>;
@@ -128,10 +132,11 @@ const Editor = ({
 
   useEffect(() => {
     (async () => {
-      if (contextMenu.activePrefix && getSuggestions) {
+      if (contextMenu.activePrefix && contextMenu.target && getSuggestions) {
         let _suggestions: Suggestion[] = await getSuggestions(
           contextMenu.activePrefix,
-          contextMenu.search
+          contextMenu.search,
+          contextMenu.target
         );
         contextMenu.setCount(_suggestions.length);
         return setSuggestions(_suggestions);
@@ -161,6 +166,7 @@ const Editor = ({
         onNoteLinkClick={onNoteLinkClick || (() => {})}
         theme={theme}
         leafMakers={leafMakers}
+        placeholder={blockPlaceholder}
       />
     ),
     []
@@ -346,7 +352,6 @@ const Editor = ({
           renderLeaf={renderLeaf}
           renderElement={renderElement}
           onKeyDown={handleKeyDown}
-          placeholder="Write your mind here ..."
           onPaste={handlePaste}
         />
         <ContextMenu
@@ -363,6 +368,11 @@ const Editor = ({
                 onClick={(e) => contextMenu.handleItemClick(e, i)}
               >
                 {suggestion.title}
+                {suggestion.description && (
+                  <ContextMenuList.Item.Description>
+                    {suggestion.description}
+                  </ContextMenuList.Item.Description>
+                )}
               </ContextMenuList.Item>
             ))}
           </ContextMenuList>
