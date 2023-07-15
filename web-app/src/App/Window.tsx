@@ -32,7 +32,6 @@ const EditorWindow = () => {
       await init();
       plugins.forEach((plugin) => plugin.init && plugin.init(editorState));
       setDbInitiated(true);
-      migrate(storage.pouch, pdb.secret);
     })();
   }, []);
 
