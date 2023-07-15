@@ -187,7 +187,7 @@ const Editor = ({
         ranges.push({
           anchor: { path, offset: 0 },
           focus: { path, offset: 0 },
-          placeholder: true,
+          newLine: true,
         } as BaseRange);
       }
 

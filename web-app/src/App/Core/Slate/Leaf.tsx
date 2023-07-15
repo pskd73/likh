@@ -201,7 +201,7 @@ function Leaf({
       }}
       spellCheck={!leaf.hashtag}
     >
-      {placeholder && leaf.placeholder && (
+      {placeholder && leaf.newLine && (
         <span
           contentEditable={false}
           className="absolute text-primary text-opacity-40 pointer-events-none select-none"
