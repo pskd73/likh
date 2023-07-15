@@ -1,4 +1,4 @@
-import { CSSProperties, ReactElement } from "react";
+import { CSSProperties } from "react";
 import { CustomElement } from "../Core";
 import { isMobile } from "../../device";
 import classNames from "classnames";
@@ -11,8 +11,6 @@ const SlateElement = ({
   img,
   title,
   list,
-  text,
-  placeholder,
 }: {
   attributes: any;
   children: any;
@@ -29,8 +27,6 @@ const SlateElement = ({
   list?: {
     level?: number;
   };
-  text: string;
-  placeholder?: string;
 }) => {
   const style: CSSProperties = {};
   if (list !== undefined && list.level !== undefined) {
@@ -76,7 +72,6 @@ const SlateElement = ({
         data-title-slug={title?.slug}
       >
         <span
-          placeholder={placeholder}
           className={classNames({
             "py-2 text-center text-sm block opacity-50 break-all": img?.url,
           })}

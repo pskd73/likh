@@ -273,8 +273,6 @@ const Editor = ({
 
       return (
         <SlateElement
-          placeholder={blockPlaceholder}
-          text={text}
           attributes={attributes}
           children={children}
           element={element}
