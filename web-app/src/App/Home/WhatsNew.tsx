@@ -2,6 +2,7 @@ import { BiBulb, BiX } from "react-icons/bi";
 import classNames from "classnames";
 import { PropsWithChildren, ReactElement, useMemo } from "react";
 import Button from "src/comps/Button";
+import Event from "src/components/Event";
 
 const Card = ({
   icon,
@@ -157,6 +158,16 @@ const cards: Record<
       </p>
     ),
   },
+  slash: {
+    icon: <BiBulb />,
+    title: 'Slash - "/" all',
+    content: (
+      <p>
+        Just hit "/" while writing the note to get all the suggestions like
+        Headings, Lists, Timestamps, Checkboxes, etc. and hit Enter!
+      </p>
+    ),
+  },
 };
 
 const WhatsNew = ({
@@ -172,6 +183,7 @@ const WhatsNew = ({
   }, [viewed]);
 
   const handleClose = (key: string) => {
+    Event.track("close_whats_new", { key });
     if (!viewed.includes(key)) {
       setViewed([...viewed, key]);
     }
