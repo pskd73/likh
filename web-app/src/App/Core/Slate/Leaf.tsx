@@ -196,6 +196,14 @@ function Leaf({
       }}
       spellCheck={!leaf.hashtag}
     >
+      {leaf.placeholder && (
+        <span
+          contentEditable={false}
+          className="absolute text-primary text-opacity-40 pointer-events-none select-none"
+        >
+          Placeholder
+        </span>
+      )}
       {children}
     </span>
   );

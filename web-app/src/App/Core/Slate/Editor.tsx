@@ -171,6 +171,20 @@ const Editor = ({
       if (!Text.isText(node)) {
         return [];
       }
+      let ranges: BaseRange[] = [];
+
+      // Placeholder
+      if (
+        node.text === "" &&
+        JSON.stringify(editor.selection?.anchor.path) === JSON.stringify(path)
+      ) {
+        ranges.push({
+          anchor: { path, offset: 0 },
+          focus: { path, offset: 0 },
+          placeholder: true,
+        } as BaseRange);
+      }
+
       const newGrammer = Object.assign({}, { ...grammer, ...passedGrammer });
       if (highlight) {
         for (const key of Object.keys(newGrammer)) {
@@ -191,8 +205,6 @@ const Editor = ({
         };
       }
       const tokens = Prism.tokenize(node.text, newGrammer);
-
-      let ranges: BaseRange[] = [];
       const [rootCodeNode] = getRootCodeNode(editor, path);
       if (!rootCodeNode) {
         ranges = [
@@ -252,8 +264,6 @@ const Editor = ({
 
       // list
       const listLevel = parseListText(text)?.level;
-
-      console.log({ attributes, children, element });
 
       return (
         <SlateElement

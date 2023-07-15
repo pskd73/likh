@@ -77,14 +77,9 @@ const SlateElement = ({
       >
         <span
           placeholder={placeholder}
-          className={classNames(
-            "after:text-primary after:text-opacity-30 flex",
-            "after:hiddesn focus:after:inline-block after:absolute",
-            {
-              "py-2 text-center text-sm block opacity-50 break-all": img?.url,
-              "after:content-[attr(placeholder)]": placeholder && text === "",
-            }
-          )}
+          className={classNames({
+            "py-2 text-center text-sm block opacity-50 break-all": img?.url,
+          })}
         >
           {children}
         </span>
