@@ -60,7 +60,7 @@ const EditableNote = () => {
     if (hashtag) {
       setTitle(hashtag);
     } else if (note) {
-      setTitle(textToTitle(note.text));
+      setTitle(textToTitle(note.text) || "Retro Note");
     }
   }, [note, hashtag]);
 

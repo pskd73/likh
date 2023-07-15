@@ -40,6 +40,11 @@ const SlashPlugin: RNPluginCreator = () => {
             replace: "- [ ] ",
             description: "Insert a checkbox list item",
           });
+          suggestions.push({
+            title: "Quote",
+            replace: "> ",
+            description: "Block quote",
+          });
           return suggestions.filter((sug) =>
             sug.title.toLowerCase().includes(word)
           );
