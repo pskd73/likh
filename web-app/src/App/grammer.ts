@@ -130,7 +130,7 @@ export const bold: CustomGrammarValue = {
 };
 
 export const title1: CustomGrammarValue = {
-  pattern: /^# .+$/m,
+  pattern: /^# .*$/m,
   inside: {
     hashes: /^# /m,
     italic,
@@ -141,7 +141,7 @@ export const title1: CustomGrammarValue = {
 };
 
 export const title2: CustomGrammarValue = {
-  pattern: /^## .+$/m,
+  pattern: /^## .*$/m,
   inside: {
     hashes: /^## /m,
     italic,
@@ -152,7 +152,7 @@ export const title2: CustomGrammarValue = {
 };
 
 export const title3: CustomGrammarValue = {
-  pattern: /^### .+$/m,
+  pattern: /^### .*$/m,
   inside: {
     hashes: /^### /m,
     italic,

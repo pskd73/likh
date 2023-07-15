@@ -12,17 +12,17 @@ const SlashPlugin: RNPluginCreator = () => {
           const suggestions: Suggestion[] = [];
           suggestions.push({
             title: "Heading 1",
-            replace: "# Heading 1",
+            replace: "# ",
             description: "Insert markdown for Heading 1",
           });
           suggestions.push({
             title: "Heading 2",
-            replace: "## Heading 2",
+            replace: "## ",
             description: "Insert markdown for Heading 2",
           });
           suggestions.push({
             title: "Heading 3",
-            replace: "### Heading 3",
+            replace: "### ",
             description: "Insert markdown for Heading 3",
           });
           suggestions.push({

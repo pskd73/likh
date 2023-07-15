@@ -60,9 +60,12 @@ function Leaf({
 
     // title
     "md:inline-flex font-semibold": title && !leaf.hashes,
-    "md:-ml-[50px] md:w-[50px] md:pr-[10px]": title && leaf.hashes,
     "md:inline-flex 1": title && leaf.hashes && leaf.focused,
-    "hidden 1": title && leaf.hashes && !leaf.focused,
+    "hidden 1":
+      title &&
+      leaf.hashes &&
+      !leaf.focused &&
+      text.text.replaceAll("#", "").trim() !== "",
     "justify-end opacity-30": title && leaf.hashes,
     [theme.font.title1]: leaf.title1,
     [theme.font.title2]: leaf.title2,
