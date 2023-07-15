@@ -4,15 +4,18 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { BiCheck, BiX } from "react-icons/bi";
 import { EditorContext } from "src/App/Context";
 import Tooltip from "src/comps/Tooltip";
+import { useNavigate } from "react-router-dom";
 
 const Delete = () => {
   const { deleteNote, note } = useContext(EditorContext);
   const [prompt, setPrompt] = useState(false);
+  const navigate = useNavigate();
 
   const handleConfirm = () => {
     if (note) {
       deleteNote(note.id);
       setPrompt(false);
+      navigate("/write");
     }
   };
 

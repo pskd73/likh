@@ -52,7 +52,7 @@ export function focusEnd(editor: CustomEditor) {
     } catch {
       console.warn("Unable to focus");
     }
-  }, 10);
+  }, 100);
 }
 
 export function getNextElementPath(at: number[]) {

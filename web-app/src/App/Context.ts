@@ -254,14 +254,6 @@ export const useEditor = ({
     if (notes[noteId]) {
       const newNotes = { ...notes };
       delete newNotes[noteId];
-
-      if (Object.keys(newNotes).length === 0) {
-        const recentNote = await storage.getRecentNote();
-        if (recentNote) {
-          newNotes[recentNote.id] = recentNote;
-        }
-      }
-
       setNotes(newNotes);
     }
   };
