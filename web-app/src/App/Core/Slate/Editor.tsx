@@ -310,6 +310,7 @@ const Editor = ({
 
   const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = (e) => {
     contextMenu.handleKeyDown(e);
+    if (e.isPropagationStopped()) return;
     if (e.key === "Enter") {
       handleEnterForCode(editor, e);
       handleEnterForList(editor, e);

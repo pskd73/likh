@@ -25,6 +25,21 @@ const SlashPlugin: RNPluginCreator = () => {
             replace: "### Heading 3",
             description: "Insert markdown for Heading 3",
           });
+          suggestions.push({
+            title: "Bullet list item",
+            replace: "* ",
+            description: "Unordered list item",
+          });
+          suggestions.push({
+            title: "Numeric list item",
+            replace: "1. ",
+            description: "Numeric list item",
+          });
+          suggestions.push({
+            title: "Checklist item",
+            replace: "- [ ] ",
+            description: "Insert a checkbox list item",
+          });
           return suggestions.filter((sug) =>
             sug.title.toLowerCase().includes(word)
           );
