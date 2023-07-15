@@ -80,7 +80,7 @@ You can add images to your notes with basic __markdown__. All you need is the _U
 Here is the syntax for it - https://cdn.pixabay.com/photo/2023/05/22/18/17/insect-8011258_1280.jpg`;
 
 export const SAMPLE_MAIN = `# 😇 Sample note
-#sample/intro
+#GetStarted/Intro
 Everything is a note here. Use __markdown__ to _style_ them.
 > Simplicity, control are the core values of this app. No ~~overwhelming~~
 
@@ -89,7 +89,7 @@ Everything is a note here. Use __markdown__ to _style_ them.
 3. Check [[⌨️ Retro Note Shortcuts]]`;
 
 export const SAMPLE_MORE_TIPS = `# 😎 More tips
-#sample/tips
+#GetStarted/Tips
 - [ ] You can manage your to-dos here
 - [x] No procrastination
 - Add in-note timestamps. Example: Retro Note is first released @2023-06-01T12:00:00 
@@ -97,15 +97,15 @@ export const SAMPLE_MORE_TIPS = `# 😎 More tips
 - Save your notes any time as _.md_ file by just clicking save button bottom right`;
 
 export const SAMPLE_JOURNALING = `# 🧵 Journaling
-#sample/tips
-- Move all your notes to a folder inside \`journal\`. For example #journal/sample
+#GetStarted/Tips
+- Move all your notes to a folder inside \`journal\`. For example #Journal/Intro
 - Make use of __Calendar__ view.
 - Use timestamps for tagging incidents either past or future. 
     - Example: I graduated @2014-07-12T12:00:00 
 - Scroll through your [Timeline](/write/timeline)`;
 
 export const SAMPLE_SHORTCUTS = `# ⌨️ Retro Note Shortcuts
-#sample/tips
+#GetStarted/Tips
 All following shortcuts are with \`command ⌘\` + \`control ⌃\`
 1. \`l\` - toggle side menu
 2. \`n\` - create new note
