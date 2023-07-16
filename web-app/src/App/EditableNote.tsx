@@ -149,10 +149,27 @@ const EditableNote = () => {
     });
 
     if (prefix === "[[") {
+      const addedLinks: Record<string, boolean> = {};
       for (const noteMeta of storage.notes) {
-        if (noteMeta.id === note?.id) continue;
         const _note = await storage.getNote(noteMeta.id);
         if (_note) {
+          for (const match of Array.from(
+            _note.text.matchAll(/\[\[([^\[]+)\]\]/g)
+          )) {
+            if (
+              !addedLinks[match[1]] &&
+              match[1].toLowerCase().includes(term.toLowerCase())
+            ) {
+              suggestions.push({
+                title: match[1],
+                id: _note.id,
+                replace: `[[${match[1]}]] `,
+              });
+              addedLinks[match[1]] = true;
+            }
+          }
+
+          if (noteMeta.id === note?.id) continue;
           const title = textToTitle(_note.text, 50);
           if (title.toLowerCase().includes(term.toLowerCase())) {
             const cleanedTitle = title.trim();
