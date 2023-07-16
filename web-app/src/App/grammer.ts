@@ -122,7 +122,26 @@ export const bold: CustomGrammarValue = {
         greedy: true,
       },
     ],
-    italic,
+    link,
+    notelink,
+    mdLink,
+  },
+};
+
+export const boldItalic: CustomGrammarValue = {
+  pattern: /[_*]{3}[^_*]+[_*]{3}/m,
+  greedy: true,
+  inside: {
+    punctuation: [
+      {
+        pattern: /^[_*]{3}/m,
+        greedy: true,
+      },
+      {
+        pattern: /[_*]{3}$/m,
+        greedy: true,
+      },
+    ],
     link,
     notelink,
     mdLink,
@@ -133,8 +152,9 @@ export const title1: CustomGrammarValue = {
   pattern: /^# .*$/m,
   inside: {
     hashes: /^# /m,
-    italic,
+    boldItalic,
     bold,
+    italic,
     link,
     mdLink,
   },
@@ -144,8 +164,9 @@ export const title2: CustomGrammarValue = {
   pattern: /^## .*$/m,
   inside: {
     hashes: /^## /m,
-    italic,
+    boldItalic,
     bold,
+    italic,
     link,
     mdLink,
   },
@@ -155,8 +176,9 @@ export const title3: CustomGrammarValue = {
   pattern: /^### .*$/m,
   inside: {
     hashes: /^### /m,
-    italic,
+    boldItalic,
     bold,
+    italic,
     link,
     mdLink,
   },
@@ -188,8 +210,9 @@ export const list: CustomGrammarValue = {
   pattern: listRegex,
   inside: {
     bullet: /^ *(([-*\+])|([0-9]+.)) /,
-    italic,
+    boldItalic,
     bold,
+    italic,
     strikethrough,
     link,
     notelink,
@@ -212,8 +235,9 @@ export const quote: CustomGrammarValue = {
   pattern: /^\> .*$/m,
   inside: {
     punctuation: /^> /m,
-    italic,
+    boldItalic,
     bold,
+    italic,
     strikethrough,
     link,
     notelink,
@@ -243,9 +267,6 @@ export const codeBlock: CustomGrammarValue = {
 };
 
 const grammer: CustomGrammar = {
-  strikethrough,
-  italic,
-  bold,
   title1,
   title2,
   title3,
@@ -257,6 +278,10 @@ const grammer: CustomGrammar = {
   notelink,
   inlineCode,
   mdLink,
+  boldItalic,
+  bold,
+  italic,
+  strikethrough,
 };
 
 export default grammer;
