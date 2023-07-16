@@ -14,7 +14,9 @@ export const textToTitle = (text: string, max?: number) => {
   }
   cleaned = cleaned.replaceAll(/\B(#[a-zA-Z_/]+)(?!;)/g, "");
   cleaned = cleaned.trim().split("\n")[0];
-  cleaned = marked.parse(cleaned).replace(/<[^>]+>/g, "");
+  cleaned = marked
+    .parse(cleaned, { mangle: false, headerIds: false })
+    .replace(/<[^>]+>/g, "");
 
   return (
     cleaned.replaceAll("\n", " ").substring(0, max) +
