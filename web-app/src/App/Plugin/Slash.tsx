@@ -54,6 +54,7 @@ const SlashPlugin: RNPluginCreator = () => {
             });
             suggestions.push({
               title: "Divider",
+              description: "---",
               onClick: async (editor) => {
                 editor.insertText("---");
                 editor.insertBreak();
