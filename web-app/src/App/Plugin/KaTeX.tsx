@@ -60,7 +60,7 @@ const KaTeXPlugin: RNPluginCreator = () => {
           >
             <span
               id={id}
-              className="mb-4 select-none"
+              className="select-none"
               contentEditable={false}
             />
             <span
