@@ -48,11 +48,11 @@ export async function saveNote(note: SavedNote, pouch: MyPouch) {
   download(text, filename, mime);
 }
 
-export function selectFile(accept?: string): Promise<null | Blob> {
+export function selectFile(accept: string): Promise<null | Blob> {
   return new Promise((resolve, reject) => {
     var input = document.createElement("input");
     input.type = "file";
-    input.accept = accept || ".md,.txt";
+    input.accept = accept;
 
     input.onchange = (e) => {
       if (!e || !e.target) return;
