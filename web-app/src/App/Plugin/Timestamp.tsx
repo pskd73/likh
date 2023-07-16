@@ -1,7 +1,6 @@
 import moment from "moment";
 import { RNPluginCreator } from "./type";
 import { Suggestion } from "../Core/Slate/Editor";
-import grammer from "../grammer";
 import classNames from "classnames";
 import { parseListText } from "../Core/List";
 import { BiBell, BiTimeFive } from "react-icons/bi";
@@ -78,7 +77,7 @@ export const TimestampPlugin: RNPluginCreator = () => ({
   onNoteChange: (note) => {
     currentNote = note;
   },
-  grammer: {
+  grammer: (grammer) => ({
     datetime,
     list: {
       ...grammer.list,
@@ -87,7 +86,7 @@ export const TimestampPlugin: RNPluginCreator = () => ({
         datetime,
       },
     },
-  },
+  }),
   leafMaker: ({ attributes, children, leaf, text, className }) => {
     if (leaf.datetime) {
       const dt = moment(leaf.text.replace("@", ""));

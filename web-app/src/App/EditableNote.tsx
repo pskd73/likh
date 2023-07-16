@@ -18,6 +18,7 @@ import { SavedNote } from "src/App/type";
 import { useNavigate, useParams } from "react-router-dom";
 import Event from "src/components/Event";
 import { useTitle } from "src/comps/useTitle";
+import grammer from "./grammer";
 
 const EditableNote = () => {
   const { setTitle } = useTitle();
@@ -266,7 +267,7 @@ const EditableNote = () => {
                 grammer={plugins
                   .filter((p) => p.grammer)
                   .map((p) => p.grammer!)
-                  .reduce((prev, cur) => ({ ...prev, ...cur }), {})}
+                  .reduce((prev, cur) => ({ ...prev, ...cur(prev) }), grammer)}
                 leafMakers={plugins
                   .filter((p) => p.leafMaker)
                   .map((p) => p.leafMaker!)}

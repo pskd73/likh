@@ -20,7 +20,9 @@ export type RNPlugin = {
   init?: (editorState: EditorContextType) => void;
   onNoteChange?: (note: SavedNote) => void;
   suggestions?: Record<string, SuggestionConfig>;
-  grammer?: Record<string, CustomGrammarValue>;
+  grammer?: (
+    grammer: Record<string, CustomGrammarValue>
+  ) => Record<string, CustomGrammarValue>;
   leafMaker?: LeafMaker;
 };
 

@@ -1,6 +1,5 @@
 import classNames from "classnames";
 import { RNPluginCreator } from "./type";
-import grammer from "../grammer";
 
 declare var katex: any;
 
@@ -21,7 +20,7 @@ const KaTeXPlugin: RNPluginCreator = () => {
   return {
     name: "KaTeX",
     version: 1,
-    grammer: {
+    grammer: (grammer) => ({
       blockedKatex,
       inlineKatex,
       list: {
@@ -38,7 +37,7 @@ const KaTeXPlugin: RNPluginCreator = () => {
           inlineKatex,
         },
       },
-    },
+    }),
     leafMaker: ({ attributes, children, leaf }) => {
       if (leaf.blockedKatex || leaf.inlineKatex) {
         const id = `katex-${getNextId()}`;
