@@ -4,6 +4,7 @@ import { ParsedListText, parseListText } from "src/App/Core/List";
 import classNames from "classnames";
 import slugify from "slugify";
 import { BiFolder } from "react-icons/bi";
+import { BaseRange } from "slate";
 
 export type LeafMaker = (props: {
   attributes: any;
@@ -23,6 +24,7 @@ function Leaf({
   theme,
   leafMakers,
   placeholder,
+  setSelection,
 }: {
   attributes: any;
   children: any;
@@ -33,6 +35,7 @@ function Leaf({
   theme: Theme;
   leafMakers: LeafMaker[];
   placeholder?: string;
+  setSelection: (range: Partial<BaseRange>) => void;
 }) {
   const title = leaf.title1 || leaf.title2 || leaf.title3;
 
@@ -118,6 +121,31 @@ function Leaf({
     if (element) {
       return element;
     }
+  }
+
+  if (leaf.hr && !leaf.focused) {
+    return (
+      <span
+        contentEditable={false}
+        onClick={() =>
+          setSelection({
+            anchor: { path: leaf.path, offset: 3 },
+            focus: { path: leaf.path, offset: 3 },
+          })
+        }
+        className={classNames(
+          "hover:bg-primary hover:bg-opacity-10 h-4",
+          "inline-flex items-center w-full transition-all"
+        )}
+      >
+        <span
+          className={classNames(
+            "border border-t border-primary",
+            "border-opacity-30 w-full inline-block"
+          )}
+        />
+      </span>
+    );
   }
 
   if (leaf.hashtag) {

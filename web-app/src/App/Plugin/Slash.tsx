@@ -53,6 +53,15 @@ const SlashPlugin: RNPluginCreator = () => {
               description: "> Qutoation",
             });
             suggestions.push({
+              title: "Divider",
+              description: "---",
+              onClick: async (editor) => {
+                editor.insertText("---");
+                editor.insertBreak();
+                return {};
+              },
+            });
+            suggestions.push({
               title: "Upload image",
               replace: "",
               description: "![Image]()",
