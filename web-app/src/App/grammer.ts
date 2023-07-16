@@ -266,6 +266,10 @@ export const codeBlock: CustomGrammarValue = {
   },
 };
 
+export const hr: CustomGrammarValue = {
+  pattern: /^---$/m,
+};
+
 const grammer: CustomGrammar = {
   title1,
   title2,
@@ -282,6 +286,7 @@ const grammer: CustomGrammar = {
   bold,
   italic,
   strikethrough,
+  hr,
 };
 
 export default grammer;

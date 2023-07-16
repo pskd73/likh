@@ -173,6 +173,7 @@ const Editor = ({
         theme={theme}
         leafMakers={leafMakers}
         placeholder={blockPlaceholder}
+        setSelection={(range) => Transforms.setSelection(editor, range)}
       />
     ),
     []

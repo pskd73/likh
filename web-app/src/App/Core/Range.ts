@@ -81,6 +81,7 @@ const hidable: string[] = [
   "blockedKatex",
   "inlineKatex",
   "strikethrough",
+  "hr"
 ];
 
 export function getTokensRanges(
