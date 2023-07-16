@@ -49,8 +49,8 @@ function Leaf({
 
   const className = classNames({
     // decor
-    "font-semibold": leaf.bold,
-    italic: leaf.italic,
+    "font-semibold": leaf.bold || leaf.boldItalic,
+    italic: leaf.italic || leaf.boldItalic,
     "line-through": leaf.strikethrough,
     hidden:
       leaf.hidable && !leaf.focused && (leaf.punctuation || leaf.notelinkId),
