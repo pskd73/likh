@@ -69,6 +69,8 @@ export type Suggestion = {
   replace: string;
   id?: string;
   description?: string;
+  anchorOffset?: number;
+  focusOffset?: number;
 };
 
 const Editor = ({
@@ -294,6 +296,27 @@ const Editor = ({
     Transforms.select(editor, target);
     const suggestion = suggestions[index];
     Transforms.insertText(editor, suggestion.replace);
+
+    if (editor.selection) {
+      if (suggestion.anchorOffset !== undefined) {
+        const { anchor } = editor.selection;
+        editor.setSelection({
+          anchor: {
+            path: anchor.path,
+            offset: anchor.offset - suggestion.anchorOffset,
+          },
+        });
+      }
+      if (suggestion.focusOffset !== undefined) {
+        const { focus } = editor.selection;
+        editor.setSelection({
+          focus: {
+            path: focus.path,
+            offset: focus.offset - suggestion.focusOffset,
+          },
+        });
+      }
+    }
   };
 
   const handleChange = (value: Descendant[]) => {

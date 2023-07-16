@@ -158,7 +158,7 @@ const EditableNote = () => {
             suggestions.push({
               title: cleanedTitle,
               id: _note.id,
-              replace: `[[${cleanedTitle}]](${_note.id}) `,
+              replace: `[[${cleanedTitle}]] `,
             });
           }
         }

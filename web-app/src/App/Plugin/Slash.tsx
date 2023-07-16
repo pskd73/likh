@@ -13,48 +13,69 @@ const SlashPlugin: RNPluginCreator = () => {
             suggestions.push({
               title: "Heading 1",
               replace: "# ",
-              description: "Insert markdown for Heading 1",
+              description: "# Heading 1",
             });
             suggestions.push({
               title: "Heading 2",
               replace: "## ",
-              description: "Insert markdown for Heading 2",
+              description: "## Heading 2",
             });
             suggestions.push({
               title: "Heading 3",
               replace: "### ",
-              description: "Insert markdown for Heading 3",
+              description: "### Heading 3",
             });
             suggestions.push({
               title: "Bullet list",
               replace: "* ",
-              description: "Start unordered bullt list",
+              description: "* Bullet point",
             });
             suggestions.push({
               title: "Number list",
               replace: "1. ",
-              description: "Start ordered number list",
+              description: "1. Numeric point",
             });
             suggestions.push({
               title: "Check box",
               replace: "- [ ] ",
-              description: "Start checkbox list",
+              description: "- [ ] Todo",
             });
             suggestions.push({
               title: "Quote",
               replace: "> ",
-              description: "Block quote",
+              description: "> Qutoation",
             });
           }
           suggestions.push({
             title: "Timestamp",
             replace: "@",
-            description: "Insert timestamp",
+            description: "@9am",
           });
           suggestions.push({
             title: "Note",
             replace: "[[",
-            description: "Link another note",
+            description: "[[Another note]]",
+          });
+          suggestions.push({
+            title: "Bold",
+            replace: "**text**",
+            description: "**bold**",
+            anchorOffset: 2,
+            focusOffset: 6,
+          });
+          suggestions.push({
+            title: "Italic",
+            replace: "*text*",
+            description: "*italic*",
+            anchorOffset: 1,
+            focusOffset: 5,
+          });
+          suggestions.push({
+            title: "Bold and Italic",
+            replace: "***text***",
+            description: "***bold & italic***",
+            anchorOffset: 3,
+            focusOffset: 7,
           });
           return suggestions.filter((sug) =>
             sug.title.toLowerCase().includes(word)
