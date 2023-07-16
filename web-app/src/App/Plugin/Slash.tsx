@@ -1,10 +1,17 @@
+import { EditorContextType } from "../Context";
 import { Suggestion } from "../Core/Slate/Editor";
+import { selectFile } from "../File";
 import { RNPluginCreator } from "./type";
+
+let editorState: EditorContextType | undefined = undefined;
 
 const SlashPlugin: RNPluginCreator = () => {
   return {
     version: 1,
     name: "Slash Plugin",
+    init: (_editorState) => {
+      editorState = _editorState;
+    },
     suggestions: {
       "/": {
         suggest: (prefix, word, note, range) => {
@@ -13,48 +20,108 @@ const SlashPlugin: RNPluginCreator = () => {
             suggestions.push({
               title: "Heading 1",
               replace: "# ",
-              description: "Insert markdown for Heading 1",
+              description: "# Heading 1",
             });
             suggestions.push({
               title: "Heading 2",
               replace: "## ",
-              description: "Insert markdown for Heading 2",
+              description: "## Heading 2",
             });
             suggestions.push({
               title: "Heading 3",
               replace: "### ",
-              description: "Insert markdown for Heading 3",
+              description: "### Heading 3",
             });
             suggestions.push({
               title: "Bullet list",
               replace: "* ",
-              description: "Start unordered bullt list",
+              description: "* Bullet point",
             });
             suggestions.push({
               title: "Number list",
               replace: "1. ",
-              description: "Start ordered number list",
+              description: "1. Numeric point",
             });
             suggestions.push({
               title: "Check box",
               replace: "- [ ] ",
-              description: "Start checkbox list",
+              description: "- [ ] Todo",
             });
             suggestions.push({
               title: "Quote",
               replace: "> ",
-              description: "Block quote",
+              description: "> Qutoation",
+            });
+            suggestions.push({
+              title: "Upload image",
+              replace: "",
+              description: "![Image]()",
+              onClick: () => {
+                return new Promise(async (resolve, reject) => {
+                  if (!editorState || !note) return resolve({});
+                  const file: Blob | null = await selectFile(
+                    ".png,.jpg,.jpeg,.gif"
+                  );
+                  if (!file) return resolve({});
+
+                  const reader = new FileReader();
+                  reader.onload = async function (event) {
+                    const uri = event.target?.result?.toString();
+                    if (uri) {
+                      const match = uri.match(/^data:(.+);base64,(.+)$/);
+                      if (match) {
+                        const id = new Date().getTime().toString();
+                        await editorState!.storage.pouch.attach(note.id, {
+                          id,
+                          data: match[2],
+                          type: match[1],
+                        });
+                        resolve({
+                          replace: `![Image](attachment://${id})`,
+                          anchorOffset: id.length + "](attachment://)".length,
+                          focusOffset:
+                            id.length +
+                            "](attachment://)".length +
+                            "Image".length,
+                        });
+                      }
+                    }
+                  };
+                  reader.readAsDataURL(file);
+                });
+              },
             });
           }
           suggestions.push({
             title: "Timestamp",
             replace: "@",
-            description: "Insert timestamp",
+            description: "@9am",
           });
           suggestions.push({
             title: "Note",
             replace: "[[",
-            description: "Link another note",
+            description: "[[Another note]]",
+          });
+          suggestions.push({
+            title: "Bold",
+            replace: "**text**",
+            description: "**bold**",
+            anchorOffset: 2,
+            focusOffset: 6,
+          });
+          suggestions.push({
+            title: "Italic",
+            replace: "*text*",
+            description: "*italic*",
+            anchorOffset: 1,
+            focusOffset: 5,
+          });
+          suggestions.push({
+            title: "Bold and Italic",
+            replace: "***text***",
+            description: "***bold & italic***",
+            anchorOffset: 3,
+            focusOffset: 7,
           });
           return suggestions.filter((sug) =>
             sug.title.toLowerCase().includes(word)

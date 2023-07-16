@@ -64,12 +64,18 @@ const defaultValue = [
   },
 ];
 
+export type SuggestionAction = {
+  replace?: string;
+  anchorOffset?: number;
+  focusOffset?: number;
+};
+
 export type Suggestion = {
   title: string;
-  replace: string;
   id?: string;
   description?: string;
-};
+  onClick?: (editor: CustomEditor) => Promise<SuggestionAction>;
+} & SuggestionAction;
 
 const Editor = ({
   onChange,
@@ -286,14 +292,44 @@ const Editor = ({
     []
   );
 
-  const handleContextMenuSelect = (
+  const handleContextMenuSelect = async (
     index: number,
     target: BaseRange,
     prefix: string
   ) => {
     Transforms.select(editor, target);
     const suggestion = suggestions[index];
-    Transforms.insertText(editor, suggestion.replace);
+
+    if (suggestion.onClick) {
+      const action = await suggestion.onClick(editor);
+      suggestion.replace = action.replace;
+      suggestion.anchorOffset = action.anchorOffset;
+      suggestion.focusOffset = action.focusOffset;
+    }
+
+    suggestion.replace !== undefined &&
+      Transforms.insertText(editor, suggestion.replace);
+
+    if (editor.selection) {
+      if (suggestion.anchorOffset !== undefined) {
+        const { anchor } = editor.selection;
+        editor.setSelection({
+          anchor: {
+            path: anchor.path,
+            offset: anchor.offset - suggestion.anchorOffset,
+          },
+        });
+      }
+      if (suggestion.focusOffset !== undefined) {
+        const { focus } = editor.selection;
+        editor.setSelection({
+          focus: {
+            path: focus.path,
+            offset: focus.offset - suggestion.focusOffset,
+          },
+        });
+      }
+    }
   };
 
   const handleChange = (value: Descendant[]) => {

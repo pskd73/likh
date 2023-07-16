@@ -48,27 +48,33 @@ export async function saveNote(note: SavedNote, pouch: MyPouch) {
   download(text, filename, mime);
 }
 
-export function openFile(): Promise<string | null | ArrayBuffer> {
+export function selectFile(accept: string): Promise<null | Blob> {
   return new Promise((resolve, reject) => {
     var input = document.createElement("input");
     input.type = "file";
-    input.accept = ".md,.txt";
+    input.accept = accept;
 
     input.onchange = (e) => {
       if (!e || !e.target) return;
-      var file = (e.target as any).files[0];
-
-      var reader = new FileReader();
-      reader.readAsText(file, "UTF-8");
-
-      reader.onload = (readerEvent) => {
-        if (readerEvent.target) {
-          resolve(readerEvent.target.result);
-        }
-      };
+      resolve((e.target as any).files[0]);
     };
 
     input.click();
+  });
+}
+
+export function openFile(): Promise<string | null | ArrayBuffer | Blob> {
+  return new Promise(async (resolve, reject) => {
+    const file = await selectFile(".md,.txt");
+    var reader = new FileReader();
+    if (!file) return null;
+    reader.readAsText(file, "UTF-8");
+
+    reader.onload = (readerEvent) => {
+      if (readerEvent.target) {
+        resolve(readerEvent.target.result);
+      }
+    };
   });
 }
 
