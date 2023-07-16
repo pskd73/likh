@@ -1,10 +1,17 @@
+import { EditorContextType } from "../Context";
 import { Suggestion } from "../Core/Slate/Editor";
+import { selectFile } from "../File";
 import { RNPluginCreator } from "./type";
+
+let editorState: EditorContextType | undefined = undefined;
 
 const SlashPlugin: RNPluginCreator = () => {
   return {
     version: 1,
     name: "Slash Plugin",
+    init: (_editorState) => {
+      editorState = _editorState;
+    },
     suggestions: {
       "/": {
         suggest: (prefix, word, note, range) => {
@@ -44,6 +51,45 @@ const SlashPlugin: RNPluginCreator = () => {
               title: "Quote",
               replace: "> ",
               description: "> Qutoation",
+            });
+            suggestions.push({
+              title: "Upload image",
+              replace: "",
+              description: "![Image]()",
+              onClick: () => {
+                return new Promise(async (resolve, reject) => {
+                  if (!editorState || !note) return resolve({});
+                  const file: Blob | null = await selectFile(
+                    ".png,.jpg,.jpeg,.gif"
+                  );
+                  if (!file) return resolve({});
+
+                  const reader = new FileReader();
+                  reader.onload = async function (event) {
+                    const uri = event.target?.result?.toString();
+                    if (uri) {
+                      const match = uri.match(/^data:(.+);base64,(.+)$/);
+                      if (match) {
+                        const id = new Date().getTime().toString();
+                        await editorState!.storage.pouch.attach(note.id, {
+                          id,
+                          data: match[2],
+                          type: match[1],
+                        });
+                        resolve({
+                          replace: `![Image](attachment://${id})`,
+                          anchorOffset: id.length + "](attachment://)".length,
+                          focusOffset:
+                            id.length +
+                            "](attachment://)".length +
+                            "Image".length,
+                        });
+                      }
+                    }
+                  };
+                  reader.readAsDataURL(file);
+                });
+              },
             });
           }
           suggestions.push({
