@@ -76,7 +76,9 @@ const hidable: string[] = [
   "mdLink",
   "image",
   "checkbox",
-  "datetime"
+  "datetime",
+  "blockedLatex",
+  "inlineLatex"
 ];
 
 export function getTokensRanges(
