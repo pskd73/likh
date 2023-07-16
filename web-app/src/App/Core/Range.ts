@@ -68,6 +68,7 @@ function getTokenRanges(
 const hidable: string[] = [
   "italic",
   "bold",
+  "boldItalic",
   "title1",
   "title2",
   "title3",
@@ -78,7 +79,8 @@ const hidable: string[] = [
   "checkbox",
   "datetime",
   "blockedKatex",
-  "inlineKatex"
+  "inlineKatex",
+  "strikethrough",
 ];
 
 export function getTokensRanges(
