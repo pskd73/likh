@@ -1,4 +1,4 @@
-import LaTeXPlugin from "./LaTeX";
+import KaTeXPlugin from "./KaTeX";
 import SlashPlugin from "./Slash";
 import { TimestampPlugin } from "./Timestamp";
 import { RNPluginCreator } from "./type";
@@ -6,5 +6,5 @@ import { RNPluginCreator } from "./type";
 export const enabledPlugins: RNPluginCreator[] = [
   TimestampPlugin,
   SlashPlugin,
-  LaTeXPlugin,
+  KaTeXPlugin,
 ];

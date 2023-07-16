@@ -4,10 +4,10 @@ import grammer from "../grammer";
 
 declare var katex: any;
 
-const blockedLatex = {
+const blockedKatex = {
   pattern: /^\$\$[^$]*\$\$$/m,
 };
-const inlineLatex = {
+const inlineKatex = {
   pattern: /\$[^$]*\$/m,
 };
 
@@ -17,32 +17,32 @@ const getNextId = () => {
   return id;
 };
 
-const LaTeXPlugin: RNPluginCreator = () => {
+const KaTeXPlugin: RNPluginCreator = () => {
   return {
-    name: "LaTeX",
+    name: "KaTeX",
     version: 1,
     grammer: {
-      blockedLatex,
-      inlineLatex,
+      blockedKatex,
+      inlineKatex,
       list: {
         ...grammer.list,
         inside: {
           ...(grammer.list as any).inside,
-          inlineLatex,
+          inlineKatex,
         },
       },
       quote: {
         ...grammer.quote,
         inside: {
           ...(grammer.quote as any).inside,
-          inlineLatex,
+          inlineKatex,
         },
       },
     },
     leafMaker: ({ attributes, children, leaf }) => {
-      if (leaf.blockedLatex || leaf.inlineLatex) {
-        const id = `latex-${getNextId()}`;
-        const raw = leaf.blockedLatex
+      if (leaf.blockedKatex || leaf.inlineKatex) {
+        const id = `katex-${getNextId()}`;
+        const raw = leaf.blockedKatex
           ? leaf.text.substring(2, leaf.text.length - 2)
           : leaf.text.substring(1, leaf.text.length - 1);
         setTimeout(() => {
@@ -56,7 +56,7 @@ const LaTeXPlugin: RNPluginCreator = () => {
           <span
             {...attributes}
             className={classNames({
-              "flex flex-col items-center": leaf.blockedLatex,
+              "flex flex-col items-center": leaf.blockedKatex,
             })}
           >
             <span
@@ -68,9 +68,9 @@ const LaTeXPlugin: RNPluginCreator = () => {
               className={classNames("text-sm text-primary", {
                 "text-opacity-20": !leaf.focused,
                 "text-opacity-50": leaf.focused,
-                "pl-1": leaf.inlineLatex,
-                hidden: leaf.inlineLatex && !leaf.focused,
-                "inline-block": leaf.inlineLatex && leaf.focused,
+                "pl-1": leaf.inlineKatex,
+                hidden: leaf.inlineKatex && !leaf.focused,
+                "inline-block": leaf.inlineKatex && leaf.focused,
               })}
             >
               {children}
@@ -82,4 +82,4 @@ const LaTeXPlugin: RNPluginCreator = () => {
   };
 };
 
-export default LaTeXPlugin;
+export default KaTeXPlugin;
