@@ -133,9 +133,17 @@ function Leaf({
             focus: { path: leaf.path, offset: 3 },
           })
         }
-        className="hover:bg-primary hover:bg-opacity-10 h-4 flex items-center w-full transition-all"
+        className={classNames(
+          "hover:bg-primary hover:bg-opacity-10 h-4",
+          "inline-flex items-center w-full transition-all"
+        )}
       >
-        <span className="border border-t border-primary border-opacity-30 w-full inline-block" />
+        <span
+          className={classNames(
+            "border border-t border-primary",
+            "border-opacity-30 w-full inline-block"
+          )}
+        />
       </span>
     );
   }
