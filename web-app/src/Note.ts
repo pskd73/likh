@@ -1,3 +1,4 @@
+import { marked } from "marked";
 import { Note } from "./type";
 
 const MAX_FOCUS_LENGTH = 30;
@@ -13,6 +14,8 @@ export const textToTitle = (text: string, max?: number) => {
   }
   cleaned = cleaned.replaceAll(/\B(#[a-zA-Z_/]+)(?!;)/g, "");
   cleaned = cleaned.trim().split("\n")[0];
+  cleaned = marked.parse(cleaned).replace(/<[^>]+>/g, "");
+
   return (
     cleaned.replaceAll("\n", " ").substring(0, max) +
     (cleaned.length > max ? "..." : "")
@@ -43,14 +46,16 @@ export const titleCase = (text: string) => {
   return splitStr.join(" ");
 };
 
-export const focus = (text: string, idx: number, term: string, max?: number) => {
+export const focus = (
+  text: string,
+  idx: number,
+  term: string,
+  max?: number
+) => {
   max = max || MAX_FOCUS_LENGTH;
   const midIdx = idx + Math.floor(term.length / 2);
   const start = Math.max(0, midIdx - Math.floor(max / 2));
-  const end = Math.min(
-    text.length - 1,
-    midIdx + Math.floor(max / 2)
-  );
+  const end = Math.min(text.length - 1, midIdx + Math.floor(max / 2));
   let focused = text.substring(start, end);
   if (start !== 0) {
     focused = "... " + focused;
