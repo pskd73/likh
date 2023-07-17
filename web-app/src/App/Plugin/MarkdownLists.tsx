@@ -8,7 +8,7 @@ const MarkdownListsPlugin: RNPluginCreator = () => {
     version: 1,
     grammer: () => ({
       bulletUnordered: {
-        pattern: /^ *[-*+] (\[[ x]\])?/m,
+        pattern: /^ *[-*+]( \[[ x]\])?/m,
       },
       bulletOrdered: {
         pattern: /^ *[\d]+. /m,
@@ -24,6 +24,7 @@ const MarkdownListsPlugin: RNPluginCreator = () => {
             style={{ marginLeft: -width, width }}
             className={"text-primary text-opacity-50 inline-block text-right"}
           >
+            {/* formatted bullet */}
             {leaf.bulletUnordered && !leaf.focused && !parsed?.checkbox && (
               <span
                 contentEditable={false}
@@ -58,6 +59,8 @@ const MarkdownListsPlugin: RNPluginCreator = () => {
                 />&nbsp;
               </span>
             )}
+
+            {/* raw bullet */}
             <span
               className={classNames({
                 hidden: !leaf.focused && leaf.bulletUnordered,
