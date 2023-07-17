@@ -30,7 +30,7 @@ const SlateElement = ({
 }) => {
   const style: CSSProperties = {};
   if (list !== undefined && list.level !== undefined) {
-    const paddingWidth = 40 * list.level;
+    const paddingWidth = 40 * (list.level + 1);
     return (
       <p {...attributes}>
         <span className="inline-flex flex-shrink-0">

@@ -209,21 +209,23 @@ function Leaf({
   }
 
   if (leaf.bulletUnordered || leaf.bulletOrdered) {
+    const parsed = parseListText(leaf.text + " ");
+    const width = (parsed?.level || 1) * 40;
     return (
       <span
         {...attributes}
-        style={{ marginLeft: -12 }}
-        className={"text-primary text-opacity-50"}
+        style={{ marginLeft: -width, width }}
+        className={"text-primary text-opacity-50 inline-block text-right"}
         onFocus={() =>
           setSelection({
-            anchor: { path: leaf.path, offset: 0 },
-            focus: { path: leaf.path, offset: 0 },
+            anchor: { path: leaf.path, offset: leaf.text.length - 1 },
+            focus: { path: leaf.path, offset: leaf.text.length - 1 },
           })
         }
         onClick={() =>
           setSelection({
-            anchor: { path: leaf.path, offset: 0 },
-            focus: { path: leaf.path, offset: 0 },
+            anchor: { path: leaf.path, offset: leaf.text.length - 1 },
+            focus: { path: leaf.path, offset: leaf.text.length - 1 },
           })
         }
       >
@@ -237,7 +239,7 @@ function Leaf({
           className={classNames({
             hidden: !leaf.focused && leaf.bulletUnordered,
           })}
-          style={{ }}
+          style={{}}
         >
           {children}
         </span>
