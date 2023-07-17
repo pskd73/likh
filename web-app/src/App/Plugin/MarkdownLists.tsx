@@ -7,68 +7,88 @@ const MarkdownListsPlugin: RNPluginCreator = () => {
     name: "Markdown Lists",
     version: 1,
     grammer: () => ({
-      bulletUnordered: [
-        { pattern: /^ *[-*+] (\[[ x]\] )?/m },
-        { pattern: /^ *[-*+] /m },
-      ],
+      bulletUnordered: {
+        pattern: /^ *[-*+]( \[[ x]\])? /m,
+        inside: {
+          bullet: /^ *[-*+]( \[[ x]\])?/,
+        },
+      },
       bulletOrdered: {
         pattern: /^ *[\d]+\. /m,
+        inside: {
+          bullet: /^ *[\d]+\./,
+        },
       },
     }),
     leafMaker: ({ leaf, attributes, children, setSelection, editor }) => {
-      if (leaf.bulletUnordered || leaf.bulletOrdered) {
+      if (leaf.bullet) {
         const parsed = parseListText(leaf.text + " ");
-        const width = (parsed?.level || 1) * 100;
+        const level = parsed?.level || 1;
+        const width = level * 100;
         return (
           <span
             {...attributes}
-            style={{ marginLeft: -width, width }}
+            style={{ marginLeft: -width - 4, width }}
             className={"text-primary text-opacity-50 inline-block text-right"}
           >
-            {/* formatted bullet */}
-            {leaf.bulletUnordered && !leaf.focused && !parsed?.checkbox && (
-              <span
-                contentEditable={false}
-                onFocus={() =>
-                  setSelection({
-                    anchor: { path: leaf.path, offset: leaf.text.length - 1 },
-                    focus: { path: leaf.path, offset: leaf.text.length - 1 },
-                  })
-                }
-                onClick={() =>
-                  setSelection({
-                    anchor: { path: leaf.path, offset: leaf.text.length - 1 },
-                    focus: { path: leaf.path, offset: leaf.text.length - 1 },
-                  })
-                }
-              >
-                •&nbsp;
-              </span>
-            )}
+            <span>
+              {leaf.bulletUnordered &&
+                !leaf.bulletFocused &&
+                !parsed?.checkbox && (
+                  <span
+                    onFocus={() =>
+                      setSelection({
+                        anchor: {
+                          path: leaf.path,
+                          offset: leaf.text.length - 1,
+                        },
+                        focus: {
+                          path: leaf.path,
+                          offset: leaf.text.length - 1,
+                        },
+                      })
+                    }
+                    onClick={() =>
+                      setSelection({
+                        anchor: {
+                          path: leaf.path,
+                          offset: leaf.text.length - 1,
+                        },
+                        focus: {
+                          path: leaf.path,
+                          offset: leaf.text.length - 1,
+                        },
+                      })
+                    }
+                    contentEditable={false}
+                  >
+                    •
+                  </span>
+                )}
 
-            {/* checkbox */}
-            {parsed?.checkbox && !leaf.focused && (
-              <span
-                onClick={() => toggleCheckbox(editor, leaf.path)}
-                contentEditable={false}
-              >
-                <input
-                  type="checkbox"
-                  checked={leaf.text.includes("x")}
-                  readOnly
-                  className="outline-none cursor-pointer"
-                />
-                &nbsp;
-              </span>
-            )}
+              {leaf.bulletUnordered &&
+                !leaf.bulletFocused &&
+                parsed?.checkbox && (
+                  <span
+                    onClick={() => toggleCheckbox(editor, leaf.path)}
+                    contentEditable={false}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={leaf.text.includes("x")}
+                      readOnly
+                      className="outline-none cursor-pointer"
+                    />
+                  </span>
+                )}
 
-            {/* raw bullet */}
-            <span
-              className={classNames({
-                hidden: !leaf.focused && leaf.bulletUnordered,
-              })}
-            >
-              {children}
+              <span
+                className={classNames({
+                  hidden: !leaf.bulletFocused && leaf.bulletUnordered,
+                })}
+              >
+                {children}
+              </span>
             </span>
           </span>
         );

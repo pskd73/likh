@@ -85,6 +85,7 @@ const hidable: string[] = [
   "list",
   "bulletUnordered",
   "bulletOrdered",
+  "bullet",
 ];
 
 export function getTokensRanges(
@@ -107,16 +108,18 @@ export function getTokensRanges(
         }
       }
 
+      const focused = isPointFocused(editor, {
+        path,
+        start,
+        end: start + _token.length,
+      });
+      if (focused) {
+        _parentTokens.push({ type: "focused" } as any);
+        _parentTokens.push({ type: `${_token.type}Focused` } as any);
+      }
+
       if (hidable.includes(_token.type)) {
         _parentTokens.push({ type: "hidable" } as any);
-        const focused = isPointFocused(editor, {
-          path,
-          start,
-          end: start + _token.length,
-        });
-        if (focused) {
-          _parentTokens.push({ type: "focused" } as any);
-        }
       }
       _parentTokens.push(_token);
     }
