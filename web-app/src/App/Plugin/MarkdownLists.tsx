@@ -108,7 +108,7 @@ const MarkdownListsPlugin: RNPluginCreator = () => {
                 <span
                   key={i}
                   contentEditable={false}
-                  style={{ width: 20 }}
+                  style={{ width: i === 0 ? 40 : 20 }}
                   className={classNames("flex-shrink-0")}
                 />
               ))}
