@@ -31,6 +31,7 @@ const SlateElement = ({
   const style: CSSProperties = {};
   if (list !== undefined && list.level !== undefined) {
     style.marginLeft = (isMobile ? 20 : 40) * (list.level + 1);
+    style.whiteSpace = "nowrap";
   }
 
   if (element.type === "code-block") {
