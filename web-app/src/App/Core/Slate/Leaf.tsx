@@ -75,7 +75,8 @@ function Leaf({
     [theme.font.title3]: leaf.title3,
 
     // list
-    "opacity-30 inline-flex justify-end pr-[4px]": leaf.bullet,
+    "opacity-30 inline-flex justify-end pr-[4px] whitespace-nowrap":
+      leaf.bullet,
     "whitespace-pre-wrap": leaf.list && !leaf.bullet,
 
     // checkbox
