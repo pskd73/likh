@@ -210,32 +210,6 @@ export const bulletOrdered: CustomGrammarValue = {
   pattern: /^ *[\d]+. /m,
 };
 
-export const listRegex = /^([ \t]*)(([-*\+])|(([0-9]+).)) (.*)$/m;
-export const list: CustomGrammarValue = {
-  pattern: listRegex,
-  inside: {
-    bulletOrdered,
-    bulletUnordered,
-    boldItalic,
-    bold,
-    italic,
-    strikethrough,
-    link,
-    notelink,
-    checkbox,
-    inlineCode,
-    mdLink,
-    hashtag,
-  },
-  greedy: true,
-  payload: {
-    checked: (token: any) =>
-      token.content[1] &&
-      token.content[1].type === "checkbox" &&
-      token.content[1].content[1] === "x",
-  },
-};
-
 export const quoteRegex = /^\> .*$/m;
 export const quote: CustomGrammarValue = {
   pattern: /^\> .*$/m,
@@ -280,7 +254,6 @@ const grammer: CustomGrammar = {
   title1,
   title2,
   title3,
-  // list,
   bulletUnordered,
   bulletOrdered,
   checkbox,
