@@ -35,7 +35,7 @@ const SlateElement = ({
         <span className="inline-flex">
           <span
             contentEditable={false}
-            style={{ width: 40 * (list.level + 1), userSelect: "none" }}
+            style={{ width: 40 * (list.level + 1) }}
             className="flex-shrink-0"
           />
           <span>{children}</span>
