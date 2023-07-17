@@ -29,7 +29,7 @@ const EditorWindow = () => {
 
   useEffect(() => {
     (async () => {
-      await init();
+      // await init();
       plugins.forEach((plugin) => plugin.init && plugin.init(editorState));
       setDbInitiated(true);
     })();
