@@ -70,7 +70,11 @@ const MarkdownListsPlugin: RNPluginCreator = () => {
                 !leaf.bulletFocused &&
                 parsed?.checkbox && (
                   <span
-                    onClick={() => toggleCheckbox(editor, leaf.path)}
+                    onClick={(e) => {
+                      toggleCheckbox(editor, leaf.path);
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
                     contentEditable={false}
                   >
                     <input

@@ -355,10 +355,11 @@ const Editor = ({
       handleEnterForList(editor, e);
     } else if (e.key === "Tab") {
       let handled: boolean | undefined = false;
-      handled = intend(editor, !e.shiftKey);
-      handled = handleTabForCode(editor, e);
+      handled = handled || handleTabForCode(editor, e);
+      handled = handled || intend(editor, !e.shiftKey);
       if (handled) {
         e.preventDefault();
+        e.stopPropagation();
       }
     } else if (e.key === "Backspace") {
       handleBackspaceForCode(editor, e);
