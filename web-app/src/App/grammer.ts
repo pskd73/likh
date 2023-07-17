@@ -206,11 +206,11 @@ export const hashtag: CustomGrammarValue = {
 };
 
 export const bulletUnordered: CustomGrammarValue = {
-  pattern: /^\t*[-*+] /m
+  pattern: /^ *[-*+] /m
 }
 
 export const bulletOrdered: CustomGrammarValue = {
-  pattern: /^\t*[\d]+. /m
+  pattern: /^ *[\d]+. /m
 }
 
 export const listRegex = /^([ \t]*)(([-*\+])|(([0-9]+).)) (.*)$/m;

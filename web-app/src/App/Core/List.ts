@@ -22,12 +22,12 @@ export type ListBlock = {
 };
 
 export function parseListText(text: string): ParsedListText | undefined {
-  const pattern = /^(\t*)([-\*\+]|([0-9]+)\.) (\[[ x]\] )?(.*)$/;
+  const pattern = /^( *)([-\*\+]|([0-9]+)\.) (\[[ x]\] )?(.*)$/;
   const match = text.match(pattern);
   if (!match) {
     return undefined;
   }
-  const level = Math.floor(match[1].length);
+  const level = Math.floor(match[1].length / 4);
   const type = match[3] === undefined ? "unordered" : "ordered";
   const serial = type === "ordered" ? Number(match[3]) : undefined;
   const content = match[5];
@@ -165,7 +165,7 @@ export function intend(editor: CustomEditor, asc = true) {
     );
 
     if (asc) {
-      Transforms.insertText(editor, "\t", {
+      Transforms.insertText(editor, "    ", {
         at: { path: editor.selection.anchor.path, offset: 0 },
       });
     } else {
@@ -176,11 +176,11 @@ export function intend(editor: CustomEditor, asc = true) {
         type: "paragraph",
         children: [{ text: "" }],
       });
-      const unTabbedText = text.replace(/^\t/, "");
+      const unTabbedText = text.replace(/^ {1,4}/, "");
       Transforms.insertText(editor, unTabbedText);
       Transforms.setSelection(editor, {
-        anchor: { path: anchor.path, offset: Math.max(0, anchor.offset - 1) },
-        focus: { path: focus.path, offset: Math.max(0, focus.offset - 1) },
+        anchor: { path: anchor.path, offset: Math.max(0, anchor.offset - 4) },
+        focus: { path: focus.path, offset: Math.max(0, focus.offset - 4) },
       });
     }
 

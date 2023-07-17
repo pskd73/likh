@@ -34,7 +34,10 @@ const SlateElement = ({
     return (
       <p {...attributes}>
         <span className="inline-flex flex-shrink-0">
-          <span contentEditable={false} style={{ width: paddingWidth }} />
+          <span
+            contentEditable={false}
+            style={{ width: paddingWidth, userSelect: "none" }}
+          />
           <span>{children}</span>
         </span>
       </p>
