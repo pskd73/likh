@@ -270,11 +270,21 @@ export const hr: CustomGrammarValue = {
   pattern: /^---$/m,
 };
 
+export const bulletUnordered: CustomGrammarValue = {
+  pattern: /^[ ]*[-*+] /m
+}
+
+export const bulletOrdered: CustomGrammarValue = {
+  pattern: /^[ ]*[\d]+. /m
+}
+
 const grammer: CustomGrammar = {
   title1,
   title2,
   title3,
-  list,
+  // list,
+  bulletUnordered,
+  bulletOrdered,
   link,
   quote,
   hashtag,

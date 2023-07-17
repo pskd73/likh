@@ -79,13 +79,13 @@ export const TimestampPlugin: RNPluginCreator = () => ({
   },
   grammer: (grammer) => ({
     datetime,
-    list: {
-      ...grammer.list,
-      inside: {
-        ...(grammer.list as any).inside,
-        datetime,
-      },
-    },
+    // list: {
+    //   ...grammer.list,
+    //   inside: {
+    //     ...(grammer.list as any).inside,
+    //     datetime,
+    //   },
+    // },
   }),
   leafMaker: ({ attributes, children, leaf, text, className }) => {
     if (leaf.datetime) {

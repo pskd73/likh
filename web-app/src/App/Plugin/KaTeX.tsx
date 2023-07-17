@@ -23,13 +23,13 @@ const KaTeXPlugin: RNPluginCreator = () => {
     grammer: (grammer) => ({
       blockedKatex,
       inlineKatex,
-      list: {
-        ...grammer.list,
-        inside: {
-          ...(grammer.list as any).inside,
-          inlineKatex,
-        },
-      },
+      // list: {
+      //   ...grammer.list,
+      //   inside: {
+      //     ...(grammer.list as any).inside,
+      //     inlineKatex,
+      //   },
+      // },
       quote: {
         ...grammer.quote,
         inside: {

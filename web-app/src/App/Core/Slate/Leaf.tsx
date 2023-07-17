@@ -213,6 +213,45 @@ function Leaf({
     );
   }
 
+  if (leaf.bulletUnordered || leaf.bulletOrdered) {
+    return (
+      <span
+        {...attributes}
+        style={{ marginLeft: -12 }}
+        className={"text-primary text-opacity-50"}
+      >
+        {leaf.bulletUnordered && (
+          <span
+            contentEditable={false}
+            onFocus={() =>
+              setSelection({
+                anchor: { path: leaf.path, offset: 0 },
+                focus: { path: leaf.path, offset: 0 },
+              })
+            }
+            onClick={() =>
+              setSelection({
+                anchor: { path: leaf.path, offset: 0 },
+                focus: { path: leaf.path, offset: 0 },
+              })
+            }
+            className={classNames({ hidden: leaf.focused })}
+          >
+            •&nbsp;
+          </span>
+        )}
+        <span
+          className={classNames({
+            hidden: !leaf.focused && leaf.bulletUnordered,
+          })}
+          style={{ whiteSpace: "initial" }}
+        >
+          {children}
+        </span>
+      </span>
+    );
+  }
+
   let id: string | undefined = undefined;
   if (leaf.highlight) {
     id = "highlight";
