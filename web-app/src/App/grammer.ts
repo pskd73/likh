@@ -205,11 +205,20 @@ export const hashtag: CustomGrammarValue = {
   inside: {},
 };
 
-export const listRegex = /^( *)(([-*\+])|(([0-9]+).)) (.*)$/m;
+export const bulletUnordered: CustomGrammarValue = {
+  pattern: /^\t*[-*+] /m
+}
+
+export const bulletOrdered: CustomGrammarValue = {
+  pattern: /^\t*[\d]+. /m
+}
+
+export const listRegex = /^([ \t]*)(([-*\+])|(([0-9]+).)) (.*)$/m;
 export const list: CustomGrammarValue = {
   pattern: listRegex,
   inside: {
-    bullet: /^ *(([-*\+])|([0-9]+.)) /,
+    bulletOrdered,
+    bulletUnordered,
     boldItalic,
     bold,
     italic,
@@ -269,14 +278,6 @@ export const codeBlock: CustomGrammarValue = {
 export const hr: CustomGrammarValue = {
   pattern: /^---$/m,
 };
-
-export const bulletUnordered: CustomGrammarValue = {
-  pattern: /^[ ]*[-*+] /m
-}
-
-export const bulletOrdered: CustomGrammarValue = {
-  pattern: /^[ ]*[\d]+. /m
-}
 
 const grammer: CustomGrammar = {
   title1,

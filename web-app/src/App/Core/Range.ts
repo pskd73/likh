@@ -1,4 +1,4 @@
-import { BaseEditor, Path, Range } from "slate";
+import { BaseEditor, Path, Point, Range, Transforms } from "slate";
 import { CustomGrammar } from "../grammer";
 
 type CustomRange = Range & {
@@ -84,7 +84,7 @@ const hidable: string[] = [
   "hr",
   "list",
   "bulletUnordered",
-  "bulletOrdered"
+  "bulletOrdered",
 ];
 
 export function getTokensRanges(
@@ -147,43 +147,9 @@ function isPointFocused(
   point: { path: number[]; start: number; end: number }
 ) {
   if (!editor.selection) return false;
-  const startPath =
-    JSON.stringify(editor.selection.anchor.path) === JSON.stringify(point.path);
-  const endPath =
-    JSON.stringify(editor.selection?.focus.path) === JSON.stringify(point.path);
 
-  if (startPath) {
-    if (
-      point.start <= editor.selection.anchor.offset &&
-      point.end >= editor.selection.anchor.offset
-    ) {
-      return true;
-    }
-  }
-
-  if (endPath) {
-    if (
-      point.start <= editor.selection.focus.offset &&
-      point.end >= editor.selection.focus.offset
-    ) {
-      return true;
-    }
-  }
-
-  if (startPath && endPath) {
-    if (
-      point.start >= editor.selection.anchor.offset &&
-      point.end <= editor.selection.focus.offset
-    ) {
-      return true;
-    }
-    if (
-      point.start >= editor.selection.focus.offset &&
-      point.end <= editor.selection.anchor.offset
-    ) {
-      return true;
-    }
-  }
-
-  return false;
+  return Range.intersection(editor.selection, {
+    anchor: { path: point.path, offset: point.start },
+    focus: { path: point.path, offset: point.end },
+  });
 }

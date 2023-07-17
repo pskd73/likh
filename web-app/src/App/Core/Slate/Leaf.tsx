@@ -74,10 +74,6 @@ function Leaf({
     [theme.font.title2]: leaf.title2,
     [theme.font.title3]: leaf.title3,
 
-    // list
-    "opacity-30 inline-flex justify-end pr-[4px] whitespace-nowrap":
-      leaf.bullet,
-
     // checkbox
     "bg-primary bg-opacity-20  w-[20px] h-[20px] font-bold":
       leaf.checkbox && !leaf.punctuation,
@@ -216,26 +212,23 @@ function Leaf({
     return (
       <span
         {...attributes}
-        style={{ marginLeft: -12 }}
-        className={"text-primary text-opacity-50"}
+        className={"text-primary text-opacity-50 flex-shrink-0"}
+        onFocus={() =>
+          setSelection({
+            anchor: { path: leaf.path, offset: 0 },
+            focus: { path: leaf.path, offset: 0 },
+          })
+        }
+        onClick={() =>
+          setSelection({
+            anchor: { path: leaf.path, offset: 0 },
+            focus: { path: leaf.path, offset: 0 },
+          })
+        }
       >
-        {leaf.bulletUnordered && (
-          <span
-            contentEditable={false}
-            onFocus={() =>
-              setSelection({
-                anchor: { path: leaf.path, offset: 0 },
-                focus: { path: leaf.path, offset: 0 },
-              })
-            }
-            onClick={() =>
-              setSelection({
-                anchor: { path: leaf.path, offset: 0 },
-                focus: { path: leaf.path, offset: 0 },
-              })
-            }
-            className={classNames({ hidden: leaf.focused })}
-          >
+        {leaf.bulletUnordered && !leaf.focused && (
+          <span contentEditable={false}>
+            {/* {leaf.text.replace(/[-+*]/, "•")} */}
             •&nbsp;
           </span>
         )}
@@ -243,7 +236,6 @@ function Leaf({
           className={classNames({
             hidden: !leaf.focused && leaf.bulletUnordered,
           })}
-          // style={{ whiteSpace: "initial" }}
         >
           {children}
         </span>
