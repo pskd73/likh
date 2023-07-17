@@ -4,6 +4,7 @@ import { SavedNote } from "../type";
 import { LeafMaker } from "../Core/Slate/Leaf";
 import { EditorContextType } from "../Context";
 import { BaseRange } from "slate";
+import { ElementMaker } from "../Core/Slate/SlateElement";
 
 export type SuggestionConfig = {
   suggest: (
@@ -24,6 +25,7 @@ export type RNPlugin = {
     grammer: Record<string, CustomGrammarValue>
   ) => Record<string, CustomGrammarValue>;
   leafMaker?: LeafMaker;
+  elementMaker?: ElementMaker;
 };
 
 export type RNPluginCreator = () => RNPlugin;

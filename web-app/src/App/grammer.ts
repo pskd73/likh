@@ -192,23 +192,13 @@ export const inlineCode: CustomGrammarValue = {
   },
 };
 
-export const checkbox: CustomGrammarValue = {
-  pattern: /\[[ x]\]/,
-};
-
 export const hashtag: CustomGrammarValue = {
   pattern: /\B(#[a-zA-Z_/]+)(?!;)/m,
   greedy: true,
   inside: {},
 };
 
-export const bulletUnordered: CustomGrammarValue = {
-  pattern: /^ *[-*+] /m,
-};
 
-export const bulletOrdered: CustomGrammarValue = {
-  pattern: /^ *[\d]+. /m,
-};
 
 export const quoteRegex = /^\> .*$/m;
 export const quote: CustomGrammarValue = {
@@ -254,9 +244,6 @@ const grammer: CustomGrammar = {
   title1,
   title2,
   title3,
-  bulletUnordered,
-  bulletOrdered,
-  checkbox,
   link,
   quote,
   hashtag,

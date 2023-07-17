@@ -1,10 +1,10 @@
-import { CSSProperties, ReactElement } from "react";
+import { ReactElement } from "react";
 import { Theme } from "src/App/Theme";
-import { ParsedListText, parseListText } from "src/App/Core/List";
 import classNames from "classnames";
 import slugify from "slugify";
 import { BiFolder } from "react-icons/bi";
 import { BaseRange } from "slate";
+import { CustomEditor } from "../Core";
 
 export type LeafMaker = (props: {
   attributes: any;
@@ -12,6 +12,8 @@ export type LeafMaker = (props: {
   leaf: Record<string, any>;
   text: { text: string };
   className: string;
+  setSelection: (range: Partial<BaseRange>) => void;
+  editor: CustomEditor;
 }) => ReactElement | undefined;
 
 function Leaf({
@@ -25,6 +27,7 @@ function Leaf({
   leafMakers,
   placeholder,
   setSelection,
+  editor,
 }: {
   attributes: any;
   children: any;
@@ -36,19 +39,9 @@ function Leaf({
   leafMakers: LeafMaker[];
   placeholder?: string;
   setSelection: (range: Partial<BaseRange>) => void;
+  editor: CustomEditor;
 }) {
   const title = leaf.title1 || leaf.title2 || leaf.title3;
-
-  let parsed: ParsedListText | undefined = undefined;
-  if (leaf.bullet) {
-    parsed = parseListText(leaf.text + " ");
-  }
-
-  const style: CSSProperties = {};
-  if (parsed) {
-    style.marginLeft = -200;
-    style.width = 200;
-  }
 
   const className = classNames({
     // decor
@@ -105,7 +98,15 @@ function Leaf({
   });
 
   for (const maker of leafMakers || []) {
-    const element = maker({ attributes, leaf, text, children, className });
+    const element = maker({
+      attributes,
+      leaf,
+      text,
+      children,
+      className,
+      setSelection,
+      editor,
+    });
     if (element) {
       return element;
     }
@@ -199,64 +200,6 @@ function Leaf({
     );
   }
 
-  if (leaf.bulletUnordered || leaf.bulletOrdered) {
-    const parsed = parseListText(leaf.text + " ");
-    const width = (parsed?.level || 1) * 40;
-    return (
-      <span
-        {...attributes}
-        style={{ marginLeft: -width, width }}
-        className={"text-primary text-opacity-50 inline-block text-right"}
-        onFocus={() =>
-          setSelection({
-            anchor: { path: leaf.path, offset: leaf.text.length - 1 },
-            focus: { path: leaf.path, offset: leaf.text.length - 1 },
-          })
-        }
-        onClick={() =>
-          setSelection({
-            anchor: { path: leaf.path, offset: leaf.text.length - 1 },
-            focus: { path: leaf.path, offset: leaf.text.length - 1 },
-          })
-        }
-      >
-        {leaf.bulletUnordered && !leaf.focused && (
-          <span contentEditable={false}>•&nbsp;</span>
-        )}
-        <span
-          className={classNames({
-            hidden: !leaf.focused && leaf.bulletUnordered,
-          })}
-        >
-          {children}
-        </span>
-      </span>
-    );
-  }
-
-  if (leaf.checkbox) {
-    return (
-      <span {...attributes}>
-        {!leaf.focused && (
-          <span
-            onClick={() => onCheckboxToggle(leaf.path)}
-            contentEditable={false}
-          >
-            <input
-              type="checkbox"
-              checked={leaf.text.includes("x")}
-              readOnly
-              className="outline-none cursor-pointer"
-            />
-          </span>
-        )}
-        <span className={classNames({ hidden: !leaf.focused })}>
-          {children}
-        </span>
-      </span>
-    );
-  }
-
   let id: string | undefined = undefined;
   if (leaf.highlight) {
     id = "highlight";
@@ -267,7 +210,6 @@ function Leaf({
       {...attributes}
       className={className}
       id={id}
-      style={style}
       onClick={() => {
         if (leaf.checkbox) {
           onCheckboxToggle(leaf.path);

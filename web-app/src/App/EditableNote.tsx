@@ -288,6 +288,9 @@ const EditableNote = () => {
                 leafMakers={plugins
                   .filter((p) => p.leafMaker)
                   .map((p) => p.leafMaker!)}
+                elementMakers={plugins
+                  .filter((p) => p.elementMaker)
+                  .map((p) => p.elementMaker!)}
                 blockPlaceholder={`Type "/" for options`}
               />
             </div>
