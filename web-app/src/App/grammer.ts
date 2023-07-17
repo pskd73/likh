@@ -193,10 +193,7 @@ export const inlineCode: CustomGrammarValue = {
 };
 
 export const checkbox: CustomGrammarValue = {
-  pattern: /^\[[ x]\]/,
-  inside: {
-    punctuation: /\[|\]/,
-  },
+  pattern: /\[[ x]\]/,
 };
 
 export const hashtag: CustomGrammarValue = {
@@ -206,12 +203,12 @@ export const hashtag: CustomGrammarValue = {
 };
 
 export const bulletUnordered: CustomGrammarValue = {
-  pattern: /^ *[-*+] /m
-}
+  pattern: /^ *[-*+] /m,
+};
 
 export const bulletOrdered: CustomGrammarValue = {
-  pattern: /^ *[\d]+. /m
-}
+  pattern: /^ *[\d]+. /m,
+};
 
 export const listRegex = /^([ \t]*)(([-*\+])|(([0-9]+).)) (.*)$/m;
 export const list: CustomGrammarValue = {
@@ -286,6 +283,7 @@ const grammer: CustomGrammar = {
   // list,
   bulletUnordered,
   bulletOrdered,
+  checkbox,
   link,
   quote,
   hashtag,

@@ -56,7 +56,10 @@ function Leaf({
     italic: leaf.italic || leaf.boldItalic,
     "line-through": leaf.strikethrough,
     hidden:
-      leaf.hidable && !leaf.focused && (leaf.punctuation || leaf.notelinkId),
+      leaf.hidable &&
+      !leaf.focused &&
+      (leaf.punctuation || leaf.notelinkId) &&
+      !leaf.checkbox,
 
     // generic punctuation
     "opacity-30": leaf.punctuation || leaf.blockquote,
@@ -73,18 +76,6 @@ function Leaf({
     [theme.font.title1]: leaf.title1,
     [theme.font.title2]: leaf.title2,
     [theme.font.title3]: leaf.title3,
-
-    // checkbox
-    "bg-primary bg-opacity-20  w-[20px] h-[20px] font-bold":
-      leaf.checkbox && !leaf.punctuation,
-    "inline-flex justify-center items-center mx-1 cursor-pointer":
-      leaf.checkbox && !leaf.punctuation,
-    "rounded border-primary border-opacity-30":
-      leaf.checkbox && !leaf.punctuation,
-    border: leaf.checkbox && !leaf.punctuation && leaf.text === " ",
-    "opacity-70": leaf.checkbox && !leaf.punctuation && leaf.text === "x",
-    "line-through text-primary text-opacity-50":
-      leaf.list && !leaf.checkbox && !leaf.bullet && leaf.payload.checked,
 
     // link
     "underline cursor-pointer": leaf.link,
@@ -230,10 +221,7 @@ function Leaf({
         }
       >
         {leaf.bulletUnordered && !leaf.focused && (
-          <span contentEditable={false}>
-            {/* {leaf.text.replace(/[-+*]/, "•")} */}
-            •&nbsp;
-          </span>
+          <span contentEditable={false}>•&nbsp;</span>
         )}
         <span
           className={classNames({
@@ -241,6 +229,29 @@ function Leaf({
           })}
           style={{}}
         >
+          {children}
+        </span>
+      </span>
+    );
+  }
+
+  if (leaf.checkbox) {
+    return (
+      <span {...attributes}>
+        {!leaf.focused && (
+          <span
+            onClick={() => onCheckboxToggle(leaf.path)}
+            contentEditable={false}
+          >
+            <input
+              type="checkbox"
+              checked={leaf.text.includes("x")}
+              readOnly
+              className="outline-none cursor-pointer"
+            />
+          </span>
+        )}
+        <span className={classNames({ hidden: !leaf.focused })}>
           {children}
         </span>
       </span>

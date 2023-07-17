@@ -30,13 +30,13 @@ const SlateElement = ({
 }) => {
   const style: CSSProperties = {};
   if (list !== undefined && list.level !== undefined) {
-    const paddingWidth = 40 * (list.level + 1);
     return (
       <p {...attributes}>
-        <span className="inline-flex flex-shrink-0">
+        <span className="inline-flex">
           <span
             contentEditable={false}
-            style={{ width: paddingWidth, userSelect: "none" }}
+            style={{ width: 40 * (list.level + 1), userSelect: "none" }}
+            className="flex-shrink-0"
           />
           <span>{children}</span>
         </span>
