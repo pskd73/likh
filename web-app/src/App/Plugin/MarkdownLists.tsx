@@ -7,11 +7,12 @@ const MarkdownListsPlugin: RNPluginCreator = () => {
     name: "Markdown Lists",
     version: 1,
     grammer: () => ({
-      bulletUnordered: {
-        pattern: /^ *[-*+]( \[[ x]\])?/m,
-      },
+      bulletUnordered: [
+        { pattern: /^ *[-*+] (\[[ x]\] )?/m },
+        { pattern: /^ *[-*+] /m },
+      ],
       bulletOrdered: {
-        pattern: /^ *[\d]+. /m,
+        pattern: /^ *[\d]+\. /m,
       },
     }),
     leafMaker: ({ leaf, attributes, children, setSelection, editor }) => {
@@ -56,7 +57,8 @@ const MarkdownListsPlugin: RNPluginCreator = () => {
                   checked={leaf.text.includes("x")}
                   readOnly
                   className="outline-none cursor-pointer"
-                />&nbsp;
+                />
+                &nbsp;
               </span>
             )}
 
@@ -78,11 +80,14 @@ const MarkdownListsPlugin: RNPluginCreator = () => {
         return (
           <p {...attributes}>
             <span className="inline-flex">
-              <span
-                contentEditable={false}
-                style={{ width: 20 * (parsed.level + 1) }}
-                className="flex-shrink-0"
-              />
+              {Array.from(Array(parsed.level + 1)).map((_, i) => (
+                <span
+                  key={i}
+                  contentEditable={false}
+                  style={{ width: 20 }}
+                  className={classNames("flex-shrink-0")}
+                />
+              ))}
               <span>{children}</span>
             </span>
           </p>

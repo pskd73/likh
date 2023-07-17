@@ -20,7 +20,6 @@ function Leaf({
   attributes,
   children,
   leaf,
-  onCheckboxToggle,
   onNoteLinkClick,
   text,
   theme,
@@ -32,7 +31,6 @@ function Leaf({
   attributes: any;
   children: any;
   leaf: Record<string, any>;
-  onCheckboxToggle(path: number[]): void;
   onNoteLinkClick(title: string, id?: string): void;
   text: { text: string };
   theme: Theme;
@@ -49,10 +47,7 @@ function Leaf({
     italic: leaf.italic || leaf.boldItalic,
     "line-through": leaf.strikethrough,
     hidden:
-      leaf.hidable &&
-      !leaf.focused &&
-      (leaf.punctuation || leaf.notelinkId) &&
-      !leaf.checkbox,
+      leaf.hidable && !leaf.focused && (leaf.punctuation || leaf.notelinkId),
 
     // generic punctuation
     "opacity-30": leaf.punctuation || leaf.blockquote,
@@ -210,11 +205,6 @@ function Leaf({
       {...attributes}
       className={className}
       id={id}
-      onClick={() => {
-        if (leaf.checkbox) {
-          onCheckboxToggle(leaf.path);
-        }
-      }}
       spellCheck={!leaf.hashtag}
     >
       {placeholder && leaf.newLine && (

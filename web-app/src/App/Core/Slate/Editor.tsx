@@ -170,7 +170,6 @@ const Editor = ({
     (props: any) => (
       <Leaf
         {...props}
-        onCheckboxToggle={(path) => toggleCheckbox(editor, path)}
         onNoteLinkClick={onNoteLinkClick || (() => {})}
         theme={theme}
         leafMakers={leafMakers}
