@@ -30,8 +30,15 @@ const SlateElement = ({
 }) => {
   const style: CSSProperties = {};
   if (list !== undefined && list.level !== undefined) {
-    style.marginLeft = list.level * 20;
-    console.log(children);
+    const paddingWidth = 40 * list.level;
+    return (
+      <p {...attributes}>
+        <span className="inline-flex flex-shrink-0">
+          <span contentEditable={false} style={{ width: paddingWidth }} />
+          <span>{children}</span>
+        </span>
+      </p>
+    );
   }
 
   if (element.type === "code-block") {

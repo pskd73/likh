@@ -212,7 +212,8 @@ function Leaf({
     return (
       <span
         {...attributes}
-        className={"text-primary text-opacity-50 flex-shrink-0"}
+        style={{ marginLeft: -12 }}
+        className={"text-primary text-opacity-50"}
         onFocus={() =>
           setSelection({
             anchor: { path: leaf.path, offset: 0 },
@@ -236,6 +237,7 @@ function Leaf({
           className={classNames({
             hidden: !leaf.focused && leaf.bulletUnordered,
           })}
+          style={{ whiteSpace: "initial" }}
         >
           {children}
         </span>
