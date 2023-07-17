@@ -76,7 +76,6 @@ function Leaf({
 
     // list
     "opacity-30 inline-flex justify-end pr-[4px]": leaf.bullet,
-    "whitespace-break-spaces": leaf.list && !leaf.bullet,
 
     // checkbox
     "bg-primary bg-opacity-20  w-[20px] h-[20px] font-bold":
