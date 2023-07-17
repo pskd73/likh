@@ -237,7 +237,7 @@ function Leaf({
           className={classNames({
             hidden: !leaf.focused && leaf.bulletUnordered,
           })}
-          style={{ whiteSpace: "initial" }}
+          style={{ }}
         >
           {children}
         </span>
