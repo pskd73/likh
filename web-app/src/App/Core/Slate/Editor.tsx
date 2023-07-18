@@ -54,7 +54,7 @@ import {
 import { PastedImg, SavedImg, useEditorPaste } from "src/App/useEditorPaste";
 import { Theme, Themes } from "src/App/Theme";
 import Leaf, { LeafMaker } from "src/App/Core/Slate/Leaf";
-import SlateElement from "src/App/Core/Slate/SlateElement";
+import SlateElement, { ElementMaker } from "src/App/Core/Slate/SlateElement";
 import { escape } from "src/util";
 
 const defaultValue = [
@@ -92,6 +92,7 @@ const Editor = ({
   contextMenuPrefixes,
   grammer: passedGrammer,
   leafMakers,
+  elementMakers,
   focus,
   blockPlaceholder,
 }: {
@@ -118,6 +119,7 @@ const Editor = ({
   contextMenuPrefixes?: string[];
   grammer?: Record<string, CustomGrammarValue>;
   leafMakers?: LeafMaker[];
+  elementMakers?: ElementMaker[];
   focus?: number;
   blockPlaceholder?: string;
 }) => {
@@ -168,12 +170,12 @@ const Editor = ({
     (props: any) => (
       <Leaf
         {...props}
-        onCheckboxToggle={(path) => toggleCheckbox(editor, path)}
         onNoteLinkClick={onNoteLinkClick || (() => {})}
         theme={theme}
         leafMakers={leafMakers}
         placeholder={blockPlaceholder}
         setSelection={(range) => Transforms.setSelection(editor, range)}
+        editor={editor}
       />
     ),
     []
@@ -287,6 +289,8 @@ const Editor = ({
           title={{ slug: titleSlug, level: titleLavel }}
           list={{ level: listLevel }}
           quote={!!quote}
+          elementMakers={elementMakers || []}
+          text={text}
         />
       );
     },
@@ -351,10 +355,11 @@ const Editor = ({
       handleEnterForList(editor, e);
     } else if (e.key === "Tab") {
       let handled: boolean | undefined = false;
-      handled = intend(editor, !e.shiftKey);
-      handled = handleTabForCode(editor, e);
+      handled = handled || handleTabForCode(editor, e);
+      handled = handled || intend(editor, !e.shiftKey);
       if (handled) {
         e.preventDefault();
+        e.stopPropagation();
       }
     } else if (e.key === "Backspace") {
       handleBackspaceForCode(editor, e);

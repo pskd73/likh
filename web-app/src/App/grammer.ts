@@ -192,43 +192,13 @@ export const inlineCode: CustomGrammarValue = {
   },
 };
 
-export const checkbox: CustomGrammarValue = {
-  pattern: /^\[[ x]\]/,
-  inside: {
-    punctuation: /\[|\]/,
-  },
-};
-
 export const hashtag: CustomGrammarValue = {
   pattern: /\B(#[a-zA-Z_/]+)(?!;)/m,
   greedy: true,
   inside: {},
 };
 
-export const listRegex = /^( *)(([-*\+])|(([0-9]+).)) (.*)$/m;
-export const list: CustomGrammarValue = {
-  pattern: listRegex,
-  inside: {
-    bullet: /^ *(([-*\+])|([0-9]+.)) /,
-    boldItalic,
-    bold,
-    italic,
-    strikethrough,
-    link,
-    notelink,
-    checkbox,
-    inlineCode,
-    mdLink,
-    hashtag,
-  },
-  greedy: true,
-  payload: {
-    checked: (token: any) =>
-      token.content[1] &&
-      token.content[1].type === "checkbox" &&
-      token.content[1].content[1] === "x",
-  },
-};
+
 
 export const quoteRegex = /^\> .*$/m;
 export const quote: CustomGrammarValue = {
@@ -274,7 +244,6 @@ const grammer: CustomGrammar = {
   title1,
   title2,
   title3,
-  list,
   link,
   quote,
   hashtag,

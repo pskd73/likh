@@ -1,7 +1,12 @@
-import { CSSProperties } from "react";
 import { CustomElement } from "../Core";
-import { isMobile } from "../../device";
 import classNames from "classnames";
+
+export type ElementMaker = (props: {
+  element: CustomElement;
+  attributes: any;
+  children: any;
+  text: string;
+}) => JSX.Element | undefined;
 
 const SlateElement = ({
   element,
@@ -11,10 +16,13 @@ const SlateElement = ({
   img,
   title,
   list,
+  elementMakers,
+  text
 }: {
   attributes: any;
   children: any;
   element: CustomElement;
+  elementMakers: ElementMaker[];
   quote?: boolean;
   img?: {
     url?: string;
@@ -27,10 +35,13 @@ const SlateElement = ({
   list?: {
     level?: number;
   };
+  text: string;
 }) => {
-  const style: CSSProperties = {};
-  if (list !== undefined && list.level !== undefined) {
-    style.marginLeft = (isMobile ? 20 : 40) * (list.level + 1);
+  for (const maker of elementMakers) {
+    const ret = maker({ element, attributes, children, text });
+    if (ret) {
+      return ret;
+    }
   }
 
   if (element.type === "code-block") {
@@ -67,7 +78,6 @@ const SlateElement = ({
           "border-l-4 border-primary border-opacity-30": quote,
           "mb-2": !quote,
         })}
-        style={style}
         data-title-level={title?.level}
         data-title-slug={title?.slug}
       >

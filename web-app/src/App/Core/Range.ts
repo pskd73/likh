@@ -1,4 +1,4 @@
-import { BaseEditor, Path, Range } from "slate";
+import { BaseEditor, Path, Point, Range, Transforms } from "slate";
 import { CustomGrammar } from "../grammer";
 
 type CustomRange = Range & {
@@ -81,7 +81,11 @@ const hidable: string[] = [
   "blockedKatex",
   "inlineKatex",
   "strikethrough",
-  "hr"
+  "hr",
+  "list",
+  "bulletUnordered",
+  "bulletOrdered",
+  "bullet",
 ];
 
 export function getTokensRanges(
@@ -104,16 +108,18 @@ export function getTokensRanges(
         }
       }
 
+      const focused = isPointFocused(editor, {
+        path,
+        start,
+        end: start + _token.length,
+      });
+      if (focused) {
+        _parentTokens.push({ type: "focused" } as any);
+        _parentTokens.push({ type: `${_token.type}Focused` } as any);
+      }
+
       if (hidable.includes(_token.type)) {
         _parentTokens.push({ type: "hidable" } as any);
-        const focused = isPointFocused(editor, {
-          path,
-          start,
-          end: start + _token.length,
-        });
-        if (focused) {
-          _parentTokens.push({ type: "focused" } as any);
-        }
       }
       _parentTokens.push(_token);
     }
@@ -144,43 +150,9 @@ function isPointFocused(
   point: { path: number[]; start: number; end: number }
 ) {
   if (!editor.selection) return false;
-  const startPath =
-    JSON.stringify(editor.selection.anchor.path) === JSON.stringify(point.path);
-  const endPath =
-    JSON.stringify(editor.selection?.focus.path) === JSON.stringify(point.path);
 
-  if (startPath) {
-    if (
-      point.start <= editor.selection.anchor.offset &&
-      point.end >= editor.selection.anchor.offset
-    ) {
-      return true;
-    }
-  }
-
-  if (endPath) {
-    if (
-      point.start <= editor.selection.focus.offset &&
-      point.end >= editor.selection.focus.offset
-    ) {
-      return true;
-    }
-  }
-
-  if (startPath && endPath) {
-    if (
-      point.start >= editor.selection.anchor.offset &&
-      point.end <= editor.selection.focus.offset
-    ) {
-      return true;
-    }
-    if (
-      point.start >= editor.selection.focus.offset &&
-      point.end <= editor.selection.anchor.offset
-    ) {
-      return true;
-    }
-  }
-
-  return false;
+  return Range.intersection(editor.selection, {
+    anchor: { path: point.path, offset: point.start },
+    focus: { path: point.path, offset: point.end },
+  });
 }
