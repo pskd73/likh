@@ -11,12 +11,14 @@ const MarkdownListsPlugin: RNPluginCreator = () => {
         pattern: /^ *[-*+]( \[[ x]\])? /m,
         inside: {
           bullet: /^ *[-*+]( \[[ x]\])?/,
+          space: / $/,
         },
       },
       bulletOrdered: {
         pattern: /^ *[\d]+\. /m,
         inside: {
           bullet: /^ *[\d]+\./,
+          space: / $/,
         },
       },
     }),
@@ -97,13 +99,20 @@ const MarkdownListsPlugin: RNPluginCreator = () => {
           </span>
         );
       }
+      if (leaf.space) {
+        return (
+          <span {...attributes} className="whitespace-nowrap">
+            {children}
+          </span>
+        );
+      }
     },
     elementMaker: ({ text, attributes, children }) => {
       const parsed = parseListText(text);
       if (parsed) {
         return (
           <p {...attributes}>
-            <span className="inline-flex">
+            <span className="inline-flex" style={{ wordBreak: "break-word" }}>
               {Array.from(Array(parsed.level + 1)).map((_, i) => (
                 <span
                   key={i}
