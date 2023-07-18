@@ -101,7 +101,7 @@ const MarkdownListsPlugin: RNPluginCreator = () => {
       }
       if (leaf.space) {
         return (
-          <span {...attributes} className="whitespace-nowrap">
+          <span {...attributes}>
             {children}
           </span>
         );
