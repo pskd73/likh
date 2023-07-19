@@ -12,7 +12,7 @@ export const textToTitle = (text: string, max?: number) => {
   if (titleMatch) {
     cleaned = titleMatch[1];
   }
-  cleaned = cleaned.replaceAll(/\B(#[a-zA-Z_/]+)(?!;)/g, "");
+  cleaned = cleaned.replaceAll(/#[\w/_]+(( [\w/_]+)*;)?/g, "");
   cleaned = cleaned.trim().split("\n")[0];
   cleaned = marked
     .parse(cleaned, { mangle: false, headerIds: false })

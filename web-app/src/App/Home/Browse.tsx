@@ -81,7 +81,7 @@ const Folders = <T extends unknown>({
             <List.Item key={i} onClickKind={() => toggle(hashtag)}>
               <div className="flex items-center space-x-1">
                 {exp ? <BiFolderOpen /> : <BiFolder />}
-                <span>{hashtag.replaceAll("#", "")}</span>
+                <span>{hashtag.replace(/^#/, "").replace(/;$/, "")}</span>
               </div>
             </List.Item>
             {exp && (

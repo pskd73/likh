@@ -37,7 +37,6 @@ export function useContextMenu(
   const [index, setIndex] = useState(0);
   const [count, setCount] = useState(0);
   const [activePrefix, setActivePrefix] = useState<string>();
-  // const [activeBoundary, setActiveBoundary] = useState<string>();
 
   useEffect(() => {
     document
@@ -104,7 +103,7 @@ export function useContextMenu(
           setIndex(0);
           showing = true;
           setActivePrefix(boundary.start);
-          setSearch(_search);
+          setSearch(currentWord);
           break;
         }
       }

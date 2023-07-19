@@ -294,7 +294,7 @@ export const useEditor = ({
     const hashtagsMap: Record<string, Record<string, NoteSummary>> = {};
     for (const summary of notesToShow) {
       if (exclude.includes(summary.note.id)) continue;
-      const re = new RegExp(/#\w+(( \w+)*;)?/, "g");
+      const re = new RegExp(/#[\w/_]+(( [\w/_]+)*;)?/, "g");
       const matches = summary.note.text.match(re);
       if (matches) {
         for (const hashtag of matches) {
