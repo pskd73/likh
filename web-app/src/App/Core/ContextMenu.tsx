@@ -13,8 +13,9 @@ import { Range } from "slate";
 import { ReactEditor } from "slate-react";
 import { twMerge } from "tailwind-merge";
 import classNames from "classnames";
-import { getCurrentWord } from "./Word";
+import { getCurrentBoundary, getCurrentWord } from "./Word";
 import { escape } from "src/util";
+import { start } from "repl";
 
 const MENU_WIDTH = 300;
 const MENU_HEIGHT = 300;
@@ -22,6 +23,7 @@ const MENU_HEIGHT = 300;
 export function useContextMenu(
   editor: CustomEditor,
   prefixes: string[],
+  boundaries: Array<{ start: string; end: string }>,
   onEnter: (opts: {
     index: number;
     target: Range;
@@ -35,6 +37,7 @@ export function useContextMenu(
   const [index, setIndex] = useState(0);
   const [count, setCount] = useState(0);
   const [activePrefix, setActivePrefix] = useState<string>();
+  // const [activeBoundary, setActiveBoundary] = useState<string>();
 
   useEffect(() => {
     document
@@ -83,27 +86,47 @@ export function useContextMenu(
 
   const handleChange = useCallback(() => {
     const { selection } = editor;
+    if (!selection || !Range.isCollapsed(selection)) return;
     let showing = false;
 
-    for (const prefix of prefixes) {
-      if (
-        selection &&
-        Range.isCollapsed(selection) &&
-        editor.selection?.anchor.offset !== 0
-      ) {
-        const { currentWord, currentRange } = getCurrentWord(editor);
+    for (const boundary of boundaries) {
+      if (editor.selection?.anchor.offset !== 0) {
+        const { currentWord, currentRange } = getCurrentBoundary(
+          editor,
+          boundary
+        );
+        if (currentWord) {
+          let _search = currentWord
+            .replace(new RegExp("^" + escape(boundary.start)), "")
+            .replace(new RegExp(escape(boundary.end) + "$"), "");
 
-        const beforeMatch =
-          currentWord &&
-          currentWord.match(new RegExp(`^${escape(prefix)}(.*)$`));
-
-        if (beforeMatch) {
           setTarget(currentRange);
           setIndex(0);
           showing = true;
-          setActivePrefix(prefix);
-          setSearch(beforeMatch[1]);
+          setActivePrefix(boundary.start);
+          setSearch(_search);
           break;
+        }
+      }
+    }
+
+    if (!showing) {
+      for (const prefix of prefixes) {
+        if (editor.selection?.anchor.offset !== 0) {
+          const { currentWord, currentRange } = getCurrentWord(editor);
+
+          const beforeMatch =
+            currentWord &&
+            currentWord.match(new RegExp(`^${escape(prefix)}(.*)$`));
+
+          if (beforeMatch) {
+            setTarget(currentRange);
+            setIndex(0);
+            showing = true;
+            setActivePrefix(prefix);
+            setSearch(beforeMatch[1]);
+            break;
+          }
         }
       }
     }
@@ -117,6 +140,7 @@ export function useContextMenu(
 
   const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = useCallback(
     (e) => {
+      console.log({ target, count });
       if (target && count > 0) {
         switch (e.key) {
           case "ArrowDown":

@@ -137,6 +137,7 @@ const EditableNote = () => {
     term: string,
     range: BaseRange
   ) => {
+    console.log({ prefix });
     const suggestions: Suggestion[] = [];
 
     plugins.forEach((plugin) => {
@@ -181,17 +182,6 @@ const EditableNote = () => {
           }
         }
       }
-    } else if (prefix === "#") {
-      Object.keys(getHashtags([note!.id])).forEach((hashtag) => {
-        const tag = hashtag.replace("#", "");
-        if (term === tag) return;
-        if (tag.toLowerCase().includes(term.toLocaleLowerCase())) {
-          suggestions.push({
-            title: `${hashtag}`,
-            replace: `${hashtag} `,
-          });
-        }
-      });
     }
     return suggestions;
   };
@@ -246,7 +236,6 @@ const EditableNote = () => {
                 focus={(note?.created_at || 0) + (editorFocus || 0)}
                 contextMenuPrefixes={[
                   "[[",
-                  "#",
                   ...plugins
                     .filter((p) => p.suggestions)
                     .map((p) => Object.keys(p.suggestions!))

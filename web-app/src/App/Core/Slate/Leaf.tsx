@@ -85,11 +85,6 @@ function Leaf({
 
     // image
     "hidden image": leaf.image && !leaf.alt && !leaf.focused,
-
-    // hashtag
-    "bg-primary bg-opacity-20 px-3 py-1 rounded-full inline-block mb-1 text-xs":
-      leaf.hashtag,
-    "inline-flex items-center": leaf.hashtag,
   });
 
   for (const maker of leafMakers || []) {
@@ -128,25 +123,6 @@ function Leaf({
             "border-opacity-30 w-full inline-block"
           )}
         />
-      </span>
-    );
-  }
-
-  if (leaf.hashtag) {
-    return (
-      <span {...attributes} className={className} spellCheck={false}>
-        {!leaf.punctuation && (
-          <span
-            contentEditable={false}
-            style={{ userSelect: "none" }}
-            className="inline-flex items-center mr-1"
-          >
-            <span>
-              <BiFolder />
-            </span>
-          </span>
-        )}
-        <span>{children}</span>
       </span>
     );
   }

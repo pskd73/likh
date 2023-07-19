@@ -18,7 +18,7 @@ export type SuggestionConfig = {
 export type RNPlugin = {
   version: number;
   name: string;
-  init?: (editorState: EditorContextType) => void;
+  setContext?: (context: EditorContextType) => void;
   onNoteChange?: (note: SavedNote) => void;
   suggestions?: Record<string, SuggestionConfig>;
   grammer?: (

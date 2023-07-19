@@ -193,7 +193,7 @@ export const inlineCode: CustomGrammarValue = {
 };
 
 export const hashtag: CustomGrammarValue = {
-  pattern: /\B(#[a-zA-Z_/]+)(?!;)/m,
+  pattern: /#\w+(( \w+)*;)?/m,
   greedy: true,
   inside: {},
 };

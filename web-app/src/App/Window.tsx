@@ -30,10 +30,15 @@ const EditorWindow = () => {
   useEffect(() => {
     (async () => {
       // await init();
-      plugins.forEach((plugin) => plugin.init && plugin.init(editorState));
       setDbInitiated(true);
     })();
   }, []);
+
+  useEffect(() => {
+    plugins.forEach(
+      (plugin) => plugin.setContext && plugin.setContext(editorState)
+    );
+  }, [editorState]);
 
   if (!dbInitiated) {
     return null;

@@ -132,6 +132,7 @@ const Editor = ({
   const contextMenu = useContextMenu(
     editor,
     contextMenuPrefixes || [],
+    [{ start: "#", end: ";" }],
     ({ index, target, prefix }) => {
       handleContextMenuSelect(index, target, prefix);
     }
@@ -146,6 +147,7 @@ const Editor = ({
           contextMenu.search,
           contextMenu.target
         );
+        console.log("setting count", _suggestions);
         contextMenu.setCount(_suggestions.length);
         return setSuggestions(_suggestions);
       }
