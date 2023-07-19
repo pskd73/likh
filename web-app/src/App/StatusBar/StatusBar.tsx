@@ -147,7 +147,7 @@ const StatusBar = ({
         )}
 
         {note && !isRoll && (
-          <Tooltip tip={"Typewriter mode"}>
+          <Tooltip tip={"Typewriter mode on/off"}>
             <Button
               className="rounded-none"
               lite={!typewriterMode}
