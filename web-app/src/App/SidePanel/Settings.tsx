@@ -30,7 +30,7 @@ const Settings = () => {
   const themes = ["base", "dark", "accent", "secondary"];
 
   return (
-    <WithTitle title="Theme">
+    <WithTitle title="Theme" active>
       <List>
         <List.Item noHover>
           <div className="flex space-x-4">
