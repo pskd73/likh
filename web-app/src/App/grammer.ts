@@ -192,14 +192,6 @@ export const inlineCode: CustomGrammarValue = {
   },
 };
 
-export const hashtag: CustomGrammarValue = {
-  pattern: /#\w+(( \w+)*;)?/m,
-  greedy: true,
-  inside: {},
-};
-
-
-
 export const quoteRegex = /^\> .*$/m;
 export const quote: CustomGrammarValue = {
   pattern: /^\> .*$/m,
@@ -246,7 +238,6 @@ const grammer: CustomGrammar = {
   title3,
   link,
   quote,
-  hashtag,
   image,
   notelink,
   inlineCode,
