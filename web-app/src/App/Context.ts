@@ -6,7 +6,7 @@ import { LinkSuggestion, getLinkSuggestions } from "./Suggestion";
 import { PersistedState } from "./usePersistedState";
 import { Theme } from "./Theme";
 import { PouchContextType } from "./PouchDB";
-import { hashtag } from "./grammer";
+import { hashtag as hashtagRegex } from "src/App/regex";
 import { isMobile } from "./device";
 import { RNPlugin } from "./Plugin/type";
 
@@ -294,10 +294,11 @@ export const useEditor = ({
     const hashtagsMap: Record<string, Record<string, NoteSummary>> = {};
     for (const summary of notesToShow) {
       if (exclude.includes(summary.note.id)) continue;
-      const re = new RegExp(/#[\w/_]+(( [\w/_]+)*;)?/, "g");
+      const re = new RegExp(hashtagRegex, "g");
       const matches = summary.note.text.match(re);
       if (matches) {
-        for (const hashtag of matches) {
+        for (let hashtag of matches) {
+          hashtag = hashtag.replace("#", "").replace(";", "");
           if (!hashtagsMap[hashtag]) {
             hashtagsMap[hashtag] = {};
           }

@@ -1,5 +1,6 @@
 import { marked } from "marked";
 import { Note } from "./type";
+import { hashtag } from "./App/regex";
 
 const MAX_FOCUS_LENGTH = 30;
 
@@ -12,7 +13,7 @@ export const textToTitle = (text: string, max?: number) => {
   if (titleMatch) {
     cleaned = titleMatch[1];
   }
-  cleaned = cleaned.replaceAll(/#[\w/_]+(( [\w/_]+)*;)?/g, "");
+  cleaned = cleaned.replaceAll(new RegExp(hashtag, "g"), "");
   cleaned = cleaned.trim().split("\n")[0];
   cleaned = marked
     .parse(cleaned, { mangle: false, headerIds: false })

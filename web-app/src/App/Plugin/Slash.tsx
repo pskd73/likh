@@ -132,6 +132,13 @@ const SlashPlugin: RNPluginCreator = () => {
             anchorOffset: 3,
             focusOffset: 7,
           });
+          suggestions.push({
+            title: "Hashtag",
+            replace: "#;",
+            description: "#;",
+            anchorOffset: 1,
+            focusOffset: 1,
+          });
           return suggestions.filter((sug) =>
             sug.title.toLowerCase().includes(word)
           );
