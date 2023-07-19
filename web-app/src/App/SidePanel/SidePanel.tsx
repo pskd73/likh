@@ -193,6 +193,18 @@ const SidePanel = () => {
               <Tooltip
                 tip={
                   <span>
+                    New note
+                    <Tooltip.Shortcut>{getShortcutText("N")}</Tooltip.Shortcut>
+                  </span>
+                }
+              >
+                <Button lite onClick={handleNew}>
+                  <BiPlus />
+                </Button>
+              </Tooltip>
+              <Tooltip
+                tip={
+                  <span>
                     Sidemenu
                     <Tooltip.Shortcut>{getShortcutText("L")}</Tooltip.Shortcut>
                   </span>
@@ -214,18 +226,6 @@ const SidePanel = () => {
                     <Notes noToggle seeAll noTitle toggleSeeAll={() => {}} />
                   </div>
                 )}
-              </div>
-              <div className="px-4">
-                <List>
-                  <List.Item withIcon onClick={handleNew}>
-                    <Tooltip tip={getShortcutText("N")} className="w-full">
-                      <List.Item.Icon>
-                        <BiPlus />
-                      </List.Item.Icon>
-                      <div className="flex-1">New note</div>
-                    </Tooltip>
-                  </List.Item>
-                </List>
               </div>
               {isRoll && <RollOutline />}
               <Outline />
