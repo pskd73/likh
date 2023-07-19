@@ -137,7 +137,6 @@ const EditableNote = () => {
     term: string,
     range: BaseRange
   ) => {
-    console.log({ prefix });
     const suggestions: Suggestion[] = [];
 
     plugins.forEach((plugin) => {

@@ -61,7 +61,6 @@ const Hashtags: RNPluginCreator = () => {
     suggestions: {
       "#": {
         suggest: (prefix, word, note, range) => {
-          console.log({ word });
           const isBoundary = word.endsWith(";");
           const suggestions: Suggestion[] = [];
           const hashtags = getHashtags();

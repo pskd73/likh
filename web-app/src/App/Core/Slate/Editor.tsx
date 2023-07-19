@@ -147,7 +147,6 @@ const Editor = ({
           contextMenu.search,
           contextMenu.target
         );
-        console.log("setting count", _suggestions);
         contextMenu.setCount(_suggestions.length);
         return setSuggestions(_suggestions);
       }

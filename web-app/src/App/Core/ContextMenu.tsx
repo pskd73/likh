@@ -139,7 +139,6 @@ export function useContextMenu(
 
   const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = useCallback(
     (e) => {
-      console.log({ target, count });
       if (target && count > 0) {
         switch (e.key) {
           case "ArrowDown":
