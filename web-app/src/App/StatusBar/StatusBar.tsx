@@ -146,15 +146,17 @@ const StatusBar = ({
           </Tooltip>
         )}
 
-        <Tooltip tip={"Typewriter mode"}>
-          <Button
-            className="rounded-none"
-            lite={!typewriterMode}
-            onClick={() => setTypewriterMode((t) => !t)}
-          >
-            <BsInputCursorText />
-          </Button>
-        </Tooltip>
+        {note && !isRoll && (
+          <Tooltip tip={"Typewriter mode"}>
+            <Button
+              className="rounded-none"
+              lite={!typewriterMode}
+              onClick={() => setTypewriterMode((t) => !t)}
+            >
+              <BsInputCursorText />
+            </Button>
+          </Tooltip>
+        )}
 
         {showStats && note && <TextCounter text={note.text} />}
 
