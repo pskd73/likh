@@ -9,6 +9,7 @@ const MarkdownListsPlugin: RNPluginCreator = () => {
     grammer: () => ({
       bulletUnordered: {
         pattern: /^ *[-*+]( \[[ x]\])? /m,
+        greedy: true,
         inside: {
           bullet: /^ *[-*+]( \[[ x]\])?/,
           space: / $/,
