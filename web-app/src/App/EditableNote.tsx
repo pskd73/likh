@@ -80,6 +80,12 @@ const EditableNote = () => {
     }
   }, [note?.id, isRoll, searchTerm]);
 
+  useEffect(() => {
+    if (typewriterMode) {
+      scroll.scroll({ force: true });
+    }
+  }, [typewriterMode]);
+
   const handleChange = (
     id: string,
     {

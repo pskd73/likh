@@ -10,6 +10,7 @@ import {
   BiSave,
   BiSidebar,
 } from "react-icons/bi";
+import { BsInputCursorText } from "react-icons/bs";
 import { saveNote } from "src/App/File";
 import Delete from "src/App/StatusBar/Delete";
 import classNames from "classnames";
@@ -49,8 +50,16 @@ const StatusBar = ({
   padding: number;
 }) => {
   const { syncState } = useContext(PouchContext);
-  const { showStats, note, sideBar, setSideBar, isRoll, storage } =
-    useContext(EditorContext);
+  const {
+    showStats,
+    note,
+    sideBar,
+    setSideBar,
+    isRoll,
+    storage,
+    setTypewriterMode,
+    typewriterMode,
+  } = useContext(EditorContext);
   const [fullScreen, setFullScreen] = useState(false);
 
   const handleSave = () => {
@@ -136,6 +145,17 @@ const StatusBar = ({
             </Button>
           </Tooltip>
         )}
+
+        <Tooltip tip={"Typewriter mode"}>
+          <Button
+            className="rounded-none"
+            lite={!typewriterMode}
+            onClick={() => setTypewriterMode((t) => !t)}
+          >
+            <BsInputCursorText />
+          </Button>
+        </Tooltip>
+
         {showStats && note && <TextCounter text={note.text} />}
 
         <Tooltip tip={"Fullscreen"}>
