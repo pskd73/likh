@@ -69,10 +69,13 @@ export const useMiddle = (
     force?: boolean;
   }) => {
     if (force || !editor || (editor && isCursorAtEnd(editor))) {
-      getScrollElement().scrollTo({
-        top: 10000000,
-        behavior: "smooth",
-      });
+      const elem = getScrollElement();
+      setTimeout(() => {
+        elem.scrollTo({
+          top: elem.scrollHeight,
+          behavior: "smooth",
+        });
+      }, 100);
     }
   };
 
