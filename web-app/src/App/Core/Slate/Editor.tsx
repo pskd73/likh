@@ -47,6 +47,7 @@ import {
 } from "src/App/Core/Code";
 import { getTokensRanges } from "src/App/Core/Range";
 import {
+  Boundary,
   ContextMenu,
   ContextMenuList,
   useContextMenu,
@@ -90,6 +91,7 @@ const Editor = ({
   containerClassName,
   theme,
   contextMenuPrefixes,
+  contextMenuBoundaries,
   grammer: passedGrammer,
   leafMakers,
   elementMakers,
@@ -117,6 +119,7 @@ const Editor = ({
   getSavedImg?: (id: string, imgType: string) => Promise<SavedImg>;
   theme?: Theme;
   contextMenuPrefixes?: string[];
+  contextMenuBoundaries?: Boundary[];
   grammer?: Record<string, CustomGrammarValue>;
   leafMakers?: LeafMaker[];
   elementMakers?: ElementMaker[];
@@ -132,6 +135,7 @@ const Editor = ({
   const contextMenu = useContextMenu(
     editor,
     contextMenuPrefixes || [],
+    contextMenuBoundaries || [],
     ({ index, target, prefix }) => {
       handleContextMenuSelect(index, target, prefix);
     }

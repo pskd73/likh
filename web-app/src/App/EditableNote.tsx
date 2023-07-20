@@ -298,6 +298,10 @@ const EditableNote = () => {
                   .filter((p) => p.elementMaker)
                   .map((p) => p.elementMaker!)}
                 blockPlaceholder={`Type "/" for options`}
+                contextMenuBoundaries={plugins
+                  .filter((p) => p.boundaries)
+                  .map((p) => p.boundaries!)
+                  .reduce((prev, cur) => [...prev, ...cur], [])}
               />
             </div>
           );
