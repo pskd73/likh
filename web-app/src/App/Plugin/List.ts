@@ -1,3 +1,4 @@
+import EmojisPlugin from "./Emojis";
 import KaTeXPlugin from "./KaTeX";
 import MarkdownListsPlugin from "./MarkdownLists";
 import SlashPlugin from "./Slash";
@@ -9,4 +10,5 @@ export const enabledPlugins: RNPluginCreator[] = [
   SlashPlugin,
   KaTeXPlugin,
   MarkdownListsPlugin,
+  EmojisPlugin,
 ];

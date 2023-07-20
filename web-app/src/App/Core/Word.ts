@@ -5,7 +5,7 @@ import { BasePoint } from "slate";
 import { ReactEditor } from "slate-react";
 
 // change this regexp if you want other characters to be considered a part of a word
-const wordRegexp = /[0-9a-zA-Z-\/#_@\[:]/;
+const wordRegexp = /[0-9a-zA-Z-\/#_@\[:\{]/;
 
 const cloneDeep = (obj: any) => {
   return JSON.parse(JSON.stringify(obj));
