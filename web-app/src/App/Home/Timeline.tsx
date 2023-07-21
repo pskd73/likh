@@ -10,13 +10,14 @@ import { EditorContext } from "src/App/Context";
 import { getImageAddresses, getTimeline } from "src/App/Timeline";
 import { textToTitle } from "src/Note";
 import moment from "moment";
-import { BiFile, BiTimeFive } from "react-icons/bi";
+import { BiFile, BiSortAZ, BiSortZA, BiTimeFive } from "react-icons/bi";
 import { SavedNote } from "src/App/type";
 import { useNavigate } from "react-router-dom";
 import classNames from "classnames";
 import { highlight, makeExtractor } from "src/App/Marker";
 import { blobToB64, escape } from "src/util";
 import useDelayedEffect from "src/App/useDelayedEffect";
+import Button from "src/comps/Button";
 
 const cachedImages: Record<string, any> = {};
 
@@ -45,13 +46,17 @@ const Timeline = () => {
   const [timelineElems, setTimelineElems] = useState<Element[]>([]);
   const [focusDt, setFocusDt] = useState<string>();
   const focusDtRef = useRef<HTMLDivElement>(null);
+  const [asc, setAsc] = useState(false);
   const timeline = useMemo(() => {
-    const timeline = getTimeline(notesToShow);
+    let timeline = getTimeline(notesToShow);
+    if (!asc) {
+      timeline = timeline.reverse();
+    }
     if (timeline.length) {
       setFocusDt(moment(timeline[0].date).format("YYYY MMMM DD"));
     }
     return timeline;
-  }, [notesToShow]);
+  }, [notesToShow, asc]);
 
   useEffect(() => {
     document
@@ -80,12 +85,12 @@ const Timeline = () => {
     1000
   );
 
-  useEffect(() => {
-    focusDtRef.current && (focusDtRef.current.style.scale = "1.2");
-    setTimeout(() => {
-      focusDtRef.current && (focusDtRef.current.style.scale = "1");
-    }, 200);
-  }, [focusDt]);
+  // useEffect(() => {
+  //   focusDtRef.current && (focusDtRef.current.style.scale = "1.2");
+  //   setTimeout(() => {
+  //     focusDtRef.current && (focusDtRef.current.style.scale = "1");
+  //   }, 200);
+  // }, [focusDt]);
 
   const handleNoteClick = (note: SavedNote) => {
     navigate(`/write/note/${note.id}`);
@@ -127,12 +132,33 @@ const Timeline = () => {
       <div
         ref={focusDtRef}
         className={classNames(
-          "inline-block sticky top-0 bg-primary text-xl font-bold text-base",
-          "px-3 py-1 rounded-full shadow-lg transition-all",
-          { hidden: !focusDt }
+          "sticky top-0",
+          "flex items-center space-x-4 z-20",
+          {
+            hidden: !focusDt,
+          }
         )}
       >
-        {focusDt}
+        <div
+          className={classNames(
+            "px-3 py-1 rounded-full shadow-lg transition-all",
+            "bg-primary text-xl font-bold text-base",
+            "inline-block"
+          )}
+        >
+          {focusDt}
+        </div>
+        <div>
+          <Button
+            className={classNames(
+              "rounded-full text-xl p-2 bg-primary text-base bg-opacity-100",
+              "hover:bg-opacity-100 shadow-md hover:shadow-lg transition-all"
+            )}
+            onClick={() => setAsc((a) => !a)}
+          >
+            {asc ? <BiSortAZ /> : <BiSortZA />}
+          </Button>
+        </div>
       </div>
       <ul className="space-y-2 pb-10">
         {timeline.map((item, i) => {
