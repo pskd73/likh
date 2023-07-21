@@ -5,6 +5,7 @@ import { LeafMaker } from "../Core/Slate/Leaf";
 import { EditorContextType } from "../Context";
 import { BaseRange } from "slate";
 import { ElementMaker } from "../Core/Slate/SlateElement";
+import { Boundary } from "../Core/ContextMenu";
 
 export type SuggestionConfig = {
   suggest: (
@@ -21,6 +22,7 @@ export type RNPlugin = {
   init?: (editorState: EditorContextType) => void;
   onNoteChange?: (note: SavedNote) => void;
   suggestions?: Record<string, SuggestionConfig>;
+  boundaries?: Boundary[];
   grammer?: (
     grammer: Record<string, CustomGrammarValue>
   ) => Record<string, CustomGrammarValue>;
