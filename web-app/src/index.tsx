@@ -20,6 +20,7 @@ import HomeScreen from "./App/Home/HomeScreen";
 import EditableNote from "./App/EditableNote";
 import Storage from "./App/SidePanel/Storage";
 import Init from "./App/Init";
+import NewHome from "./App/Home/NewHome";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <HomeScreen />,
+      },
+      {
+        path: "home",
+        element: <NewHome />,
       },
       {
         path: "timeline",
@@ -99,7 +104,7 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   // <React.StrictMode>
-    <RouterProvider router={router} />
+  <RouterProvider router={router} />
   // </React.StrictMode>
 );
 
