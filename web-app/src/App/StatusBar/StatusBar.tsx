@@ -19,6 +19,8 @@ import { isMobile } from "src/App/device";
 import { twMerge } from "tailwind-merge";
 import Tooltip from "src/comps/Tooltip";
 import { getShortcutText } from "../useShortcuts";
+import moment from "moment";
+import CreatedTime from "./CreatedTime";
 
 const SyncIcon = ({ state }: { state: string }) => {
   if (state === "paused" || state === "init") {
@@ -126,6 +128,7 @@ const StatusBar = ({
             <SyncIcon state={syncState} />
           </Button>
         </Tooltip>
+        <CreatedTime />
       </div>
 
       {/* Right */}
@@ -147,7 +150,11 @@ const StatusBar = ({
         )}
 
         {note && !isRoll && (
-          <Tooltip tip={typewriterMode ? "Typewriter mode: ON" : "Typewriter mode: OFF"}>
+          <Tooltip
+            tip={
+              typewriterMode ? "Typewriter mode: ON" : "Typewriter mode: OFF"
+            }
+          >
             <Button
               className="rounded-none"
               lite={!typewriterMode}

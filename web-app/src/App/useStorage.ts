@@ -53,6 +53,7 @@ const useStorage = (pdb: Pouch.PouchContextType): Storage => {
   };
 
   const saveNote = (note: SavedNote) => {
+    note.updated_at = new Date().getTime();
     if (!lastSaved[note.id]) {
       lastSaved[note.id] = { time: -1 };
     }
