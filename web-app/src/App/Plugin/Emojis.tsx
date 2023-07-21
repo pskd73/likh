@@ -492,7 +492,7 @@ const EmojisPlugin: RNPluginCreator = () => {
     name: "Emojis",
     version: 1,
     suggestions: {
-      "{:": {
+      "[:": {
         suggest: (prefix, word) => {
           return emojis
             .filter((item) =>
