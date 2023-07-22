@@ -17,12 +17,13 @@ import {
 } from "react-icons/tfi";
 import classNames from "classnames";
 import { ReactElement } from "react-markdown/lib/react-markdown";
-import { Link, LinkProps } from "react-router-dom";
+import { Link, LinkProps, useNavigate } from "react-router-dom";
 import List from "../List";
 import { WithTitle } from "../SidePanel/Common";
-import { EditorContext } from "../Context";
+import { EditorContext, NoteSummary } from "../Context";
 import { textToTitle } from "src/Note";
 import { getTimeline } from "../Timeline";
+import { SavedNote } from "../type";
 
 const DateTime = () => {
   const [time, setTime] = useState(new Date());
@@ -102,6 +103,7 @@ const ClickableTile = ({
 
 const NewHome = () => {
   const { notesToShow, getTodoNotes } = useContext(EditorContext);
+  const navigate = useNavigate();
   const { todos, reminders } = useMemo(() => {
     let _todos = getTodoNotes();
     _todos = _todos.filter(
@@ -111,6 +113,11 @@ const NewHome = () => {
     const reminders = getTimeline(notesToShow).filter((item) => item.future);
     return { todos, reminders };
   }, [notesToShow]);
+  const lastEditedNote = useMemo(() => {
+    return notesToShow.reduce((a: NoteSummary | undefined, b) => {
+      return (a?.note.updated_at || 0) > (b.note.updated_at || 0) ? a : b;
+    }, undefined);
+  }, []);
 
   return (
     <div>
@@ -119,14 +126,18 @@ const NewHome = () => {
       </div>
       <div className="lg:flex lg:space-x-6 space-y-6 lg:space-y-0 mb-6">
         <div className="flex-1">
-          <div className="mb-4">
-            <ClickableTile
-              label="My personal note"
-              description="Edited 2 hours ago"
-              to={"#"}
-              rightIcon={<TfiArrowRight />}
-            />
-          </div>
+          {lastEditedNote && (
+            <div className="mb-4">
+              <ClickableTile
+                label={textToTitle(lastEditedNote.note.text)}
+                description={moment(
+                  new Date(lastEditedNote.note.updated_at || 0)
+                ).fromNow()}
+                to={"#"}
+                rightIcon={<TfiArrowRight />}
+              />
+            </div>
+          )}
           <div className="lg:grid lg:grid-cols-2 gap-4 space-y-4 lg:space-y-0">
             <div>
               <ClickableTile
@@ -173,7 +184,11 @@ const NewHome = () => {
             <WithTitle title="Todos" noPadding>
               <List>
                 {todos.map((summary, i) => (
-                  <List.Item key={i} className="text-base text-primary">
+                  <List.Item
+                    key={i}
+                    className="text-base text-primary"
+                    onClick={() => navigate(`/write/note/${summary.note.id}`)}
+                  >
                     {textToTitle(summary.note.text)}
                     <List.Item.Description>
                       [{summary.todo?.checked}/{summary.todo?.total}]
@@ -185,7 +200,13 @@ const NewHome = () => {
             <WithTitle title="Reminders" noPadding>
               <List>
                 {reminders.map((item, i) => (
-                  <List.Item key={i} className="text-base text-primary group">
+                  <List.Item
+                    key={i}
+                    className="text-base text-primary group"
+                    onClick={() =>
+                      navigate(`/write/note/${item.summary.note.id}`)
+                    }
+                  >
                     {textToTitle(item.summary.note.text)}
                     <List.Item.Description>
                       <span className="group-hover:hidden">

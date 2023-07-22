@@ -41,7 +41,7 @@ const SidePanel = () => {
 
   const handleHome = () => {
     home();
-    navigate("/write");
+    navigate("/write/home");
   };
 
   const handleZip = async () => {

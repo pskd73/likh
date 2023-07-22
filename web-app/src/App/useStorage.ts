@@ -46,6 +46,7 @@ const useStorage = (pdb: Pouch.PouchContextType): Storage => {
         text: note.text,
         serialized: note.serialized,
         reminder: note.reminder,
+        updated_at: note.updated_at,
       };
     });
     lastSaved[note.id].time = new Date().getTime();
@@ -53,7 +54,6 @@ const useStorage = (pdb: Pouch.PouchContextType): Storage => {
   };
 
   const saveNote = (note: SavedNote) => {
-    note.updated_at = new Date().getTime();
     if (!lastSaved[note.id]) {
       lastSaved[note.id] = { time: -1 };
     }

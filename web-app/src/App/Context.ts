@@ -223,6 +223,7 @@ export const useEditor = ({
   };
 
   const updateNote = (note: SavedNote) => {
+    note = { ...note, updated_at: new Date().getTime() };
     storage.saveNote(note);
     let updatedNotes = { ...notes };
     updatedNotes[note.id] = note;
