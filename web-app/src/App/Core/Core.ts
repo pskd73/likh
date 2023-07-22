@@ -47,7 +47,7 @@ export function focusEnd(editor: CustomEditor) {
         focus: end,
       });
       document
-        .getElementById("editor-container")
+        .getElementById("page-container")
         ?.scrollTo({ top: 100000000, behavior: "smooth" });
     } catch {
       console.warn("Unable to focus");

@@ -26,6 +26,7 @@ import { getTimeline } from "../Timeline";
 import Event from "src/components/Event";
 import { openFile } from "../File";
 import EditableNote from "../EditableNote";
+import HeadlessNoteEditor from "../HeadlessNoteEditor";
 
 const DateTime = () => {
   const [time, setTime] = useState(new Date());
@@ -205,7 +206,7 @@ const NewHome = () => {
             "max-h-[300px] overflow-y-scroll scrollbar-hide"
           )}
         >
-          {/* <EditableNote nodeId={"1690050008847"} headless /> */}
+          <HeadlessNoteEditor noteId={"1690050008847"} />
         </div>
       </div>
       <hr className="mb-6" />

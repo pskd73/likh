@@ -60,24 +60,24 @@ const Timeline = () => {
 
   useEffect(() => {
     document
-      .getElementById("editor-container")
+      .getElementById("page-container")
       ?.addEventListener("scrollend", handleScroll);
     document
-      .getElementById("editor-container")
+      .getElementById("page-container")
       ?.addEventListener("touchend", handleScroll);
     return () => {
       document
-        .getElementById("editor-container")
+        .getElementById("page-container")
         ?.removeEventListener("scrollend", handleScroll);
       document
-        .getElementById("editor-container")
+        .getElementById("page-container")
         ?.removeEventListener("touchend", handleScroll);
     };
   }, [timelineElems]);
 
   useDelayedEffect(
     () => {
-      setScrollElem(document.getElementById("editor-container")!);
+      setScrollElem(document.getElementById("page-container")!);
       const elems = document.querySelectorAll("li.timeline");
       setTimelineElems(Array.from(elems));
     },
