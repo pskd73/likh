@@ -117,7 +117,7 @@ const NewHome = () => {
       <div className="flex justify-end mb-10">
         <DateTime />
       </div>
-      <div className="lg:flex space-x-6 mb-6">
+      <div className="lg:flex lg:space-x-6 space-y-6 lg:space-y-0 mb-6">
         <div className="flex-1">
           <div className="mb-4">
             <ClickableTile
@@ -162,7 +162,7 @@ const NewHome = () => {
             </div>
           </div>
         </div>
-        <div className="w-1/3 p-4 border border-primary border-opacity-20 rounded-md">
+        <div className="lg:w-1/3 p-4 border border-primary border-opacity-20 rounded-md">
           Scribble
         </div>
       </div>
