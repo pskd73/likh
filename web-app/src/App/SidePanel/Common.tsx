@@ -6,13 +6,18 @@ export const WithTitle = ({
   title,
   children,
   active: initActive,
-}: PropsWithChildren & { title: string; active?: boolean }) => {
+  noPadding,
+}: PropsWithChildren & {
+  title: string;
+  active?: boolean;
+  noPadding?: boolean;
+}) => {
   const [active, setActive] = useState<boolean>(initActive || false);
 
   const expanded = active || initActive === undefined;
 
   return (
-    <div className="px-4">
+    <div className={classNames({ "px-4": !noPadding })}>
       <div
         className={classNames(
           "text-xs font-bold text-primary text-opacity-40",

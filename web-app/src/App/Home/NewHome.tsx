@@ -1,12 +1,6 @@
 import moment from "moment";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { getShortcutText } from "../useShortcuts";
-import {
-  BiCalendarAlt,
-  BiCheckCircle,
-  BiGhost,
-  BiRightArrowAlt,
-} from "react-icons/bi";
 import {
   TfiCheck,
   TfiPencilAlt,
@@ -17,6 +11,11 @@ import {
 import classNames from "classnames";
 import { ReactElement } from "react-markdown/lib/react-markdown";
 import { Link } from "react-router-dom";
+import List from "../List";
+import { WithTitle } from "../SidePanel/Common";
+import { EditorContext } from "../Context";
+import { textToTitle } from "src/Note";
+import { getTimeline } from "../Timeline";
 
 const DateTime = () => {
   const [time, setTime] = useState(new Date());
@@ -73,9 +72,10 @@ const ClickableTile = ({
       className={classNames(
         "flex justify-between items-center",
         "border border-primary border-opacity-10 rounded-lg",
-        "py-4 bg-primary bg-opacity-5 active:bg-opacity-10 hover:shadow-md",
+        "py-4 bg-primary bg-opacity-5 active:bg-opacity-10",
         "cursor-pointer active:shadow transition-all",
-        "px-6"
+        "px-6",
+        "hover:border-opacity-100"
       )}
     >
       <div className="flex items-center">
@@ -93,12 +93,23 @@ const ClickableTile = ({
 };
 
 const NewHome = () => {
+  const { notesToShow, getTodoNotes } = useContext(EditorContext);
+  const { todos, reminders } = useMemo(() => {
+    let _todos = getTodoNotes();
+    _todos = _todos.filter(
+      (summary) => summary.todo!.total - summary.todo!.checked > 0
+    );
+    const todos = _todos.sort((a, b) => b.note.created_at - a.note.created_at);
+    const reminders = getTimeline(notesToShow).filter((item) => item.future);
+    return { todos, reminders };
+  }, [notesToShow]);
+
   return (
     <div>
       <div className="flex justify-end mb-10">
         <DateTime />
       </div>
-      <div className="lg:flex space-x-6">
+      <div className="lg:flex space-x-6 mb-6">
         <div className="flex-1">
           <div className="mb-4">
             <ClickableTile
@@ -146,6 +157,43 @@ const NewHome = () => {
         <div className="w-1/3 p-4 border border-primary border-opacity-20 rounded-md">
           Scribble
         </div>
+      </div>
+      <hr className="mb-6" />
+      <div className="lg:flex space-x-6 mb-6">
+        <div className="flex-1">
+          <div className="lg:grid lg:grid-cols-2 gap-4 space-y-4 lg:space-y-0">
+            <WithTitle title="Todos" noPadding>
+              <List>
+                {todos.map((summary, i) => (
+                  <List.Item key={i} className="text-base text-primary">
+                    {textToTitle(summary.note.text)}
+                    <List.Item.Description>
+                      [{summary.todo?.checked}/{summary.todo?.total}]
+                    </List.Item.Description>
+                  </List.Item>
+                ))}
+              </List>
+            </WithTitle>
+            <WithTitle title="Reminders" noPadding>
+              <List>
+                {reminders.map((item, i) => (
+                  <List.Item key={i} className="text-base text-primary group">
+                    {textToTitle(item.summary.note.text)}
+                    <List.Item.Description>
+                      <span className="group-hover:hidden">
+                        {moment(item.date).fromNow()}
+                      </span>
+                      <span className="hidden group-hover:inline-block">
+                        {moment(item.date).format("DD/MM/YYYY hh:mm:ss")}
+                      </span>
+                    </List.Item.Description>
+                  </List.Item>
+                ))}
+              </List>
+            </WithTitle>
+          </div>
+        </div>
+        <div className="w-1/3" />
       </div>
     </div>
   );
