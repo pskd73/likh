@@ -1,5 +1,12 @@
 import moment from "moment";
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import {
+  ComponentProps,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { getShortcutText } from "../useShortcuts";
 import {
   TfiCheck,
@@ -10,7 +17,7 @@ import {
 } from "react-icons/tfi";
 import classNames from "classnames";
 import { ReactElement } from "react-markdown/lib/react-markdown";
-import { Link } from "react-router-dom";
+import { Link, LinkProps } from "react-router-dom";
 import List from "../List";
 import { WithTitle } from "../SidePanel/Common";
 import { EditorContext } from "../Context";
@@ -57,26 +64,27 @@ const ClickableTile = ({
   label,
   description,
   icon,
-  onClick,
   rightIcon,
-}: {
+  className,
+  ...restProps
+}: LinkProps & {
   label: string;
   description: string;
   icon?: ReactElement;
-  onClick: () => void;
   rightIcon?: ReactElement;
 }) => {
   return (
     <Link
-      to="/"
       className={classNames(
         "flex justify-between items-center",
         "border border-primary border-opacity-10 rounded-lg",
         "py-4 bg-primary bg-opacity-5 active:bg-opacity-10",
         "cursor-pointer active:shadow transition-all",
         "px-6",
-        "hover:border-opacity-100"
+        "hover:border-opacity-100",
+        className
       )}
+      {...restProps}
     >
       <div className="flex items-center">
         {icon && <div className="text-4xl mr-6">{icon}</div>}
@@ -115,7 +123,7 @@ const NewHome = () => {
             <ClickableTile
               label="My personal note"
               description="Edited 2 hours ago"
-              onClick={console.log}
+              to={"#"}
               rightIcon={<TfiArrowRight />}
             />
           </div>
@@ -125,7 +133,7 @@ const NewHome = () => {
                 label="Write new"
                 description={getShortcutText("N")}
                 icon={<TfiPencilAlt />}
-                onClick={console.log}
+                to={"#"}
               />
             </div>
             <div>
@@ -133,7 +141,7 @@ const NewHome = () => {
                 label="Journal"
                 description={getShortcutText("J")}
                 icon={<TfiCalendar />}
-                onClick={console.log}
+                to={"#"}
               />
             </div>
             <div>
@@ -141,7 +149,7 @@ const NewHome = () => {
                 label="Todo"
                 description={getShortcutText("T")}
                 icon={<TfiCheck />}
-                onClick={console.log}
+                to={"#"}
               />
             </div>
             <div>
@@ -149,7 +157,7 @@ const NewHome = () => {
                 label="Import"
                 description={getShortcutText("O")}
                 icon={<TfiImport />}
-                onClick={console.log}
+                to={"#"}
               />
             </div>
           </div>
