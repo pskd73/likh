@@ -25,6 +25,7 @@ import { textToTitle } from "src/Note";
 import { getTimeline } from "../Timeline";
 import Event from "src/components/Event";
 import { openFile } from "../File";
+import EditableNote from "../EditableNote";
 
 const DateTime = () => {
   const [time, setTime] = useState(new Date());
@@ -91,7 +92,7 @@ const ClickableTile = ({
       <div className="flex items-center">
         {icon && <div className="text-4xl mr-6">{icon}</div>}
         <div className="flex flex-col pr-4">
-          <div className="text-xl font-bold">{label}</div>
+          <div className="text-xl font-medium">{label}</div>
           <div className="text-sm text-primary text-opacity-50">
             {description}
           </div>
@@ -118,7 +119,7 @@ const NewHome = () => {
     return notesToShow.reduce((a: NoteSummary | undefined, b) => {
       return (a?.note.updated_at || 0) > (b.note.updated_at || 0) ? a : b;
     }, undefined);
-  }, []);
+  }, [notesToShow]);
 
   const handleNewNote = () => {
     Event.track("new_note");
@@ -197,8 +198,14 @@ const NewHome = () => {
             </div>
           </div>
         </div>
-        <div className="lg:w-1/3 p-4 border border-primary border-opacity-20 rounded-md">
-          Scribble
+        <div
+          className={classNames(
+            "lg:w-1/3 p-4 border border-primary",
+            "border-opacity-20 rounded-md",
+            "max-h-[300px] overflow-y-scroll scrollbar-hide"
+          )}
+        >
+          {/* <EditableNote nodeId={"1690050008847"} headless /> */}
         </div>
       </div>
       <hr className="mb-6" />

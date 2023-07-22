@@ -20,7 +20,13 @@ import Event from "src/components/Event";
 import { useTitle } from "src/comps/useTitle";
 import grammer from "./grammer";
 
-const EditableNote = () => {
+const EditableNote = ({
+  headless,
+  nodeId: passedNoteId,
+}: {
+  headless?: boolean;
+  nodeId?: string;
+}) => {
   const { setTitle } = useTitle();
   const { noteId, hashtag } = useParams();
   const navigate = useNavigate();
@@ -45,19 +51,26 @@ const EditableNote = () => {
   } = useContext(EditorContext);
   const scroll = useMiddle(ref, [typewriterMode], {
     typeWriter: typewriterMode,
+    active: !headless,
   });
 
   useEffect(() => {
-    if (noteId) {
+    if (noteId || passedNoteId) {
       setRollHashTag("");
-      setNote({ id: noteId });
+      if (noteId) {
+        setNote({ id: noteId });
+      } else if (passedNoteId) {
+        setNote({ id: passedNoteId });
+      }
     }
     if (hashtag) {
       setRollHashTag(decodeURIComponent(hashtag));
     }
-  }, [noteId, hashtag]);
+  }, [noteId, passedNoteId, hashtag]);
 
   useEffect(() => {
+    if (headless) return;
+
     if (hashtag) {
       setTitle(hashtag);
     } else if (note) {
@@ -66,6 +79,8 @@ const EditableNote = () => {
   }, [note, hashtag]);
 
   useEffect(() => {
+    if (headless) return;
+
     if (searchTerm) {
       setTimeout(() => {
         scroll.scrollTo({ className: "highlight" });
@@ -81,6 +96,8 @@ const EditableNote = () => {
   }, [note?.id, isRoll, searchTerm]);
 
   useEffect(() => {
+    if (headless) return;
+
     if (typewriterMode) {
       scroll.scroll({ force: true });
     }
@@ -207,7 +224,11 @@ const EditableNote = () => {
   };
 
   return (
-    <div ref={ref} style={{ ...scroll.style }} className="space-y-6 md:px-20">
+    <div
+      ref={ref}
+      style={{ ...scroll.style }}
+      className={classNames("space-y-6", { "md:px-20": !headless })}
+    >
       {Object.values(notes)
         .sort((a, b) => a.created_at - b.created_at)
         .map((_note) => {

@@ -22,10 +22,12 @@ export const useMiddle = (
   deps: DependencyList,
   options?: {
     typeWriter?: boolean;
+    active?: boolean;
   }
 ) => {
   options = options || {
     typeWriter: true,
+    active: true,
   };
   const height = useMemo(() => window.innerHeight, []);
   const [paddingTop, setPaddingTop] = useState(height / 2);
@@ -98,8 +100,12 @@ export const useMiddle = (
     scrollToTop,
     scrollTo,
     style: {
-      paddingTop: options.typeWriter ? paddingTop : 0,
-      paddingBottom: options.typeWriter ? height / 2 : 100,
+      paddingTop: options.active && options.typeWriter ? paddingTop : 0,
+      paddingBottom: !options.active
+        ? undefined
+        : options.typeWriter
+        ? height / 2
+        : 100,
     },
   };
 };
