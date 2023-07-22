@@ -17,13 +17,14 @@ import {
 } from "react-icons/tfi";
 import classNames from "classnames";
 import { ReactElement } from "react-markdown/lib/react-markdown";
-import { Link, LinkProps, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import List from "../List";
 import { WithTitle } from "../SidePanel/Common";
 import { EditorContext, NoteSummary } from "../Context";
 import { textToTitle } from "src/Note";
 import { getTimeline } from "../Timeline";
-import { SavedNote } from "../type";
+import Event from "src/components/Event";
+import { openFile } from "../File";
 
 const DateTime = () => {
   const [time, setTime] = useState(new Date());
@@ -68,14 +69,14 @@ const ClickableTile = ({
   rightIcon,
   className,
   ...restProps
-}: LinkProps & {
+}: ComponentProps<"div"> & {
   label: string;
   description: string;
   icon?: ReactElement;
   rightIcon?: ReactElement;
 }) => {
   return (
-    <Link
+    <div
       className={classNames(
         "flex justify-between items-center",
         "border border-primary border-opacity-10 rounded-lg",
@@ -97,12 +98,12 @@ const ClickableTile = ({
         </div>
       </div>
       {rightIcon && <div className="text-2xl">{rightIcon}</div>}
-    </Link>
+    </div>
   );
 };
 
 const NewHome = () => {
-  const { notesToShow, getTodoNotes } = useContext(EditorContext);
+  const { notesToShow, getTodoNotes, newNote } = useContext(EditorContext);
   const navigate = useNavigate();
   const { todos, reminders } = useMemo(() => {
     let _todos = getTodoNotes();
@@ -119,6 +120,28 @@ const NewHome = () => {
     }, undefined);
   }, []);
 
+  const handleNewNote = () => {
+    Event.track("new_note");
+    const note = newNote({
+      text: `# A title for the note\nWrite your mind here ...\n`,
+    });
+    navigate(`/write/note/${note!.id}`);
+  };
+
+  const handleNewTodo = () => {
+    Event.track("new_todo");
+    const note = newNote({
+      text: `# ✅ Things to do\n- [ ] Task one\n- [ ] Task two\n`,
+    });
+    navigate(`/write/note/${note!.id}`);
+  };
+
+  const handleOpen = async () => {
+    const text = (await openFile()) as string;
+    const note = newNote({ text });
+    navigate(`/write/note/${note!.id}`);
+  };
+
   return (
     <div>
       <div className="flex justify-end mb-10">
@@ -133,7 +156,9 @@ const NewHome = () => {
                 description={moment(
                   new Date(lastEditedNote.note.updated_at || 0)
                 ).fromNow()}
-                to={"#"}
+                onClick={() =>
+                  navigate(`/write/note/${lastEditedNote.note.id}`)
+                }
                 rightIcon={<TfiArrowRight />}
               />
             </div>
@@ -144,7 +169,7 @@ const NewHome = () => {
                 label="Write new"
                 description={getShortcutText("N")}
                 icon={<TfiPencilAlt />}
-                to={"#"}
+                onClick={handleNewNote}
               />
             </div>
             <div>
@@ -152,7 +177,6 @@ const NewHome = () => {
                 label="Journal"
                 description={getShortcutText("J")}
                 icon={<TfiCalendar />}
-                to={"#"}
               />
             </div>
             <div>
@@ -160,7 +184,7 @@ const NewHome = () => {
                 label="Todo"
                 description={getShortcutText("T")}
                 icon={<TfiCheck />}
-                to={"#"}
+                onClick={handleNewTodo}
               />
             </div>
             <div>
@@ -168,7 +192,7 @@ const NewHome = () => {
                 label="Import"
                 description={getShortcutText("O")}
                 icon={<TfiImport />}
-                to={"#"}
+                onClick={handleOpen}
               />
             </div>
           </div>
