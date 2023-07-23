@@ -1,5 +1,5 @@
 import { Descendant } from "slate";
-import { useContext, useEffect, useMemo, useRef } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { EditorContext } from "src/App/Context";
 import { useMiddle } from "src/comps/useMiddle";
 import { CustomEditor } from "src/App/Core/Core";
@@ -18,24 +18,23 @@ import NoteEditor from "./NoteEditor";
 
 const RollPage = () => {
   const { setTitle } = useTitle();
-  const { noteId, hashtag } = useParams();
+  const { hashtag } = useParams();
   const navigate = useNavigate();
   const ref = useRef<HTMLDivElement>(null);
   const {
     allNotes,
-    noteIds,
     note,
     updateNote,
     typewriterMode,
     isRoll,
     newNote,
-    rollHashTag,
     searchTerm,
-    setNote,
     setRollHashTag,
-    plugins,
     setNoteIds,
+    getHashtags,
+    noteIds,
   } = useContext(EditorContext);
+  const [loaded, setLoaded] = useState(false);
   const scroll = useMiddle(ref, [typewriterMode], {
     typeWriter: typewriterMode,
   });
@@ -45,19 +44,25 @@ const RollPage = () => {
   );
 
   useEffect(() => {
-    if (noteId) {
-      setRollHashTag("");
-      setNote({ id: noteId });
-    }
-    if (hashtag) {
-      setRollHashTag(decodeURIComponent(hashtag));
-    }
-
     return () => {
       setNoteIds({});
       setRollHashTag("");
     };
-  }, [noteId, hashtag]);
+  }, []);
+
+  useEffect(() => {
+    if (!loaded && hashtag && Object.keys(allNotes).length > 0) {
+      setRollHashTag(decodeURIComponent(hashtag));
+      const hashtags = getHashtags();
+      const ids = hashtags[hashtag].map((note) => note.id);
+      const _noteIds: Record<string, boolean> = {};
+      ids.forEach((id) => {
+        _noteIds[id] = true;
+      });
+      setNoteIds(_noteIds);
+      setLoaded(true);
+    }
+  }, [hashtag, allNotes]);
 
   useEffect(() => {
     if (hashtag) {
@@ -106,10 +111,6 @@ const RollPage = () => {
     updatedNote.serialized = serialized;
     updateNote(updatedNote);
 
-    plugins.forEach(
-      (plugin) => plugin.onNoteChange && plugin.onNoteChange(updatedNote)
-    );
-
     scroll.update();
     if (id === note?.id) {
       scroll.scroll({ editor });
@@ -120,16 +121,21 @@ const RollPage = () => {
     Event.track("new_roll_note");
     const savedNote = newNote(
       {
-        text: `${rollHashTag}\nWrite your journal ...`,
+        text: `${hashtag}\nWrite your journal ...`,
       },
       false
     );
-    scrollTo({ noteId: savedNote!.id });
+    if (savedNote) {
+      setNoteIds({ ...noteIds, [savedNote.id]: true });
+      scrollTo({ noteId: savedNote!.id });
+    }
   };
 
   const handleExpand = (note: SavedNote) => {
     navigate(`/write/note/${note.id}`);
   };
+
+  if (!notes) return null;
 
   return (
     <div
@@ -137,39 +143,35 @@ const RollPage = () => {
       style={{ ...scroll.style }}
       className={classNames("space-y-6 md:px-20")}
     >
-      {Object.values(notes)
+      {notes
         .sort((a, b) => a.created_at - b.created_at)
         .map((_note) => {
           const id = _note.id;
           return (
             <div
               className={classNames(
-                `note-date-${moment(_note.created_at).format(
-                  "YYYY-MM-DD"
-                )}`,
+                `note-date-${moment(_note.created_at).format("YYYY-MM-DD")}`,
                 `note-${id}`,
                 "pt-2"
               )}
               key={id}
             >
-              {isRoll && (
-                <div
-                  className={classNames(
-                    "flex items-center justify-end text-sm",
-                    "border-b border-primary mb-4 pb-2",
-                    "border-opacity-10 opacity-50 space-x-2"
+              <div
+                className={classNames(
+                  "flex items-center justify-end text-sm",
+                  "border-b border-primary mb-4 pb-2",
+                  "border-opacity-10 opacity-50 space-x-2"
+                )}
+              >
+                <Button lite onClick={() => handleExpand(_note)}>
+                  <FiExternalLink />
+                </Button>
+                <span>
+                  {moment(new Date(_note.created_at)).format(
+                    "MMMM Do YYYY, h:mm:ss a"
                   )}
-                >
-                  <Button lite onClick={() => handleExpand(_note)}>
-                    <FiExternalLink />
-                  </Button>
-                  <span>
-                    {moment(new Date(_note.created_at)).format(
-                      "MMMM Do YYYY, h:mm:ss a"
-                    )}
-                  </span>
-                </div>
-              )}
+                </span>
+              </div>
               <NoteEditor
                 onChange={(v) => handleChange(id, v)}
                 note={_note}
@@ -178,17 +180,15 @@ const RollPage = () => {
             </div>
           );
         })}
-      {isRoll && (
-        <div>
-          <Button
-            className="flex items-center space-x-1 text-sm"
-            onClick={handleNewRollNote}
-          >
-            <BiPlus />
-            <span>New note</span>
-          </Button>
-        </div>
-      )}
+      <div>
+        <Button
+          className="flex items-center space-x-1 text-sm"
+          onClick={handleNewRollNote}
+        >
+          <BiPlus />
+          <span>New note</span>
+        </Button>
+      </div>
     </div>
   );
 };

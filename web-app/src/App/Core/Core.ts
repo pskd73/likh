@@ -36,7 +36,7 @@ export function getNodeText(
 
 export function focusEnd(editor: CustomEditor, scrollContainerId: string) {
   setTimeout(() => {
-    (document.querySelector("#editorContainer > div") as any).focus();
+    (document.querySelector("#editorContainer > div") as any)?.focus();
   }, 0);
 
   setTimeout(() => {
