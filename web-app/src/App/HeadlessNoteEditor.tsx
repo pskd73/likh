@@ -5,7 +5,13 @@ import { EditorContext } from "./Context";
 import { Descendant } from "slate";
 import { CustomEditor } from "./Core/Core";
 
-const HeadlessNoteEditor = ({ noteId }: { noteId: string }) => {
+const HeadlessNoteEditor = ({
+  noteId,
+  scrollContainerId,
+}: {
+  noteId: string;
+  scrollContainerId?: string;
+}) => {
   const { storage } = useContext(EditorContext);
   const note = useMemoAsync(async () => {
     return storage.getNote(noteId);
@@ -32,7 +38,13 @@ const HeadlessNoteEditor = ({ noteId }: { noteId: string }) => {
 
   if (!note) return null;
 
-  return <NoteEditor onChange={handleChange} note={note} />;
+  return (
+    <NoteEditor
+      onChange={handleChange}
+      note={note}
+      scrollContainerId={scrollContainerId}
+    />
+  );
 };
 
 export default HeadlessNoteEditor;

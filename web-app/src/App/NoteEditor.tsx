@@ -15,6 +15,7 @@ import { SavedNote } from "./type";
 const NoteEditor = ({
   note,
   onChange,
+  scrollContainerId,
 }: {
   note: SavedNote;
   onChange: (change: {
@@ -23,6 +24,7 @@ const NoteEditor = ({
     serialized: string;
     editor: CustomEditor;
   }) => void;
+  scrollContainerId?: string;
 }) => {
   const navigate = useNavigate();
   const {
@@ -167,6 +169,7 @@ const NoteEditor = ({
         .filter((p) => p.boundaries)
         .map((p) => p.boundaries!)
         .reduce((prev, cur) => [...prev, ...cur], [])}
+      scrollContainerId={scrollContainerId}
     />
   );
 };

@@ -34,7 +34,7 @@ export function getNodeText(
   return text;
 }
 
-export function focusEnd(editor: CustomEditor) {
+export function focusEnd(editor: CustomEditor, scrollContainerId: string) {
   setTimeout(() => {
     (document.querySelector("#editorContainer > div") as any).focus();
   }, 0);
@@ -47,7 +47,7 @@ export function focusEnd(editor: CustomEditor) {
         focus: end,
       });
       document
-        .getElementById("page-container")
+        .getElementById(scrollContainerId)
         ?.scrollTo({ top: 100000000, behavior: "smooth" });
     } catch {
       console.warn("Unable to focus");

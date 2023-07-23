@@ -159,7 +159,11 @@ const EditableNote = () => {
                   </span>
                 </div>
               )}
-              <NoteEditor onChange={v => handleChange(id, v)} note={_note}/>
+              <NoteEditor
+                onChange={(v) => handleChange(id, v)}
+                note={_note}
+                scrollContainerId={"page-container"}
+              />
             </div>
           );
         })}

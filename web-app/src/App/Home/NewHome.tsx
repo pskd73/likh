@@ -105,7 +105,8 @@ const ClickableTile = ({
 };
 
 const NewHome = () => {
-  const { notesToShow, getTodoNotes, newNote } = useContext(EditorContext);
+  const { notesToShow, getTodoNotes, newNote, storage } =
+    useContext(EditorContext);
   const navigate = useNavigate();
   const { todos, reminders } = useMemo(() => {
     let _todos = getTodoNotes();
@@ -121,6 +122,20 @@ const NewHome = () => {
       return (a?.note.updated_at || 0) > (b.note.updated_at || 0) ? a : b;
     }, undefined);
   }, [notesToShow]);
+  const [scribbleLoaded, setScribbleLoaded] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      let scribble = await storage.getNote("scribble");
+
+      if (!scribble) {
+        await newNote({ id: "scribble", text: "# 📝 Scribble\n- Anything" });
+        setScribbleLoaded(true);
+      } else {
+        setScribbleLoaded(true);
+      }
+    })();
+  }, []);
 
   const handleNewNote = () => {
     Event.track("new_note");
@@ -200,13 +215,19 @@ const NewHome = () => {
           </div>
         </div>
         <div
+          id="home-scribble"
           className={classNames(
             "lg:w-1/3 p-4 border border-primary",
             "border-opacity-20 rounded-md",
-            "max-h-[300px] overflow-y-scroll scrollbar-hide"
+            "max-h-[278px] overflow-y-scroll scrollbar-hide"
           )}
         >
-          <HeadlessNoteEditor noteId={"1690050008847"} />
+          {scribbleLoaded && (
+            <HeadlessNoteEditor
+              noteId={"scribble"}
+              scrollContainerId="home-scribble"
+            />
+          )}
         </div>
       </div>
       <hr className="mb-6" />
