@@ -292,7 +292,7 @@ export const useEditor = ({
 
   const getHashtags = (exclude?: string[]) => {
     exclude = exclude || [];
-    const hashtagsMap: Record<string, Record<string, NoteSummary>> = {};
+    const hashtagsMap: Record<string, Record<string, NoteSummary>> = { "": {} };
     for (const summary of notesToShow) {
       if (exclude.includes(summary.note.id)) continue;
       const re = new RegExp((hashtag as any).pattern, "g");
@@ -304,6 +304,8 @@ export const useEditor = ({
           }
           hashtagsMap[hashtag][summary.note.id] = summary;
         }
+      } else {
+        hashtagsMap[""][summary.note.id] = summary;
       }
     }
     const hashtags: Record<string, NoteSummary[]> = {};

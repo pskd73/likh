@@ -115,8 +115,11 @@ const Browse = ({
 }) => {
   const navigate = useNavigate();
   const { notesToShow, note, getHashtags } = useContext(EditorContext);
-  const hashtags = useMemo<Record<string, NoteSummary[]>>(() => {
-    return getHashtags();
+  const [hashtags, untagged] = useMemo(() => {
+    const all = getHashtags();
+    const untagged = all[""];
+    delete all[""];
+    return [all, untagged];
   }, [notesToShow, note]);
 
   const handleJournal = (hashtag: string) => {
@@ -127,33 +130,42 @@ const Browse = ({
     navigate(`/write/note/${summary.note.id}`);
   };
 
+  const toTitle = (summary: NoteSummary) => textToTitle(summary.note.text, 20);
+
   return (
-    <Folders
-      onFileClick={handleNoteClick}
-      map={hashtags}
-      prefix={""}
-      toTitle={(summary) => textToTitle(summary.note.text, 20)}
-      inject={(prefix, hashtag) => {
-        if (prefix.toLowerCase() === "#journal/") {
-          return (
-            <List>
-              <List.Item
-                withIcon
-                onClickKind={() => handleJournal(prefix + hashtag)}
-              >
-                <List.Item.Icon>
-                  <BiBook />
-                </List.Item.Icon>
-                <span className="font-CrimsonText italic">
-                  Journal it &rarr;
-                </span>
-              </List.Item>
-            </List>
-          );
-        }
-        return null;
-      }}
-    />
+    <>
+      <Folders
+        onFileClick={handleNoteClick}
+        map={hashtags}
+        prefix={""}
+        toTitle={toTitle}
+        inject={(prefix, hashtag) => {
+          if (prefix.toLowerCase() === "#journal/") {
+            return (
+              <List>
+                <List.Item
+                  withIcon
+                  onClickKind={() => handleJournal(prefix + hashtag)}
+                >
+                  <List.Item.Icon>
+                    <BiBook />
+                  </List.Item.Icon>
+                  <span className="font-CrimsonText italic">
+                    Journal it &rarr;
+                  </span>
+                </List.Item>
+              </List>
+            );
+          }
+          return null;
+        }}
+      />
+      <Files
+        onClick={handleNoteClick}
+        files={untagged || []}
+        toTitle={toTitle}
+      />
+    </>
   );
 };
 
