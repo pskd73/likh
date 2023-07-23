@@ -70,6 +70,13 @@ export const TimestampPlugin: RNPluginCreator = () => ({
             replace: `@${iso} `,
           });
         }
+        if (word === "now") {
+          const iso = dtToIso(new Date());
+          suggestions.push({
+            title: `${iso}`,
+            replace: `@${iso} `,
+          });
+        }
         return suggestions;
       },
     },

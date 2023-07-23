@@ -198,7 +198,7 @@ const NewHome = () => {
             </div>
             <div>
               <ClickableTile
-                label="Todo"
+                label="To do list"
                 description={getShortcutText("T")}
                 icon={<TfiCheck />}
                 onClick={handleNewTodo}
@@ -234,7 +234,7 @@ const NewHome = () => {
       <div className="lg:flex space-x-6 mb-6">
         <div className="flex-1">
           <div className="lg:grid lg:grid-cols-2 gap-4 space-y-4 lg:space-y-0">
-            <WithTitle title="Todos" noPadding>
+            <WithTitle title="To dos" noPadding>
               <List>
                 {todos.map((summary, i) => (
                   <List.Item
