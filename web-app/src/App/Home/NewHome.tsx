@@ -139,9 +139,11 @@ const NewHome = () => {
     return { todos, reminders };
   }, [allNotes]);
   const lastEditedNote = useMemo(() => {
-    return Object.values(allNotes).reduce((a: SavedNote | undefined, b) => {
-      return (a?.updated_at || 0) > (b.updated_at || 0) ? a : b;
-    }, undefined);
+    return Object.values(allNotes)
+      .filter((note) => note.id !== "scribble")
+      .reduce((a: SavedNote | undefined, b) => {
+        return (a?.updated_at || 0) > (b.updated_at || 0) ? a : b;
+      }, undefined);
   }, [allNotes]);
   const [scribbleLoaded, setScribbleLoaded] = useState(false);
 

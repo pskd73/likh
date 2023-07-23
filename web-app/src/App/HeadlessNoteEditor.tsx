@@ -8,13 +8,13 @@ import { CustomEditor } from "./Core/Core";
 const HeadlessNoteEditor = ({
   noteId,
   scrollContainerId,
-  blockPlaceholder
+  blockPlaceholder,
 }: {
   noteId: string;
   scrollContainerId?: string;
-  blockPlaceholder?: string
+  blockPlaceholder?: string;
 }) => {
-  const { storage } = useContext(EditorContext);
+  const { updateNote, storage } = useContext(EditorContext);
   const note = useMemoAsync(async () => {
     return storage.getNote(noteId);
   }, [noteId]);
@@ -22,7 +22,6 @@ const HeadlessNoteEditor = ({
   const handleChange = ({
     text,
     serialized,
-    editor,
   }: {
     value: Descendant[];
     text: string;
@@ -34,7 +33,7 @@ const HeadlessNoteEditor = ({
       _note.serialized = serialized;
       _note.text = text;
 
-      storage.saveNote(_note);
+      updateNote(_note);
     }
   };
 
