@@ -232,14 +232,14 @@ const NewHome = () => {
             <div>
               <ClickableTile
                 label="Journal"
-                description={getShortcutText("J")}
+                description={"New daily journal entry"}
                 icon={<BiCalendarHeart />}
               />
             </div>
             <div>
               <ClickableTile
                 label="To do list"
-                description={getShortcutText("T")}
+                description={"Start a new to-do list"}
                 icon={<BiCheckSquare />}
                 onClick={handleNewTodo}
               />
