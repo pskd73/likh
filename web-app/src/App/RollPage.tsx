@@ -16,7 +16,7 @@ import Event from "src/components/Event";
 import { useTitle } from "src/comps/useTitle";
 import NoteEditor from "./NoteEditor";
 
-const EditableNote = () => {
+const RollPage = () => {
   const { setTitle } = useTitle();
   const { noteId, hashtag } = useParams();
   const navigate = useNavigate();
@@ -193,4 +193,4 @@ const EditableNote = () => {
   );
 };
 
-export default EditableNote;
+export default RollPage;

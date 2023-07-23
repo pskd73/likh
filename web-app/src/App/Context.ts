@@ -95,6 +95,9 @@ export const useEditor = ({
     note = { ...note, updated_at: new Date().getTime() };
     storage.saveNote(note);
     setAllNotes({ ...allNotes, [note.id]: note });
+    plugins.forEach(
+      (plugin) => plugin.onNoteChange && plugin.onNoteChange(note)
+    );
   };
 
   const newNote = (note: NewNote, replace: boolean = true) => {
