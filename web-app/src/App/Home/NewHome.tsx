@@ -134,7 +134,10 @@ const NewHome = () => {
       let scribble = await storage.getNote("scribble");
 
       if (!scribble) {
-        await newNote({ id: "scribble", text: "### 📝 Scribble\n- Anything" });
+        await newNote({
+          id: "scribble",
+          text: "- Write your random thoughts\n- ",
+        });
         setScribbleLoaded(true);
       } else {
         setScribbleLoaded(true);
@@ -227,6 +230,7 @@ const NewHome = () => {
             "max-h-[278px] overflow-y-scroll scrollbar-hide"
           )}
         >
+          <div className="text-xl font-medium mb-4">Scribble</div>
           {scribbleLoaded && (
             <HeadlessNoteEditor
               noteId={"scribble"}
