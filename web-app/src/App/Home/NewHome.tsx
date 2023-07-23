@@ -29,6 +29,7 @@ import {
 import useDelayedEffect from "../useDelayedEffect";
 import { SavedNote } from "../type";
 import { isMobile } from "../device";
+import Promotion from "./Promotion";
 
 const DateTime = () => {
   const [time, setTime] = useState(new Date());
@@ -332,6 +333,8 @@ const NewHome = () => {
         </div>
         <div className="w-1/3" />
       </div>
+      <hr className="mb-6" />
+      <Promotion />
     </div>
   );
 };
