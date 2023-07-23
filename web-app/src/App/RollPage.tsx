@@ -55,22 +55,31 @@ const RollPage = () => {
     if (!loaded && hashtag && Object.keys(allNotes).length > 0) {
       setRollHashTag(decodeURIComponent(hashtag));
       const hashtags = getHashtags();
-      const ids = (hashtags[hashtag] || []).map((note) => note.id);
+      const existingNotes = hashtags[hashtag] || [];
+      const ids = existingNotes.map((note) => note.id);
       const _noteIds: Record<string, boolean> = {};
       ids.forEach((id) => {
         _noteIds[id] = true;
       });
 
       if (search.get("new")) {
-        Event.track("new_roll_note");
-        const savedNote = newNote(
-          {
-            text: `${hashtag}\nWrite your journal ...`,
-          },
-          false
-        );
-        if (savedNote) {
-          _noteIds[savedNote.id] = true;
+        const now = moment(new Date());
+        const shouldCreate =
+          existingNotes.filter((note) =>
+            moment(new Date(note.created_at)).isSame(now, "day")
+          ).length === 0;
+
+        if (shouldCreate) {
+          Event.track("new_roll_note");
+          const savedNote = newNote(
+            {
+              text: `${hashtag}\nWrite your journal ...`,
+            },
+            false
+          );
+          if (savedNote) {
+            _noteIds[savedNote.id] = true;
+          }
         }
       }
 
