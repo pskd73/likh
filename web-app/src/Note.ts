@@ -18,10 +18,11 @@ export const textToTitle = (text: string, max?: number) => {
     .parse(cleaned, { mangle: false, headerIds: false })
     .replace(/<[^>]+>/g, "");
 
-  return (
+  cleaned = (
     cleaned.replaceAll("\n", " ").substring(0, max) +
     (cleaned.length > max ? "..." : "")
   );
+  return cleaned || "Note"
 };
 
 export const getNoteTitle = (note: Note) => {

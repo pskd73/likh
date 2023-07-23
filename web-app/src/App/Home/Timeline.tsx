@@ -41,14 +41,14 @@ const Highligher = (word: string) =>
 
 const Timeline = () => {
   const navigate = useNavigate();
-  const { notesToShow, storage } = useContext(EditorContext);
+  const { storage, allNotes } = useContext(EditorContext);
   const [scrollElem, setScrollElem] = useState<Element>();
   const [timelineElems, setTimelineElems] = useState<Element[]>([]);
   const [focusDt, setFocusDt] = useState<string>();
   const focusDtRef = useRef<HTMLDivElement>(null);
   const [asc, setAsc] = useState(false);
   const timeline = useMemo(() => {
-    let timeline = getTimeline(notesToShow);
+    let timeline = getTimeline(Object.values(allNotes));
     if (!asc) {
       timeline = timeline.reverse();
     }
@@ -56,28 +56,28 @@ const Timeline = () => {
       setFocusDt(moment(timeline[0].date).format("YYYY MMMM DD"));
     }
     return timeline;
-  }, [notesToShow, asc]);
+  }, [allNotes, asc]);
 
   useEffect(() => {
     document
-      .getElementById("editor-container")
+      .getElementById("page-container")
       ?.addEventListener("scrollend", handleScroll);
     document
-      .getElementById("editor-container")
+      .getElementById("page-container")
       ?.addEventListener("touchend", handleScroll);
     return () => {
       document
-        .getElementById("editor-container")
+        .getElementById("page-container")
         ?.removeEventListener("scrollend", handleScroll);
       document
-        .getElementById("editor-container")
+        .getElementById("page-container")
         ?.removeEventListener("touchend", handleScroll);
     };
   }, [timelineElems]);
 
   useDelayedEffect(
     () => {
-      setScrollElem(document.getElementById("editor-container")!);
+      setScrollElem(document.getElementById("page-container")!);
       const elems = document.querySelectorAll("li.timeline");
       setTimelineElems(Array.from(elems));
     },
@@ -162,8 +162,8 @@ const Timeline = () => {
       </div>
       <ul className="space-y-2 pb-10">
         {timeline.map((item, i) => {
-          const imgAddresses = getImageAddresses(item.summary.note.text);
-          imgAddresses.forEach((addr) => loadImage(item.summary.note.id, addr));
+          const imgAddresses = getImageAddresses(item.note.text);
+          imgAddresses.forEach((addr) => loadImage(item.note.id, addr));
           return (
             <li
               key={i}
@@ -200,11 +200,11 @@ const Timeline = () => {
                   >
                     <img
                       className={classNames(
-                        `timeline-img-${item.summary.note.id}-${addr}`,
+                        `timeline-img-${item.note.id}-${addr}`,
                         "object-cover",
                         "w-full h-full"
                       )}
-                      src={cachedImages[`${item.summary.note.id}-${addr}`]}
+                      src={cachedImages[`${item.note.id}-${addr}`]}
                       alt="Retro Note"
                     />
                   </div>
@@ -234,10 +234,10 @@ const Timeline = () => {
                     "text-opacity-50 text-xs": item.type === "mention",
                   }
                 )}
-                onClick={() => handleNoteClick(item.summary.note)}
+                onClick={() => handleNoteClick(item.note)}
               >
                 <BiFile />
-                <span>{textToTitle(item.summary.note.text, 20)}</span>
+                <span>{textToTitle(item.note.text, 20)}</span>
               </div>
             </li>
           );

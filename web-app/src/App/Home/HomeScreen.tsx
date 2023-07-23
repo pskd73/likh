@@ -3,20 +3,14 @@ import {
   PropsWithChildren,
   useContext,
   useMemo,
-  useState,
 } from "react";
-import { EditorContext, NoteSummary } from "src/App/Context";
+import { EditorContext } from "src/App/Context";
 import QuickStart from "src/App/Home/QuickStart";
-import Browse from "src/App/Home/Browse";
-import Notes from "src/App/Home/Notes";
-import Reminders from "src/App/Home/Reminders";
-import { SavedNote } from "src/App/type";
 import Promotion from "src/App/Home/Promotion";
 import Calendar from "src/App/Home/HomeCalendar";
 import classNames from "classnames";
 import Logo from "src/comps/Logo";
 import Todos from "src/App/Home/Todos";
-import { ListContainer, Title } from "./Common";
 
 const Col = ({ children, className, ...restProps }: ComponentProps<"div">) => {
   return (
@@ -34,30 +28,15 @@ const Section = ({ children }: PropsWithChildren) => {
 };
 
 const HomeScreen = () => {
-  const {
-    notesToShow,
-    note,
-    getHashtags,
-    setSearchTerm,
-    searchTerm,
-    getTodoNotes,
-  } = useContext(EditorContext);
-  const [seeAll, setSeeAll] = useState(false);
-  const hashtags = useMemo<Record<string, NoteSummary[]>>(() => {
-    return getHashtags();
-  }, [notesToShow, note]);
-  const reminderNotes = useMemo<SavedNote[]>(() => {
-    return notesToShow
-      .filter((n) => !!n.note.reminder)
-      .map((summary) => summary.note);
-  }, [notesToShow]);
-  const todos = useMemo(() => {
+  const { allNotes, getTodoNotes } = useContext(EditorContext);
+  const [todos, notes] = useMemo(() => {
     let _todos = getTodoNotes();
-    _todos = _todos.filter(
-      (summary) => summary.todo!.total - summary.todo!.checked > 0
-    );
-    return _todos.sort((a, b) => b.note.created_at - a.note.created_at);
-  }, [notesToShow]);
+    _todos = _todos.filter((summary) => summary.total - summary.checked > 0);
+    return [
+      _todos.sort((a, b) => b.note.created_at - a.note.created_at),
+      Object.values(allNotes),
+    ];
+  }, [allNotes]);
 
   return (
     <div className="pb-20">
@@ -79,33 +58,9 @@ const HomeScreen = () => {
       <Section>
         <Col>
           <QuickStart />
-          {notesToShow.length > 0 && (
-            <div>
-              <Title>Notes</Title>
-              <ListContainer>
-                <Notes
-                  seeAll={seeAll}
-                  toggleSeeAll={() => setSeeAll((s) => !s)}
-                />
-              </ListContainer>
-            </div>
-          )}
-          {todos.length > 0 && <Todos summaries={todos} />}
+          {todos.length > 0 && <Todos todos={todos} />}
         </Col>
-        <Col>
-          {Object.keys(hashtags).length > 0 && (
-            <div>
-              <Title>Browse</Title>
-              <ListContainer>
-                <Browse />
-              </ListContainer>
-            </div>
-          )}
-          {reminderNotes.length > 0 && (
-            <Reminders reminderNotes={reminderNotes} />
-          )}
-        </Col>
-        <Col>{notesToShow.length > 3 && <Calendar />}</Col>
+        <Col>{notes.length > 3 && <Calendar />}</Col>
       </Section>
       <hr />
       <Section>

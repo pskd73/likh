@@ -5,16 +5,16 @@ import { EditorContext } from "src/App/Context";
 import moment from "moment";
 
 const HomeCalendar = () => {
-  const { notesToShow } = useContext(EditorContext);
+  const { allNotes } = useContext(EditorContext);
 
   const counts = useMemo(() => {
     const _map: Record<string, SavedNote[]> = {};
-    notesToShow.forEach((summary) => {
-      const key = moment(summary.note.created_at).format("YYYY-MM-DD");
+    Object.values(allNotes).forEach((note) => {
+      const key = moment(note.created_at).format("YYYY-MM-DD");
       if (!_map[key]) {
         _map[key] = [];
       }
-      _map[key].push(summary.note);
+      _map[key].push(note);
     });
 
     const counts: Record<string, number> = {};
@@ -22,7 +22,7 @@ const HomeCalendar = () => {
       counts[key] = _map[key].length;
     });
     return counts;
-  }, [notesToShow]);
+  }, [allNotes]);
 
   return (
     <div>

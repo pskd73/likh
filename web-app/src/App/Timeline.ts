@@ -1,10 +1,10 @@
 import moment from "moment";
-import { NoteSummary } from "./Context";
 import { ParsedListText, parseListText } from "./Core/List";
 import { focus } from "src/Note";
+import { SavedNote } from "./type";
 
 export type TimelineItem = {
-  summary: NoteSummary;
+  note: SavedNote;
   date: Date;
   type: "note" | "mention";
   future: boolean;
@@ -45,24 +45,24 @@ const getPara = (text: string, idx: number) => {
   return text.substring(start, end);
 };
 
-export const getTimeline = (summaries: NoteSummary[]) => {
+export const getTimeline = (notes: SavedNote[]) => {
   let items: TimelineItem[] = [];
-  for (const summary of summaries) {
-    const date = new Date(summary.note.created_at);
+  for (const note of notes) {
+    const date = new Date(note.created_at);
     items.push({
-      summary,
+      note,
       date,
       type: "note",
       future: isFuture(date),
     });
 
     for (const match of Array.from(
-      summary.note.text.matchAll(/@(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})/g)
+      note.text.matchAll(/@(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})/g)
     )) {
       if (match.index !== undefined) {
-        const para = getPara(summary.note.text, match.index);
+        const para = getPara(note.text, match.index);
 
-        let { focused } = focus(summary.note.text, match.index, match[0], 400);
+        let { focused } = focus(note.text, match.index, match[0], 400);
 
         const listParsed = parseListText(para);
         if (listParsed) {
@@ -71,7 +71,7 @@ export const getTimeline = (summaries: NoteSummary[]) => {
 
         const date = moment(match[1]).toDate();
         items.push({
-          summary,
+          note,
           date,
           type: "mention",
           future: isFuture(date),

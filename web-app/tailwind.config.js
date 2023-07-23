@@ -10,6 +10,7 @@ module.exports = {
         CourierPrime: ["Courier Prime", "monospace"],
         Inter: ["Inter", "sans-serif"],
         CrimsonText: ["'Crimson Text'", "serif"],
+        SourceSans3: ["'Source Sans 3'", "sans-serif"],
       },
       colors: {},
       typography: (theme) => ({

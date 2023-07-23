@@ -41,11 +41,11 @@ export function useContextMenu(
 
   useEffect(() => {
     document
-      .getElementById("editor-container")
+      .getElementById("page-container")
       ?.addEventListener("scroll", handleScroll);
     return () => {
       document
-        .getElementById("editor-container")
+        .getElementById("page-container")
         ?.removeEventListener("scroll", handleScroll);
     };
   }, [editor, prefixes]);

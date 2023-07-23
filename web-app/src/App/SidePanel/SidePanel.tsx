@@ -23,7 +23,6 @@ import Tooltip from "src/comps/Tooltip";
 import { getShortcutText } from "../useShortcuts";
 import SidePanelBrowse from "./SidePanelBrowse";
 import Settings from "./Settings";
-import List from "../List";
 
 const SidePanel = () => {
   const navigate = useNavigate();
@@ -223,7 +222,7 @@ const SidePanel = () => {
                 <Search searchTerm={searchTerm} onChange={setSearchTerm} />
                 {searchTerm && (
                   <div className="mt-4">
-                    <Notes noToggle seeAll noTitle toggleSeeAll={() => {}} />
+                    <Notes />
                   </div>
                 )}
               </div>

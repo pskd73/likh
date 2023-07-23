@@ -68,7 +68,7 @@ const Item = ({
 
 const Description = ({ children }: PropsWithChildren) => {
   return (
-    <div className="text-xs py-1 ml-5 opacity-50 overflow-hidden">
+    <div className="text-xs py-1 opacity-50 overflow-hidden">
       {children}
     </div>
   );

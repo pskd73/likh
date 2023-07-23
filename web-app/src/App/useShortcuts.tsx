@@ -3,7 +3,7 @@ import { EditorContextType } from "./Context";
 import { openFile, saveNote, zipIt } from "./File";
 import { SavedNote } from "./type";
 import { NavigateFunction, useNavigate } from "react-router-dom";
-import { isMac, isWindows } from "./device";
+import { isMac } from "./device";
 
 const isWindowShortcut = (e: KeyboardEvent) => {
   const mac = e.metaKey && e.ctrlKey;

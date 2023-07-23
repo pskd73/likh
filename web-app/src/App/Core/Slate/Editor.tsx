@@ -61,7 +61,7 @@ import { escape } from "src/util";
 const defaultValue = [
   {
     type: "paragraph",
-    children: [{ text: "New note" }],
+    children: [{ text: "" }],
   },
 ];
 
@@ -97,6 +97,7 @@ const Editor = ({
   elementMakers,
   focus,
   blockPlaceholder,
+  scrollContainerId,
 }: {
   onChange: (val: {
     value: Descendant[];
@@ -125,6 +126,7 @@ const Editor = ({
   elementMakers?: ElementMaker[];
   focus?: number;
   blockPlaceholder?: string;
+  scrollContainerId?: string;
 }) => {
   theme = theme || Themes.Basic;
 
@@ -165,8 +167,8 @@ const Editor = ({
   });
 
   useEffect(() => {
-    if (focus) {
-      focusEnd(editor);
+    if (focus && scrollContainerId) {
+      focusEnd(editor, scrollContainerId);
     }
   }, [focus]);
 

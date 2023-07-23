@@ -17,9 +17,11 @@ import Roll from "./Write/Roll";
 import Landing from "./Landing";
 import Timeline from "./App/Home/Timeline";
 import HomeScreen from "./App/Home/HomeScreen";
-import EditableNote from "./App/EditableNote";
+import NotePage from "./App/NotePage";
 import Storage from "./App/SidePanel/Storage";
 import Init from "./App/Init";
+import NewHome from "./App/Home/NewHome";
+import RollPage from "./App/RollPage";
 
 const router = createBrowserRouter([
   {
@@ -35,16 +37,20 @@ const router = createBrowserRouter([
         element: <HomeScreen />,
       },
       {
+        path: "home",
+        element: <NewHome />,
+      },
+      {
         path: "timeline",
         element: <Timeline />,
       },
       {
         path: "note/:noteId",
-        element: <EditableNote />,
+        element: <NotePage />,
       },
       {
         path: "journal/:hashtag",
-        element: <EditableNote />,
+        element: <RollPage />,
       },
       {
         path: "settings/sync",
@@ -99,7 +105,7 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   // <React.StrictMode>
-    <RouterProvider router={router} />
+  <RouterProvider router={router} />
   // </React.StrictMode>
 );
 

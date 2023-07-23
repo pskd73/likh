@@ -60,7 +60,7 @@ const EditorWindow = () => {
             }}
           >
             <div
-              id="editor-container"
+              id="page-container"
               className="flex-1 p-4 py-8 flex justify-center overflow-y-scroll"
               style={{
                 height: `calc(100vh - ${
