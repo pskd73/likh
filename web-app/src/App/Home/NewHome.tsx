@@ -8,13 +8,6 @@ import {
   useState,
 } from "react";
 import { getShortcutText } from "../useShortcuts";
-import {
-  TfiCheck,
-  TfiPencilAlt,
-  TfiImport,
-  TfiCalendar,
-  TfiArrowRight,
-} from "react-icons/tfi";
 import classNames from "classnames";
 import { ReactElement } from "react-markdown/lib/react-markdown";
 import { useNavigate } from "react-router-dom";
@@ -26,6 +19,13 @@ import { getTimeline } from "../Timeline";
 import Event from "src/components/Event";
 import { openFile } from "../File";
 import HeadlessNoteEditor from "../HeadlessNoteEditor";
+import {
+  BiCalendarHeart,
+  BiCheckSquare,
+  BiChevronRight,
+  BiEdit,
+  BiUpload,
+} from "react-icons/bi";
 
 const DateTime = () => {
   const [time, setTime] = useState(new Date());
@@ -90,7 +90,11 @@ const ClickableTile = ({
       {...restProps}
     >
       <div className="flex items-center">
-        {icon && <div className="text-4xl mr-6">{icon}</div>}
+        {icon && (
+          <div className="text-4xl mr-6 text-primary text-opacity-50">
+            {icon}
+          </div>
+        )}
         <div className="flex flex-col pr-4">
           <div className="text-xl font-medium">{label}</div>
           <div className="text-sm text-primary text-opacity-50">
@@ -98,7 +102,9 @@ const ClickableTile = ({
           </div>
         </div>
       </div>
-      {rightIcon && <div className="text-2xl">{rightIcon}</div>}
+      {rightIcon && (
+        <div className="text-2xl text-primary text-opacity-50">{rightIcon}</div>
+      )}
     </div>
   );
 };
@@ -175,7 +181,7 @@ const NewHome = () => {
                 onClick={() =>
                   navigate(`/write/note/${lastEditedNote.note.id}`)
                 }
-                rightIcon={<TfiArrowRight />}
+                rightIcon={<BiChevronRight />}
               />
             </div>
           )}
@@ -184,7 +190,7 @@ const NewHome = () => {
               <ClickableTile
                 label="Write new"
                 description={getShortcutText("N")}
-                icon={<TfiPencilAlt />}
+                icon={<BiEdit />}
                 onClick={handleNewNote}
               />
             </div>
@@ -192,14 +198,14 @@ const NewHome = () => {
               <ClickableTile
                 label="Journal"
                 description={getShortcutText("J")}
-                icon={<TfiCalendar />}
+                icon={<BiCalendarHeart />}
               />
             </div>
             <div>
               <ClickableTile
                 label="To do list"
                 description={getShortcutText("T")}
-                icon={<TfiCheck />}
+                icon={<BiCheckSquare />}
                 onClick={handleNewTodo}
               />
             </div>
@@ -207,7 +213,7 @@ const NewHome = () => {
               <ClickableTile
                 label="Import"
                 description={getShortcutText("O")}
-                icon={<TfiImport />}
+                icon={<BiUpload />}
                 onClick={handleOpen}
               />
             </div>
