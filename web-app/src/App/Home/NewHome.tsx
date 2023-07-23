@@ -25,7 +25,6 @@ import { textToTitle } from "src/Note";
 import { getTimeline } from "../Timeline";
 import Event from "src/components/Event";
 import { openFile } from "../File";
-import EditableNote from "../EditableNote";
 import HeadlessNoteEditor from "../HeadlessNoteEditor";
 
 const DateTime = () => {
@@ -129,7 +128,7 @@ const NewHome = () => {
       let scribble = await storage.getNote("scribble");
 
       if (!scribble) {
-        await newNote({ id: "scribble", text: "# 📝 Scribble\n- Anything" });
+        await newNote({ id: "scribble", text: "### 📝 Scribble\n- Anything" });
         setScribbleLoaded(true);
       } else {
         setScribbleLoaded(true);

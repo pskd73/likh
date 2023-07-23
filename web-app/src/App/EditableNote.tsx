@@ -33,6 +33,7 @@ const EditableNote = () => {
     setNote,
     setRollHashTag,
     plugins,
+    setNotes,
   } = useContext(EditorContext);
   const scroll = useMiddle(ref, [typewriterMode], {
     typeWriter: typewriterMode,
@@ -46,6 +47,11 @@ const EditableNote = () => {
     if (hashtag) {
       setRollHashTag(decodeURIComponent(hashtag));
     }
+
+    return () => {
+      setNotes({});
+      setRollHashTag("");
+    };
   }, [noteId, hashtag]);
 
   useEffect(() => {
