@@ -2,7 +2,9 @@ import mixpanel from "mixpanel-browser";
 
 mixpanel.init("636dcfc140621d079b6da334d676bd23");
 
-let prod = process.env.NODE_ENV === "production";
+let prod =
+  process.env.NODE_ENV === "production" &&
+  window.location.origin.includes("retronote.app");
 
 let actions = {
   track: (name: string, props?: any) => {
