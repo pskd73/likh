@@ -26,6 +26,7 @@ import {
   BiEdit,
   BiUpload,
 } from "react-icons/bi";
+import useDelayedEffect from "../useDelayedEffect";
 
 const DateTime = () => {
   const [time, setTime] = useState(new Date());
@@ -159,6 +160,22 @@ const NewHome = () => {
     })();
   }, []);
 
+  useDelayedEffect(() => {
+    const containers = Array.from(
+      document.querySelectorAll(".tiles-container")
+    );
+    let height = containers
+      .map((item) => item.getBoundingClientRect().height)
+      .reduce((a, b) => a + b);
+    height += Math.max((containers.length - 1) * 16, 0);
+
+    const scribbleElem = document.getElementById("home-scribble");
+    if (scribbleElem) {
+      scribbleElem.style.height = height + "px";
+      scribbleElem.style.maxHeight = height + "px";
+    }
+  }, [lastEditedNote]);
+
   const handleNewNote = () => {
     Event.track("new_note");
     const note = newNote({
@@ -189,7 +206,7 @@ const NewHome = () => {
       <div className="lg:flex lg:space-x-6 space-y-6 lg:space-y-0 mb-6">
         <div className="flex-1">
           {lastEditedNote && (
-            <div className="mb-4">
+            <div className="mb-4 tiles-container">
               <ClickableTile
                 label={textToTitle(lastEditedNote.note.text)}
                 description={`Edited ${moment(
@@ -203,7 +220,7 @@ const NewHome = () => {
               />
             </div>
           )}
-          <div className="lg:grid lg:grid-cols-2 gap-4 space-y-4 lg:space-y-0">
+          <div className="lg:grid lg:grid-cols-2 gap-4 space-y-4 lg:space-y-0 tiles-container">
             <div>
               <ClickableTile
                 label="Write new"
@@ -242,7 +259,7 @@ const NewHome = () => {
           className={classNames(
             "lg:w-1/3 p-4 border border-primary",
             "border-opacity-20 rounded-md",
-            "max-h-[278px] overflow-y-scroll scrollbar-hide"
+            "overflow-y-scroll scrollbar-hide"
           )}
         >
           <div className="text-xl font-medium mb-4">Scribble</div>
