@@ -17,4 +17,5 @@ export type SavedNote = {
   reminder?: {
     date: number;
   }
+  deleted?: boolean;
 };
