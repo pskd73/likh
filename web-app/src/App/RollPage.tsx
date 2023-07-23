@@ -11,7 +11,7 @@ import { scrollTo } from "src/App/scroll";
 import { textToTitle } from "src/Note";
 import { FiExternalLink } from "react-icons/fi";
 import { SavedNote } from "src/App/type";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import Event from "src/components/Event";
 import { useTitle } from "src/comps/useTitle";
 import NoteEditor from "./NoteEditor";
@@ -19,6 +19,7 @@ import NoteEditor from "./NoteEditor";
 const RollPage = () => {
   const { setTitle } = useTitle();
   const { hashtag } = useParams();
+  const [search] = useSearchParams();
   const navigate = useNavigate();
   const ref = useRef<HTMLDivElement>(null);
   const {
@@ -54,11 +55,25 @@ const RollPage = () => {
     if (!loaded && hashtag && Object.keys(allNotes).length > 0) {
       setRollHashTag(decodeURIComponent(hashtag));
       const hashtags = getHashtags();
-      const ids = hashtags[hashtag].map((note) => note.id);
+      const ids = (hashtags[hashtag] || []).map((note) => note.id);
       const _noteIds: Record<string, boolean> = {};
       ids.forEach((id) => {
         _noteIds[id] = true;
       });
+
+      if (search.get("new")) {
+        Event.track("new_roll_note");
+        const savedNote = newNote(
+          {
+            text: `${hashtag}\nWrite your journal ...`,
+          },
+          false
+        );
+        if (savedNote) {
+          _noteIds[savedNote.id] = true;
+        }
+      }
+
       setNoteIds(_noteIds);
       setLoaded(true);
     }

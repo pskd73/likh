@@ -213,9 +213,7 @@ const NewHome = () => {
                 description={`Edited ${moment(
                   new Date(lastEditedNote.updated_at || 0)
                 ).fromNow()}`}
-                onClick={() =>
-                  navigate(`/write/note/${lastEditedNote.id}`)
-                }
+                onClick={() => navigate(`/write/note/${lastEditedNote.id}`)}
                 rightIcon={<BiChevronRight />}
                 highlight={<span>Continue where you left</span>}
               />
@@ -235,6 +233,13 @@ const NewHome = () => {
                 label="Journal"
                 description={"New daily journal entry"}
                 icon={<BiCalendarHeart />}
+                onClick={() =>
+                  navigate(
+                    `/write/journal/${encodeURIComponent(
+                      "#journal/daily"
+                    )}?new=true`
+                  )
+                }
               />
             </div>
             <div>
@@ -299,9 +304,7 @@ const NewHome = () => {
                   <List.Item
                     key={i}
                     className="text-base text-primary group"
-                    onClick={() =>
-                      navigate(`/write/note/${item.note.id}`)
-                    }
+                    onClick={() => navigate(`/write/note/${item.note.id}`)}
                   >
                     {textToTitle(item.note.text)}
                     <List.Item.Description>
