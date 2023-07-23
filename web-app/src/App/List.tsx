@@ -49,13 +49,13 @@ const Item = ({
       onKeyUp={handleKeyUp}
       tabIndex={0}
       className={twMerge(
-        classNames("py-1 px-2", "rounded text-sm outline-none", {
+        classNames("py-1 px-2", "rounded outline-none", {
           "bg-opacity-10": active,
           "bg-opacity-0": !active,
           "bg-primary transition-colors cursor-pointer": !noHover,
           "hover:bg-opacity-10 focus:bg-opacity-10 active:bg-opacity-20":
             !noHover,
-          "flex space-x-1": withIcon,
+          "flex space-x-2": withIcon,
         }),
         className
       )}

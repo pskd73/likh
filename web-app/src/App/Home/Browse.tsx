@@ -78,11 +78,11 @@ const Folders = <T extends unknown>({
         const exp = expanded.includes(hashtag);
         return (
           <Fragment key={i}>
-            <List.Item key={i} onClickKind={() => toggle(hashtag)}>
-              <div className="flex items-center space-x-1">
+            <List.Item withIcon key={i} onClickKind={() => toggle(hashtag)}>
+              <List.Item.Icon>
                 {exp ? <BiFolderOpen /> : <BiFolder />}
-                <span>{hashtag.replaceAll("#", "")}</span>
-              </div>
+              </List.Item.Icon>
+              <span>{hashtag.replaceAll("#", "")}</span>
             </List.Item>
             {exp && (
               <div className="ml-3 pl-1 border-l border-primary border-opacity-30">
