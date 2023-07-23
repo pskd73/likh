@@ -1,11 +1,11 @@
 import { Fragment, ReactElement, useContext, useMemo, useState } from "react";
 import List from "src/App/List";
-import { ListContainer, Title } from "src/App/Home/Common";
-import { EditorContext, NoteSummary } from "src/App/Context";
+import { EditorContext } from "src/App/Context";
 import { BiFile, BiFolder, BiFolderOpen, BiBook } from "react-icons/bi";
 import { textToTitle } from "src/Note";
-import classNames from "classnames";
 import { useNavigate } from "react-router-dom";
+import { SavedNote } from "../type";
+import { isMobile } from "../device";
 
 const folderize = (paths: string[], prefix: string) => {
   return paths
@@ -108,29 +108,27 @@ const Folders = <T extends unknown>({
   );
 };
 
-const Browse = ({
-  onNoteClick,
-}: {
-  onNoteClick?: (noteSummary: NoteSummary) => void;
-}) => {
+const Browse = () => {
   const navigate = useNavigate();
-  const { notesToShow, note, getHashtags } = useContext(EditorContext);
+  const { allNotes, note, getHashtags, setSideBar } = useContext(EditorContext);
   const [hashtags, untagged] = useMemo(() => {
     const all = getHashtags();
     const untagged = all[""];
     delete all[""];
     return [all, untagged];
-  }, [notesToShow, note]);
+  }, [allNotes, note]);
 
   const handleJournal = (hashtag: string) => {
     navigate(`/write/journal/${encodeURIComponent(hashtag)}`);
+    isMobile && setSideBar(undefined);
   };
 
-  const handleNoteClick = (summary: NoteSummary) => {
-    navigate(`/write/note/${summary.note.id}`);
+  const handleNoteClick = (note: SavedNote) => {
+    navigate(`/write/note/${note.id}`);
+    isMobile && setSideBar(undefined);
   };
 
-  const toTitle = (summary: NoteSummary) => textToTitle(summary.note.text, 20);
+  const toTitle = (note: SavedNote) => textToTitle(note.text, 20);
 
   return (
     <>

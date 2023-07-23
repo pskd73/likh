@@ -13,7 +13,7 @@ import { ReactElement } from "react-markdown/lib/react-markdown";
 import { useNavigate } from "react-router-dom";
 import List from "../List";
 import { WithTitle } from "../SidePanel/Common";
-import { EditorContext, NoteSummary } from "../Context";
+import { EditorContext } from "../Context";
 import { textToTitle } from "src/Note";
 import { getTimeline } from "../Timeline";
 import Event from "src/components/Event";
@@ -27,6 +27,7 @@ import {
   BiUpload,
 } from "react-icons/bi";
 import useDelayedEffect from "../useDelayedEffect";
+import { SavedNote } from "../type";
 
 const DateTime = () => {
   const [time, setTime] = useState(new Date());
@@ -125,23 +126,23 @@ const ClickableTile = ({
 };
 
 const NewHome = () => {
-  const { notesToShow, getTodoNotes, newNote, storage } =
+  const { allNotes, getTodoNotes, newNote, storage } =
     useContext(EditorContext);
   const navigate = useNavigate();
   const { todos, reminders } = useMemo(() => {
     let _todos = getTodoNotes();
-    _todos = _todos.filter(
-      (summary) => summary.todo!.total - summary.todo!.checked > 0
-    );
+    _todos = _todos.filter((summary) => summary.total - summary.checked > 0);
     const todos = _todos.sort((a, b) => b.note.created_at - a.note.created_at);
-    const reminders = getTimeline(notesToShow).filter((item) => item.future);
+    const reminders = getTimeline(Object.values(allNotes)).filter(
+      (item) => item.future
+    );
     return { todos, reminders };
-  }, [notesToShow]);
+  }, [allNotes]);
   const lastEditedNote = useMemo(() => {
-    return notesToShow.reduce((a: NoteSummary | undefined, b) => {
-      return (a?.note.updated_at || 0) > (b.note.updated_at || 0) ? a : b;
+    return Object.values(allNotes).reduce((a: SavedNote | undefined, b) => {
+      return (a?.updated_at || 0) > (b.updated_at || 0) ? a : b;
     }, undefined);
-  }, [notesToShow]);
+  }, [allNotes]);
   const [scribbleLoaded, setScribbleLoaded] = useState(false);
 
   useEffect(() => {
@@ -208,12 +209,12 @@ const NewHome = () => {
           {lastEditedNote && (
             <div className="mb-4 tiles-container">
               <ClickableTile
-                label={textToTitle(lastEditedNote.note.text)}
+                label={textToTitle(lastEditedNote.text)}
                 description={`Edited ${moment(
-                  new Date(lastEditedNote.note.updated_at || 0)
+                  new Date(lastEditedNote.updated_at || 0)
                 ).fromNow()}`}
                 onClick={() =>
-                  navigate(`/write/note/${lastEditedNote.note.id}`)
+                  navigate(`/write/note/${lastEditedNote.id}`)
                 }
                 rightIcon={<BiChevronRight />}
                 highlight={<span>Continue where you left</span>}
@@ -278,15 +279,15 @@ const NewHome = () => {
           <div className="lg:grid lg:grid-cols-2 gap-4 space-y-4 lg:space-y-0">
             <WithTitle title="To dos" noPadding>
               <List>
-                {todos.map((summary, i) => (
+                {todos.map((todo, i) => (
                   <List.Item
                     key={i}
                     className="text-base text-primary"
-                    onClick={() => navigate(`/write/note/${summary.note.id}`)}
+                    onClick={() => navigate(`/write/note/${todo.note.id}`)}
                   >
-                    {textToTitle(summary.note.text)}
+                    {textToTitle(todo.note.text)}
                     <List.Item.Description>
-                      [{summary.todo?.checked}/{summary.todo?.total}]
+                      [{todo?.checked}/{todo?.total}]
                     </List.Item.Description>
                   </List.Item>
                 ))}
@@ -299,10 +300,10 @@ const NewHome = () => {
                     key={i}
                     className="text-base text-primary group"
                     onClick={() =>
-                      navigate(`/write/note/${item.summary.note.id}`)
+                      navigate(`/write/note/${item.note.id}`)
                     }
                   >
-                    {textToTitle(item.summary.note.text)}
+                    {textToTitle(item.note.text)}
                     <List.Item.Description>
                       <span className="group-hover:hidden">
                         {moment(item.date).fromNow()}

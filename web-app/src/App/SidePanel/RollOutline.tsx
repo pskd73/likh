@@ -11,11 +11,12 @@ import { textToTitle } from "src/Note";
 import Event from "src/components/Event";
 
 const RollOutline = () => {
-  const { notes, newNote, rollHashTag } = useContext(EditorContext);
+  const { noteIds, allNotes, newNote, rollHashTag } = useContext(EditorContext);
 
   const notesMap = useMemo(() => {
     const _map: Record<string, SavedNote[]> = {};
-    Object.values(notes).forEach((note) => {
+    Object.keys(noteIds).forEach((noteId) => {
+      const note = allNotes[noteId]
       const key = moment(note.created_at).format("YYYY-MM-DD");
       if (!_map[key]) {
         _map[key] = [];
@@ -23,7 +24,7 @@ const RollOutline = () => {
       _map[key].push(note);
     });
     return _map;
-  }, [notes]);
+  }, [noteIds]);
 
   const notesCounts = useMemo(() => {
     const counts: Record<string, number> = {};

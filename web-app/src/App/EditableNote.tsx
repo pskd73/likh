@@ -1,5 +1,5 @@
 import { Descendant } from "slate";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useMemo, useRef } from "react";
 import { EditorContext } from "src/App/Context";
 import { useMiddle } from "src/comps/useMiddle";
 import { CustomEditor } from "src/App/Core/Core";
@@ -22,7 +22,8 @@ const EditableNote = () => {
   const navigate = useNavigate();
   const ref = useRef<HTMLDivElement>(null);
   const {
-    notes,
+    allNotes,
+    noteIds,
     note,
     updateNote,
     typewriterMode,
@@ -33,11 +34,15 @@ const EditableNote = () => {
     setNote,
     setRollHashTag,
     plugins,
-    setNotes,
+    setNoteIds,
   } = useContext(EditorContext);
   const scroll = useMiddle(ref, [typewriterMode], {
     typeWriter: typewriterMode,
   });
+  const notes = useMemo(
+    () => Object.keys(noteIds).map((id) => allNotes[id]),
+    [noteIds]
+  );
 
   useEffect(() => {
     if (noteId) {
@@ -49,7 +54,7 @@ const EditableNote = () => {
     }
 
     return () => {
-      setNotes({});
+      setNoteIds({});
       setRollHashTag("");
     };
   }, [noteId, hashtag]);
@@ -96,7 +101,7 @@ const EditableNote = () => {
       editor: CustomEditor;
     }
   ) => {
-    const updatedNote = { ...notes[id] };
+    const updatedNote = allNotes[id];
     updatedNote.text = text;
     updatedNote.serialized = serialized;
     updateNote(updatedNote);
@@ -139,7 +144,7 @@ const EditableNote = () => {
           return (
             <div
               className={classNames(
-                `note-date-${moment(notes[id].created_at).format(
+                `note-date-${moment(_note.created_at).format(
                   "YYYY-MM-DD"
                 )}`,
                 `note-${id}`,
@@ -159,7 +164,7 @@ const EditableNote = () => {
                     <FiExternalLink />
                   </Button>
                   <span>
-                    {moment(new Date(notes[id].created_at)).format(
+                    {moment(new Date(_note.created_at)).format(
                       "MMMM Do YYYY, h:mm:ss a"
                     )}
                   </span>

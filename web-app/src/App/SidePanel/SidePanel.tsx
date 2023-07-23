@@ -222,7 +222,7 @@ const SidePanel = () => {
                 <Search searchTerm={searchTerm} onChange={setSearchTerm} />
                 {searchTerm && (
                   <div className="mt-4">
-                    <Notes noToggle seeAll noTitle toggleSeeAll={() => {}} />
+                    <Notes />
                   </div>
                 )}
               </div>
