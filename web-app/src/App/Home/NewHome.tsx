@@ -208,7 +208,12 @@ const NewHome = () => {
 
   return (
     <div className="pb-10">
-      <div className="flex justify-between mb-10 items-center">
+      <div
+        className={classNames(
+          "flex flex-col lg:flex-row justify-between",
+          "mb-10 items-center space-y-4 lg:space-y-0"
+        )}
+      >
         <div className="text-3xl font-CrimsonText flex items-center space-x-4">
           <div className="fill-primary w-10 max-h-full">
             <Logo />
