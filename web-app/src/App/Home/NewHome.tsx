@@ -280,47 +280,51 @@ const NewHome = () => {
           )}
         </div>
       </div>
-      <hr className="mb-6" />
+      {todos.length || reminders.length ? <hr className="mb-6" /> : null}
       <div className="lg:flex space-x-6 mb-6">
         <div className="flex-1">
           <div className="lg:grid lg:grid-cols-2 gap-4 space-y-4 lg:space-y-0">
-            <WithTitle title="To dos" noPadding>
-              <List>
-                {todos.map((todo, i) => (
-                  <List.Item
-                    key={i}
-                    className="text-base text-primary"
-                    onClick={() => navigate(`/write/note/${todo.note.id}`)}
-                  >
-                    {textToTitle(todo.note.text)}
-                    <List.Item.Description>
-                      [{todo?.checked}/{todo?.total}]
-                    </List.Item.Description>
-                  </List.Item>
-                ))}
-              </List>
-            </WithTitle>
-            <WithTitle title="Reminders" noPadding>
-              <List>
-                {reminders.map((item, i) => (
-                  <List.Item
-                    key={i}
-                    className="text-base text-primary group"
-                    onClick={() => navigate(`/write/note/${item.note.id}`)}
-                  >
-                    {textToTitle(item.note.text)}
-                    <List.Item.Description>
-                      <span className="group-hover:hidden">
-                        {moment(item.date).fromNow()}
-                      </span>
-                      <span className="hidden group-hover:inline-block">
-                        {moment(item.date).format("DD/MM/YYYY hh:mm:ss")}
-                      </span>
-                    </List.Item.Description>
-                  </List.Item>
-                ))}
-              </List>
-            </WithTitle>
+            {todos.length > 0 && (
+              <WithTitle title="To dos" noPadding>
+                <List>
+                  {todos.map((todo, i) => (
+                    <List.Item
+                      key={i}
+                      className="text-base text-primary"
+                      onClick={() => navigate(`/write/note/${todo.note.id}`)}
+                    >
+                      {textToTitle(todo.note.text)}
+                      <List.Item.Description>
+                        [{todo?.checked}/{todo?.total}]
+                      </List.Item.Description>
+                    </List.Item>
+                  ))}
+                </List>
+              </WithTitle>
+            )}
+            {reminders.length > 0 && (
+              <WithTitle title="Reminders" noPadding>
+                <List>
+                  {reminders.map((item, i) => (
+                    <List.Item
+                      key={i}
+                      className="text-base text-primary group"
+                      onClick={() => navigate(`/write/note/${item.note.id}`)}
+                    >
+                      {textToTitle(item.note.text)}
+                      <List.Item.Description>
+                        <span className="group-hover:hidden">
+                          {moment(item.date).fromNow()}
+                        </span>
+                        <span className="hidden group-hover:inline-block">
+                          {moment(item.date).format("DD/MM/YYYY hh:mm:ss")}
+                        </span>
+                      </List.Item.Description>
+                    </List.Item>
+                  ))}
+                </List>
+              </WithTitle>
+            )}
           </div>
         </div>
         <div className="w-1/3" />
