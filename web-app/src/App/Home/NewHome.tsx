@@ -28,6 +28,7 @@ import {
 } from "react-icons/bi";
 import useDelayedEffect from "../useDelayedEffect";
 import { SavedNote } from "../type";
+import { isMobile } from "../device";
 
 const DateTime = () => {
   const [time, setTime] = useState(new Date());
@@ -172,6 +173,8 @@ const NewHome = () => {
       .reduce((a, b) => a + b);
     height += Math.max((containers.length - 1) * 16, 0);
 
+    height = isMobile ? 300 : height;
+
     const scribbleElem = document.getElementById("home-scribble");
     if (scribbleElem) {
       scribbleElem.style.height = height + "px";
@@ -202,7 +205,7 @@ const NewHome = () => {
   };
 
   return (
-    <div>
+    <div className="pb-10">
       <div className="flex justify-end mb-10">
         <DateTime />
       </div>
