@@ -30,6 +30,7 @@ import useDelayedEffect from "../useDelayedEffect";
 import { SavedNote } from "../type";
 import { isMobile } from "../device";
 import Promotion from "./Promotion";
+import Logo from "src/comps/Logo";
 
 const DateTime = () => {
   const [time, setTime] = useState(new Date());
@@ -207,7 +208,13 @@ const NewHome = () => {
 
   return (
     <div className="pb-10">
-      <div className="flex justify-end mb-10">
+      <div className="flex justify-between mb-10 items-center">
+        <div className="text-3xl font-CrimsonText flex items-center space-x-4">
+          <div className="fill-primary w-10 max-h-full">
+            <Logo />
+          </div>
+          <span>Retro Note</span>
+        </div>
         <DateTime />
       </div>
       <div className="lg:flex lg:space-x-6 space-y-6 lg:space-y-0 mb-6">
@@ -284,7 +291,7 @@ const NewHome = () => {
           )}
         </div>
       </div>
-      {todos.length || reminders.length ? <hr className="mb-6" /> : null}
+      {todos.length || reminders.length ? <hr className="my-12" /> : null}
       <div className="lg:flex space-x-6 mb-6">
         <div className="flex-1">
           <div className="lg:grid lg:grid-cols-2 gap-4 space-y-4 lg:space-y-0">
@@ -333,7 +340,7 @@ const NewHome = () => {
         </div>
         <div className="w-1/3" />
       </div>
-      <hr className="mb-6" />
+      <hr className="my-12" />
       <Promotion />
     </div>
   );

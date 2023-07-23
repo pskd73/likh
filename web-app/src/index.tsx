@@ -16,7 +16,6 @@ import WriteV2 from "./Write";
 import Roll from "./Write/Roll";
 import Landing from "./Landing";
 import Timeline from "./App/Home/Timeline";
-import HomeScreen from "./App/Home/HomeScreen";
 import NotePage from "./App/NotePage";
 import Storage from "./App/SidePanel/Storage";
 import Init from "./App/Init";
@@ -34,10 +33,6 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <HomeScreen />,
-      },
-      {
-        path: "home",
         element: <NewHome />,
       },
       {
