@@ -49,18 +49,27 @@ export const useEditor = ({
   const [themeName, setThemeName] = useThemeName<string>("Basic");
   const [colorTheme, setColorTheme] = useColorTheme<string>("base");
   const [allNotes, setAllNotes] = useState<Record<string, SavedNote>>({});
+  const [trashedNotes, setTrashedNotes] = useState<Record<string, SavedNote>>(
+    {}
+  );
   const [editorFocus, setEditorFocus] = useState<number>();
 
   useEffect(() => {
     (async () => {
       let _notes: Record<string, SavedNote> = {};
+      let _trashed: Record<string, SavedNote> = {};
       for (const meta of storage.notes) {
         const note = await storage.getNote(meta.id);
         if (note) {
-          _notes[meta.id] = note;
+          if (!note.deleted) {
+            _notes[meta.id] = note;
+          } else {
+            _trashed[meta.id] = note;
+          }
         }
       }
       setAllNotes(_notes);
+      setTrashedNotes(_trashed);
     })();
   }, [storage.notes]);
 
@@ -95,6 +104,11 @@ export const useEditor = ({
     note = { ...note, updated_at: new Date().getTime() };
     storage.saveNote(note);
     setAllNotes({ ...allNotes, [note.id]: note });
+    if (trashedNotes[note.id] && !note.deleted) {
+      const _trashed = { ...trashedNotes };
+      delete _trashed[note.id];
+      setTrashedNotes(_trashed);
+    }
     plugins.forEach(
       (plugin) => plugin.onNoteChange && plugin.onNoteChange(note)
     );
@@ -107,17 +121,32 @@ export const useEditor = ({
     return savedNote;
   };
 
-  const deleteNote = async (noteId: string) => {
-    await storage.delete(noteId);
-    if (allNotes[noteId]) {
-      const newNotes = { ...allNotes };
-      delete newNotes[noteId];
-      setAllNotes(newNotes);
-    }
-    if (noteIds[noteId]) {
-      const newNotes = { ...noteIds };
-      delete newNotes[noteId];
-      setNoteIds(newNotes);
+  const deleteNote = async (noteId: string, hard = false) => {
+    if (hard) {
+      if (allNotes[noteId]) {
+        const newNotes = { ...allNotes };
+        delete newNotes[noteId];
+        setAllNotes(newNotes);
+      }
+      if (noteIds[noteId]) {
+        const newNotes = { ...noteIds };
+        delete newNotes[noteId];
+        setNoteIds(newNotes);
+      }
+      await storage.delete(noteId);
+    } else {
+      updateNote({ ...allNotes[noteId], deleted: true });
+      setTrashedNotes({ ...trashedNotes, [noteId]: allNotes[noteId] });
+      if (allNotes[noteId]) {
+        const newNotes = { ...allNotes };
+        delete newNotes[noteId];
+        setAllNotes(newNotes);
+      }
+      if (noteIds[noteId]) {
+        const newNotes = { ...noteIds };
+        delete newNotes[noteId];
+        setNoteIds(newNotes);
+      }
     }
   };
 
@@ -273,5 +302,6 @@ export const useEditor = ({
       : undefined,
 
     allNotes,
+    trashedNotes,
   };
 };

@@ -30,7 +30,9 @@ const Delete = () => {
   }
   return (
     <div className="text-sm flex items-center space-x-2">
-      <span className="text-xs">Sure?</span>
+      <span className="text-xs">
+        {note?.deleted ? "Permanently?" : "Sure?"}
+      </span>
       <div className="space-x-1">
         <Button onClick={handleConfirm}>
           <BiCheck />

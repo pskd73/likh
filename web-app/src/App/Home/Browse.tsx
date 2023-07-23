@@ -1,11 +1,19 @@
 import { Fragment, ReactElement, useContext, useMemo, useState } from "react";
 import List from "src/App/List";
 import { EditorContext } from "src/App/Context";
-import { BiFile, BiFolder, BiFolderOpen, BiBook } from "react-icons/bi";
+import {
+  BiFile,
+  BiFolder,
+  BiFolderOpen,
+  BiBook,
+  BiTrash,
+  BiUndo,
+} from "react-icons/bi";
 import { textToTitle } from "src/Note";
 import { useNavigate } from "react-router-dom";
 import { SavedNote } from "../type";
 import { isMobile } from "../device";
+import Button from "src/comps/Button";
 
 const folderize = (paths: string[], prefix: string) => {
   return paths
@@ -110,13 +118,22 @@ const Folders = <T extends unknown>({
 
 const Browse = () => {
   const navigate = useNavigate();
-  const { allNotes, note, getHashtags, setSideBar } = useContext(EditorContext);
+  const {
+    allNotes,
+    note,
+    getHashtags,
+    setSideBar,
+    trashedNotes,
+    updateNote,
+    deleteNote,
+  } = useContext(EditorContext);
   const [hashtags, untagged] = useMemo(() => {
     const all = getHashtags();
     const untagged = all[""];
     delete all[""];
     return [all, untagged];
   }, [allNotes, note]);
+  const [trash, setTrash] = useState(false);
 
   const handleJournal = (hashtag: string) => {
     navigate(`/write/journal/${encodeURIComponent(hashtag)}`);
@@ -126,6 +143,14 @@ const Browse = () => {
   const handleNoteClick = (note: SavedNote) => {
     navigate(`/write/note/${note.id}`);
     isMobile && setSideBar(undefined);
+  };
+
+  const handleUndelete = (note: SavedNote) => {
+    updateNote({ ...note, deleted: false });
+  };
+
+  const handleDelete = (note: SavedNote) => {
+    deleteNote(note.id, true);
   };
 
   const toTitle = (note: SavedNote) => textToTitle(note.text, 20);
@@ -158,6 +183,40 @@ const Browse = () => {
           return null;
         }}
       />
+      <List>
+        <List.Item withIcon onClickKind={() => setTrash((t) => !t)}>
+          <List.Item.Icon>
+            <BiTrash />
+          </List.Item.Icon>
+          <span>Trash</span>
+        </List.Item>
+        {trash && (
+          <div className="ml-3 pl-1 border-l border-primary border-opacity-30">
+            <List>
+              {Object.values(trashedNotes).map((note, i) => (
+                <List.Item
+                  key={i}
+                  noHover
+                  className="flex items-center justify-between group"
+                >
+                  <div className="flex items-center space-x-1">
+                    <BiFile />
+                    <span>{textToTitle(note.text, 13)}</span>
+                  </div>
+                  <div className="group-hover:flex items-center space-x-1 hidden">
+                    <Button onClick={() => handleUndelete(note)}>
+                      <BiUndo />
+                    </Button>
+                    <Button onClick={() => handleDelete(note)}>
+                      <BiTrash />
+                    </Button>
+                  </div>
+                </List.Item>
+              ))}
+            </List>
+          </div>
+        )}
+      </List>
       <Files
         onClick={handleNoteClick}
         files={untagged || []}
