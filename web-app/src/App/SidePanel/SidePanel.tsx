@@ -23,7 +23,6 @@ import Tooltip from "src/comps/Tooltip";
 import { getShortcutText } from "../useShortcuts";
 import SidePanelBrowse from "./SidePanelBrowse";
 import Settings from "./Settings";
-import List from "../List";
 
 const SidePanel = () => {
   const navigate = useNavigate();
@@ -41,7 +40,7 @@ const SidePanel = () => {
 
   const handleHome = () => {
     home();
-    navigate("/write/home");
+    navigate("/write");
   };
 
   const handleZip = async () => {

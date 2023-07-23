@@ -61,7 +61,7 @@ import { escape } from "src/util";
 const defaultValue = [
   {
     type: "paragraph",
-    children: [{ text: "New note" }],
+    children: [{ text: "" }],
   },
 ];
 

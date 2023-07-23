@@ -69,12 +69,14 @@ const ClickableTile = ({
   icon,
   rightIcon,
   className,
+  highlight,
   ...restProps
 }: ComponentProps<"div"> & {
   label: string;
   description: string;
   icon?: ReactElement;
   rightIcon?: ReactElement;
+  highlight?: ReactElement;
 }) => {
   return (
     <div
@@ -96,6 +98,18 @@ const ClickableTile = ({
           </div>
         )}
         <div className="flex flex-col pr-4">
+          {highlight && (
+            <div className="mb-3">
+              <span
+                className={classNames(
+                  "text-xs rounded-md py-1 px-2",
+                  "bg-primary bg-opacity-50 text-base"
+                )}
+              >
+                {highlight}
+              </span>
+            </div>
+          )}
           <div className="text-xl font-medium">{label}</div>
           <div className="text-sm text-primary text-opacity-50">
             {description}
@@ -136,7 +150,7 @@ const NewHome = () => {
       if (!scribble) {
         await newNote({
           id: "scribble",
-          text: "- Write your random thoughts\n- ",
+          text: "",
         });
         setScribbleLoaded(true);
       } else {
@@ -178,13 +192,14 @@ const NewHome = () => {
             <div className="mb-4">
               <ClickableTile
                 label={textToTitle(lastEditedNote.note.text)}
-                description={moment(
+                description={`Edited ${moment(
                   new Date(lastEditedNote.note.updated_at || 0)
-                ).fromNow()}
+                ).fromNow()}`}
                 onClick={() =>
                   navigate(`/write/note/${lastEditedNote.note.id}`)
                 }
                 rightIcon={<BiChevronRight />}
+                highlight={<span>Continue where you left</span>}
               />
             </div>
           )}
@@ -235,6 +250,7 @@ const NewHome = () => {
             <HeadlessNoteEditor
               noteId={"scribble"}
               scrollContainerId="home-scribble"
+              blockPlaceholder="Write down before you forget"
             />
           )}
         </div>

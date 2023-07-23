@@ -16,6 +16,7 @@ const NoteEditor = ({
   note,
   onChange,
   scrollContainerId,
+  blockPlaceholder,
 }: {
   note: SavedNote;
   onChange: (change: {
@@ -25,6 +26,7 @@ const NoteEditor = ({
     editor: CustomEditor;
   }) => void;
   scrollContainerId?: string;
+  blockPlaceholder?: string;
 }) => {
   const navigate = useNavigate();
   const {
@@ -164,7 +166,7 @@ const NoteEditor = ({
       elementMakers={plugins
         .filter((p) => p.elementMaker)
         .map((p) => p.elementMaker!)}
-      blockPlaceholder={`Type "/" for options`}
+      blockPlaceholder={blockPlaceholder || `Type "/" for options`}
       contextMenuBoundaries={plugins
         .filter((p) => p.boundaries)
         .map((p) => p.boundaries!)

@@ -8,9 +8,11 @@ import { CustomEditor } from "./Core/Core";
 const HeadlessNoteEditor = ({
   noteId,
   scrollContainerId,
+  blockPlaceholder
 }: {
   noteId: string;
   scrollContainerId?: string;
+  blockPlaceholder?: string
 }) => {
   const { storage } = useContext(EditorContext);
   const note = useMemoAsync(async () => {
@@ -43,6 +45,7 @@ const HeadlessNoteEditor = ({
       onChange={handleChange}
       note={note}
       scrollContainerId={scrollContainerId}
+      blockPlaceholder={blockPlaceholder}
     />
   );
 };
