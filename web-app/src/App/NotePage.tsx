@@ -28,7 +28,12 @@ const NotePage = () => {
 
   useEffect(() => {
     if (noteId) {
-      setNote({ id: noteId });
+      const container = document.getElementById("page-container");
+      container!.style.transition = "opacity 0.1s";
+      container!.style.opacity = "0";
+      setTimeout(() => {
+        setNote({ id: noteId });
+      }, 100);
     }
 
     return () => {

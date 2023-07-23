@@ -35,9 +35,16 @@ export function getNodeText(
 }
 
 export function focusEnd(editor: CustomEditor, scrollContainerId: string) {
+  const container = document.getElementById(scrollContainerId);
+  if (!container) return;
+
+  setTimeout(() => {
+    container.scrollTo({ top: 100000000, behavior: "auto" });
+  }, 100);
+
   setTimeout(() => {
     (document.querySelector("#editorContainer > div") as any)?.focus();
-  }, 0);
+  }, 200);
 
   setTimeout(() => {
     try {
@@ -46,13 +53,11 @@ export function focusEnd(editor: CustomEditor, scrollContainerId: string) {
         anchor: end,
         focus: end,
       });
-      document
-        .getElementById(scrollContainerId)
-        ?.scrollTo({ top: 100000000, behavior: "smooth" });
+      container.style.opacity = "1";
     } catch {
       console.warn("Unable to focus");
     }
-  }, 100);
+  }, 250);
 }
 
 export function getNextElementPath(at: number[]) {
