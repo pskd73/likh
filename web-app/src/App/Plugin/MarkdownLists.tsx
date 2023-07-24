@@ -8,16 +8,16 @@ const MarkdownListsPlugin: RNPluginCreator = () => {
     version: 1,
     grammer: () => ({
       bulletUnordered: {
-        pattern: /^$ *[-*+]( \[[ x]\])? /m,
+        pattern: /^ *[-*+]( \[[ x]\])? /m,
         inside: {
-          bullet: /^$ *[-*+]( \[[ x]\])?/,
+          bullet: /^ *[-*+]( \[[ x]\])?/,
           space: / $/,
         },
       },
       bulletOrdered: {
-        pattern: /^$ *[\d]+\. /m,
+        pattern: /^ *[\d]+\. /m,
         inside: {
-          bullet: /^$ *[\d]+\./,
+          bullet: /^ *[\d]+\./,
           space: / $/,
         },
       },
