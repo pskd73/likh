@@ -66,9 +66,19 @@ const Item = ({
   );
 };
 
-const Description = ({ children }: PropsWithChildren) => {
+const Description = ({
+  className,
+  children,
+  ...restProps
+}: ComponentProps<"div">) => {
   return (
-    <div className="text-xs py-1 opacity-50 overflow-hidden">
+    <div
+      className={classNames(
+        "text-xs py-1 opacity-50 overflow-hidden",
+        className
+      )}
+      {...restProps}
+    >
       {children}
     </div>
   );

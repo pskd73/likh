@@ -20,6 +20,7 @@ import Event from "src/components/Event";
 import { openFile } from "../File";
 import HeadlessNoteEditor from "../HeadlessNoteEditor";
 import {
+  BiAlarm,
   BiCalendarHeart,
   BiCheckSquare,
   BiChevronRight,
@@ -310,8 +311,22 @@ const NewHome = () => {
                       onClick={() => navigate(`/write/note/${todo.note.id}`)}
                     >
                       {textToTitle(todo.note.text)}
-                      <List.Item.Description>
-                        [{todo?.checked}/{todo?.total}]
+                      <List.Item.Description className="flex items-center space-x-2">
+                        <div
+                          className="bg-primary bg-opacity-20 rounded overflow-hidden"
+                          style={{ height: 10, width: 100 }}
+                        >
+                          <div
+                            className="bg-primary bg-opacity-100"
+                            style={{
+                              width: (todo.checked / todo.total) * 100,
+                              height: "100%",
+                            }}
+                          />
+                        </div>
+                        <span>
+                          {todo?.checked}/{todo?.total}
+                        </span>
                       </List.Item.Description>
                     </List.Item>
                   ))}
@@ -328,7 +343,8 @@ const NewHome = () => {
                       onClick={() => navigate(`/write/note/${item.note.id}`)}
                     >
                       {textToTitle(item.note.text)}
-                      <List.Item.Description>
+                      <List.Item.Description className="flex items-center space-x-2">
+                        <BiAlarm />
                         <span className="group-hover:hidden">
                           {moment(item.date).fromNow()}
                         </span>
