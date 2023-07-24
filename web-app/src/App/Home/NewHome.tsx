@@ -137,9 +137,13 @@ const NewHome = () => {
     let _todos = getTodoNotes();
     _todos = _todos.filter((summary) => summary.total - summary.checked > 0);
     const todos = _todos.sort((a, b) => b.note.created_at - a.note.created_at);
-    const reminders = getTimeline(Object.values(allNotes)).filter(
-      (item) => item.future
-    );
+    const reminders = getTimeline(Object.values(allNotes))
+      .filter((item) => item.future)
+      .map((item) => ({
+        noteId: item.note.id,
+        text: item.listParsed ? item.listParsed.content : item.note.text,
+        date: item.date,
+      }));
     return { todos, reminders };
   }, [allNotes]);
   const lastEditedNote = useMemo(() => {
@@ -310,7 +314,7 @@ const NewHome = () => {
                       className="text-base text-primary"
                       onClick={() => navigate(`/write/note/${todo.note.id}`)}
                     >
-                      {textToTitle(todo.note.text)}
+                      {textToTitle(todo.note.text, 26)}
                       <List.Item.Description className="flex items-center space-x-2">
                         <div
                           className="bg-primary bg-opacity-20 rounded overflow-hidden"
@@ -340,9 +344,9 @@ const NewHome = () => {
                     <List.Item
                       key={i}
                       className="text-base text-primary group"
-                      onClick={() => navigate(`/write/note/${item.note.id}`)}
+                      onClick={() => navigate(`/write/note/${item.noteId}`)}
                     >
-                      {textToTitle(item.note.text)}
+                      {textToTitle(item.text, 26)}
                       <List.Item.Description className="flex items-center space-x-2">
                         <BiAlarm />
                         <span className="group-hover:hidden">
