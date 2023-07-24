@@ -3,11 +3,10 @@ import List from "src/App/List";
 import { EditorContext } from "src/App/Context";
 import {
   BiFile,
-  BiFolder,
-  BiFolderOpen,
   BiBook,
   BiTrash,
   BiUndo,
+  BiHash,
 } from "react-icons/bi";
 import { textToTitle } from "src/Note";
 import { useNavigate } from "react-router-dom";
@@ -88,7 +87,7 @@ const Folders = <T extends unknown>({
           <Fragment key={i}>
             <List.Item withIcon key={i} onClickKind={() => toggle(hashtag)}>
               <List.Item.Icon>
-                {exp ? <BiFolderOpen /> : <BiFolder />}
+                <BiHash/>
               </List.Item.Icon>
               <span>{hashtag.replaceAll("#", "")}</span>
             </List.Item>

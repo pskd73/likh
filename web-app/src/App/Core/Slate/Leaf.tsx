@@ -2,7 +2,6 @@ import { ReactElement } from "react";
 import { Theme } from "src/App/Theme";
 import classNames from "classnames";
 import slugify from "slugify";
-import { BiFolder } from "react-icons/bi";
 import { BaseRange } from "slate";
 import { CustomEditor } from "../Core";
 
@@ -135,18 +134,7 @@ function Leaf({
   if (leaf.hashtag) {
     return (
       <span {...attributes} className={className} spellCheck={false}>
-        {!leaf.punctuation && (
-          <span
-            contentEditable={false}
-            style={{ userSelect: "none" }}
-            className="inline-flex items-center mr-1"
-          >
-            <span>
-              <BiFolder />
-            </span>
-          </span>
-        )}
-        <span>{children}</span>
+        {children}
       </span>
     );
   }
