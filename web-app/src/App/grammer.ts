@@ -89,19 +89,9 @@ export const strikethrough: CustomGrammarValue = {
 };
 
 export const italic: CustomGrammarValue = {
-  pattern: /[_*][^_*]+[_*]/m,
-  greedy: true,
+  pattern: /[_*]([^ ])[^_*]+[_*]/m,
   inside: {
-    punctuation: [
-      {
-        pattern: /^[_*]/m,
-        greedy: true,
-      },
-      {
-        pattern: /[_*]$/m,
-        greedy: true,
-      },
-    ],
+    punctuation: [/^[_*]/m, /[_*]$/m],
     link,
     notelink,
     mdLink,
@@ -197,8 +187,6 @@ export const hashtag: CustomGrammarValue = {
   greedy: true,
   inside: {},
 };
-
-
 
 export const quoteRegex = /^\> .*$/m;
 export const quote: CustomGrammarValue = {
