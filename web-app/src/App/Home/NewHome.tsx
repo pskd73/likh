@@ -20,6 +20,7 @@ import Event from "src/components/Event";
 import { openFile } from "../File";
 import HeadlessNoteEditor from "../HeadlessNoteEditor";
 import {
+  BiAlarm,
   BiCalendarHeart,
   BiCheckSquare,
   BiChevronRight,
@@ -136,9 +137,13 @@ const NewHome = () => {
     let _todos = getTodoNotes();
     _todos = _todos.filter((summary) => summary.total - summary.checked > 0);
     const todos = _todos.sort((a, b) => b.note.created_at - a.note.created_at);
-    const reminders = getTimeline(Object.values(allNotes)).filter(
-      (item) => item.future
-    );
+    const reminders = getTimeline(Object.values(allNotes))
+      .filter((item) => item.future)
+      .map((item) => ({
+        noteId: item.note.id,
+        text: item.listParsed ? item.listParsed.content : item.note.text,
+        date: item.date,
+      }));
     return { todos, reminders };
   }, [allNotes]);
   const lastEditedNote = useMemo(() => {
@@ -309,9 +314,23 @@ const NewHome = () => {
                       className="text-base text-primary"
                       onClick={() => navigate(`/write/note/${todo.note.id}`)}
                     >
-                      {textToTitle(todo.note.text)}
-                      <List.Item.Description>
-                        [{todo?.checked}/{todo?.total}]
+                      {textToTitle(todo.note.text, 26)}
+                      <List.Item.Description className="flex items-center space-x-2">
+                        <div
+                          className="bg-primary bg-opacity-20 rounded overflow-hidden"
+                          style={{ height: 10, width: 100 }}
+                        >
+                          <div
+                            className="bg-primary bg-opacity-100"
+                            style={{
+                              width: (todo.checked / todo.total) * 100,
+                              height: "100%",
+                            }}
+                          />
+                        </div>
+                        <span>
+                          {todo?.checked}/{todo?.total}
+                        </span>
                       </List.Item.Description>
                     </List.Item>
                   ))}
@@ -325,10 +344,11 @@ const NewHome = () => {
                     <List.Item
                       key={i}
                       className="text-base text-primary group"
-                      onClick={() => navigate(`/write/note/${item.note.id}`)}
+                      onClick={() => navigate(`/write/note/${item.noteId}`)}
                     >
-                      {textToTitle(item.note.text)}
-                      <List.Item.Description>
+                      {textToTitle(item.text, 26)}
+                      <List.Item.Description className="flex items-center space-x-2">
+                        <BiAlarm />
                         <span className="group-hover:hidden">
                           {moment(item.date).fromNow()}
                         </span>
