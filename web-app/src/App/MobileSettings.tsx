@@ -8,7 +8,7 @@ const MobileSettings = () => {
   const { colorTheme, setColorTheme } = useContext(EditorContext);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-20">
       <WithTitle noPadding title="Theme">
         <div className="px-2">
           <div className="flex space-x-4">
