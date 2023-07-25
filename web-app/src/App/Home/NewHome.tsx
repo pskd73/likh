@@ -318,7 +318,7 @@ const NewHome = () => {
                       <List.Item.Description className="flex items-center space-x-2">
                         <div
                           className="bg-primary bg-opacity-20 rounded overflow-hidden"
-                          style={{ height: 10, width: 100 }}
+                          style={{ height: 8, width: 100 }}
                         >
                           <div
                             className="bg-primary bg-opacity-100"
