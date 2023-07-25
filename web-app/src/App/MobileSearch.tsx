@@ -4,7 +4,7 @@ import Search from "./SidePanel/Search";
 import { EditorContext } from "./Context";
 import Notes from "./Home/Notes";
 
-const MobileTags = () => {
+const MobileSearch = () => {
   const { searchTerm, setSearchTerm } = useContext(EditorContext);
 
   return (
@@ -23,4 +23,4 @@ const MobileTags = () => {
   );
 };
 
-export default MobileTags;
+export default MobileSearch;
