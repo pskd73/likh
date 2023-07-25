@@ -22,6 +22,7 @@ import Init from "./App/Init";
 import NewHome from "./App/Home/NewHome";
 import RollPage from "./App/RollPage";
 import MobileTags from "./App/MobileTags";
+import MobileSettings from "./App/MobileSettings";
 
 const router = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
       {
         path: "settings/sync",
         element: <Storage />,
+      },
+      {
+        path: "settings",
+        element: <MobileSettings />,
       },
       {
         path: "init",

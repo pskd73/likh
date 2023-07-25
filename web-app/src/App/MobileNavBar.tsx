@@ -2,6 +2,7 @@ import classNames from "classnames";
 import { ComponentProps, useContext, useMemo } from "react";
 import {
   BiCalendarHeart,
+  BiCog,
   BiHash,
   BiHomeHeart,
   BiMenu,
@@ -102,9 +103,9 @@ const MobileNavBar = () => {
       </MenuItem>
       <MenuItem
         active={activeMenu === "settings"}
-        onClick={() => navigate("/write/settings/sync")}
+        onClick={() => navigate("/write/settings")}
       >
-        <BiMenu />
+        <BiCog />
       </MenuItem>
     </div>
   );
