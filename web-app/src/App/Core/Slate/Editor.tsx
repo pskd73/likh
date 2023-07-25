@@ -278,22 +278,12 @@ const Editor = ({
       // quote
       const quote = text.match(quoteRegex);
 
-      // title
-      const titleMatch = text.match(/^(#{1,6}) .+/);
-      const titleSlug = titleMatch ? slugify(text, { lower: true }) : undefined;
-      const titleLavel = titleMatch ? titleMatch[1].length : undefined;
-
-      // list
-      const listLevel = parseListText(text)?.level;
-
       return (
         <SlateElement
           attributes={attributes}
           children={children}
           element={element}
           img={{ url: imgUrl || undefined, uri: imgUri }}
-          title={{ slug: titleSlug, level: titleLavel }}
-          list={{ level: listLevel }}
           quote={!!quote}
           elementMakers={elementMakers || []}
           text={text}

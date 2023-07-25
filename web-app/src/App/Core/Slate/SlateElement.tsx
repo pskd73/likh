@@ -14,8 +14,6 @@ const SlateElement = ({
   children,
   quote,
   img,
-  title,
-  list,
   elementMakers,
   text
 }: {
@@ -27,13 +25,6 @@ const SlateElement = ({
   img?: {
     url?: string;
     uri?: string;
-  };
-  title?: {
-    level?: number;
-    slug?: string;
-  };
-  list?: {
-    level?: number;
   };
   text: string;
 }) => {
@@ -78,8 +69,6 @@ const SlateElement = ({
           "border-l-4 border-primary border-opacity-30": quote,
           "mb-2": !quote,
         })}
-        data-title-level={title?.level}
-        data-title-slug={title?.slug}
       >
         <span
           className={classNames({
