@@ -283,23 +283,25 @@ const NewHome = () => {
             </div>
           </div>
         </div>
-        <div
-          id="home-scribble"
-          className={classNames(
-            "lg:w-1/3 p-4 border border-primary",
-            "border-opacity-20 rounded-md",
-            "overflow-y-scroll scrollbar-hide"
-          )}
-        >
-          <div className="text-xl font-medium mb-4">Scribble</div>
-          {scribbleLoaded && (
-            <HeadlessNoteEditor
-              noteId={"scribble"}
-              scrollContainerId="home-scribble"
-              blockPlaceholder="Write down before you forget"
-            />
-          )}
-        </div>
+        {!isMobile && (
+          <div
+            id="home-scribble"
+            className={classNames(
+              "lg:w-1/3 p-4 border border-primary",
+              "border-opacity-20 rounded-md",
+              "overflow-y-scroll scrollbar-hide"
+            )}
+          >
+            <div className="text-xl font-medium mb-4">Scribble</div>
+            {scribbleLoaded && (
+              <HeadlessNoteEditor
+                noteId={"scribble"}
+                scrollContainerId="home-scribble"
+                blockPlaceholder="Write down before you forget"
+              />
+            )}
+          </div>
+        )}
       </div>
       {todos.length || reminders.length ? <hr className="my-12" /> : null}
       <div className="lg:flex space-x-6 mb-6">
