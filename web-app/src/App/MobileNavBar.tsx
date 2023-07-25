@@ -11,7 +11,7 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import { EditorContext } from "./Context";
-import { isMac } from "./device";
+import { isMac, isPWA } from "./device";
 
 const MenuItem = ({
   children,
@@ -19,7 +19,7 @@ const MenuItem = ({
   active,
   highlight,
   ...restProps
-}: ComponentProps<"div"> & { active?: boolean, highlight?: boolean }) => {
+}: ComponentProps<"div"> & { active?: boolean; highlight?: boolean }) => {
   return (
     <div
       className={twMerge(
@@ -31,7 +31,7 @@ const MenuItem = ({
           {
             "text-opacity-30 text-primary": !active && !highlight,
             "text-opacity-100 text-primary": active,
-            "text-4xl": highlight
+            "text-4xl": highlight,
           }
         ),
         className
@@ -78,7 +78,7 @@ const MobileNavBar = () => {
         "border-t border-primary border-opacity-10",
         "fixed bottom-0 bg-base rounded-t-lg w-full",
         "flex",
-        { "pb-4": isMac }
+        { "pb-4": isMac() && isPWA }
       )}
       style={{ boxShadow: "rgb(136, 136, 136) 0px 5px 10px" }}
     >
