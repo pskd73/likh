@@ -116,63 +116,65 @@ const NoteEditor = ({
   };
 
   return (
-    <Editor
-      containerClassName={`note-${note.id}`}
-      onChange={onChange}
-      initValue={note.serialized}
-      initText={note.text}
-      onNoteLinkClick={handleNoteLinkClick}
-      getSuggestions={getSuggestions}
-      focus={(note?.created_at || 0) + (editorFocus || 0)}
-      contextMenuPrefixes={[
-        "[[",
-        "#",
-        ...plugins
-          .filter((p) => p.suggestions)
-          .map((p) => Object.keys(p.suggestions!))
-          .reduce((prev, cur) => [...prev, ...cur], []),
-      ]}
-      getSavedImg={async (attachmentId, imgType) => {
-        if (note && imgType === "attachment") {
-          const blob = await storage.pouch.attachment(note.id, attachmentId);
-          const uri = await blobToB64(blob);
-          if (uri) {
-            return { id: attachmentId, uri: uri as string };
+    <div className={`note-${note.id}`}>
+      <Editor
+        containerClassName={`note-${note.id}`}
+        onChange={onChange}
+        initValue={note.serialized}
+        initText={note.text}
+        onNoteLinkClick={handleNoteLinkClick}
+        getSuggestions={getSuggestions}
+        focus={(note?.created_at || 0) + (editorFocus || 0)}
+        contextMenuPrefixes={[
+          "[[",
+          "#",
+          ...plugins
+            .filter((p) => p.suggestions)
+            .map((p) => Object.keys(p.suggestions!))
+            .reduce((prev, cur) => [...prev, ...cur], []),
+        ]}
+        getSavedImg={async (attachmentId, imgType) => {
+          if (note && imgType === "attachment") {
+            const blob = await storage.pouch.attachment(note.id, attachmentId);
+            const uri = await blobToB64(blob);
+            if (uri) {
+              return { id: attachmentId, uri: uri as string };
+            }
           }
-        }
-        const img = await getImage(Number(attachmentId));
-        return { id: attachmentId, uri: img.uri };
-      }}
-      handleSaveImg={async (img) => {
-        if (note) {
-          const match = img.uri.match(/^data:(.+);base64,(.+)$/);
-          if (match) {
-            const id = new Date().getTime().toString();
-            await storage.pouch.attach(note.id, {
-              id,
-              data: match[2],
-              type: match[1],
-            });
-            return { id, uri: img.uri };
+          const img = await getImage(Number(attachmentId));
+          return { id: attachmentId, uri: img.uri };
+        }}
+        handleSaveImg={async (img) => {
+          if (note) {
+            const match = img.uri.match(/^data:(.+);base64,(.+)$/);
+            if (match) {
+              const id = new Date().getTime().toString();
+              await storage.pouch.attach(note.id, {
+                id,
+                data: match[2],
+                type: match[1],
+              });
+              return { id, uri: img.uri };
+            }
           }
-        }
-      }}
-      theme={Themes[themeName] || Themes.Basic}
-      grammer={plugins
-        .filter((p) => p.grammer)
-        .map((p) => p.grammer!)
-        .reduce((prev, cur) => ({ ...prev, ...cur(prev) }), grammer)}
-      leafMakers={plugins.filter((p) => p.leafMaker).map((p) => p.leafMaker!)}
-      elementMakers={plugins
-        .filter((p) => p.elementMaker)
-        .map((p) => p.elementMaker!)}
-      blockPlaceholder={blockPlaceholder || `Type "/" for options`}
-      contextMenuBoundaries={plugins
-        .filter((p) => p.boundaries)
-        .map((p) => p.boundaries!)
-        .reduce((prev, cur) => [...prev, ...cur], [])}
-      scrollContainerId={scrollContainerId}
-    />
+        }}
+        theme={Themes[themeName] || Themes.Basic}
+        grammer={plugins
+          .filter((p) => p.grammer)
+          .map((p) => p.grammer!)
+          .reduce((prev, cur) => ({ ...prev, ...cur(prev) }), grammer)}
+        leafMakers={plugins.filter((p) => p.leafMaker).map((p) => p.leafMaker!)}
+        elementMakers={plugins
+          .filter((p) => p.elementMaker)
+          .map((p) => p.elementMaker!)}
+        blockPlaceholder={blockPlaceholder || `Type "/" for options`}
+        contextMenuBoundaries={plugins
+          .filter((p) => p.boundaries)
+          .map((p) => p.boundaries!)
+          .reduce((prev, cur) => [...prev, ...cur], [])}
+        scrollContainerId={scrollContainerId}
+      />
+    </div>
   );
 };
 
