@@ -4,7 +4,9 @@ import classNames from "classnames";
 import { EditorContext } from "src/App/Context";
 import { WithTitle } from "./Common";
 
-const ColorTheme = ({
+export const themes = ["base", "dark", "accent", "secondary"];
+
+export const ColorTheme = ({
   theme,
   active,
   ...restProps
@@ -26,8 +28,6 @@ const ColorTheme = ({
 
 const Settings = () => {
   const { colorTheme, setColorTheme } = useContext(EditorContext);
-
-  const themes = ["base", "dark", "accent", "secondary"];
 
   return (
     <WithTitle title="Theme" active>

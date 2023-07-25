@@ -13,6 +13,7 @@ import { migrate } from "src/App/localStorage";
 import * as PouchDB from "src/App/PouchDB";
 import { Outlet } from "react-router-dom";
 import { enabledPlugins } from "./Plugin/List";
+import MobileNavBar from "./MobileNavBar";
 
 const STATUS_BAR_HEIGHT = 30;
 
@@ -61,19 +62,26 @@ const EditorWindow = () => {
           >
             <div
               id="page-container"
-              className="flex-1 p-4 py-8 flex justify-center overflow-y-scroll"
-              style={{
-                height: `calc(100vh - ${
-                  STATUS_BAR_HEIGHT + statusBarPadding
-                }px)`,
-              }}
+              className="flex-1 p-4 py-8 flex justify-center"
+              // style={{
+              //   height: `calc(100vh - ${
+              //     !isMobile ? STATUS_BAR_HEIGHT + statusBarPadding : 0
+              //   }px)`,
+              // }}
               tabIndex={-1}
             >
               <div className={classNames("w-full max-w-[1000px]")}>
                 <Outlet />
               </div>
             </div>
-            <StatusBar height={STATUS_BAR_HEIGHT} padding={statusBarPadding} />
+            {!isMobile ? (
+              <StatusBar
+                height={STATUS_BAR_HEIGHT}
+                padding={statusBarPadding}
+              />
+            ) : (
+              <MobileNavBar />
+            )}
           </div>
         </div>
       </EditorContext.Provider>

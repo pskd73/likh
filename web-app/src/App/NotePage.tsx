@@ -34,6 +34,9 @@ const NotePage = () => {
       setTimeout(() => {
         setNote({ id: noteId });
       }, 100);
+      setTimeout(() => {
+        container!.style.opacity = "1";
+      }, 400);
     }
 
     return () => {
@@ -100,7 +103,7 @@ const NotePage = () => {
       <NoteEditor
         onChange={handleChange}
         note={note}
-        scrollContainerId={"page-container"}
+        scrollContainerId={"body"}
       />
     </div>
   );

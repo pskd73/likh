@@ -53,7 +53,6 @@ export function focusEnd(editor: CustomEditor, scrollContainerId: string) {
         anchor: end,
         focus: end,
       });
-      container.style.opacity = "1";
     } catch {
       console.warn("Unable to focus");
     }

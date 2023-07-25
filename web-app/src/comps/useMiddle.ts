@@ -35,7 +35,7 @@ export const useMiddle = (
   }, [options.typeWriter, ...deps]);
 
   const getScrollElement = () => {
-    let element = document.getElementById("page-container");
+    let element = document.getElementById("body");
     if (!element) {
       element = document.body;
     }

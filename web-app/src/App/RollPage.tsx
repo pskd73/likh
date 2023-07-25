@@ -199,7 +199,7 @@ const RollPage = () => {
               <NoteEditor
                 onChange={(v) => handleChange(id, v)}
                 note={_note}
-                scrollContainerId={"page-container"}
+                scrollContainerId={"body"}
               />
             </div>
           );
