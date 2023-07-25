@@ -62,6 +62,8 @@ const SidePanel = () => {
     navigate(`/write/note/${note!.id}`);
   };
 
+  if (isMobile) return null;
+
   return (
     <>
       {!isMobile && (
