@@ -51,19 +51,6 @@ function Leaf({
     // generic punctuation
     "opacity-30": leaf.punctuation || leaf.blockquote,
 
-    // title
-    "md:inline-flex font-semibold": title && !leaf.hashes,
-    "md:inline-flex 1": title && leaf.hashes && leaf.focused,
-    "hidden 1":
-      title &&
-      leaf.hashes &&
-      !leaf.focused &&
-      text.text.replaceAll("#", "").trim() !== "",
-    "justify-end opacity-30": title && leaf.hashes,
-    [theme.font.title1]: leaf.title1,
-    [theme.font.title2]: leaf.title2,
-    [theme.font.title3]: leaf.title3,
-
     // link
     "underline cursor-pointer": leaf.link,
 

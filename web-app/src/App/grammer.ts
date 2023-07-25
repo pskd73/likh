@@ -138,42 +138,6 @@ export const boldItalic: CustomGrammarValue = {
   },
 };
 
-export const title1: CustomGrammarValue = {
-  pattern: /^# .*$/m,
-  inside: {
-    hashes: /^# /m,
-    boldItalic,
-    bold,
-    italic,
-    link,
-    mdLink,
-  },
-};
-
-export const title2: CustomGrammarValue = {
-  pattern: /^## .*$/m,
-  inside: {
-    hashes: /^## /m,
-    boldItalic,
-    bold,
-    italic,
-    link,
-    mdLink,
-  },
-};
-
-export const title3: CustomGrammarValue = {
-  pattern: /^### .*$/m,
-  inside: {
-    hashes: /^### /m,
-    boldItalic,
-    bold,
-    italic,
-    link,
-    mdLink,
-  },
-};
-
 export const inlineCode: CustomGrammarValue = {
   pattern: /`+[^`]+`+/,
   greedy: true,
@@ -229,9 +193,6 @@ export const hr: CustomGrammarValue = {
 };
 
 const grammer: CustomGrammar = {
-  title1,
-  title2,
-  title3,
   link,
   quote,
   hashtag,
