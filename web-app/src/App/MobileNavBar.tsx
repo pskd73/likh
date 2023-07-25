@@ -5,6 +5,7 @@ import {
   BiCog,
   BiHomeHeart,
   BiPlus,
+  BiPlusCircle,
   BiSearchAlt,
 } from "react-icons/bi";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -16,19 +17,21 @@ const MenuItem = ({
   children,
   className,
   active,
+  highlight,
   ...restProps
-}: ComponentProps<"div"> & { active?: boolean }) => {
+}: ComponentProps<"div"> & { active?: boolean, highlight?: boolean }) => {
   return (
     <div
       className={twMerge(
         classNames(
           "p-4 text-2xl flex-1 flex justify-center items-center",
-          "text-primary hover:text-opacity-100",
+          "hover:text-opacity-100",
           "cursor-pointer",
           "transition-all",
           {
-            "text-opacity-30": !active,
-            "text-opacity-100": active,
+            "text-opacity-30 text-primary": !active && !highlight,
+            "text-opacity-100 text-primary": active,
+            "text-4xl": highlight
           }
         ),
         className
@@ -91,8 +94,8 @@ const MobileNavBar = () => {
       >
         <BiSearchAlt />
       </MenuItem>
-      <MenuItem onClick={handleNew}>
-        <BiPlus />
+      <MenuItem onClick={handleNew} highlight>
+        <BiPlusCircle />
       </MenuItem>
       <MenuItem
         active={activeMenu === "timeline"}
