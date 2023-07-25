@@ -3,12 +3,11 @@ import { ComponentProps, useContext, useMemo } from "react";
 import {
   BiCalendarHeart,
   BiCog,
-  BiHash,
   BiHomeHeart,
-  BiMenu,
   BiPlus,
+  BiSearchAlt,
 } from "react-icons/bi";
-import { useLocation, useNavigate, useNavigation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import { EditorContext } from "./Context";
 import { isMac } from "./device";
@@ -81,25 +80,25 @@ const MobileNavBar = () => {
       style={{ boxShadow: "rgb(136, 136, 136) 0px 5px 10px" }}
     >
       <MenuItem
+        active={activeMenu === "home"}
+        onClick={() => navigate("/write")}
+      >
+        <BiHomeHeart />
+      </MenuItem>
+      <MenuItem
         active={activeMenu === "tags"}
         onClick={() => navigate("/write/tags")}
       >
-        <BiHash />
+        <BiSearchAlt />
+      </MenuItem>
+      <MenuItem onClick={handleNew}>
+        <BiPlus />
       </MenuItem>
       <MenuItem
         active={activeMenu === "timeline"}
         onClick={() => navigate("/write/timeline")}
       >
         <BiCalendarHeart />
-      </MenuItem>
-      <MenuItem
-        active={activeMenu === "home"}
-        onClick={() => navigate("/write")}
-      >
-        <BiHomeHeart />
-      </MenuItem>
-      <MenuItem onClick={handleNew}>
-        <BiPlus />
       </MenuItem>
       <MenuItem
         active={activeMenu === "settings"}
