@@ -99,8 +99,9 @@ const StatusBar = ({
   return (
     <div
       className={classNames(
-        "bottom-0 w-full right-0 z-10 flex justify-between items-center",
-        "bg-base shadow-2xl border-t border-primary border-opacity-10"
+        "w-full right-0 z-30 flex justify-between items-center",
+        "bg-base shadow-2xl border-t border-primary border-opacity-10",
+        "absolute bottom-0"
       )}
       style={{ height: height + padding, paddingBottom: padding }}
     >

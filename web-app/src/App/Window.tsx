@@ -62,12 +62,12 @@ const EditorWindow = () => {
           >
             <div
               id="page-container"
-              className="flex-1 p-4 py-8 flex justify-center overflow-y-scroll"
-              style={{
-                height: `calc(100vh - ${
-                  !isMobile ? STATUS_BAR_HEIGHT + statusBarPadding : 0
-                }px)`,
-              }}
+              className="flex-1 p-4 py-8 flex justify-center"
+              // style={{
+              //   height: `calc(100vh - ${
+              //     !isMobile ? STATUS_BAR_HEIGHT + statusBarPadding : 0
+              //   }px)`,
+              // }}
               tabIndex={-1}
             >
               <div className={classNames("w-full max-w-[1000px]")}>
