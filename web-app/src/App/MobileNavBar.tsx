@@ -74,7 +74,7 @@ const MobileNavBar = () => {
     <div
       className={classNames(
         "border-t border-primary border-opacity-10",
-        "sticky bottom-0 bg-base rounded-t-lg",
+        "fixed bottom-0 bg-base rounded-t-lg w-full",
         "flex",
         { "pb-4": isMac }
       )}
