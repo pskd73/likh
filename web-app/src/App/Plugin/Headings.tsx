@@ -44,10 +44,7 @@ const HeadingsPlugin: RNPluginCreator = () => {
         const level = text.match(/^#{1,6} /)?.[0].trim().length;
         return (
           <p
-            className={classNames("mt-2 mb-3", {
-              "border-b border-primary border-opacity-10":
-                level === 1 || level === 2,
-            })}
+            className={classNames("mt-4 mb-3")}
             {...attributes}
             data-title-level={level}
             data-title-slug={slugify(text, { lower: true })}
