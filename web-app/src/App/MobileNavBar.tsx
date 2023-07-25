@@ -11,7 +11,7 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import { EditorContext } from "./Context";
-import { isMac, isPWA } from "./device";
+import { iOS, isMac, isPWA } from "./device";
 
 const MenuItem = ({
   children,
@@ -78,7 +78,7 @@ const MobileNavBar = () => {
         "border-t border-primary border-opacity-10",
         "fixed bottom-0 bg-base rounded-t-lg w-full",
         "flex",
-        { "pb-4": isMac() }
+        { "pb-4": iOS() }
       )}
       style={{ boxShadow: "rgb(136, 136, 136) 0px 5px 10px" }}
     >
