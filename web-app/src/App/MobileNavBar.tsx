@@ -78,7 +78,7 @@ const MobileNavBar = () => {
         "border-t border-primary border-opacity-10",
         "fixed bottom-0 bg-base rounded-t-lg w-full",
         "flex",
-        { "pb-4": isMac() && isPWA }
+        { "pb-4": isMac() && isPWA() }
       )}
       style={{ boxShadow: "rgb(136, 136, 136) 0px 5px 10px" }}
     >
