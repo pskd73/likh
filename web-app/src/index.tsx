@@ -21,6 +21,7 @@ import Storage from "./App/SidePanel/Storage";
 import Init from "./App/Init";
 import NewHome from "./App/Home/NewHome";
 import RollPage from "./App/RollPage";
+import MobileTags from "./App/MobileTags";
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <NewHome />,
+      },
+      {
+        path: "tags",
+        element: <MobileTags />,
       },
       {
         path: "timeline",

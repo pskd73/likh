@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { ComponentProps, useMemo } from "react";
+import { ComponentProps, useContext, useMemo } from "react";
 import {
   BiCalendarHeart,
   BiHash,
@@ -7,8 +7,9 @@ import {
   BiMenu,
   BiPlus,
 } from "react-icons/bi";
-import { useLocation, useNavigation } from "react-router-dom";
+import { useLocation, useNavigate, useNavigation } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
+import { EditorContext } from "./Context";
 
 const MenuItem = ({
   children,
@@ -39,15 +40,33 @@ const MenuItem = ({
 };
 
 const MobileNavBar = () => {
+  const { newNote } = useContext(EditorContext);
   const location = useLocation();
+  const navigate = useNavigate();
   const activeMenu = useMemo(() => {
     if (location) {
       const { pathname } = location;
       if (pathname === "/write") {
         return "home";
       }
+      if (pathname === "/write/tags") {
+        return "tags";
+      }
+      if (pathname === "/write/timeline") {
+        return "timeline";
+      }
+      if (pathname.startsWith("/write/settings")) {
+        return "settings";
+      }
     }
   }, [location?.pathname]);
+
+  const handleNew = async () => {
+    const note = newNote({
+      text: `# A title for the note\nWrite your mind here ...`,
+    });
+    navigate(`/write/note/${note!.id}`);
+  };
 
   return (
     <div
@@ -58,19 +77,31 @@ const MobileNavBar = () => {
       )}
       style={{ boxShadow: "rgb(136, 136, 136) 0px 5px 10px" }}
     >
-      <MenuItem>
+      <MenuItem
+        active={activeMenu === "tags"}
+        onClick={() => navigate("/write/tags")}
+      >
         <BiHash />
       </MenuItem>
-      <MenuItem>
+      <MenuItem
+        active={activeMenu === "timeline"}
+        onClick={() => navigate("/write/timeline")}
+      >
         <BiCalendarHeart />
       </MenuItem>
-      <MenuItem active={activeMenu === "home"}>
+      <MenuItem
+        active={activeMenu === "home"}
+        onClick={() => navigate("/write")}
+      >
         <BiHomeHeart />
       </MenuItem>
-      <MenuItem>
+      <MenuItem onClick={handleNew}>
         <BiPlus />
       </MenuItem>
-      <MenuItem>
+      <MenuItem
+        active={activeMenu === "settings"}
+        onClick={() => navigate("/write/settings/sync")}
+      >
         <BiMenu />
       </MenuItem>
     </div>
