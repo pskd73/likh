@@ -312,7 +312,7 @@ export default function Hero() {
         Retro Note
       </h1>
       <a
-        href="https://app.retronote.app/write/init"
+        href="https://app.retronote.app/write"
         className={classNames(
           Courier.className,
           "bg-primary-700 text-white italic px-6 py-2 rounded-full text-3xl"
