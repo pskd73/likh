@@ -120,7 +120,7 @@ const CollapseButton = ({
   return (
     <span
       className={classNames(
-        "mr-6 cursor-pointer absolute hover:bg-primary hover:bg-opacity-20",
+        "mr-5 cursor-pointer absolute hover:bg-primary hover:bg-opacity-20",
         "transition-all text-primary text-opacity-50 rounded-full",
         "group"
       )}
@@ -211,52 +211,71 @@ const MarkdownListsPlugin: RNPluginCreator = () => {
       const parsed = parseListText(text);
       if (parsed) {
         const path = ReactEditor.findPath(editor, element);
+        const collapsed = (element as any).collapsed;
 
         if (isPointFocused(editor, { path, start: 0, end: text.length })) {
           const parent = getParentItem(editor, path, parsed.level);
-          parent &&
-            (parent[0] as any).collapsed &&
-            toggleItem(editor, parent[1], parent[0]);
+          parent && collapsed && toggleItem(editor, parent[1], parent[0]);
         }
+
+        const isParent = hasChildren(editor, parsed.level, path);
+        const spaces = Array.from(Array(parsed.level + 1));
 
         return (
           <p
-            className={classNames({
+            className={classNames("flex", {
               hidden: isCollapsed(editor, path, parsed.level),
             })}
             {...attributes}
           >
-            <span className="inline-flex" style={{ wordBreak: "break-word" }}>
-              {Array.from(Array(parsed.level + 1)).map((_, i) => (
+            <span
+              className="inline-flex h-full"
+              style={{ wordBreak: "break-word" }}
+            >
+              {spaces.map((_, i) => (
                 <span
                   key={i}
                   contentEditable={false}
-                  style={{ width: i === 0 ? 40 : 20 }}
+                  style={{ width: 30 }}
                   className={classNames(
                     "flex-shrink-0 inline-flex justify-end items-start"
                   )}
                 >
-                  {i === parsed.level &&
-                    hasChildren(editor, parsed.level, path) && (
-                      <CollapseButton
-                        editor={editor}
-                        path={path}
-                        element={element}
-                      />
-                    )}
+                  {i === parsed.level && isParent && (
+                    <CollapseButton
+                      editor={editor}
+                      path={path}
+                      element={element}
+                    />
+                  )}
+                  {((isParent && !collapsed) || i < spaces.length - 1) && (
+                    <span
+                      className={classNames(
+                        "bg-primary inline-block h-full bg-opacity-20"
+                      )}
+                      style={{
+                        width: 1,
+                        marginRight: 8,
+                        marginTop: i === parsed.level ? 24 : 0,
+                        height:
+                          i === parsed.level ? "calc(100% - 24px)" : "100%",
+                      }}
+                    />
+                  )}
                 </span>
               ))}
-              <span>{children}</span>
-              {(element as any).collapsed && (
-                <span
-                  contentEditable={false}
-                  className="px-2 text-primary text-opacity-50"
-                  onClick={() => toggleItem(editor, path, element)}
-                  onFocus={() => toggleItem(editor, path, element)}
-                >
-                  [...]
-                </span>
-              )}
+              <span>
+                {children}
+                {collapsed && (
+                  <span
+                    contentEditable={false}
+                    className="px-2 text-primary text-opacity-50"
+                    onClick={() => toggleItem(editor, path, element)}
+                  >
+                    [...]
+                  </span>
+                )}
+              </span>
             </span>
           </p>
         );
