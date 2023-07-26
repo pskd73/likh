@@ -10,6 +10,7 @@ import {
   getPreviousElementPath,
 } from "../Core/Core";
 import { ReactEditor } from "slate-react";
+import { isPointFocused } from "../Core/Range";
 
 const getPrevPath = (path: number[]) => [getPreviousElementPath(path)[0]];
 const getNextPath = (path: number[]) => [getNextElementPath(path)[0]];
@@ -210,6 +211,14 @@ const MarkdownListsPlugin: RNPluginCreator = () => {
       const parsed = parseListText(text);
       if (parsed) {
         const path = ReactEditor.findPath(editor, element);
+
+        if (isPointFocused(editor, { path, start: 0, end: text.length })) {
+          const parent = getParentItem(editor, path, parsed.level);
+          parent &&
+            (parent[0] as any).collapsed &&
+            toggleItem(editor, parent[1], parent[0]);
+        }
+
         return (
           <p
             className={classNames({
