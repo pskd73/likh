@@ -264,7 +264,7 @@ const MarkdownListsPlugin: RNPluginCreator = () => {
                   )}
                 </span>
               ))}
-              <span>
+              <span className="pb-2">
                 {children}
                 {collapsed && (
                   <span
