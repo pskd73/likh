@@ -112,17 +112,27 @@ const CollapseButton = ({
   editor,
   path,
   element,
+  collapsed,
+  checkbox
 }: {
   editor: CustomEditor;
   path: number[];
   element: any;
+  collapsed: boolean,
+  checkbox: boolean,
 }) => {
   return (
     <span
       className={classNames(
-        "mr-5 cursor-pointer absolute hover:bg-primary hover:bg-opacity-20",
+        "cursor-pointer absolute",
         "transition-all text-primary text-opacity-50 rounded-full",
-        "group"
+        {
+          "bg-primary bg-opacity-10": collapsed,
+          "hover:bg-primary hover:bg-opacity-20": !collapsed,
+          "hidden group-hover:inline": !collapsed,
+          "mr-5": checkbox,
+          "mr-4": !checkbox
+        }
       )}
       style={{ marginTop: 5 }}
       onClick={(e) => {
@@ -223,7 +233,7 @@ const MarkdownListsPlugin: RNPluginCreator = () => {
 
         return (
           <p
-            className={classNames("flex", {
+            className={classNames("flex group", {
               hidden: isCollapsed(editor, path, parsed.level),
             })}
             {...attributes}
@@ -246,6 +256,8 @@ const MarkdownListsPlugin: RNPluginCreator = () => {
                       editor={editor}
                       path={path}
                       element={element}
+                      collapsed={collapsed}
+                      checkbox={parsed.checkbox || false}
                     />
                   )}
                   {((isParent && !collapsed) || i < spaces.length - 1) && (
