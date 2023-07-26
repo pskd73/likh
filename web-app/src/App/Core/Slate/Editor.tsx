@@ -287,6 +287,7 @@ const Editor = ({
           quote={!!quote}
           elementMakers={elementMakers || []}
           text={text}
+          editor={editor}
         />
       );
     },

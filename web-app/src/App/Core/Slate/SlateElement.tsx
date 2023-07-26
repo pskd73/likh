@@ -1,4 +1,4 @@
-import { CustomElement } from "../Core";
+import { CustomEditor, CustomElement } from "../Core";
 import classNames from "classnames";
 
 export type ElementMaker = (props: {
@@ -6,6 +6,7 @@ export type ElementMaker = (props: {
   attributes: any;
   children: any;
   text: string;
+  editor: CustomEditor;
 }) => JSX.Element | undefined;
 
 const SlateElement = ({
@@ -15,7 +16,8 @@ const SlateElement = ({
   quote,
   img,
   elementMakers,
-  text
+  text,
+  editor,
 }: {
   attributes: any;
   children: any;
@@ -27,9 +29,10 @@ const SlateElement = ({
     uri?: string;
   };
   text: string;
+  editor: CustomEditor;
 }) => {
   for (const maker of elementMakers) {
-    const ret = maker({ element, attributes, children, text });
+    const ret = maker({ element, attributes, children, text, editor });
     if (ret) {
       return ret;
     }
