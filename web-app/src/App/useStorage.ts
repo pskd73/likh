@@ -36,8 +36,8 @@ const useStorage = (pdb: Pouch.PouchContextType): Storage => {
     })();
   }, [pdb.pulled]);
 
-  const saveNoteImmediate = (note: SavedNote) => {
-    pdb.db.put(note.id, (doc) => {
+  const saveNoteImmediate = async (note: SavedNote) => {
+    await pdb.db.put(note.id, (doc) => {
       if (doc === undefined) {
         return { ...note, _id: note.id };
       }
@@ -50,6 +50,7 @@ const useStorage = (pdb: Pouch.PouchContextType): Storage => {
         deleted: note.deleted,
       };
     });
+    setNotes((_notes) => [..._notes, { id: note.id }]);
     lastSaved[note.id].time = new Date().getTime();
     setLastSavedAt(lastSaved[note.id].time);
   };
@@ -74,7 +75,6 @@ const useStorage = (pdb: Pouch.PouchContextType): Storage => {
     if (notes.filter((n) => n.id === id).length) return;
     const newNote = { id, text, created_at: date || new Date().getTime() };
     saveNote(newNote);
-    setNotes((_notes) => [..._notes, { id: id! }]);
     return newNote;
   };
 
