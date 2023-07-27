@@ -82,12 +82,15 @@ const NotePage = () => {
   }) => {
     if (note) {
       const updatedNote = allNotes[note.id];
+      const changed = updatedNote.text.length !== text.length;
       updatedNote.text = text;
       updatedNote.serialized = serialized;
       updateNote(updatedNote);
 
       scroll.update();
-      scroll.scroll({ editor });
+      if (changed) {
+        scroll.scroll({ editor });
+      }
     }
   };
 
