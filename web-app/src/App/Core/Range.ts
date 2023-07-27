@@ -145,7 +145,7 @@ function getRangesEnd(ranges: Range[], start: number) {
   return start;
 }
 
-function isPointFocused(
+export function isPointFocused(
   editor: BaseEditor,
   point: { path: number[]; start: number; end: number }
 ) {
