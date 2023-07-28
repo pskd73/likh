@@ -1,4 +1,4 @@
-import { ComponentProps, useContext, useState } from "react";
+import { ComponentProps, useContext, useMemo, useState } from "react";
 import { EditorContext } from "src/App/Context";
 import TextCounter from "src/App/StatusBar/TextCounter";
 import BaseButton from "src/comps/Button";
@@ -21,6 +21,7 @@ import Tooltip from "src/comps/Tooltip";
 import { getShortcutText } from "../useShortcuts";
 import moment from "moment";
 import CreatedTime from "./CreatedTime";
+import { useNavigate } from "react-router-dom";
 
 const SyncIcon = ({ state }: { state: string }) => {
   if (state === "paused" || state === "init") {
@@ -61,8 +62,25 @@ const StatusBar = ({
     storage,
     setTypewriterMode,
     typewriterMode,
+    plugins,
   } = useContext(EditorContext);
+  const navigate = useNavigate();
   const [fullScreen, setFullScreen] = useState(false);
+  const pluginIconGetters = useMemo(
+    () =>
+      plugins
+        .filter((p) => p.noteStatuBarIcons)
+        .map((p) => p.noteStatuBarIcons)
+        .reduce((prev, cur) => ({ ...prev, ...cur }), {}),
+    [plugins]
+  );
+  const pluginIcons = useMemo(() => {
+    if (note) {
+      return Object.values(pluginIconGetters || {}).map((getter) =>
+        getter(note)
+      );
+    }
+  }, [note]);
 
   const handleSave = () => {
     if (note) {
@@ -129,6 +147,20 @@ const StatusBar = ({
             <SyncIcon state={syncState} />
           </Button>
         </Tooltip>
+        {pluginIcons &&
+          pluginIcons.map((pluginIcon, i) => (
+            <Tooltip tip={pluginIcon.tooltop}>
+              <Button
+                lite
+                className="rounded-none"
+                onClick={(e) =>
+                  pluginIcon.onClick && pluginIcon.onClick(e, navigate)
+                }
+              >
+                {pluginIcon.icon}
+              </Button>
+            </Tooltip>
+          ))}
         <CreatedTime />
       </div>
 
