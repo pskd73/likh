@@ -144,6 +144,12 @@ const NotePage = () => {
           )}
         </div>
       )}
+
+      <div className="text-sm italic text-primary text-opacity-50 max-w-sm mt-10">
+        * Your shared notes will be stored on Retro Note servers. End to end
+        encryption breaks here. Make sure you don't have sensitive information
+        on the notes.
+      </div>
     </div>
   );
 };
