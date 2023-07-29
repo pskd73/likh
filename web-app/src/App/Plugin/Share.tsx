@@ -10,6 +10,7 @@ import moment from "moment";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { getDownloadableNote } from "../File";
+import { Loader } from "src/comps/Loading";
 
 const HOST = "https://api.retronote.app";
 
@@ -176,7 +177,8 @@ const NotePage = () => {
         </div>
       )}
       <div className="text-sm text-primary text-opacity-50 mt-10 max-w-sm">
-        * The shared note will be encrypted and only people who know the link can decrypt it
+        * The shared note will be encrypted and only people who know the link
+        can decrypt it
       </div>
     </div>
   );
@@ -200,9 +202,9 @@ const SharePage = () => {
   }, [shareKey]);
 
   return (
-    <div className="mb-20">
-      {shared && (
-        <div>
+    <div>
+      {shared ? (
+        <div className="mb-20">
           <SaveAsNote text={shared.text} />
           <div className="prose my-6">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
@@ -210,6 +212,13 @@ const SharePage = () => {
             </ReactMarkdown>
           </div>
           <SaveAsNote text={shared.text} />
+        </div>
+      ) : (
+        <div
+          className="w-full flex justify-center items-center"
+          style={{ height: "calc(100vh - 80px)" }}
+        >
+          <Loader />
         </div>
       )}
     </div>
