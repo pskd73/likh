@@ -10,13 +10,7 @@ const PluginPage = () => {
     return [plugin, plugin?.page?.element];
   }, [pluginUrl]);
 
-  return (
-    <div>
-      <div className="text-3xl font-bold">Share</div>
-      <hr />
-      <div className="py-6">{children}</div>
-    </div>
-  );
+  return <div>{children}</div>;
 };
 
 export default PluginPage;
