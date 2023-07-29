@@ -175,6 +175,9 @@ const NotePage = () => {
           )}
         </div>
       )}
+      <div className="text-sm text-primary text-opacity-50 mt-10 max-w-sm">
+        * The shared note will be encrypted and only people who know the link can decrypt it
+      </div>
     </div>
   );
 };
