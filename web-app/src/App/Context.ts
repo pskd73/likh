@@ -27,6 +27,8 @@ const { hook: useCountStatType } =
   PersistedState<CountStatType>("countStatType");
 const { hook: useThemeName } = PersistedState<Theme>("themeName");
 const { hook: useColorTheme } = PersistedState<Theme>("colorTheme");
+const { hook: usePluginsState } =
+  PersistedState<Record<string, any>>("pluginState");
 
 export const useEditor = ({
   storage,
@@ -53,6 +55,9 @@ export const useEditor = ({
     {}
   );
   const [editorFocus, setEditorFocus] = useState<number>();
+  const [pluginsState, setPluginsState] = usePluginsState<Record<string, any>>(
+    {}
+  );
 
   useEffect(() => {
     (async () => {
@@ -244,6 +249,21 @@ export const useEditor = ({
     }
   };
 
+  const updatePluginState = (name: string, state: any) => {
+    setPluginsState({ ...pluginsState, [name]: state });
+  };
+
+  const getPluginState = (name: string) => {
+    return pluginsState[name];
+  };
+
+  const usePluginState = <T>(name: string): [T, (val: T) => void] => {
+    return [
+      (getPluginState(name) || {}) as T,
+      (val: T) => updatePluginState(name, val),
+    ];
+  };
+
   return {
     storage,
 
@@ -303,5 +323,7 @@ export const useEditor = ({
 
     allNotes,
     trashedNotes,
+
+    usePluginState,
   };
 };

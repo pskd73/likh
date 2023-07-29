@@ -19,6 +19,9 @@ module.exports = {
             "*": {
               color: theme("colors.primary"),
             },
+            "input[type=checkbox]": {
+              margin: 0,
+            },
           },
         },
       }),
@@ -30,7 +33,7 @@ module.exports = {
       base: {
         primary: "#6C6327",
         base: "#FFFEF8",
-        highlight: "#1D405C"
+        highlight: "#1D405C",
       },
       dark: {
         primary: "#FFFFFA",
@@ -38,12 +41,12 @@ module.exports = {
       },
       accent: {
         primary: "#1F2041",
-        base: "#e9e9ec"
+        base: "#e9e9ec",
       },
       secondary: {
         primary: "#fffffa",
-        base: "#486aa0"
-      }
+        base: "#486aa0",
+      },
     }),
   ],
 };

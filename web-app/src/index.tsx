@@ -23,6 +23,7 @@ import NewHome from "./App/Home/NewHome";
 import RollPage from "./App/RollPage";
 import MobileSearch from "./App/MobileSearch";
 import MobileSettings from "./App/MobileSettings";
+import PluginPage from "./App/PluginPage";
 
 const router = createBrowserRouter([
   {
@@ -64,6 +65,10 @@ const router = createBrowserRouter([
       {
         path: "init",
         element: <Init />,
+      },
+      {
+        path: "plugin/:pluginUrl",
+        element: <PluginPage />,
       },
     ],
   },

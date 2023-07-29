@@ -219,3 +219,22 @@ def handle_get_user_home(user: User):
         'notes': [n.to_dict() for n in notes],
         'hashtags': get_hashtags(notes)
     }
+
+
+@app.route('/share/note', methods=['POST'])
+def handle_post_share_note():
+    note = Note(
+        user_id='share',
+        created_at=to_millis(datetime.now()),
+        text=request.json.get('text'),
+    )
+    note.save()
+    return note.to_dict()
+
+
+@app.route('/share/note')
+def handle_get_share_note():
+    note = get_note(note_id=request.args['share_id'])
+    if note.user_id != 'share':
+        return '', 403
+    return note.to_dict()

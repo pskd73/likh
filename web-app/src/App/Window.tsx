@@ -24,21 +24,14 @@ const EditorWindow = () => {
   const storage = useStorage(pdb);
   const editorState = useEditor({ storage, pdb, plugins });
   const statusBarPadding = useMemo(() => (iOS() ? 20 : 0), []);
-  const [dbInitiated, setDbInitiated] = useState(false);
 
   useShortcuts(editorState);
 
   useEffect(() => {
-    (async () => {
-      // await init();
-      plugins.forEach((plugin) => plugin.init && plugin.init(editorState));
-      setDbInitiated(true);
-    })();
-  }, []);
-
-  if (!dbInitiated) {
-    return null;
-  }
+    plugins.forEach(
+      (plugin) => plugin.updateState && plugin.updateState(editorState)
+    );
+  }, [editorState]);
 
   return (
     <PouchDB.PouchContext.Provider value={pdb}>
@@ -63,11 +56,6 @@ const EditorWindow = () => {
             <div
               id="page-container"
               className="flex-1 p-4 py-8 flex justify-center"
-              // style={{
-              //   height: `calc(100vh - ${
-              //     !isMobile ? STATUS_BAR_HEIGHT + statusBarPadding : 0
-              //   }px)`,
-              // }}
               tabIndex={-1}
             >
               <div className={classNames("w-full max-w-[1000px]")}>

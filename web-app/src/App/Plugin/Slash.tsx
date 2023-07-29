@@ -9,7 +9,7 @@ const SlashPlugin: RNPluginCreator = () => {
   return {
     version: 1,
     name: "Slash Plugin",
-    init: (_editorState) => {
+    updateState: (_editorState) => {
       editorState = _editorState;
     },
     suggestions: {
