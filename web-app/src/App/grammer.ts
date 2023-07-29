@@ -9,6 +9,14 @@ export const link = {
   inside: {},
 };
 
+let hashtagRegex = null
+
+try {
+  hashtagRegex = new RegExp("(?<![\w\/?])(#[a-zA-Z0-9_\/]+)(?!\/)", "m");
+} catch {
+  hashtagRegex = new RegExp("(#[a-zA-Z0-9_\/]+)(?!\/)", "m");
+}
+
 export const notelink: CustomGrammarValue = {
   pattern: /\[\[[^\[\]]+\]\](\([^\(\)]+\))?/m,
   greedy: true,
@@ -147,7 +155,7 @@ export const inlineCode: CustomGrammarValue = {
 };
 
 export const hashtag: CustomGrammarValue = {
-  pattern: /(?<![\w\/?])(#[a-zA-Z0-9_\/]+)(?!\/)/m,
+  pattern: hashtagRegex,
   greedy: true,
   inside: {},
 };

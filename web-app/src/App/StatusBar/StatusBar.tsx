@@ -149,7 +149,7 @@ const StatusBar = ({
         </Tooltip>
         {pluginIcons &&
           pluginIcons.map((pluginIcon, i) => (
-            <Tooltip tip={pluginIcon.tooltop}>
+            <Tooltip key={i} tip={pluginIcon.tooltop}>
               <Button
                 lite
                 className="rounded-none"
