@@ -1,3 +1,4 @@
+import CryptoJS from "crypto-js";
 import { useContext, useEffect, useState } from "react";
 import { RNPluginCreator } from "./type";
 import { EditorContext } from "../Context";
@@ -11,6 +12,27 @@ import remarkGfm from "remark-gfm";
 import { getDownloadableNote } from "../File";
 
 const HOST = "https://api.retronote.app";
+
+function generateRandomString(length: number) {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = " ";
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+
+  return result;
+}
+
+function encrypt(text: string, secret: string) {
+  return CryptoJS.AES.encrypt(text, secret).toString();
+}
+
+function decrypt(text: string, secret: string) {
+  var bytes = CryptoJS.AES.decrypt(text, secret);
+  return bytes.toString(CryptoJS.enc.Utf8);
+}
 
 const shareNote = async (
   text: string
@@ -56,45 +78,54 @@ const NotePage = () => {
     "share"
   );
   const [shared, setShared] = useState<{
-    _id: string;
     created_at: number;
-    text: string;
   }>();
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const noteId = search.get("noteId");
   const note = noteId ? allNotes[noteId] : undefined;
-  const shareId = noteId ? (state?.shares || {})[noteId] : undefined;
+  const shareKey = noteId ? (state?.shares || {})[noteId] : undefined;
 
   useEffect(() => {
     (async () => {
-      if (shareId) {
+      if (shareKey) {
         setLoading(true);
-        setShared(await getShared(shareId));
+        const decoded = atob(shareKey);
+        const [shareId] = decoded.split("|");
+        const sharedNote = await getShared(shareId);
+        setShared({ created_at: sharedNote.created_at });
         setLoading(false);
       } else {
         setLoading(false);
       }
     })();
-  }, [shareId]);
+  }, [shareKey]);
 
   const share = async () => {
     if (note) {
       setLoading(true);
       const downloadableNote = await getDownloadableNote(note, storage.pouch);
-      const json = await shareNote(downloadableNote.text);
+
+      let text = downloadableNote.text;
+      const secret = generateRandomString(10);
+      text = encrypt(text, secret);
+      console.log("encrypted", text);
+
+      const json = await shareNote(text);
+      const shareKey = btoa(`${json._id}|${secret}`);
+
       setLoading(false);
       setState({
         ...state,
-        shares: { ...(state.shares || {}), [note.id]: json._id },
+        shares: { ...(state.shares || {}), [note.id]: shareKey },
       });
     }
   };
 
   const handleCopy = () => {
     navigator.clipboard.writeText(
-      `https://app.retronote.app/write/plugin/share?shareId=${shareId}`
+      `https://app.retronote.app/write/plugin/share?shareKey=${shareKey}`
     );
     setCopied(true);
     setTimeout(() => {
@@ -144,28 +175,26 @@ const NotePage = () => {
           )}
         </div>
       )}
-
-      <div className="text-sm italic text-primary text-opacity-50 max-w-sm mt-10">
-        * Your shared notes will be stored on Retro Note servers. End to end
-        encryption breaks here. Make sure you don't have sensitive information
-        on the notes.
-      </div>
     </div>
   );
 };
 
 const SharePage = () => {
   const [search] = useSearchParams();
-  const shareId = search.get("shareId");
+  const shareKey = search.get("shareKey");
   const [shared, setShared] = useState<{ text: string }>();
 
   useEffect(() => {
     (async () => {
-      if (shareId) {
-        setShared(await getShared(shareId));
+      if (shareKey) {
+        const decoded = atob(shareKey);
+        const [shareId, secret] = decoded.split("|");
+        const sharedNote = await getShared(shareId);
+        const text = decrypt(sharedNote.text, secret);
+        setShared({ text });
       }
     })();
-  }, [shareId]);
+  }, [shareKey]);
 
   return (
     <div className="mb-20">
@@ -190,7 +219,7 @@ const Page = () => {
   if (search.get("noteId")) {
     return <NotePage />;
   }
-  if (search.get("shareId")) {
+  if (search.get("shareKey")) {
     return <SharePage />;
   }
 
