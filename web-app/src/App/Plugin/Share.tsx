@@ -2,16 +2,15 @@ import { useContext, useEffect, useState } from "react";
 import { RNPluginCreator } from "./type";
 import { EditorContext } from "../Context";
 import { textToTitle } from "src/Note";
-import { BiCopy, BiFile, BiShare } from "react-icons/bi";
-import { useSearchParams } from "react-router-dom";
+import { BiCopy, BiEdit, BiFile, BiShare } from "react-icons/bi";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Button from "src/comps/Button";
-import { SavedNote } from "../type";
 import moment from "moment";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { getDownloadableNote } from "../File";
 
-const HOST = "http://127.0.0.1:5000";
+const HOST = "https://api.retronote.app";
 
 const shareNote = async (
   text: string
@@ -33,18 +32,37 @@ const getShared = async (
   return await res.json();
 };
 
+const SaveAsNote = ({ text }: { text: string }) => {
+  const navigate = useNavigate();
+  const { newNote } = useContext(EditorContext);
+
+  const handleClick = () => {
+    const note = newNote({ text });
+    navigate(`/write/note/${note?.id}`);
+  };
+
+  return (
+    <Button className="flex items-center space-x-2" onClick={handleClick}>
+      <BiEdit />
+      <span>Save as note</span>
+    </Button>
+  );
+};
+
 const NotePage = () => {
   const [search] = useSearchParams();
   const { usePluginState, allNotes, storage } = useContext(EditorContext);
   const [state, setState] = usePluginState<{ shares?: Record<string, string> }>(
-    "test2"
+    "share"
   );
   const [shared, setShared] = useState<{
     _id: string;
     created_at: number;
     text: string;
   }>();
-  const [copyBtnTxt, setCopyBtnTxt] = useState("Copy link");
+  const [copied, setCopied] = useState(false);
+  const [loading, setLoading] = useState(true);
+
   const noteId = search.get("noteId");
   const note = noteId ? allNotes[noteId] : undefined;
   const shareId = noteId ? (state?.shares || {})[noteId] : undefined;
@@ -52,15 +70,21 @@ const NotePage = () => {
   useEffect(() => {
     (async () => {
       if (shareId) {
+        setLoading(true);
         setShared(await getShared(shareId));
+        setLoading(false);
+      } else {
+        setLoading(false);
       }
     })();
   }, [shareId]);
 
   const share = async () => {
     if (note) {
+      setLoading(true);
       const downloadableNote = await getDownloadableNote(note, storage.pouch);
       const json = await shareNote(downloadableNote.text);
+      setLoading(false);
       setState({
         ...state,
         shares: { ...(state.shares || {}), [note.id]: json._id },
@@ -72,9 +96,9 @@ const NotePage = () => {
     navigator.clipboard.writeText(
       `https://app.retronote.app/write/plugin/share?shareId=${shareId}`
     );
-    setCopyBtnTxt("Copied!");
+    setCopied(true);
     setTimeout(() => {
-      setCopyBtnTxt("Copy link");
+      setCopied(false);
     }, 3000);
   };
 
@@ -91,9 +115,13 @@ const NotePage = () => {
             </div>
             <div className="space-x-2">
               <div className="space-x-2 inline-block">
-                <Button onClick={share} className="flex items-center space-x-2">
+                <Button
+                  onClick={share}
+                  className="flex items-center space-x-2"
+                  disabled={loading}
+                >
                   <BiShare />
-                  <span>Share now</span>
+                  <span>{loading ? "Loading" : "Share now"}</span>
                 </Button>
               </div>
             </div>
@@ -107,9 +135,10 @@ const NotePage = () => {
               <Button
                 className="text-xs flex items-center space-x-2"
                 onClick={handleCopy}
+                disabled={copied}
               >
                 <BiCopy />
-                <span>{copyBtnTxt}</span>
+                <span>{copied ? "Copied!" : "Copy link"}</span>
               </Button>
             </div>
           )}
@@ -135,10 +164,14 @@ const SharePage = () => {
   return (
     <div className="mb-20">
       {shared && (
-        <div className="prose">
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-            {shared.text}
-          </ReactMarkdown>
+        <div>
+          <SaveAsNote text={shared.text} />
+          <div className="prose my-6">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {shared.text}
+            </ReactMarkdown>
+          </div>
+          <SaveAsNote text={shared.text} />
         </div>
       )}
     </div>
