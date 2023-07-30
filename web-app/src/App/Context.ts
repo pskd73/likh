@@ -188,7 +188,9 @@ export const useEditor = ({
       if (exclude.includes(note.id)) continue;
       let added = false;
 
-      const tokens = Prism.tokenize(note.text, { hashtag: grammer.hashtag }).filter(t => typeof t === "object") as Token[];
+      const tokens = Prism.tokenize(note.text, {
+        hashtag: grammer.hashtag,
+      }).filter((t) => typeof t === "object") as Token[];
       for (const token of tokens) {
         const hashtag = token.content as string;
         if (!hashtagsMap[hashtag]) {
