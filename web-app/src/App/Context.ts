@@ -6,9 +6,10 @@ import { getLinkSuggestions } from "./Suggestion";
 import { PersistedState } from "./usePersistedState";
 import { Theme } from "./Theme";
 import { PouchContextType } from "./PouchDB";
-import { hashtag } from "./grammer";
 import { isMobile } from "./device";
 import { RNPlugin } from "./Plugin/type";
+import Prism, { Token } from "prismjs";
+import grammer from "./grammer";
 
 type CountStatType = "words" | "readTime";
 
@@ -185,16 +186,19 @@ export const useEditor = ({
     const hashtagsMap: Record<string, Record<string, SavedNote>> = { "": {} };
     for (const note of Object.values(allNotes || [])) {
       if (exclude.includes(note.id)) continue;
-      const re = new RegExp((hashtag as any).pattern, "g");
-      const matches = note.text.match(re);
-      if (matches) {
-        for (const hashtag of matches) {
-          if (!hashtagsMap[hashtag]) {
-            hashtagsMap[hashtag] = {};
-          }
-          hashtagsMap[hashtag][note.id] = note;
+      let added = false;
+
+      const tokens = Prism.tokenize(note.text, { hashtag: grammer.hashtag }).filter(t => typeof t === "object") as Token[];
+      for (const token of tokens) {
+        const hashtag = token.content as string;
+        if (!hashtagsMap[hashtag]) {
+          hashtagsMap[hashtag] = {};
         }
-      } else {
+        hashtagsMap[hashtag][note.id] = note;
+        added = true;
+      }
+
+      if (!added) {
         hashtagsMap[""][note.id] = note;
       }
     }
