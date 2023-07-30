@@ -254,7 +254,7 @@ const NewHome = () => {
             <div>
               <ClickableTile
                 label="Journal"
-                description={"New daily journal entry"}
+                description={"Daily entry"}
                 icon={<BiCalendarHeart />}
                 onClick={() =>
                   navigate(
