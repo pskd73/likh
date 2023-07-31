@@ -11,6 +11,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { getDownloadableNote } from "../File";
 import { Loader } from "src/comps/Loading";
+import Event from "src/components/Event";
 
 const HOST = "https://api.retronote.app";
 
@@ -116,6 +117,7 @@ const NotePage = () => {
       const json = await shareNote(text);
       const shareKey = btoa(`${json._id}|${secret}`);
 
+      Event.track("share");
       setLoading(false);
       setState({
         ...state,
