@@ -27,9 +27,7 @@ const RollPage = () => {
     note,
     updateNote,
     typewriterMode,
-    isRoll,
     newNote,
-    searchTerm,
     setRollHashTag,
     setNoteIds,
     getHashtags,
@@ -97,25 +95,10 @@ const RollPage = () => {
   }, [note, hashtag]);
 
   useEffect(() => {
-    if (searchTerm) {
-      setTimeout(() => {
-        scroll.scrollTo({ className: "highlight" });
-      }, 100);
-      return;
-    }
-
-    if (!isRoll) {
-      scroll.scrollToTop();
-    } else {
+    setTimeout(() => {
       scroll.scroll({ force: true });
-    }
-  }, [note?.id, isRoll, searchTerm]);
-
-  useEffect(() => {
-    if (typewriterMode) {
-      scroll.scroll({ force: true });
-    }
-  }, [typewriterMode]);
+    }, 100);
+  }, [notes, typewriterMode]);
 
   const handleChange = (
     id: string,
@@ -199,7 +182,6 @@ const RollPage = () => {
               <NoteEditor
                 onChange={(v) => handleChange(id, v)}
                 note={_note}
-                scrollContainerId={"body"}
               />
             </div>
           );

@@ -2,7 +2,6 @@ import classNames from "classnames";
 import Prism from "prismjs";
 import {
   KeyboardEventHandler,
-  ReactElement,
   useCallback,
   useEffect,
   useMemo,
@@ -23,7 +22,6 @@ import grammer, {
   imageRegex,
   quoteRegex,
 } from "src/App/grammer";
-import slugify from "slugify";
 import {
   CustomEditor,
   CustomElement,
@@ -34,8 +32,6 @@ import {
 import {
   handleEnterForList,
   intend,
-  parseListText,
-  toggleCheckbox,
 } from "src/App/Core/List";
 import {
   codify,
