@@ -68,7 +68,6 @@ const StatusBar = ({
   const navigate = useNavigate();
   const [fullScreen, setFullScreen] = useState(false);
   const pluginIconGetters = useMemo(() => {
-    console.log("updating");
     return plugins
       .filter((p) => p.noteStatuBarIcons)
       .map((p) => p.noteStatuBarIcons)
