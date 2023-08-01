@@ -63,24 +63,23 @@ const StatusBar = ({
     setTypewriterMode,
     typewriterMode,
     plugins,
+    pluginsState,
   } = useContext(EditorContext);
   const navigate = useNavigate();
   const [fullScreen, setFullScreen] = useState(false);
-  const pluginIconGetters = useMemo(
-    () =>
-      plugins
-        .filter((p) => p.noteStatuBarIcons)
-        .map((p) => p.noteStatuBarIcons)
-        .reduce((prev, cur) => ({ ...prev, ...cur }), {}),
-    [plugins]
-  );
+  const pluginIconGetters = useMemo(() => {
+    return plugins
+      .filter((p) => p.noteStatuBarIcons)
+      .map((p) => p.noteStatuBarIcons)
+      .reduce((prev, cur) => ({ ...prev, ...cur }), {});
+  }, [plugins, pluginsState]);
   const pluginIcons = useMemo(() => {
     if (note) {
       return Object.values(pluginIconGetters || {}).map((getter) =>
         getter(note)
       );
     }
-  }, [note]);
+  }, [note, pluginsState]);
 
   const handleSave = () => {
     if (note) {
@@ -147,9 +146,19 @@ const StatusBar = ({
             <SyncIcon state={syncState} />
           </Button>
         </Tooltip>
+        <CreatedTime />
+      </div>
+
+      {/* Right */}
+      <div className="flex justify-end h-full">
+        {note && !isRoll && <Delete />}
         {pluginIcons &&
           pluginIcons.map((pluginIcon, i) => (
-            <Tooltip key={i} tip={pluginIcon.tooltop}>
+            <Tooltip
+              key={i}
+              tip={pluginIcon.tooltop.text}
+              active={pluginIcon.tooltop.force}
+            >
               <Button
                 lite
                 className="rounded-none"
@@ -161,12 +170,6 @@ const StatusBar = ({
               </Button>
             </Tooltip>
           ))}
-        <CreatedTime />
-      </div>
-
-      {/* Right */}
-      <div className="flex justify-end h-full">
-        {note && !isRoll && <Delete />}
         {note && (
           <Tooltip
             tip={

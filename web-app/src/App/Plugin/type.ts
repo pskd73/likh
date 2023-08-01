@@ -39,7 +39,10 @@ export type RNPlugin = {
     string,
     (note: SavedNote) => {
       icon: ReactElement;
-      tooltop: string;
+      tooltop: {
+        text: string;
+        force?: boolean;
+      };
       onClick?: (
         e: React.MouseEvent<HTMLButtonElement>,
         navigate: NavigateFunction

@@ -1,9 +1,16 @@
 import CryptoJS from "crypto-js";
 import { useContext, useEffect, useState } from "react";
 import { RNPluginCreator } from "./type";
-import { EditorContext } from "../Context";
+import { EditorContext, EditorContextType } from "../Context";
 import { textToTitle } from "src/Note";
-import { BiCopy, BiEdit, BiFile, BiShare } from "react-icons/bi";
+import {
+  BiCopy,
+  BiEdit,
+  BiFile,
+  BiLoaderAlt,
+  BiShare,
+  BiShareAlt,
+} from "react-icons/bi";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Button from "src/comps/Button";
 import moment from "moment";
@@ -12,6 +19,8 @@ import remarkGfm from "remark-gfm";
 import { getDownloadableNote } from "../File";
 import { Loader } from "src/comps/Loading";
 import Event from "src/components/Event";
+import { CustomEditor } from "../Core/Core";
+import { SavedNote } from "../type";
 
 const HOST = "https://api.retronote.app";
 
@@ -240,20 +249,83 @@ const Page = () => {
   return null;
 };
 
+let editorState: EditorContextType | null = null;
+let copied = false;
+let loading = false;
+
 const SharePlugin: RNPluginCreator = () => {
+  const getStateItem = (key: string): any => {
+    const [state] = editorState!.usePluginState<{
+      shares?: Record<string, string>;
+    }>("share");
+    return state.shares![key];
+  };
+
+  const setStateItem = (key: string, value: any): any => {
+    const [state, setState] = editorState!.usePluginState<{
+      shares?: Record<string, string>;
+    }>("share");
+    setState({
+      ...state,
+      shares: { ...(state.shares || {}), [key]: value },
+    });
+  };
+
   return {
     name: "Share",
     version: 1,
+    updateState(_editorState) {
+      editorState = _editorState;
+    },
     page: {
       url: "share",
       element: <Page />,
     },
     noteStatuBarIcons: {
       share: (note) => ({
-        icon: <BiShare />,
-        tooltop: "Share",
-        onClick: (e, navigate) =>
-          navigate(`/write/plugin/share?noteId=${note.id}`),
+        icon: (
+          <span>
+            {loading ? (
+              <BiLoaderAlt className="animate-spin" />
+            ) : (
+              <BiShareAlt />
+            )}
+          </span>
+        ),
+        tooltop: {
+          text: copied ? "Link copied!" : "Share",
+          force: copied ? true : undefined,
+        },
+        onClick: async (e, navigate) => {
+          if (!editorState) return;
+          loading = true;
+          setStateItem("updated", new Date().getTime());
+
+          const downloadableNote = await getDownloadableNote(
+            note,
+            editorState.storage.pouch
+          );
+
+          let text = downloadableNote.text;
+          const secret = generateRandomString(10);
+          text = encrypt(text, secret);
+
+          const json = await shareNote(text);
+          const shareKey = btoa(`${json._id}|${secret}`);
+
+          Event.track("share");
+
+          navigator.clipboard.writeText(
+            `https://app.retronote.app/write/plugin/share?shareKey=${shareKey}`
+          );
+          loading = false;
+          copied = true;
+          setStateItem(note.id, shareKey);
+          setTimeout(() => {
+            copied = false;
+            setStateItem("updated", new Date().getTime());
+          }, 3000);
+        },
       }),
     },
   };

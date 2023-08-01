@@ -1,9 +1,9 @@
 import classNames from "classnames";
 import {
   ComponentProps,
-  MouseEventHandler,
   PropsWithChildren,
   ReactElement,
+  useEffect,
   useRef,
   useState,
 } from "react";
@@ -18,13 +18,16 @@ const Tooltip = ({
   tip,
   direction = "bottom",
   multiline,
+  active,
   ...restProps
 }: ComponentProps<"div"> & {
   tip: ReactElement | string;
   direction?: "top" | "bottom";
   multiline?: boolean;
+  active?: boolean;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const timeout = useRef<NodeJS.Timeout>();
   const [pos, setPos] = useState<Position>({
     top: -9999,
@@ -36,6 +39,16 @@ const Tooltip = ({
     left: -9999,
     direction: "bottom",
   });
+
+  useEffect(() => {
+    if (containerRef.current) {
+      if (active) {
+        handleEnter(containerRef.current);
+      } else {
+        handleLeave();
+      }
+    }
+  }, [active, containerRef])
 
   const getPosition = (
     rect: DOMRect,
@@ -115,6 +128,7 @@ const Tooltip = ({
   return (
     <div className={twMerge(className, "group relative")} {...restProps}>
       <div
+        ref={containerRef}
         onMouseEnter={(e) => handleEnter(e.currentTarget)}
         onMouseLeave={handleLeave}
         onFocus={(e) => handleEnter(e.currentTarget)}

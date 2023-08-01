@@ -331,5 +331,6 @@ export const useEditor = ({
     trashedNotes,
 
     usePluginState,
+    pluginsState
   };
 };
