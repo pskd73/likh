@@ -28,6 +28,7 @@ export function getNodeText(
   }
   if ((element as CustomElement).children) {
     for (const child of (element as CustomElement).children) {
+      if ((element as CustomElement).type === "title") continue;
       text += getNodeText(child);
     }
   }
@@ -74,6 +75,9 @@ export const serialize = (value: Descendant[]) => {
     .map((n): string => {
       if ((n as CustomElement).type === "code-block") {
         return serialize((n as CustomElement).children);
+      }
+      if ((n as CustomElement).type === "title") {
+        return "";
       }
       return Node.string(n);
     })

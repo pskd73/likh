@@ -32,13 +32,6 @@ const SlateElement = ({
   text: string;
   editor: CustomEditor;
 }) => {
-  for (const maker of elementMakers) {
-    const ret = maker({ element, attributes, children, text, editor });
-    if (ret) {
-      return ret;
-    }
-  }
-
   if (element.type === "title") {
     return (
       <h1 {...attributes} className="text-4xl font-bold mb-3">
@@ -56,6 +49,13 @@ const SlateElement = ({
         {children}
       </h1>
     );
+  }
+
+  for (const maker of elementMakers) {
+    const ret = maker({ element, attributes, children, text, editor });
+    if (ret) {
+      return ret;
+    }
   }
 
   if (element.type === "code-block") {
