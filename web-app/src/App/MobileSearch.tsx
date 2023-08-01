@@ -3,6 +3,8 @@ import Browse from "./Home/Browse";
 import Search from "./SidePanel/Search";
 import { EditorContext } from "./Context";
 import Notes from "./Home/Notes";
+import { WithTitle } from "./SidePanel/Common";
+import Trash from "./Home/Trash";
 
 const MobileSearch = () => {
   const { searchTerm, setSearchTerm } = useContext(EditorContext);
@@ -15,8 +17,13 @@ const MobileSearch = () => {
           <Notes />
         </div>
       ) : (
-        <div>
-          <Browse />
+        <div className="space-y-6">
+          <div>
+            <Browse />
+          </div>
+          <WithTitle title="Trash" active={false} noPadding>
+            <Trash />
+          </WithTitle>
         </div>
       )}
     </div>
