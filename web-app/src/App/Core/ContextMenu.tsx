@@ -40,15 +40,18 @@ export function useContextMenu(
   const [activePrefix, setActivePrefix] = useState<string>();
 
   useEffect(() => {
-    document
-      .getElementById("body")
-      ?.addEventListener("scroll", handleScroll);
+    document.getElementById("body")?.addEventListener("scroll", handleScroll);
     return () => {
       document
         .getElementById("body")
         ?.removeEventListener("scroll", handleScroll);
     };
   }, [editor, prefixes]);
+
+  useEffect(() => {
+    window.addEventListener("click", handleBodyClick);
+    return () => window.removeEventListener("click", handleBodyClick);
+  }, []);
 
   useEffect(() => {
     const el = ref.current;
@@ -76,6 +79,15 @@ export function useContextMenu(
       }
     }
   }, [editor, index, activePrefix, search, count, target]);
+
+  const handleBodyClick = (e: MouseEvent) => {
+    const contextMenu = document.getElementById("context-menu");
+    if (!contextMenu?.contains(e.target as any)) {
+      setTarget(undefined);
+      setSearch("");
+      setActivePrefix(undefined);
+    }
+  };
 
   const handleScroll = useCallback(() => {
     setActivePrefix(undefined);
