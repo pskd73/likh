@@ -38,8 +38,6 @@ function Leaf({
   setSelection: (range: Partial<BaseRange>) => void;
   editor: CustomEditor;
 }) {
-  const title = leaf.title1 || leaf.title2 || leaf.title3;
-
   const className = classNames({
     // decor
     "font-semibold": leaf.bold || leaf.boldItalic,
@@ -182,7 +180,7 @@ function Leaf({
       id={id}
       spellCheck={!leaf.hashtag}
     >
-      {placeholder && leaf.newLine && (
+      {leaf.path && leaf.path[0] !== 0 && placeholder && leaf.newLine && (
         <span
           contentEditable={false}
           className="absolute text-primary text-opacity-40 pointer-events-none select-none"

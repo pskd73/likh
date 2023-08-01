@@ -29,10 +29,7 @@ import {
   deserialize,
   focusEnd,
 } from "src/App/Core/Core";
-import {
-  handleEnterForList,
-  intend,
-} from "src/App/Core/List";
+import { handleEnterForList, intend } from "src/App/Core/List";
 import {
   codify,
   getCodeRanges,
@@ -53,6 +50,7 @@ import { Theme, Themes } from "src/App/Theme";
 import Leaf, { LeafMaker } from "src/App/Core/Slate/Leaf";
 import SlateElement, { ElementMaker } from "src/App/Core/Slate/SlateElement";
 import { escape } from "src/util";
+import withLayout from "./withLayout";
 
 const defaultValue = [
   {
@@ -127,7 +125,7 @@ const Editor = ({
   theme = theme || Themes.Basic;
 
   const editor = useMemo(
-    () => passedEditor || withHistory(withReact(createEditor())),
+    () => passedEditor || withHistory(withLayout(withReact(createEditor()))),
     [passedEditor]
   );
   const contextMenu = useContextMenu(
@@ -188,6 +186,10 @@ const Editor = ({
       if (!Text.isText(node)) {
         return [];
       }
+      if (path[0] === 0) {
+        return [];
+      }
+
       let ranges: BaseRange[] = [];
 
       // Placeholder

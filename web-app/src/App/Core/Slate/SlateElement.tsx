@@ -1,5 +1,6 @@
 import { CustomEditor, CustomElement } from "../Core";
 import classNames from "classnames";
+import { isPointFocused } from "../Range";
 
 export type ElementMaker = (props: {
   element: CustomElement;
@@ -36,6 +37,25 @@ const SlateElement = ({
     if (ret) {
       return ret;
     }
+  }
+
+  if (element.type === "title") {
+    return (
+      <h1 {...attributes} className="text-4xl font-bold mb-3">
+        {!text.length && (
+          <span
+            contentEditable={false}
+            className={classNames(
+              "absolute text-primary text-opacity-40",
+              "pointer-events-none select-none"
+            )}
+          >
+            Untitled note
+          </span>
+        )}
+        {children}
+      </h1>
+    );
   }
 
   if (element.type === "code-block") {

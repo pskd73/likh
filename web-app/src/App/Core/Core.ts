@@ -4,7 +4,7 @@ import { ReactEditor } from "slate-react";
 
 export type CustomEditor = BaseEditor & ReactEditor & HistoryEditor;
 export type CustomElement = {
-  type: "paragraph" | "code-block";
+  type: "paragraph" | "code-block" | "title";
   children: CustomText[];
 };
 export type CustomText = { text: string };

@@ -40,9 +40,7 @@ export function useContextMenu(
   const [activePrefix, setActivePrefix] = useState<string>();
 
   useEffect(() => {
-    document
-      .getElementById("body")
-      ?.addEventListener("scroll", handleScroll);
+    document.getElementById("body")?.addEventListener("scroll", handleScroll);
     return () => {
       document
         .getElementById("body")
@@ -87,6 +85,7 @@ export function useContextMenu(
   const handleChange = useCallback(() => {
     const { selection } = editor;
     if (!selection || !Range.isCollapsed(selection)) return;
+    if (selection.anchor.path[0] === 0 || selection.focus.path[0] === 0) return;
     let showing = false;
 
     for (const boundary of boundaries) {
