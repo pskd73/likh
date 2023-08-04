@@ -157,15 +157,9 @@ export const useEditor = ({
   };
 
   const getNoteByTitle = async (title: string) => {
-    for (const noteMeta of storage.notes) {
-      const note = await storage.getNote(noteMeta.id);
-      if (note) {
-        const match = note.text.match(/^ *#{1,3} (.*)$/m);
-        if (match) {
-          if (match[1].toLowerCase() === title.toLowerCase()) {
-            return note;
-          }
-        }
+    for (const note of Object.values(allNotes)) {
+      if (isLinked(title, note.text)) {
+        return note;
       }
     }
   };
