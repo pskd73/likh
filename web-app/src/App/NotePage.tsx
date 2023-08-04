@@ -46,7 +46,7 @@ const NotePage = () => {
 
   useEffect(() => {
     if (note) {
-      setTitle(textToTitle(note.text) || "Retro Note");
+      setTitle(textToTitle(note.text) || "RetroNote");
     }
   }, [note]);
 

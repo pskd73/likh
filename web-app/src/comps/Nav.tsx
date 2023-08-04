@@ -49,7 +49,7 @@ export const Nav = () => {
               <div className="fill-primary w-8 max-h-full">
                 <Logo />
               </div>
-              {/* <span className="block -mb-2">Retro Note</span> */}
+              {/* <span className="block -mb-2">RetroNote</span> */}
             </Link>
           </h1>
           <div>
@@ -103,7 +103,7 @@ export const Footer = () => {
         )}
         <p>
           <Clickable>
-            <a href="/">Retro Note</a>
+            <a href="/">RetroNote</a>
           </Clickable>
           &nbsp;•&nbsp;Built with &lt;3 by&nbsp;
           <Clickable>

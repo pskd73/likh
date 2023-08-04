@@ -205,7 +205,7 @@ const Timeline = () => {
                         "w-full h-full"
                       )}
                       src={cachedImages[`${item.note.id}-${addr}`]}
-                      alt="Retro Note"
+                      alt="RetroNote"
                     />
                   </div>
                 ))}

@@ -147,7 +147,7 @@ const MyNotes = () => {
   return (
     <div>
       <Helmet>
-        <title>My notes - Retro Note</title>
+        <title>My notes - RetroNote</title>
       </Helmet>
       <div className="mb-2 flex items-center space-x-2">
         <Header className="">My notes</Header>

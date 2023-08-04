@@ -57,7 +57,7 @@ const Settings = () => {
   return (
     <div className="space-y-4">
       <Helmet>
-        <title>Settings - Retro Note</title>
+        <title>Settings - RetroNote</title>
       </Helmet>
       <Item>
         <Label>Blog font</Label>

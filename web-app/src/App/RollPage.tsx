@@ -90,7 +90,7 @@ const RollPage = () => {
     if (hashtag) {
       setTitle(hashtag);
     } else if (note) {
-      setTitle(textToTitle(note.text) || "Retro Note");
+      setTitle(textToTitle(note.text) || "RetroNote");
     }
   }, [note, hashtag]);
 

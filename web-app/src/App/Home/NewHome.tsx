@@ -223,7 +223,7 @@ const NewHome = () => {
           <div className="fill-primary w-10 max-h-full">
             <Logo />
           </div>
-          <span>Retro Note</span>
+          <span>RetroNote</span>
         </div>
         <DateTime />
       </div>

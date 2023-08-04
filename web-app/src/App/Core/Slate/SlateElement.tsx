@@ -61,7 +61,7 @@ const SlateElement = ({
           <img
             src={img.uri || img.url}
             className="rounded-lg"
-            alt="Retro Note"
+            alt="RetroNote"
           />
         </div>
       )}
