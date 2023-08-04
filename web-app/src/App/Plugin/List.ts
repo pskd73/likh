@@ -1,6 +1,7 @@
 import EmojisPlugin from "./Emojis";
 import HeadingsPlugin from "./Headings";
 import KaTeXPlugin from "./KaTeX";
+import { LinkGraphPlugin } from "./LinkGraph";
 import MarkdownListsPlugin from "./MarkdownLists";
 import SharePlugin from "./Share";
 import SlashPlugin from "./Slash";
@@ -15,4 +16,5 @@ export const enabledPlugins: RNPluginCreator[] = [
   EmojisPlugin,
   HeadingsPlugin,
   SharePlugin,
+  LinkGraphPlugin,
 ];
