@@ -1,49 +1,54 @@
 {
-  "short_name": "Retro Note",
-  "name": "Retro Note",
+  "short_name": "RetroNote",
+  "name": "RetroNote",
   "icons": [
     {
       "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
+      "sizes": "24x24 16x16",
       "type": "image/x-icon"
     },
     {
-      "src": "icons/icon-72x72.png",
+      "src": "icons-v2/32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "icons-v2/62.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "icons-v2/72.png",
       "sizes": "72x72",
       "type": "image/png"
     },
     {
-      "src": "icons/icon-96x96.png",
+      "src": "icons-v2/6.png",
       "sizes": "96x96",
       "type": "image/png"
     },
     {
-      "src": "icons/icon-128x128.png",
+      "src": "icons-v2/128.png",
       "sizes": "128x128",
       "type": "image/png"
     },
     {
-      "src": "icons/icon-144x144.png",
+      "src": "icons-v2/144.png",
       "sizes": "144x144",
       "type": "image/png"
     },
     {
-      "src": "icons/icon-152x152.png",
+      "src": "icons-v2/152.png",
       "sizes": "152x152",
       "type": "image/png"
     },
     {
-      "src": "icons/icon-192x192.png",
+      "src": "icons-v2/192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "icons/icon-384x384.png",
-      "sizes": "384x384",
-      "type": "image/png"
-    },
-    {
-      "src": "icons/icon-512x512.png",
+      "src": "icons-v2/512.png",
       "sizes": "512x512",
       "type": "image/png"
     }

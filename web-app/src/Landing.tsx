@@ -11,7 +11,7 @@ import Event from "./components/Event";
 const steps = [
   "Add topics you are interested in",
   "Add the daily calendar event",
-  "Pick a Retro Note suggested topic to write about. Repeat it daily!",
+  "Pick a RetroNote suggested topic to write about. Repeat it daily!",
 ];
 
 const Landing = () => {
@@ -50,7 +50,7 @@ const Landing = () => {
   return (
     <div className="font-Inter min-h-[100vh] w-full bg-base">
       <Helmet>
-        <title>Retro Note - Build daily writing habit</title>
+        <title>RetroNote - Build daily writing habit</title>
       </Helmet>
       <Paper>
         <div className="p-4 md:py-6 space-y-20">

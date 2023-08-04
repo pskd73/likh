@@ -65,8 +65,8 @@ const Home = () => {
     const parts = [
       "action=TEMPLATE",
       "dates=" + formatDate(new Date(start)) + "/" + formatDate(new Date(end)),
-      "text=Write on Retro Note",
-      "location=Retro Note",
+      "text=Write on RetroNote",
+      "location=RetroNote",
       "recur=RRULE:FREQ%3DDAILY;INTERVAL%3D1",
     ];
     Event.track("add_to_calendar");
@@ -83,7 +83,7 @@ const Home = () => {
   return (
     <div className="flex flex-col-reverse lg:flex-row lg:space-x-6">
       <Helmet>
-        <title>Home - Retro Note</title>
+        <title>Home - RetroNote</title>
       </Helmet>
       <div className="lg:w-9/12 space-y-6">
         {homeApi.response?.hashtags && homeApi.response.hashtags.length > 0 && (

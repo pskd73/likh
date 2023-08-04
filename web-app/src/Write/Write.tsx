@@ -65,7 +65,7 @@ const Write = () => {
       {note && (
         <>
           <Helmet>
-            <title>{getNoteTitle(note)} - Retro Note</title>
+            <title>{getNoteTitle(note)} - RetroNote</title>
           </Helmet>
           <NoteWriter
             note={note}
