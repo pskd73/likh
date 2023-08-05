@@ -1,7 +1,6 @@
 import CryptoJS from "crypto-js";
-import { useContext, useEffect, useState } from "react";
-import { RNPluginCreator } from "./type";
-import { EditorContext, EditorContextType } from "../Context";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { EditorContext } from "../Context";
 import { textToTitle } from "src/Note";
 import {
   BiCopy,
@@ -19,8 +18,8 @@ import remarkGfm from "remark-gfm";
 import { getDownloadableNote } from "../File";
 import { Loader } from "src/comps/Loading";
 import Event from "src/components/Event";
-import { CustomEditor } from "../Core/Core";
-import { SavedNote } from "../type";
+import { PluginContext } from "./Context";
+import Tooltip from "src/comps/Tooltip";
 
 const HOST = "https://api.retronote.app";
 
@@ -249,86 +248,66 @@ const Page = () => {
   return null;
 };
 
-let editorState: EditorContextType | null = null;
-let copied = false;
-let loading = false;
+const StatusBarIcon = () => {
+  const { note, storage } = useContext(EditorContext);
+  const { getState } = useContext(PluginContext);
+  const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const { set } = useMemo(() => getState("share"), [getState]);
 
-const SharePlugin: RNPluginCreator = () => {
-  const getStateItem = (key: string): any => {
-    const [state] = editorState!.usePluginState<{
-      shares?: Record<string, string>;
-    }>("share");
-    return state.shares![key];
+  const handleClick = async () => {
+    if (!note) return;
+    setLoading(true);
+
+    const downloadableNote = await getDownloadableNote(note, storage.pouch);
+
+    let text = downloadableNote.text;
+    const secret = generateRandomString(10);
+    text = encrypt(text, secret);
+
+    const json = await shareNote(text);
+    const shareKey = btoa(`${json._id}|${secret}`);
+
+    Event.track("share");
+
+    navigator.clipboard.writeText(
+      `https://app.retronote.app/write/plugin/share?shareKey=${shareKey}`
+    );
+    setLoading(false);
+    setCopied(true);
+    set(note.id, shareKey);
+    setTimeout(() => {
+      setCopied(false);
+    }, 3000);
   };
 
-  const setStateItem = (key: string, value: any): any => {
-    const [state, setState] = editorState!.usePluginState<{
-      shares?: Record<string, string>;
-    }>("share");
-    setState({
-      ...state,
-      shares: { ...(state.shares || {}), [key]: value },
-    });
-  };
+  if (!note) return null;
 
-  return {
-    name: "Share",
-    version: 1,
-    updateState(_editorState) {
-      editorState = _editorState;
-    },
-    page: {
-      url: "share",
-      element: <Page />,
-    },
-    noteStatuBarIcons: {
-      share: (note) => ({
-        icon: (
-          <span>
-            {loading ? (
-              <BiLoaderAlt className="animate-spin" />
-            ) : (
-              <BiShareAlt />
-            )}
-          </span>
-        ),
-        tooltop: {
-          text: copied ? "Link copied!" : "Share",
-          force: copied ? true : undefined,
-        },
-        onClick: async (e, navigate) => {
-          if (!editorState) return;
-          loading = true;
-          setStateItem("updated", new Date().getTime());
-
-          const downloadableNote = await getDownloadableNote(
-            note,
-            editorState.storage.pouch
-          );
-
-          let text = downloadableNote.text;
-          const secret = generateRandomString(10);
-          text = encrypt(text, secret);
-
-          const json = await shareNote(text);
-          const shareKey = btoa(`${json._id}|${secret}`);
-
-          Event.track("share");
-
-          navigator.clipboard.writeText(
-            `https://app.retronote.app/write/plugin/share?shareKey=${shareKey}`
-          );
-          loading = false;
-          copied = true;
-          setStateItem(note.id, shareKey);
-          setTimeout(() => {
-            copied = false;
-            setStateItem("updated", new Date().getTime());
-          }, 3000);
-        },
-      }),
-    },
-  };
+  return (
+    <Tooltip
+      tip={copied ? "Link copied!" : "Share"}
+      active={copied ? true : undefined}
+    >
+      <Button onClick={handleClick} lite>
+        {loading ? <BiLoaderAlt className="animate-spin" /> : <BiShareAlt />}
+      </Button>
+    </Tooltip>
+  );
 };
 
-export default SharePlugin;
+export const SharePlugin = () => {
+  const { register } = useContext(PluginContext);
+
+  useEffect(() => {
+    register("share-plugin", {
+      name: "Share",
+      version: 1,
+      pages: {
+        share: { page: <Page /> },
+      },
+      statusBarIcons: [<StatusBarIcon />],
+    });
+  }, []);
+
+  return null;
+};
