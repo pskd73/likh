@@ -1,10 +1,10 @@
 import { useContext, useEffect, useRef } from "react";
-import { RNPluginCreator } from "./type";
 import * as d3 from "d3";
 import { EditorContext } from "../Context";
 import { textToTitle } from "src/Note";
 import useMemoAsync from "../useMemoAsync";
 import { useNavigate } from "react-router-dom";
+import { PluginContext } from "./Context";
 
 // https://observablehq.com/@d3/disjoint-force-directed-graph/2?intent=fork
 
@@ -64,8 +64,8 @@ const Page = () => {
     if (!data) return;
 
     // Specify the dimensions of the chart.
-    const width = 600;
-    const height = 600;
+    const width = 900;
+    const height = 700;
 
     // Specify the color scale.
     const color = d3.scaleOrdinal(d3.schemeCategory10);
@@ -208,13 +208,16 @@ const Page = () => {
   );
 };
 
-export const LinkGraphPlugin: RNPluginCreator = () => {
-  return {
-    name: "Link Graph",
-    version: 1,
-    page: {
-      url: "link-graph",
-      element: <Page />,
-    },
-  };
+export const LinkGraphPlugin = () => {
+  const { register } = useContext(PluginContext);
+
+  useEffect(() => {
+    register("link-graph", {
+      name: "Link Graph",
+      version: 1,
+      pages: { "link-graph": { page: <Page /> } },
+    });
+  }, []);
+
+  return null;
 };

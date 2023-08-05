@@ -14,6 +14,8 @@ import * as PouchDB from "src/App/PouchDB";
 import { Outlet } from "react-router-dom";
 import { enabledPlugins } from "./Plugin/List";
 import MobileNavBar from "./MobileNavBar";
+import PluginInjector from "./Plugin/Injector";
+import { PluginContext, usePlugins } from "./Plugin/Context";
 
 const STATUS_BAR_HEIGHT = 30;
 
@@ -23,6 +25,7 @@ const EditorWindow = () => {
   const pdb = PouchDB.usePouchDb();
   const storage = useStorage(pdb);
   const editorState = useEditor({ storage, pdb, plugins });
+
   const statusBarPadding = useMemo(() => (iOS() ? 20 : 0), []);
 
   useShortcuts(editorState);
@@ -36,42 +39,44 @@ const EditorWindow = () => {
   return (
     <PouchDB.PouchContext.Provider value={pdb}>
       <EditorContext.Provider value={editorState}>
-        <div
-          className={classNames("min-h-[100vh] bg-base text-primary flex", {
-            "theme-base": editorState.colorTheme === "base",
-            "theme-dark": editorState.colorTheme === "dark",
-            "theme-accent": editorState.colorTheme === "accent",
-            "theme-secondary": editorState.colorTheme === "secondary",
-          })}
-        >
-          <SidePanel />
+        <PluginInjector>
           <div
-            style={{
-              width:
-                editorState.sideBar && !isMobile
-                  ? "calc(100vw - 300px)"
-                  : "100vw",
-            }}
+            className={classNames("min-h-[100vh] bg-base text-primary flex", {
+              "theme-base": editorState.colorTheme === "base",
+              "theme-dark": editorState.colorTheme === "dark",
+              "theme-accent": editorState.colorTheme === "accent",
+              "theme-secondary": editorState.colorTheme === "secondary",
+            })}
           >
+            <SidePanel />
             <div
-              id="page-container"
-              className="flex-1 p-4 py-8 flex justify-center"
-              tabIndex={-1}
+              style={{
+                width:
+                  editorState.sideBar && !isMobile
+                    ? "calc(100vw - 300px)"
+                    : "100vw",
+              }}
             >
-              <div className={classNames("w-full max-w-[1000px]")}>
-                <Outlet />
+              <div
+                id="page-container"
+                className="flex-1 p-4 py-8 flex justify-center"
+                tabIndex={-1}
+              >
+                <div className={classNames("w-full max-w-[1000px]")}>
+                  <Outlet />
+                </div>
               </div>
+              {!isMobile ? (
+                <StatusBar
+                  height={STATUS_BAR_HEIGHT}
+                  padding={statusBarPadding}
+                />
+              ) : (
+                <MobileNavBar />
+              )}
             </div>
-            {!isMobile ? (
-              <StatusBar
-                height={STATUS_BAR_HEIGHT}
-                padding={statusBarPadding}
-              />
-            ) : (
-              <MobileNavBar />
-            )}
           </div>
-        </div>
+        </PluginInjector>
       </EditorContext.Provider>
     </PouchDB.PouchContext.Provider>
   );

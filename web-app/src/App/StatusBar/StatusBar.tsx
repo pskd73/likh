@@ -22,6 +22,9 @@ import { getShortcutText } from "../useShortcuts";
 import moment from "moment";
 import CreatedTime from "./CreatedTime";
 import { useNavigate } from "react-router-dom";
+import { PluginContext } from "../Plugin/Context";
+import React from "react";
+import { ReactElement } from "react-markdown/lib/react-markdown";
 
 const SyncIcon = ({ state }: { state: string }) => {
   if (state === "paused" || state === "init") {
@@ -62,24 +65,17 @@ const StatusBar = ({
     storage,
     setTypewriterMode,
     typewriterMode,
-    plugins,
-    pluginsState,
   } = useContext(EditorContext);
+  const { plugins } = useContext(PluginContext);
   const navigate = useNavigate();
   const [fullScreen, setFullScreen] = useState(false);
-  const pluginIconGetters = useMemo(() => {
-    return plugins
-      .filter((p) => p.noteStatuBarIcons)
-      .map((p) => p.noteStatuBarIcons)
-      .reduce((prev, cur) => ({ ...prev, ...cur }), {});
-  }, [plugins, pluginsState]);
-  const pluginIcons = useMemo(() => {
-    if (note) {
-      return Object.values(pluginIconGetters || {}).map((getter) =>
-        getter(note)
-      );
-    }
-  }, [note, pluginsState]);
+  const pluginBtns = useMemo(() => {
+    const btns = Object.values(plugins)
+      .map((p) => p.statusBarIcons)
+      .filter((icons) => icons?.length)
+      .reduce((p, c) => [...p!, ...c!], []);
+    return btns || [];
+  }, [plugins]);
 
   const handleSave = () => {
     if (note) {
@@ -152,24 +148,9 @@ const StatusBar = ({
       {/* Right */}
       <div className="flex justify-end h-full">
         {note && !isRoll && <Delete />}
-        {pluginIcons &&
-          pluginIcons.map((pluginIcon, i) => (
-            <Tooltip
-              key={i}
-              tip={pluginIcon.tooltop.text}
-              active={pluginIcon.tooltop.force}
-            >
-              <Button
-                lite
-                className="rounded-none"
-                onClick={(e) =>
-                  pluginIcon.onClick && pluginIcon.onClick(e, navigate)
-                }
-              >
-                {pluginIcon.icon}
-              </Button>
-            </Tooltip>
-          ))}
+        {pluginBtns.map((btn, i) => (
+          <React.Fragment key={i}>{btn}</React.Fragment>
+        ))}
         {note && (
           <Tooltip
             tip={

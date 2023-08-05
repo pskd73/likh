@@ -7,7 +7,6 @@ import { BaseRange } from "slate";
 import { ElementMaker } from "../Core/Slate/SlateElement";
 import { Boundary } from "../Core/ContextMenu";
 import { ReactElement } from "react-markdown/lib/react-markdown";
-import { MouseEventHandler } from "react";
 import { NavigateFunction } from "react-router-dom";
 
 export type SuggestionConfig = {
@@ -49,6 +48,7 @@ export type RNPlugin = {
       ) => void;
     }
   >;
+  injector?: ReactElement;
 };
 
 export type RNPluginCreator = () => RNPlugin;
