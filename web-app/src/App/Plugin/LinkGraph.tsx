@@ -5,6 +5,8 @@ import { textToTitle } from "src/Note";
 import useMemoAsync from "../useMemoAsync";
 import { useNavigate } from "react-router-dom";
 import { PluginContext } from "./Context";
+import List from "../List";
+import { BiGitRepoForked } from "react-icons/bi";
 
 // https://observablehq.com/@d3/disjoint-force-directed-graph/2?intent=fork
 
@@ -216,6 +218,18 @@ const Page = () => {
   );
 };
 
+const NavItem = () => {
+  const navigate = useNavigate();
+  return (
+    <List.Item withIcon onClick={() => navigate("/write/plugin/link-graph")}>
+      <List.Item.Icon>
+        <BiGitRepoForked />
+      </List.Item.Icon>
+      <span>Link graph</span>
+    </List.Item>
+  );
+};
+
 export const LinkGraphPlugin = () => {
   const { register } = useContext(PluginContext);
 
@@ -224,6 +238,8 @@ export const LinkGraphPlugin = () => {
       name: "Link Graph",
       version: 1,
       pages: { "link-graph": { page: <Page /> } },
+      navigationItems: [<NavItem />],
+      mobileSettingItems: [<NavItem />],
     });
   }, []);
 

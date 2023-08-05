@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 import { EditorContext } from "src/App/Context";
 import Outline from "src/App/SidePanel/Outline";
 import { isMobile } from "src/App/device";
@@ -7,6 +7,7 @@ import RollOutline from "./RollOutline";
 import {
   BiCalendarHeart,
   BiCog,
+  BiGitRepoForked,
   BiHomeSmile,
   BiPlus,
   BiSidebar,
@@ -25,6 +26,8 @@ import SidePanelBrowse from "./SidePanelBrowse";
 import Settings from "./Settings";
 import { WithTitle } from "./Common";
 import Trash from "../Home/Trash";
+import List from "../List";
+import { PluginContext } from "../Plugin/Context";
 
 const SidePanel = () => {
   const navigate = useNavigate();
@@ -39,6 +42,14 @@ const SidePanel = () => {
     setSearchTerm,
     newNote,
   } = useContext(EditorContext);
+  const { plugins } = useContext(PluginContext);
+  const navigationItems = useMemo(() => {
+    const btns = Object.values(plugins)
+      .map((p) => p.navigationItems)
+      .filter((items) => items?.length)
+      .reduce((p, c) => [...p!, ...c!], []);
+    return btns || [];
+  }, [plugins]);
 
   const handleHome = () => {
     home();
@@ -233,6 +244,15 @@ const SidePanel = () => {
               {isRoll && <RollOutline />}
               <Outline />
               <Links />
+              {navigationItems.length > 0 && (
+                <WithTitle title="Navigation" active>
+                  <List>
+                    {navigationItems.map((item, i) => (
+                      <React.Fragment key={i}>{item}</React.Fragment>
+                    ))}
+                  </List>
+                </WithTitle>
+              )}
               <SidePanelBrowse />
               <WithTitle title="Trash" active={false}>
                 <Trash />

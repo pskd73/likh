@@ -11,6 +11,8 @@ export type Plugin = {
   pages?: Record<string, { page: ReactElement }>;
   statusBarIcons?: ReactElement[];
   noteMenuItems?: ReactElement[];
+  navigationItems?: ReactElement[];
+  mobileSettingItems?: ReactElement[];
 };
 
 export const usePlugins = () => {
