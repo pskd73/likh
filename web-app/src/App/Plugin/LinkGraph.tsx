@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { PluginContext } from "./Context";
 import List from "../List";
 import { BiGitRepoForked } from "react-icons/bi";
+import Event from "src/components/Event";
 
 // https://observablehq.com/@d3/disjoint-force-directed-graph/2?intent=fork
 
@@ -210,6 +211,10 @@ const Page = () => {
 
     return () => setFullPage(false);
   }, [ref.current, data]);
+
+  useEffect(() => {
+    Event.track("link-graph");
+  }, []);
 
   return (
     <div className="flex justify-center items-center w-full h-full">
