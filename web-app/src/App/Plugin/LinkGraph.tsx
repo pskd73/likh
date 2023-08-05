@@ -12,6 +12,7 @@ type Node = { id: string; title: string };
 type Link = { source: string; target: string };
 
 const Page = () => {
+  const { setFullPage } = useContext(EditorContext);
   const navigate = useNavigate();
   const ref = useRef<HTMLDivElement>(null);
   const { allNotes, getNoteByTitle, newNote } = useContext(EditorContext);
@@ -63,9 +64,14 @@ const Page = () => {
   useEffect(() => {
     if (!data) return;
 
+    setFullPage(true);
+    const rect = document
+      .getElementById("page-container")
+      ?.getBoundingClientRect();
+
     // Specify the dimensions of the chart.
-    const width = 900;
-    const height = 700;
+    const width = rect?.width || 300;
+    const height = window.innerHeight;
 
     // Specify the color scale.
     const color = d3.scaleOrdinal(d3.schemeCategory10);
@@ -166,7 +172,7 @@ const Page = () => {
           .selectAll(".label")
           .filter((d, _i) => i === _i)
           .node();
-        const offset = _node?.getBoundingClientRect().width / 2 || 0;
+        const offset = _node?.getBBox().width / 2 || 0;
         return "translate(" + (d.x - offset) + "," + (d.y + 18) + ")";
       });
     });
@@ -199,6 +205,8 @@ const Page = () => {
     if (ref.current) {
       ref.current.replaceChildren(svg.node() as any);
     }
+
+    return () => setFullPage(false);
   }, [ref.current, data]);
 
   return (

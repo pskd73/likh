@@ -56,10 +56,16 @@ const EditorWindow = () => {
             >
               <div
                 id="page-container"
-                className="flex-1 p-4 py-8 flex justify-center"
+                className={classNames("flex-1 flex justify-center", {
+                  "p-4 py-8": !editorState.fullPage,
+                })}
                 tabIndex={-1}
               >
-                <div className={classNames("w-full max-w-[1000px]")}>
+                <div
+                  className={classNames("w-full", {
+                    "max-w-[1000px]": !editorState.fullPage,
+                  })}
+                >
                   <Outlet />
                 </div>
               </div>
