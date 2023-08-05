@@ -59,6 +59,7 @@ export const useEditor = ({
   const [pluginsState, setPluginsState] = usePluginsState<Record<string, any>>(
     {}
   );
+  const [fullPage, setFullPage] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -325,6 +326,9 @@ export const useEditor = ({
     trashedNotes,
 
     usePluginState,
-    pluginsState
+    pluginsState,
+
+    fullPage,
+    setFullPage,
   };
 };
