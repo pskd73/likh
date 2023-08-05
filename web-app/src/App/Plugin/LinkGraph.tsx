@@ -4,6 +4,7 @@ import * as d3 from "d3";
 import { EditorContext } from "../Context";
 import { textToTitle } from "src/Note";
 import useMemoAsync from "../useMemoAsync";
+import { useNavigate } from "react-router-dom";
 
 // https://observablehq.com/@d3/disjoint-force-directed-graph/2?intent=fork
 
@@ -11,15 +12,13 @@ type Node = { id: string; title: string };
 type Link = { source: string; target: string };
 
 const Page = () => {
+  const navigate = useNavigate();
   const ref = useRef<HTMLDivElement>(null);
-  const { allNotes, getNoteByTitle } = useContext(EditorContext);
+  const { allNotes, getNoteByTitle, newNote } = useContext(EditorContext);
 
   const data = useMemoAsync(async () => {
     if (allNotes) {
-      const nodes = Object.keys(allNotes).map((id) => ({
-        id: id,
-        title: textToTitle(allNotes[id].text, 20),
-      }));
+      const nonExistingNodes: Record<string, boolean> = {};
 
       const links: Link[] = [];
       for (const note of Object.values(allNotes)) {
@@ -32,10 +31,32 @@ const Page = () => {
               source: note.id,
               target: linkedNote.id,
             });
+          } else {
+            links.push({
+              source: note.id,
+              target: title,
+            });
+            nonExistingNodes[title] = true;
           }
         }
       }
-      return { nodes, links };
+
+      const nodes = Object.keys(allNotes).map((id) => ({
+        id: id,
+        title: textToTitle(allNotes[id].text, 20),
+        existing: true,
+      }));
+      return {
+        nodes: [
+          ...nodes,
+          ...Object.keys(nonExistingNodes).map((title) => ({
+            id: title,
+            title,
+            existing: false,
+          })),
+        ],
+        links,
+      };
     }
   }, [allNotes]);
 
@@ -56,12 +77,13 @@ const Page = () => {
 
     // Create a simulation with several forces.
     const forceMany = d3.forceManyBody().strength(-150);
+    const forceLink = d3
+      .forceLink(links)
+      .id((d) => (d as Node).id)
+      .distance(60);
     const simulation = d3
       .forceSimulation(nodes as d3.SimulationNodeDatum[])
-      .force(
-        "link",
-        d3.forceLink(links).id((d) => (d as Node).id)
-      )
+      .force("link", forceLink)
       .force("charge", forceMany)
       .force("x", d3.forceX())
       .force("y", d3.forceY());
@@ -84,6 +106,8 @@ const Page = () => {
       .join("line")
       .attr("stroke-width", 1);
 
+    svg.call(d3.zoom().on("zoom", handleZoom) as any);
+
     const g = svg.append("g").attr("stroke", "#fff").attr("stroke-width", 1.5);
 
     const node = g
@@ -92,15 +116,17 @@ const Page = () => {
       .join("circle")
       .attr("class", "node")
       .attr("r", 5)
-      .attr("fill", "red");
+      .style("cursor", "pointer")
+      .attr("fill", (d: any) => color(d.existing));
 
-    node.append("title").text((d) => d.title);
+    // node.append("title").text((d) => d.title);
 
     const text = g
       .selectAll("text")
       .data(nodes)
       .enter()
       .append("text")
+      .attr("class", "label")
       .text((d) => d.title)
       .style("stroke-width", 0)
       .style("fill", "gray")
@@ -115,6 +141,17 @@ const Page = () => {
         .on("end", dragended) as any
     );
 
+    node.on("click", (_, d) => {
+      if (d.existing) {
+        navigate(`/write/note/${d.id}`);
+      } else {
+        const note = newNote({ text: `# ${d.title}` });
+        if (note) {
+          navigate(`/write/note/${note.id}`);
+        }
+      }
+    });
+
     // Set the position attributes of links and nodes each time the simulation ticks.
     simulation.on("tick", () => {
       link
@@ -124,8 +161,13 @@ const Page = () => {
         .attr("y2", (d: any) => d.target.y);
 
       node.attr("cx", (d: any) => d.x).attr("cy", (d: any) => d.y);
-      text.attr("transform", (d: any) => {
-        return "translate(" + (d.x - 10) + "," + (d.y + 14) + ")";
+      text.attr("transform", (d: any, i) => {
+        const _node: any = d3
+          .selectAll(".label")
+          .filter((d, _i) => i === _i)
+          .node();
+        const offset = _node?.getBoundingClientRect().width / 2 || 0;
+        return "translate(" + (d.x - offset) + "," + (d.y + 18) + ")";
       });
     });
 
@@ -148,6 +190,10 @@ const Page = () => {
       if (!event.active) simulation.alphaTarget(0);
       event.subject.fx = null;
       event.subject.fy = null;
+    }
+
+    function handleZoom(event: any) {
+      svg.attr("transform", event.transform);
     }
 
     if (ref.current) {
