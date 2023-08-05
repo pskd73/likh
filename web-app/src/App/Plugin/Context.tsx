@@ -10,6 +10,7 @@ export type Plugin = {
   version: number;
   pages?: Record<string, { page: ReactElement }>;
   statusBarIcons?: ReactElement[];
+  noteMenuItems?: ReactElement[];
 };
 
 export const usePlugins = () => {

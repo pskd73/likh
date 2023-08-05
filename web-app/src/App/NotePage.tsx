@@ -4,13 +4,15 @@ import { useMiddle } from "src/comps/useMiddle";
 import { CustomEditor } from "src/App/Core/Core";
 import classNames from "classnames";
 import { textToTitle } from "src/Note";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { useTitle } from "src/comps/useTitle";
 import NoteEditor from "./NoteEditor";
+import NoteMenu from "./NoteMenu";
 
 const NotePage = () => {
   const { setTitle } = useTitle();
   const { noteId } = useParams();
+  const [search] = useSearchParams();
   const ref = useRef<HTMLDivElement>(null);
   const {
     allNotes,
@@ -95,6 +97,8 @@ const NotePage = () => {
   };
 
   if (!note) return null;
+
+  if (search.get("menu")) return <NoteMenu />;
 
   return (
     <div

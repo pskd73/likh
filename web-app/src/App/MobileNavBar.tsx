@@ -4,11 +4,13 @@ import {
   BiCalendarHeart,
   BiCog,
   BiHomeHeart,
+  BiMenu,
   BiPlus,
   BiPlusCircle,
   BiSearchAlt,
+  BiX,
 } from "react-icons/bi";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import { EditorContext } from "./Context";
 import { iOS, isMac, isPWA } from "./device";
@@ -44,7 +46,8 @@ const MenuItem = ({
 };
 
 const MobileNavBar = () => {
-  const { newNote } = useContext(EditorContext);
+  const { newNote, note } = useContext(EditorContext);
+  const [search] = useSearchParams();
   const location = useLocation();
   const navigate = useNavigate();
   const activeMenu = useMemo(() => {
@@ -61,6 +64,9 @@ const MobileNavBar = () => {
       }
       if (pathname.startsWith("/write/settings")) {
         return "settings";
+      }
+      if (pathname.startsWith("/write/note-menu")) {
+        return "note-menu";
       }
     }
   }, [location?.pathname]);
@@ -103,12 +109,24 @@ const MobileNavBar = () => {
       >
         <BiCalendarHeart />
       </MenuItem>
-      <MenuItem
-        active={activeMenu === "settings"}
-        onClick={() => navigate("/write/settings")}
-      >
-        <BiCog />
-      </MenuItem>
+      {!note && (
+        <MenuItem
+          active={activeMenu === "settings"}
+          onClick={() => navigate("/write/settings")}
+        >
+          <BiCog />
+        </MenuItem>
+      )}
+      {note && (
+        <MenuItem
+          active={activeMenu === "note-menu"}
+          onClick={() =>
+            search.get("menu") ? navigate("?") : navigate("?menu=true")
+          }
+        >
+          {search.get("menu") ? <BiX /> : <BiMenu />}
+        </MenuItem>
+      )}
     </div>
   );
 };
