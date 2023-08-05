@@ -3,19 +3,16 @@ import { EditorContext, useEditor } from "src/App/Context";
 import SidePanel from "src/App/SidePanel/SidePanel";
 import StatusBar from "src/App/StatusBar/StatusBar";
 import useStorage from "src/App/useStorage";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import useShortcuts from "src/App/useShortcuts";
 import classNames from "classnames";
 import "src/App/Core/test";
 import { iOS, isMobile } from "src/App/device";
-import { init } from "src/App/db";
-import { migrate } from "src/App/localStorage";
 import * as PouchDB from "src/App/PouchDB";
 import { Outlet } from "react-router-dom";
 import { enabledPlugins } from "./Plugin/List";
 import MobileNavBar from "./MobileNavBar";
-import PluginInjector from "./Plugin/Injector";
-import { PluginContext, usePlugins } from "./Plugin/Context";
+import { WithPlugins } from "./Plugin/Context";
 
 const STATUS_BAR_HEIGHT = 30;
 
@@ -39,7 +36,7 @@ const EditorWindow = () => {
   return (
     <PouchDB.PouchContext.Provider value={pdb}>
       <EditorContext.Provider value={editorState}>
-        <PluginInjector>
+        <WithPlugins>
           <div
             className={classNames("min-h-[100vh] bg-base text-primary flex", {
               "theme-base": editorState.colorTheme === "base",
@@ -76,7 +73,7 @@ const EditorWindow = () => {
               )}
             </div>
           </div>
-        </PluginInjector>
+        </WithPlugins>
       </EditorContext.Provider>
     </PouchDB.PouchContext.Provider>
   );
