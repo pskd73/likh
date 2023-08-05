@@ -48,7 +48,6 @@ export type RNPlugin = {
       ) => void;
     }
   >;
-  injector?: ReactElement;
 };
 
 export type RNPluginCreator = () => RNPlugin;
