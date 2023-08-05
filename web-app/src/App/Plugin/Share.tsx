@@ -20,6 +20,8 @@ import { Loader } from "src/comps/Loading";
 import Event from "src/components/Event";
 import { PluginContext } from "./Context";
 import Tooltip from "src/comps/Tooltip";
+import List from "../List";
+import classNames from "classnames";
 
 const HOST = "https://api.retronote.app";
 
@@ -248,7 +250,7 @@ const Page = () => {
   return null;
 };
 
-const StatusBarIcon = () => {
+const useControl = () => {
   const { note, storage } = useContext(EditorContext);
   const { getState } = useContext(PluginContext);
   const [loading, setLoading] = useState(false);
@@ -281,6 +283,11 @@ const StatusBarIcon = () => {
     }, 3000);
   };
 
+  return { handleClick, note, copied, loading };
+};
+
+const StatusBarIcon = () => {
+  const { handleClick, note, copied, loading } = useControl();
   if (!note) return null;
 
   return (
@@ -295,6 +302,22 @@ const StatusBarIcon = () => {
   );
 };
 
+const NoteMenuItem = () => {
+  const { handleClick, note, copied, loading } = useControl();
+  if (!note) return null;
+
+  return (
+    <List.Item withIcon onClick={() => (!loading ? handleClick() : undefined)}>
+      <List.Item.Icon>
+        {loading ? <BiLoaderAlt className="animate-spin" /> : <BiShareAlt />}
+      </List.Item.Icon>
+      <span className={classNames({ "text-primary text-opacity-50": loading })}>
+        {loading ? "Sharing..." : copied ? "Link copied!" : "Share"}
+      </span>
+    </List.Item>
+  );
+};
+
 export const SharePlugin = () => {
   const { register } = useContext(PluginContext);
 
@@ -306,6 +329,7 @@ export const SharePlugin = () => {
         share: { page: <Page /> },
       },
       statusBarIcons: [<StatusBarIcon />],
+      noteMenuItems: [<NoteMenuItem />],
     });
   }, []);
 
