@@ -18,7 +18,7 @@ const Page = () => {
     if (allNotes) {
       const nodes = Object.keys(allNotes).map((id) => ({
         id: id,
-        title: textToTitle(allNotes[id].text),
+        title: textToTitle(allNotes[id].text, 20),
       }));
 
       const links: Link[] = [];
@@ -55,13 +55,14 @@ const Page = () => {
     const nodes = data.nodes.map((d) => ({ ...d }));
 
     // Create a simulation with several forces.
+    const forceMany = d3.forceManyBody().strength(-150);
     const simulation = d3
       .forceSimulation(nodes as d3.SimulationNodeDatum[])
       .force(
         "link",
         d3.forceLink(links).id((d) => (d as Node).id)
       )
-      .force("charge", d3.forceManyBody())
+      .force("charge", forceMany)
       .force("x", d3.forceX())
       .force("y", d3.forceY());
 
@@ -83,17 +84,27 @@ const Page = () => {
       .join("line")
       .attr("stroke-width", 1);
 
-    const node = svg
-      .append("g")
-      .attr("stroke", "#fff")
-      .attr("stroke-width", 1.5)
+    const g = svg.append("g").attr("stroke", "#fff").attr("stroke-width", 1.5);
+
+    const node = g
       .selectAll("circle")
       .data(nodes)
       .join("circle")
+      .attr("class", "node")
       .attr("r", 5)
       .attr("fill", "red");
 
     node.append("title").text((d) => d.title);
+
+    const text = g
+      .selectAll("text")
+      .data(nodes)
+      .enter()
+      .append("text")
+      .text((d) => d.title)
+      .style("stroke-width", 0)
+      .style("fill", "gray")
+      .style("font-size", "8px");
 
     // Add a drag behavior.
     node.call(
@@ -113,6 +124,9 @@ const Page = () => {
         .attr("y2", (d: any) => d.target.y);
 
       node.attr("cx", (d: any) => d.x).attr("cy", (d: any) => d.y);
+      text.attr("transform", (d: any) => {
+        return "translate(" + (d.x - 10) + "," + (d.y + 14) + ")";
+      });
     });
 
     // Reheat the simulation when drag starts, and fix the subject position.
