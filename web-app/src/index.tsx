@@ -24,7 +24,6 @@ import RollPage from "./App/RollPage";
 import MobileSearch from "./App/MobileSearch";
 import MobileSettings from "./App/MobileSettings";
 import PluginPage from "./App/PluginPage";
-import NoteMenu from "./App/NoteMenu";
 
 const router = createBrowserRouter([
   {
