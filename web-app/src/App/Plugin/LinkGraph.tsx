@@ -193,7 +193,7 @@ const Page = () => {
     }
 
     function handleZoom(event: any) {
-      svg.attr("transform", event.transform);
+      svg.selectAll("g").attr("transform", event.transform);
     }
 
     if (ref.current) {
