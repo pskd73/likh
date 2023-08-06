@@ -59,7 +59,7 @@ export const PlainBullet = ({
   leaf,
 }: PropsWithChildren & { parsed: ParsedListText; leaf: any }) => {
   return (
-    <span className="text-primary text-opacity-50">
+    <span className="text-primary text-opacity-50 self-baseline">
       <span
         className={classNames("select-none", {
           hidden: leaf.bulletFocused,
@@ -76,7 +76,11 @@ export const PlainBullet = ({
 };
 
 export const OrderedBullet = ({ children }: PropsWithChildren) => {
-  return <span className="text-primary text-opacity-50">{children}</span>;
+  return (
+    <span className="text-primary text-opacity-50 self-baseline">
+      {children}
+    </span>
+  );
 };
 
 export const CheckboxBullet = ({
@@ -90,7 +94,7 @@ export const CheckboxBullet = ({
   editor: CustomEditor;
 }) => {
   return (
-    <span className="text-primary text-opacity-50">
+    <span className="text-primary text-opacity-50 self-baseline">
       <span
         className={classNames("select-none", {
           hidden: leaf.bulletFocused,
@@ -149,10 +153,7 @@ export const Bullet = ({
   };
 
   return (
-    <span
-      className="inline-flex items-center space-x-1"
-      style={{ alignSelf: "last baseline" }}
-    >
+    <span className="inline-flex items-center space-x-1">
       {collapsible && !leaf.bulletFocused && (
         <CollapseButton editor={editor} element={element} leaf={leaf} />
       )}

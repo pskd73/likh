@@ -52,12 +52,14 @@ const BulletsPlugin: RNPluginCreator = () => {
               hidden: isCollapsed(editor, path, parsed.level),
             })}
           >
-            <span className="inline-flex" style={{ wordBreak: "break-word" }}>
+            <span className="inline-flex">
               {spaces.map((_, i) => (
                 <Space key={i} i={i} parsed={parsed} />
               ))}
             </span>
-            <span className="pb-1">{children}</span>
+            <span className="pb-1" style={{ wordBreak: "break-word" }}>
+              {children}
+            </span>
           </p>
         );
       }

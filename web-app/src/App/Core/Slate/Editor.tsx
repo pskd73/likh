@@ -328,7 +328,6 @@ const Editor = ({
   };
 
   const handleChange = (value: Descendant[]) => {
-    console.log({ value });
     onChange({
       value,
       text: serialize(value),
