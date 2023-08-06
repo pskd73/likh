@@ -3,17 +3,17 @@ import EmojisPlugin from "./Emojis";
 import HeadingsPlugin from "./Headings";
 import KaTeXPlugin from "./KaTeX";
 import { LinkGraphPlugin } from "./LinkGraph";
-import MarkdownListsPlugin from "./MarkdownLists";
 import { SharePlugin } from "./Share";
 import SlashPlugin from "./Slash";
 import { TimestampPlugin } from "./Timestamp";
 import { RNPluginCreator } from "./type";
+import BulletsPlugin from "./Bullets/Plugin";
 
 export const enabledPlugins: RNPluginCreator[] = [
   TimestampPlugin,
   SlashPlugin,
   KaTeXPlugin,
-  MarkdownListsPlugin,
+  BulletsPlugin,
   EmojisPlugin,
   HeadingsPlugin,
 ];
