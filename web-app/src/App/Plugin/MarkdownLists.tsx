@@ -1,7 +1,7 @@
 import classNames from "classnames";
-import { parseListText, toggleCheckbox } from "../Core/List";
+import { ParsedListText, parseListText, toggleCheckbox } from "../Core/List";
 import { RNPluginCreator } from "./type";
-import { BiChevronDown, BiChevronRight } from "react-icons/bi";
+import { BiChevronDown, BiChevronRight, BiX } from "react-icons/bi";
 import { NodeEntry, Transforms } from "slate";
 import {
   CustomEditor,
@@ -11,6 +11,7 @@ import {
 } from "../Core/Core";
 import { ReactEditor } from "slate-react";
 import { isPointFocused } from "../Core/Range";
+import { PropsWithChildren } from "react";
 
 const getPrevPath = (path: number[]) => [getPreviousElementPath(path)[0]];
 const getNextPath = (path: number[]) => [getNextElementPath(path)[0]];
@@ -108,30 +109,48 @@ const toggleItem = (editor: CustomEditor, path: number[], element: any) => {
   updateChildren(editor, path);
 };
 
+const Checkbox = ({ parsed }: { parsed: ParsedListText }) => {
+  if (parsed.checkboxType === "/") {
+    return (
+      <span className="inline-flex items-center justify-center">
+        <BiX />
+      </span>
+    );
+  }
+  return (
+    <input
+      type="checkbox"
+      checked={parsed.checkboxType === "x"}
+      readOnly
+      className="outline-none cursor-pointer"
+    />
+  );
+};
+
 const CollapseButton = ({
   editor,
   path,
   element,
   collapsed,
-  checkbox
+  leaf,
 }: {
   editor: CustomEditor;
   path: number[];
   element: any;
-  collapsed: boolean,
-  checkbox: boolean,
+  collapsed: boolean;
+  leaf: any;
 }) => {
   return (
     <span
+      contentEditable={false}
       className={classNames(
-        "cursor-pointer absolute",
+        "cursor-pointer inline-block",
         "transition-all text-primary text-opacity-50 rounded-full",
+        "select-none",
         {
           "bg-primary bg-opacity-10": collapsed,
           "hover:bg-primary hover:bg-opacity-20": !collapsed,
-          "hidden group-hover:inline": !collapsed,
-          "mr-5": checkbox,
-          "mr-4": !checkbox
+          hidden: leaf.bulletFocused,
         }
       )}
       style={{ marginTop: 5 }}
@@ -146,79 +165,149 @@ const CollapseButton = ({
   );
 };
 
+const PlainBullet = ({
+  children,
+  parsed,
+  leaf,
+}: PropsWithChildren & { parsed: ParsedListText; leaf: any }) => {
+  return (
+    <span className="text-primary text-opacity-50">
+      <span
+        className={classNames("select-none", {
+          hidden: leaf.bulletFocused,
+        })}
+        contentEditable={false}
+      >
+        •
+      </span>
+      <span className={classNames({ hidden: !leaf.bulletFocused })}>
+        {children}
+      </span>
+    </span>
+  );
+};
+
+const OrderedBullet = ({ children }: PropsWithChildren) => {
+  return <span className="text-primary text-opacity-50">{children}</span>;
+};
+
+const CheckboxBullet = ({
+  children,
+  parsed,
+  leaf,
+  editor,
+}: PropsWithChildren & {
+  parsed: ParsedListText;
+  leaf: any;
+  editor: CustomEditor;
+}) => {
+  return (
+    <span className="text-primary text-opacity-50">
+      <span
+        className={classNames("select-none", {
+          hidden: leaf.bulletFocused,
+        })}
+        contentEditable={false}
+        onClick={() => toggleCheckbox(editor, leaf.path)}
+      >
+        <input
+          type="checkbox"
+          checked={parsed.checkboxType === "x"}
+          readOnly
+          className="outline-none cursor-pointer"
+        />
+      </span>
+      <span className={classNames({ hidden: !leaf.bulletFocused })}>
+        {children}
+      </span>
+    </span>
+  );
+};
+
+const Bullet = ({
+  children,
+  parsed,
+  leaf,
+  editor,
+}: PropsWithChildren & {
+  parsed: ParsedListText;
+  leaf: any;
+  editor: CustomEditor;
+  collapsible?: boolean;
+  element: any;
+}) => {
+  const getBullet = () => {
+    if (parsed.type === "unordered" && !parsed.checkbox) {
+      return (
+        <PlainBullet parsed={parsed} leaf={leaf}>
+          {children}
+        </PlainBullet>
+      );
+    }
+    if (parsed.type === "unordered" && parsed.checkbox) {
+      return (
+        <CheckboxBullet parsed={parsed} leaf={leaf} editor={editor}>
+          {children}
+        </CheckboxBullet>
+      );
+    }
+    if (parsed.type === "ordered") {
+      return <OrderedBullet>{children}</OrderedBullet>;
+    }
+
+    return <span>{children}</span>;
+  };
+
+  return (
+    <span className="inline-flex items-center space-x-1">
+      {/* {collapsible &&
+        !leaf.bulletFocused &&
+        !leaf.bulletFocused && (
+          <span contentEditable={false} className={classNames("select-none")}>
+            c
+          </span>
+        )} */}
+      {getBullet()}
+    </span>
+  );
+};
+
 const MarkdownListsPlugin: RNPluginCreator = () => {
   return {
     name: "Markdown Lists",
     version: 1,
     grammer: () => ({
-      bulletUnordered: {
-        pattern: /^ *[-*+]( \[[ x]\])? /m,
-        inside: {
-          bullet: /^ *[-*+]( \[[ x]\])?/,
-          space: / $/,
-        },
-      },
-      bulletOrdered: {
-        pattern: /^ *[\d]+\. /m,
-        inside: {
-          bullet: /^ *[\d]+\./,
-          space: / $/,
-        },
-      },
+      bullet: [/^ *[-*+]( \[[ x/]\])?/m, /^ *[\d]+\./m],
     }),
-    leafMaker: ({ leaf, attributes, children, setSelection, editor }) => {
-      if (leaf.bullet) {
+    leafMaker: ({ leaf, attributes, children, editor }) => {
+      if (leaf.bullet || leaf.bullet) {
         const parsed = parseListText(leaf.text + " ");
-        const level = parsed?.level || 1;
-        const width = level * 100;
+        const level = parsed?.level || 0;
+        const width = (level + 1) * 40;
+        const _hasChildren = hasChildren(editor, parsed!.level, leaf.path);
+        const [element]: any = editor.node([leaf.path[0]]);
+
         return (
           <span
             {...attributes}
+            className={classNames("inline-flex justify-end")}
             style={{ marginLeft: -width - 4, width }}
-            className={"text-primary text-opacity-50 inline-block text-right"}
           >
-            <span>
-              {leaf.bulletUnordered &&
-                !leaf.bulletFocused &&
-                !parsed?.checkbox && <span contentEditable={false}>•</span>}
-
-              {leaf.bulletUnordered &&
-                !leaf.bulletFocused &&
-                parsed?.checkbox && (
-                  <span
-                    onClick={(e) => {
-                      toggleCheckbox(editor, leaf.path);
-                      e.preventDefault();
-                      e.stopPropagation();
-                    }}
-                    contentEditable={false}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={leaf.text.includes("x")}
-                      readOnly
-                      className="outline-none cursor-pointer"
-                    />
-                  </span>
-                )}
-
-              <span
-                className={classNames({
-                  hidden: !leaf.bulletFocused && leaf.bulletUnordered,
-                })}
-              >
-                {children}
-              </span>
-            </span>
+            <Bullet
+              editor={editor}
+              parsed={parsed!}
+              leaf={leaf}
+              element={element}
+              collapsible={_hasChildren}
+            >
+              {children}
+            </Bullet>
           </span>
         );
       }
-      if (leaf.space) {
-        return <span {...attributes}>{children}</span>;
-      }
     },
     elementMaker: ({ text, attributes, children, element, editor }) => {
-      const parsed = parseListText(text);
+      const parsed = parseListText(text + " ");
       if (parsed) {
         const path = ReactEditor.findPath(editor, element);
         const collapsed = (element as any).collapsed;
@@ -228,43 +317,28 @@ const MarkdownListsPlugin: RNPluginCreator = () => {
           parent && collapsed && toggleItem(editor, parent[1], parent[0]);
         }
 
-        const isParent = hasChildren(editor, parsed.level, path);
         const spaces = Array.from(Array(parsed.level + 1));
 
         return (
           <p
-            className={classNames("flex group", {
+            {...attributes}
+            className={classNames("flex", {
               hidden: isCollapsed(editor, path, parsed.level),
             })}
-            {...attributes}
           >
-            <span
-              className="inline-flex h-full"
-              style={{ wordBreak: "break-word" }}
-            >
+            <span className="inline-flex" style={{ wordBreak: "break-word" }}>
               {spaces.map((_, i) => (
                 <span
                   key={i}
                   contentEditable={false}
-                  style={{ width: 30 }}
+                  style={{ width: 40 }}
                   className={classNames(
                     "flex-shrink-0 inline-flex justify-end items-start"
                   )}
                 >
-                  {i === parsed.level && isParent && (
-                    <CollapseButton
-                      editor={editor}
-                      path={path}
-                      element={element}
-                      collapsed={collapsed}
-                      checkbox={parsed.checkbox || false}
-                    />
-                  )}
-                  {((isParent && !collapsed) || i < spaces.length - 1) && (
+                  {parsed.level > 0 && (
                     <span
-                      className={classNames(
-                        "bg-primary inline-block h-full bg-opacity-20"
-                      )}
+                      className={classNames("bg-primary bg-opacity-20")}
                       style={{
                         width: 1,
                         marginRight: 8,
@@ -276,19 +350,8 @@ const MarkdownListsPlugin: RNPluginCreator = () => {
                   )}
                 </span>
               ))}
-              <span className="pb-2">
-                {children}
-                {collapsed && (
-                  <span
-                    contentEditable={false}
-                    className="px-2 text-primary text-opacity-50"
-                    onClick={() => toggleItem(editor, path, element)}
-                  >
-                    [...]
-                  </span>
-                )}
-              </span>
             </span>
+            {children}
           </p>
         );
       }

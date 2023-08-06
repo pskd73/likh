@@ -15,6 +15,7 @@ export type ParsedListText = {
   serial?: number;
   symbol?: string;
   checkbox?: boolean;
+  checkboxType?: string;
 };
 
 export type ListBlock = {
@@ -22,7 +23,7 @@ export type ListBlock = {
 };
 
 export function parseListText(text: string): ParsedListText | undefined {
-  const pattern = /^( *)([-\*\+]|([0-9]+)\.) (\[[ x]\] )?(.*)$/;
+  const pattern = /^( *)([-\*\+]|([0-9]+)\.) (\[[ x/]\] )?(.*)$/;
   const match = text.match(pattern);
   if (!match) {
     return undefined;
@@ -34,6 +35,7 @@ export function parseListText(text: string): ParsedListText | undefined {
   const symbol = match[2];
   const paddingText = match[1];
   const checkbox = !!match[4];
+  const checkboxType = checkbox ? match[4][1] : undefined;
   return {
     text,
     level,
@@ -43,6 +45,7 @@ export function parseListText(text: string): ParsedListText | undefined {
     symbol,
     paddingText,
     checkbox,
+    checkboxType
   };
 }
 
