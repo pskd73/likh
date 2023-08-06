@@ -188,6 +188,7 @@ export const useEditor = ({
       }).filter((t) => typeof t === "object") as Token[];
       for (const token of tokens) {
         const hashtag = token.content as string;
+        if (hashtag.startsWith("#tag_")) continue;
         if (!hashtagsMap[hashtag]) {
           hashtagsMap[hashtag] = {};
         }
@@ -214,6 +215,7 @@ export const useEditor = ({
     }> = [];
     for (const note of Object.values(allNotes || [])) {
       let [total, checked] = [0, 0];
+      if (note.text.includes("#tag_no_todo")) continue;
       for (const match of Array.from(
         note.text.matchAll(/\n? *- \[([ x])\].*/g)
       )) {
