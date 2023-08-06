@@ -5,7 +5,19 @@ import { CustomEditor } from "src/App/Core/Core";
 import { ParsedListText, toggleCheckbox } from "src/App/Core/List";
 import { toggleItem } from "./utils";
 
-export const Space = ({ i, parsed }: { parsed: ParsedListText; i: number }) => {
+export const Space = ({
+  i,
+  parsed,
+  isParent,
+  collapsed,
+  length
+}: {
+  parsed: ParsedListText;
+  i: number;
+  isParent: boolean;
+  collapsed: boolean;
+  length: number;
+}) => {
   return (
     <span
       key={i}
@@ -15,7 +27,7 @@ export const Space = ({ i, parsed }: { parsed: ParsedListText; i: number }) => {
         "flex-shrink-0 inline-flex justify-end items-start"
       )}
     >
-      {parsed.level > 0 && (
+      {((isParent && !collapsed) || i < length - 1) && (
         <span
           className={classNames("bg-primary bg-opacity-20")}
           style={{
@@ -46,7 +58,11 @@ export const CollapseButton = ({
         "select-none cursor-pointer",
         "text-primary text-opacity-50"
       )}
-      onClick={() => toggleItem(editor, [leaf.path[0]], element)}
+      onClick={(e) => {
+        toggleItem(editor, [leaf.path[0]], element);
+        e.preventDefault();
+        e.stopPropagation();
+      }}
     >
       {(element as any).collapsed ? <BiChevronRight /> : <BiChevronDown />}
     </span>

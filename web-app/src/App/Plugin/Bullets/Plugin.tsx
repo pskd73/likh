@@ -44,6 +44,7 @@ const BulletsPlugin: RNPluginCreator = () => {
       if (parsed) {
         const path = ReactEditor.findPath(editor, element);
         const spaces = Array.from(Array(parsed.level + 1));
+        const isParent = hasChildren(editor, parsed.level, path);
 
         return (
           <p
@@ -54,7 +55,14 @@ const BulletsPlugin: RNPluginCreator = () => {
           >
             <span className="inline-flex">
               {spaces.map((_, i) => (
-                <Space key={i} i={i} parsed={parsed} />
+                <Space
+                  key={i}
+                  i={i}
+                  parsed={parsed}
+                  isParent={isParent || false}
+                  collapsed={(element as any).collapsed}
+                  length={spaces.length}
+                />
               ))}
             </span>
             <span className="pb-1" style={{ wordBreak: "break-word" }}>
