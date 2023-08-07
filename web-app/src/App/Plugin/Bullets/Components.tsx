@@ -116,6 +116,9 @@ export const CheckboxIcon = ({ parsed }: { parsed: ParsedListText }) => {
   if (parsed.checkboxType === "b") {
     return <span>🔖</span>;
   }
+  if (parsed.checkboxType === "l") {
+    return <span>😍</span>;
+  }
   return null;
 };
 
