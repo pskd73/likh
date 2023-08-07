@@ -1,4 +1,4 @@
-import { BaseEditor, Path, Point, Range, Transforms } from "slate";
+import { BaseEditor, BaseRange, Path, Point, Range, Transforms } from "slate";
 import { CustomGrammar } from "../grammer";
 
 type CustomRange = Range & {
@@ -109,9 +109,8 @@ export function getTokensRanges(
       }
 
       const focused = isPointFocused(editor, {
-        path,
-        start,
-        end: start + _token.length,
+        anchor: { path, offset: start },
+        focus: { path, offset: start + _token.length },
       });
       if (focused) {
         _parentTokens.push({ type: "focused" } as any);
@@ -145,14 +144,8 @@ function getRangesEnd(ranges: Range[], start: number) {
   return start;
 }
 
-export function isPointFocused(
-  editor: BaseEditor,
-  point: { path: number[]; start: number; end: number }
-) {
+export function isPointFocused(editor: BaseEditor, range: BaseRange) {
   if (!editor.selection) return false;
 
-  return Range.intersection(editor.selection, {
-    anchor: { path: point.path, offset: point.start },
-    focus: { path: point.path, offset: point.end },
-  });
+  return Range.intersection(editor.selection, range);
 }

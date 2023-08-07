@@ -78,23 +78,33 @@ export const PlainBullet = ({
     <span className="text-primary text-opacity-50 self-baseline">
       <span
         className={classNames("select-none", {
-          hidden: leaf.bulletFocused,
+          hidden: leaf.justBulletFocused,
         })}
         contentEditable={false}
       >
         •
       </span>
-      <span className={classNames({ hidden: !leaf.bulletFocused })}>
+      <span className={classNames({ hidden: !leaf.justBulletFocused })}>
         {children}
       </span>
     </span>
   );
 };
 
-export const OrderedBullet = ({ children }: PropsWithChildren) => {
+export const OrderedBullet = ({ children, leaf }: PropsWithChildren & {leaf: any}) => {
   return (
     <span className="text-primary text-opacity-50 self-baseline">
-      {children}
+      <span
+        className={classNames("select-none", {
+          hidden: leaf.justBulletFocused,
+        })}
+        contentEditable={false}
+      >
+        {leaf.text.trim()}
+      </span>
+      <span className={classNames({ hidden: !leaf.justBulletFocused })}>
+        {children}
+      </span>
     </span>
   );
 };
@@ -136,7 +146,7 @@ export const CheckboxBullet = ({
     <span className="self-baseline">
       <span
         className={classNames("select-none", {
-          hidden: leaf.bulletFocused,
+          hidden: leaf.justBulletFocused,
         })}
         contentEditable={false}
         onClick={() => toggleCheckbox(editor, leaf.path)}
@@ -145,7 +155,7 @@ export const CheckboxBullet = ({
       </span>
       <span
         className={classNames("text-primary text-opacity-50", {
-          hidden: !leaf.bulletFocused,
+          hidden: !leaf.justBulletFocused,
         })}
       >
         {children}
@@ -184,7 +194,7 @@ export const Bullet = ({
       );
     }
     if (parsed.type === "ordered") {
-      return <OrderedBullet>{children}</OrderedBullet>;
+      return <OrderedBullet leaf={leaf}>{children}</OrderedBullet>;
     }
 
     return <span>{children}</span>;
@@ -192,7 +202,7 @@ export const Bullet = ({
 
   return (
     <span className="inline-flex items-center space-x-1">
-      {collapsible && !leaf.bulletFocused && (
+      {collapsible && !leaf.justBulletFocused && (
         <CollapseButton editor={editor} element={element} leaf={leaf} />
       )}
       {getBullet()}

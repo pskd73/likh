@@ -10,10 +10,25 @@ const BulletsPlugin: RNPluginCreator = () => {
     name: "Markdown Lists",
     version: 1,
     grammer: () => ({
-      bullet: [/^ *[-*+]( \[[ a-zA-Z/]\])?/m, /^ *[\d]+\./m],
+      bulletUnordered: {
+        pattern: /^ *[-*+]( \[[ a-zA-Z/]\])? /m,
+        inside: {
+          justBullet: /^ *[-*+]( \[[ a-zA-Z/]\])?/m,
+          bulletSpace: / $/m,
+        },
+        
+      },
+      bulletOrdered: {
+        pattern: /^ *[\d]+\. /m,
+        inside: {
+          justBullet: /^ *[\d]+\./m,
+          bulletSpace: / $/m,
+        },
+        
+      },
     }),
     leafMaker: ({ leaf, attributes, children, editor }) => {
-      if (leaf.bullet || leaf.bullet) {
+      if (leaf.justBullet) {
         const parsed = parseListText(leaf.text + " ");
         const level = parsed?.level || 0;
         const width = (level + 1) * 40;
@@ -38,9 +53,12 @@ const BulletsPlugin: RNPluginCreator = () => {
           </span>
         );
       }
+      if (leaf.bulletSpace) {
+        return <span {...attributes}>{children}</span>;
+      }
     },
     elementMaker: ({ text, attributes, children, element, editor }) => {
-      const parsed = parseListText(text + " ");
+      const parsed = parseListText(text);
       if (parsed) {
         const path = ReactEditor.findPath(editor, element);
         const spaces = Array.from(Array(parsed.level + 1));
