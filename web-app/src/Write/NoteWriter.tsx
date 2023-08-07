@@ -78,6 +78,7 @@ const NoteWriter = ({
         initText={note.text}
         editor={editor}
         containerClassName="dummy"
+        grammer={{}}
       />
     </div>
   );

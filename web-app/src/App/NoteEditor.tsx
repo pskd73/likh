@@ -159,10 +159,13 @@ const NoteEditor = ({
           }
         }}
         theme={Themes[themeName] || Themes.Basic}
-        grammer={plugins
-          .filter((p) => p.grammer)
-          .map((p) => p.grammer!)
-          .reduce((prev, cur) => ({ ...prev, ...cur(prev) }), grammer)}
+        grammer={{
+          ...plugins
+            .filter((p) => p.grammer)
+            .map((p) => p.grammer!)
+            .reduce((prev, cur) => ({ ...cur(), ...prev }), {}),
+          ...grammer,
+        }}
         leafMakers={plugins.filter((p) => p.leafMaker).map((p) => p.leafMaker!)}
         elementMakers={plugins
           .filter((p) => p.elementMaker)

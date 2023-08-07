@@ -1,6 +1,6 @@
 import { GrammarValue } from "prismjs";
 
-export type CustomGrammarValue = GrammarValue & { payload?: any };
+export type CustomGrammarValue = GrammarValue & { payload?: any, priority?: number };
 export type CustomGrammar = Record<string, CustomGrammarValue>;
 
 export const link = {
@@ -89,7 +89,7 @@ export const strikethrough: CustomGrammarValue = {
 };
 
 export const italic: CustomGrammarValue = {
-  pattern: /[_*]([^ ])[^_*]+[_*]/m,
+  pattern: /[_*][^_*]*[_*]/m,
   inside: {
     punctuation: [/^[_*]/m, /[_*]$/m],
     link,
@@ -99,17 +99,14 @@ export const italic: CustomGrammarValue = {
 };
 
 export const bold: CustomGrammarValue = {
-  pattern: /[_*]{2}[^_*]+[_*]{2}/m,
-  greedy: true,
+  pattern: /[_*]{2}[^_*]*[_*]{2}/m,
   inside: {
     punctuation: [
       {
         pattern: /^[_*]{2}/m,
-        greedy: true,
       },
       {
         pattern: /[_*]{2}$/m,
-        greedy: true,
       },
     ],
     link,
@@ -119,17 +116,14 @@ export const bold: CustomGrammarValue = {
 };
 
 export const boldItalic: CustomGrammarValue = {
-  pattern: /[_*]{3}[^_*]+[_*]{3}/m,
-  greedy: true,
+  pattern: /[_*]{3}[^_*]*[_*]{3}/m,
   inside: {
     punctuation: [
       {
         pattern: /^[_*]{3}/m,
-        greedy: true,
       },
       {
         pattern: /[_*]{3}$/m,
-        greedy: true,
       },
     ],
     link,

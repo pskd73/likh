@@ -64,6 +64,7 @@ const OpenWrite = () => {
             onChange={handleChange}
             initValue={initalValue!}
             containerClassName="dummy"
+            grammer={{}}
           />
         </div>
       </Paper>
