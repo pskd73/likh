@@ -25,9 +25,7 @@ export type RNPlugin = {
   onNoteChange?: (note: SavedNote) => void;
   suggestions?: Record<string, SuggestionConfig>;
   boundaries?: Boundary[];
-  grammer?: (
-    grammer: Record<string, CustomGrammarValue>
-  ) => Record<string, CustomGrammarValue>;
+  grammer?: () => Record<string, CustomGrammarValue>;
   leafMaker?: LeafMaker;
   elementMaker?: ElementMaker;
   page?: {

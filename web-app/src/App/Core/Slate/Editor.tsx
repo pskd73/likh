@@ -17,7 +17,7 @@ import {
 } from "slate";
 import { withHistory } from "slate-history";
 import { Slate, Editable, withReact } from "slate-react";
-import grammer, {
+import {
   CustomGrammarValue,
   imageRegex,
   quoteRegex,
@@ -114,7 +114,7 @@ const Editor = ({
   theme?: Theme;
   contextMenuPrefixes?: string[];
   contextMenuBoundaries?: Boundary[];
-  grammer?: Record<string, CustomGrammarValue>;
+  grammer: Record<string, CustomGrammarValue>;
   leafMakers?: LeafMaker[];
   elementMakers?: ElementMaker[];
   focus?: number;
@@ -199,31 +199,12 @@ const Editor = ({
         } as BaseRange);
       }
 
-      const newGrammer = Object.assign({}, { ...grammer, ...passedGrammer });
-      if (highlight) {
-        for (const key of Object.keys(newGrammer)) {
-          if (["hashtag"].includes(key)) continue;
-          (newGrammer[key] as any) = {
-            ...(newGrammer[key] as any),
-            inside: {
-              ...(newGrammer[key] as any).inside,
-              highlight: {
-                pattern: RegExp(escape(highlight), "i"),
-              },
-            },
-          };
-        }
-        newGrammer.highlight = {
-          pattern: RegExp(escape(highlight), "i"),
-          inside: {},
-        };
-      }
-      const tokens = Prism.tokenize(node.text, newGrammer);
+      const tokens = Prism.tokenize(node.text, passedGrammer);
       const [rootCodeNode] = getRootCodeNode(editor, path);
       if (!rootCodeNode) {
         ranges = [
           ...ranges,
-          ...getTokensRanges(editor, path, tokens, 0, [], {}, newGrammer),
+          ...getTokensRanges(editor, path, tokens, 0, [], {}, passedGrammer),
         ];
       } else {
         ranges = [...ranges, ...getCodeRanges(editor, path)];

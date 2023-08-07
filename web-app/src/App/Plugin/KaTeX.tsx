@@ -20,16 +20,9 @@ const KaTeXPlugin: RNPluginCreator = () => {
   return {
     name: "KaTeX",
     version: 1,
-    grammer: (grammer) => ({
+    grammer: () => ({
       blockedKatex,
       inlineKatex,
-      quote: {
-        ...grammer.quote,
-        inside: {
-          ...(grammer.quote as any).inside,
-          inlineKatex,
-        },
-      },
     }),
     leafMaker: ({ attributes, children, leaf }) => {
       if (leaf.blockedKatex || leaf.inlineKatex) {
