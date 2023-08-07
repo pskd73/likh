@@ -29,10 +29,7 @@ import {
   deserialize,
   focusEnd,
 } from "src/App/Core/Core";
-import {
-  handleEnterForList,
-  intend,
-} from "src/App/Core/List";
+import { handleEnterForList, intend } from "src/App/Core/List";
 import {
   codify,
   getCodeRanges,

@@ -15,6 +15,7 @@ export type ParsedListText = {
   serial?: number;
   symbol?: string;
   checkbox?: boolean;
+  checkboxType?: string;
 };
 
 export type ListBlock = {
@@ -22,7 +23,7 @@ export type ListBlock = {
 };
 
 export function parseListText(text: string): ParsedListText | undefined {
-  const pattern = /^( *)([-\*\+]|([0-9]+)\.) (\[[ x]\] )?(.*)$/;
+  const pattern = /^( *)([-\*\+]|([0-9]+)\.) (\[[ a-zA-Z/]\] )?(.*)$/;
   const match = text.match(pattern);
   if (!match) {
     return undefined;
@@ -34,6 +35,7 @@ export function parseListText(text: string): ParsedListText | undefined {
   const symbol = match[2];
   const paddingText = match[1];
   const checkbox = !!match[4];
+  const checkboxType = checkbox ? match[4][1] : undefined;
   return {
     text,
     level,
@@ -43,6 +45,7 @@ export function parseListText(text: string): ParsedListText | undefined {
     symbol,
     paddingText,
     checkbox,
+    checkboxType,
   };
 }
 
@@ -243,9 +246,9 @@ export function handleEnterForList(
       }
 
       // checkbox
-      const { match: checkbox } = parseCheckbox(text);
-      if (checkbox) {
-        prefix += "[ ] ";
+      if (parsed.checkbox) {
+        const type = parsed.checkboxType === "x" ? " " : parsed.checkboxType;
+        prefix += `[${type}] `;
       }
 
       Transforms.insertNodes(editor, [
@@ -264,7 +267,7 @@ export function handleEnterForList(
   }
 }
 
-const CHECKBOX_PATTERN = /^( *)([-\+\*]) \[([ x])\](.*)/;
+const CHECKBOX_PATTERN = /^( *)([-\+\*]) \[([ a-zA-Z/])\](.*)/;
 
 export function parseCheckbox(text: string) {
   const match = text.match(CHECKBOX_PATTERN);
