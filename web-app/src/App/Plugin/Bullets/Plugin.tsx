@@ -10,7 +10,7 @@ const BulletsPlugin: RNPluginCreator = () => {
     name: "Markdown Lists",
     version: 1,
     grammer: () => ({
-      bullet: [/^ *[-*+]( \[[ x/]\])?/m, /^ *[\d]+\./m],
+      bullet: [/^ *[-*+]( \[[ a-zA-Z/]\])?/m, /^ *[\d]+\./m],
     }),
     leafMaker: ({ leaf, attributes, children, editor }) => {
       if (leaf.bullet || leaf.bullet) {

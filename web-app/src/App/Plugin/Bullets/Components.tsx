@@ -10,7 +10,7 @@ export const Space = ({
   parsed,
   isParent,
   collapsed,
-  length
+  length,
 }: {
   parsed: ParsedListText;
   i: number;
@@ -99,6 +99,26 @@ export const OrderedBullet = ({ children }: PropsWithChildren) => {
   );
 };
 
+export const CheckboxIcon = ({ parsed }: { parsed: ParsedListText }) => {
+  if ([" ", "x"].includes(parsed.checkboxType!)) {
+    return (
+      <input
+        type="checkbox"
+        checked={parsed.checkboxType === "x"}
+        readOnly
+        className="outline-none cursor-pointer"
+      />
+    );
+  }
+  if (parsed.checkboxType === "/") {
+    return <span>👎</span>;
+  }
+  if (parsed.checkboxType === "b") {
+    return <span>🔖</span>;
+  }
+  return null;
+};
+
 export const CheckboxBullet = ({
   children,
   parsed,
@@ -110,7 +130,7 @@ export const CheckboxBullet = ({
   editor: CustomEditor;
 }) => {
   return (
-    <span className="text-primary text-opacity-50 self-baseline">
+    <span className="self-baseline">
       <span
         className={classNames("select-none", {
           hidden: leaf.bulletFocused,
@@ -118,14 +138,13 @@ export const CheckboxBullet = ({
         contentEditable={false}
         onClick={() => toggleCheckbox(editor, leaf.path)}
       >
-        <input
-          type="checkbox"
-          checked={parsed.checkboxType === "x"}
-          readOnly
-          className="outline-none cursor-pointer"
-        />
+        <CheckboxIcon parsed={parsed} />
       </span>
-      <span className={classNames({ hidden: !leaf.bulletFocused })}>
+      <span
+        className={classNames("text-primary text-opacity-50", {
+          hidden: !leaf.bulletFocused,
+        })}
+      >
         {children}
       </span>
     </span>
