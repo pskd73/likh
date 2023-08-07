@@ -89,7 +89,7 @@ export const strikethrough: CustomGrammarValue = {
 };
 
 export const italic: CustomGrammarValue = {
-  pattern: /[_*][^_*]*[_*]/m,
+  pattern: /[_*][^_*]+[_*]/m,
   inside: {
     punctuation: [/^[_*]/m, /[_*]$/m],
     link,
@@ -99,7 +99,7 @@ export const italic: CustomGrammarValue = {
 };
 
 export const bold: CustomGrammarValue = {
-  pattern: /[_*]{2}[^_*]*[_*]{2}/m,
+  pattern: /[_*]{2}[^_*]+[_*]{2}/m,
   inside: {
     punctuation: [
       {
@@ -116,7 +116,7 @@ export const bold: CustomGrammarValue = {
 };
 
 export const boldItalic: CustomGrammarValue = {
-  pattern: /[_*]{3}[^_*]*[_*]{3}/m,
+  pattern: /[_*]{3}[^_*]+[_*]{3}/m,
   inside: {
     punctuation: [
       {
