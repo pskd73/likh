@@ -8,6 +8,7 @@ import SlashPlugin from "./Slash";
 import { TimestampPlugin } from "./Timestamp";
 import { RNPluginCreator } from "./type";
 import BulletsPlugin from "./Bullets/Plugin";
+import SpellCheckPlugin from "./SpellCheck";
 
 export const enabledPlugins: RNPluginCreator[] = [
   TimestampPlugin,
@@ -18,4 +19,8 @@ export const enabledPlugins: RNPluginCreator[] = [
   HeadingsPlugin,
 ];
 
-export const plugins: ReactElement[] = [<LinkGraphPlugin />, <SharePlugin />];
+export const plugins: ReactElement[] = [
+  <LinkGraphPlugin />,
+  <SharePlugin />,
+  <SpellCheckPlugin />,
+];
