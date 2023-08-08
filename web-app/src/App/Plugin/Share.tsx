@@ -219,7 +219,14 @@ const SharePage = () => {
         <div className="mb-20">
           <SaveAsNote text={shared.text} />
           <div className="prose my-6">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                p: ({ node, ...props }) => (
+                  <p style={{ whiteSpace: "pre-wrap" }} {...props} />
+                ),
+              }}
+            >
               {shared.text}
             </ReactMarkdown>
           </div>
