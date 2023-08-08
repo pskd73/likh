@@ -36,6 +36,7 @@ const NoteEditor = ({
     editorFocus,
     getHashtags,
     setOrNewNote,
+    allNotes,
   } = useContext(EditorContext);
 
   const getSuggestions = async (
@@ -55,38 +56,35 @@ const NoteEditor = ({
     });
 
     if (prefix === "[[") {
-      const addedLinks: Record<string, boolean> = {};
-      for (const noteMeta of storage.notes) {
-        const _note = await storage.getNote(noteMeta.id);
-        if (_note) {
-          for (const match of Array.from(
-            _note.text.matchAll(/\[\[([^\[]+)\]\]/g)
-          )) {
-            if (
-              !addedLinks[match[1]] &&
-              match[1].toLowerCase().includes(term.toLowerCase())
-            ) {
-              suggestions.push({
-                title: match[1],
-                id: _note.id,
-                replace: `[[${match[1]}]] `,
-              });
-              addedLinks[match[1]] = true;
-            }
-          }
-
-          if (noteMeta.id === note?.id) continue;
-          const title = textToTitle(_note.text, 50);
-          if (title.toLowerCase().includes(term.toLowerCase())) {
-            const cleanedTitle = title.trim();
-            suggestions.push({
-              title: cleanedTitle,
+      const links: Record<string, Suggestion> = {};
+      for (const _note of Object.values(allNotes)) {
+        for (const match of Array.from(
+          _note.text.matchAll(/\[\[([^\[]+)\]\]/g)
+        )) {
+          if (
+            !links[match[1]] &&
+            match[1].toLowerCase().includes(term.toLowerCase())
+          ) {
+            links[match[1]] = {
+              title: match[1],
               id: _note.id,
-              replace: `[[${cleanedTitle}]] `,
-            });
+              replace: `[[${match[1]}]] `,
+            };
           }
         }
+
+        if (_note.id === note?.id) continue;
+        const title = textToTitle(_note.text, 50);
+        if (title.toLowerCase().includes(term.toLowerCase())) {
+          const cleanedTitle = title.trim();
+          links[cleanedTitle] = {
+            title: cleanedTitle,
+            id: _note.id,
+            replace: `[[${cleanedTitle}]] `,
+          };
+        }
       }
+      Object.values(links).forEach((link) => suggestions.push(link));
     } else if (prefix === "#") {
       Object.keys(getHashtags([note!.id])).forEach((hashtag) => {
         const tag = hashtag.replace("#", "");
