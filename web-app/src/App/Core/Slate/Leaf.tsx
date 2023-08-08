@@ -180,7 +180,7 @@ function Leaf({
       {...attributes}
       className={className}
       id={id}
-      spellCheck={!leaf.hashtag}
+      spellCheck={leaf.hashtag ? false : undefined}
     >
       {placeholder && leaf.newLine && (
         <span

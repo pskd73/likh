@@ -365,6 +365,7 @@ const Editor = ({
           renderElement={renderElement}
           onKeyDown={handleKeyDown}
           onPaste={handlePaste}
+          spellCheck={false}
         />
         <ContextMenu
           ref={contextMenu.ref}
