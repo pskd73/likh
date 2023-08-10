@@ -32,4 +32,29 @@ const Highlight = ({
   );
 };
 
+const NavBtn = ({
+  className,
+  children,
+  left,
+  right,
+  ...restProps
+}: ComponentProps<"button"> & { left?: boolean; right?: boolean }) => {
+  return (
+    <button
+      className={twMerge(
+        className,
+        classNames("inline-block text-primary-700 text-opacity-30", {
+          "-mr-4": left,
+          "-ml-4": right,
+        })
+      )}
+      {...restProps}
+    >
+      {children}
+    </button>
+  );
+};
+
+Highlight.NavBtn = NavBtn;
+
 export default Highlight;

@@ -14,7 +14,7 @@ const Column = ({ children }: PropsWithChildren) => {
 };
 
 const Items = ({ children }: PropsWithChildren) => {
-  return <ul className="space-y-4">{children}</ul>;
+  return <ul>{children}</ul>;
 };
 
 const Item = ({ children, active }: PropsWithChildren & {active?: boolean}) => {
@@ -22,7 +22,8 @@ const Item = ({ children, active }: PropsWithChildren & {active?: boolean}) => {
     <div
       className={classNames(
         "flex bg-primary-700 bg-opacity-5 rounded-2xl p-4 space-x-4",
-        "space-x-4 border-4 border-primary-700 cursor-pointer transition-all", {
+        "space-x-4 border-4 border-primary-700 cursor-pointer transition-all", 
+        "mb-4", {
           "border-opacity-10": !active,
           "border-opacity-60": active,
           "shadow-md": active,

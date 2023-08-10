@@ -1,10 +1,25 @@
-"use client"
+"use client";
 import Button from "@/components/NewLanding/Button";
 import Highlight from "@/components/NewLanding/Highlight";
 import Title from "@/components/NewLanding/Title";
 import UseCase from "@/components/NewLanding/UseCase";
-import { ComponentProps, useState } from "react";
-import { BiBookContent, BiHash, BiLink, BiMath, BiSearchAlt } from "react-icons/bi";
+import classNames from "classnames";
+import { ComponentProps, useEffect, useState } from "react";
+import {
+  BiBookContent,
+  BiChevronLeft,
+  BiChevronRight,
+  BiCodeAlt,
+  BiExport,
+  BiHash,
+  BiImage,
+  BiLink,
+  BiLock,
+  BiMath,
+  BiSearchAlt,
+  BiShareAlt,
+} from "react-icons/bi";
+import { BsMarkdownFill } from "react-icons/bs";
 import { twMerge } from "tailwind-merge";
 
 const P = ({ className, children, ...restProps }: ComponentProps<"p">) => {
@@ -18,9 +33,30 @@ const P = ({ className, children, ...restProps }: ComponentProps<"p">) => {
   );
 };
 
+const usecases = [
+  { prefix: "For all your", highlight: "academic", postfix: "needs!" },
+  { prefix: "For all your", highlight: "research", postfix: "needs!" },
+  { prefix: "For all your", highlight: "blogging", postfix: "needs!" },
+  { prefix: "For all your", highlight: "writing", postfix: "needs!" },
+];
+
 const NewLandingPage = () => {
-  const [activeItem, setActiveItem] = useState("organize");
-  
+  const [activeItem, setActiveItem] = useState<string>();
+  const [activeUsecase, setActiveUsecase] = useState(0);
+
+  const handleUsecaseClick = ({ prev }: { prev?: boolean }) => {
+    let next = activeUsecase + 1;
+    if (prev) {
+      next = activeUsecase - 1;
+    }
+    if (next < 0) {
+      next = usecases.length - 1;
+    } else if (next > usecases.length - 1) {
+      next = 0;
+    }
+    setActiveUsecase(next);
+  };
+
   return (
     <div className="bg-base text-primary-700 p-10">
       <div className="flex flex-col items-center">
@@ -46,14 +82,45 @@ const NewLandingPage = () => {
           />
         </p>
 
-        <Title className="mt-24 mb-10">
-          For all your <Highlight bottom={-10}>academic</Highlight> needs!
-        </Title>
+        {usecases.map((usecase, i) => (
+          <Title
+            key={i}
+            className={classNames("mt-24 mb-14", {
+              hidden: activeUsecase !== i,
+            })}
+          >
+            {usecase.prefix}
+            <Highlight.NavBtn
+              left
+              onClick={() => handleUsecaseClick({ prev: true })}
+            >
+              <BiChevronLeft className="inline" />
+            </Highlight.NavBtn>
+            <Highlight
+              bottom={-10}
+              className="cursor-pointer"
+              onClick={() => handleUsecaseClick({})}
+            >
+              {usecase.highlight}
+            </Highlight>
+            <Highlight.NavBtn right onClick={() => handleUsecaseClick({})}>
+              <BiChevronRight className="inline" />
+            </Highlight.NavBtn>
+            {usecase.postfix}
+          </Title>
+        ))}
 
         <UseCase.Container>
           <UseCase.Column>
             <UseCase.Items>
-              <li onClick={() => setActiveItem("organize")}>
+              <li
+                onClick={() => setActiveItem("organize")}
+                className={classNames({
+                  hidden: !["academic"].includes(
+                    usecases[activeUsecase].highlight
+                  ),
+                })}
+              >
                 <UseCase.Item active={activeItem === "organize"}>
                   <UseCase.Item.Icon>
                     <BiHash />
@@ -67,7 +134,15 @@ const NewLandingPage = () => {
                   </UseCase.Item.Content>
                 </UseCase.Item>
               </li>
-              <li onClick={() => setActiveItem("link-notes")}>
+
+              <li
+                onClick={() => setActiveItem("link-notes")}
+                className={classNames({
+                  hidden: !["academic", "research", "writing"].includes(
+                    usecases[activeUsecase].highlight
+                  ),
+                })}
+              >
                 <UseCase.Item active={activeItem === "link-notes"}>
                   <UseCase.Item.Icon>
                     <BiLink />
@@ -81,7 +156,15 @@ const NewLandingPage = () => {
                   </UseCase.Item.Content>
                 </UseCase.Item>
               </li>
-              <li onClick={() => setActiveItem("search")}>
+
+              <li
+                onClick={() => setActiveItem("search")}
+                className={classNames({
+                  hidden: !["academic"].includes(
+                    usecases[activeUsecase].highlight
+                  ),
+                })}
+              >
                 <UseCase.Item active={activeItem === "search"}>
                   <UseCase.Item.Icon>
                     <BiSearchAlt />
@@ -95,13 +178,175 @@ const NewLandingPage = () => {
                   </UseCase.Item.Content>
                 </UseCase.Item>
               </li>
-              <li onClick={() => setActiveItem("outline")}>
+
+              <li
+                onClick={() => setActiveItem("outline")}
+                className={classNames({
+                  hidden: !["academic"].includes(
+                    usecases[activeUsecase].highlight
+                  ),
+                })}
+              >
                 <UseCase.Item active={activeItem === "outline"}>
                   <UseCase.Item.Icon>
                     <BiBookContent />
                   </UseCase.Item.Icon>
                   <UseCase.Item.Content>
                     <UseCase.Item.Title>Outline</UseCase.Item.Title>
+                    <UseCase.Item.Description>
+                      Lorem Ipsum is simply dummy text of the printing and
+                      typesetting industry.
+                    </UseCase.Item.Description>
+                  </UseCase.Item.Content>
+                </UseCase.Item>
+              </li>
+
+              <li
+                onClick={() => setActiveItem("e2e")}
+                className={classNames({
+                  hidden: !["research", "writing"].includes(
+                    usecases[activeUsecase].highlight
+                  ),
+                })}
+              >
+                <UseCase.Item active={activeItem === "e2e"}>
+                  <UseCase.Item.Icon>
+                    <BiLock />
+                  </UseCase.Item.Icon>
+                  <UseCase.Item.Content>
+                    <UseCase.Item.Title>E2E encryption</UseCase.Item.Title>
+                    <UseCase.Item.Description>
+                      Lorem Ipsum is simply dummy text of the printing and
+                      typesetting industry.
+                    </UseCase.Item.Description>
+                  </UseCase.Item.Content>
+                </UseCase.Item>
+              </li>
+
+              <li
+                onClick={() => setActiveItem("images")}
+                className={classNames({
+                  hidden: !["research", "blogging"].includes(
+                    usecases[activeUsecase].highlight
+                  ),
+                })}
+              >
+                <UseCase.Item active={activeItem === "images"}>
+                  <UseCase.Item.Icon>
+                    <BiImage />
+                  </UseCase.Item.Icon>
+                  <UseCase.Item.Content>
+                    <UseCase.Item.Title>Images</UseCase.Item.Title>
+                    <UseCase.Item.Description>
+                      Lorem Ipsum is simply dummy text of the printing and
+                      typesetting industry.
+                    </UseCase.Item.Description>
+                  </UseCase.Item.Content>
+                </UseCase.Item>
+              </li>
+
+              <li
+                onClick={() => setActiveItem("code")}
+                className={classNames({
+                  hidden: !["blogging"].includes(
+                    usecases[activeUsecase].highlight
+                  ),
+                })}
+              >
+                <UseCase.Item active={activeItem === "code"}>
+                  <UseCase.Item.Icon>
+                    <BiCodeAlt />
+                  </UseCase.Item.Icon>
+                  <UseCase.Item.Content>
+                    <UseCase.Item.Title>Code blocks</UseCase.Item.Title>
+                    <UseCase.Item.Description>
+                      Lorem Ipsum is simply dummy text of the printing and
+                      typesetting industry.
+                    </UseCase.Item.Description>
+                  </UseCase.Item.Content>
+                </UseCase.Item>
+              </li>
+
+              <li
+                onClick={() => setActiveItem("markdown")}
+                className={classNames({
+                  hidden: !["blogging", "writing"].includes(
+                    usecases[activeUsecase].highlight
+                  ),
+                })}
+              >
+                <UseCase.Item active={activeItem === "markdown"}>
+                  <UseCase.Item.Icon>
+                    <BsMarkdownFill />
+                  </UseCase.Item.Icon>
+                  <UseCase.Item.Content>
+                    <UseCase.Item.Title>Pure markdown</UseCase.Item.Title>
+                    <UseCase.Item.Description>
+                      Lorem Ipsum is simply dummy text of the printing and
+                      typesetting industry.
+                    </UseCase.Item.Description>
+                  </UseCase.Item.Content>
+                </UseCase.Item>
+              </li>
+
+              <li
+                onClick={() => setActiveItem("export")}
+                className={classNames({
+                  hidden: !["writing"].includes(
+                    usecases[activeUsecase].highlight
+                  ),
+                })}
+              >
+                <UseCase.Item active={activeItem === "export"}>
+                  <UseCase.Item.Icon>
+                    <BiExport />
+                  </UseCase.Item.Icon>
+                  <UseCase.Item.Content>
+                    <UseCase.Item.Title>Full export</UseCase.Item.Title>
+                    <UseCase.Item.Description>
+                      Lorem Ipsum is simply dummy text of the printing and
+                      typesetting industry.
+                    </UseCase.Item.Description>
+                  </UseCase.Item.Content>
+                </UseCase.Item>
+              </li>
+
+              <li
+                onClick={() => setActiveItem("math")}
+                className={classNames({
+                  hidden: !["research"].includes(
+                    usecases[activeUsecase].highlight
+                  ),
+                })}
+              >
+                <UseCase.Item active={activeItem === "math"}>
+                  <UseCase.Item.Icon>
+                    <BiMath />
+                  </UseCase.Item.Icon>
+                  <UseCase.Item.Content>
+                    <UseCase.Item.Title>Math expressions</UseCase.Item.Title>
+                    <UseCase.Item.Description>
+                      Lorem Ipsum is simply dummy text of the printing and
+                      typesetting industry.
+                    </UseCase.Item.Description>
+                  </UseCase.Item.Content>
+                </UseCase.Item>
+              </li>
+
+              <li
+                onClick={() => setActiveItem("share")}
+                className={classNames({
+                  hidden: !["blogging"].includes(
+                    usecases[activeUsecase].highlight
+                  ),
+                })}
+              >
+                <UseCase.Item active={activeItem === "share"}>
+                  <UseCase.Item.Icon>
+                    <BiShareAlt />
+                  </UseCase.Item.Icon>
+                  <UseCase.Item.Content>
+                    <UseCase.Item.Title>Quick share</UseCase.Item.Title>
                     <UseCase.Item.Description>
                       Lorem Ipsum is simply dummy text of the printing and
                       typesetting industry.
