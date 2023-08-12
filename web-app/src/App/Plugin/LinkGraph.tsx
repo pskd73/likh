@@ -35,8 +35,15 @@ const Page = () => {
   const data = useMemoAsync(async () => {
     if (allNotes) {
       const nonExistingNodes: Record<string, boolean> = {};
-      const notes =
-        tag === "all" ? Object.values(allNotes) : getHashtags()[tag];
+      let notes = Object.values(allNotes);
+      if (tag !== "all") {
+        const hashtags = getHashtags();
+        const keys = Object.keys(hashtags).filter((t) => t.startsWith(tag));
+        notes = [];
+        for (const key of keys) {
+          notes = [...notes, ...hashtags[key]];
+        }
+      }
 
       const links: Link[] = [];
       const nodes: Record<
@@ -45,6 +52,12 @@ const Page = () => {
       > = {};
 
       for (const note of notes) {
+        nodes[note.id] = {
+          id: note.id,
+          title: textToTitle(note.text, 20),
+          existing: true,
+        };
+
         const matches = Array.from(note.text.matchAll(/\[\[([^\[\]]+)\]\]/g));
         for (const match of matches) {
           const title = match[1];
@@ -66,11 +79,6 @@ const Page = () => {
             });
             nonExistingNodes[title] = true;
           }
-          nodes[note.id] = {
-            id: note.id,
-            title: textToTitle(note.text, 20),
-            existing: true,
-          };
         }
       }
 
