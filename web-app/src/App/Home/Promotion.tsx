@@ -36,6 +36,16 @@ const Promotion = () => {
         <SocialIcon href="mailto:help@retronote.app">
           <RxEnvelopeClosed />
         </SocialIcon>
+        <div className="flex justify-center items-center">
+          <a
+            className="text-sm"
+            href="https://forms.gle/YKSbYg7raWEeyvqP7"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Provide feedback
+          </a>
+        </div>
       </div>
     </div>
   );
