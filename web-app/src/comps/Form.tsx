@@ -22,8 +22,8 @@ export const Select = ({
   return (
     <select
       className={twMerge(
-        className,
-        "h-9 px-2 rounded bg-primary bg-opacity-10"
+        "h-9 px-2 rounded bg-primary bg-opacity-10",
+        className
       )}
       {...restProps}
     >

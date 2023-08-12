@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import * as d3 from "d3";
 import { EditorContext } from "../Context";
 import { textToTitle } from "src/Note";
@@ -8,6 +8,7 @@ import { PluginContext } from "./Context";
 import List from "../List";
 import { BiGitRepoForked } from "react-icons/bi";
 import Event from "src/components/Event";
+import { Select } from "src/comps/Form";
 
 // https://observablehq.com/@d3/disjoint-force-directed-graph/2?intent=fork
 
@@ -15,17 +16,34 @@ type Node = { id: string; title: string };
 type Link = { source: string; target: string };
 
 const Page = () => {
-  const { setFullPage } = useContext(EditorContext);
+  const { setFullPage, getHashtags } = useContext(EditorContext);
   const navigate = useNavigate();
   const ref = useRef<HTMLDivElement>(null);
   const { allNotes, getNoteByTitle, newNote } = useContext(EditorContext);
+  const tags = useMemo(() => {
+    const _tags: Record<string, boolean> = {};
+    for (const tag of Object.keys(getHashtags())) {
+      if (!tag) continue;
+      _tags[tag.split("/")[0]] = true;
+    }
+    return Object.keys(_tags);
+  }, [allNotes]);
+  const [tag, setTag] = useState("all");
+  const [excludeMentions, setExcludeMentions] = useState(false);
 
   const data = useMemoAsync(async () => {
     if (allNotes) {
       const nonExistingNodes: Record<string, boolean> = {};
+      const notes =
+        tag === "all" ? Object.values(allNotes) : getHashtags()[tag];
 
       const links: Link[] = [];
-      for (const note of Object.values(allNotes)) {
+      const nodes: Record<
+        string,
+        { id: string; title: string; existing: boolean }
+      > = {};
+
+      for (const note of notes) {
         const matches = Array.from(note.text.matchAll(/\[\[([^\[\]]+)\]\]/g));
         for (const match of matches) {
           const title = match[1];
@@ -35,24 +53,29 @@ const Page = () => {
               source: note.id,
               target: linkedNote.id,
             });
-          } else {
+            nodes[linkedNote.id] = {
+              id: linkedNote.id,
+              title: textToTitle(linkedNote.text, 20),
+              existing: true,
+            };
+          } else if (!excludeMentions) {
             links.push({
               source: note.id,
               target: title,
             });
             nonExistingNodes[title] = true;
           }
+          nodes[note.id] = {
+            id: note.id,
+            title: textToTitle(note.text, 20),
+            existing: true,
+          };
         }
       }
 
-      const nodes = Object.keys(allNotes).map((id) => ({
-        id: id,
-        title: textToTitle(allNotes[id].text, 20),
-        existing: true,
-      }));
       return {
         nodes: [
-          ...nodes,
+          ...Object.values(nodes),
           ...Object.keys(nonExistingNodes).map((title) => ({
             id: title,
             title,
@@ -62,7 +85,7 @@ const Page = () => {
         links,
       };
     }
-  }, [allNotes]);
+  }, [allNotes, tag, excludeMentions]);
 
   useEffect(() => {
     if (!data) return;
@@ -217,8 +240,32 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="flex justify-center items-center w-full h-full">
-      <div ref={ref} />
+    <div className="relative">
+      <div className="p-6 absolute top-0 left-0 flex items-center space-x-2">
+        <Select
+          className="h-auto px-2 py-1"
+          value={tag}
+          onChange={(e) => setTag(e.target.value)}
+        >
+          <option value={"all"}>All</option>
+          {tags.map((tag, i) => (
+            <option value={tag} key={i}>
+              {tag}
+            </option>
+          ))}
+        </Select>
+        <label className="flex items-center space-x-1">
+          <input
+            type="checkbox"
+            checked={excludeMentions}
+            onChange={(e) => setExcludeMentions(e.target.checked)}
+          />
+          <span>Exclude mentions</span>
+        </label>
+      </div>
+      <div className="flex justify-center items-center w-full">
+        <div ref={ref} />
+      </div>
     </div>
   );
 };
