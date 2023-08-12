@@ -9,6 +9,7 @@ import List from "../List";
 import { BiGitRepoForked } from "react-icons/bi";
 import Event from "src/components/Event";
 import { Select } from "src/comps/Form";
+import classNames from "classnames";
 
 // https://observablehq.com/@d3/disjoint-force-directed-graph/2?intent=fork
 
@@ -241,7 +242,13 @@ const Page = () => {
 
   return (
     <div className="relative">
-      <div className="p-6 absolute top-0 left-0 flex items-center space-x-2">
+      <div
+        className={classNames(
+          "p-6 absolute top-0 left-0",
+          "md:flex items-center md:space-x-2",
+          "space-y-1 md:space-y-0"
+        )}
+      >
         <Select
           className="h-auto px-2 py-1"
           value={tag}
