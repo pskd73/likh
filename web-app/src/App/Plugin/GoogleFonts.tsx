@@ -179,8 +179,12 @@ const Page = () => {
             )}
             onClick={() => handleFontClick(font)}
           >
-            <span>{font.name}</span>
-            <span className="text-primary text-opacity-50">{font.family}</span>
+            <span>
+              <span>{font.name}</span>
+              <span className="text-primary text-opacity-50 ml-2">
+                {font.family}
+              </span>
+            </span>
             {activeFont?.name !== font.name && !font.inbuilt && (
               <Button
                 className="text-xs"
