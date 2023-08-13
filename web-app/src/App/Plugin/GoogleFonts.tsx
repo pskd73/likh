@@ -7,6 +7,7 @@ import { Input } from "src/comps/Form";
 import { BiCheck, BiFont, BiTrash } from "react-icons/bi";
 import classNames from "classnames";
 import { useNavigate } from "react-router-dom";
+import Event from "src/components/Event";
 
 const NavLink = () => {
   const navigate = useNavigate();
@@ -107,6 +108,7 @@ const Page = () => {
   const activeFont = get<SavedFont | undefined>("active-font");
 
   useEffect(() => {
+    Event.track("google-fonts");
     [...defaultFonts, ...fonts].forEach((font) => loadGoogleFont(font.name));
   }, []);
 
