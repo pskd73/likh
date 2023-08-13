@@ -359,7 +359,6 @@ const Editor = ({
         onChange={handleChange}
       >
         <Editable
-          className={theme.font.base}
           decorate={decorate}
           renderLeaf={renderLeaf}
           renderElement={renderElement}
