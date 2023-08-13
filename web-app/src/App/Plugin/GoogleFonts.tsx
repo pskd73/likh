@@ -230,6 +230,7 @@ const GoogleFontsPlugin = () => {
       version: 1,
       pages: { "google-fonts": { page: <Page /> } },
       navigationItems: [<NavLink />],
+      mobileSettingItems: [<NavLink />],
     });
   }, []);
 
