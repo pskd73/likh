@@ -114,7 +114,7 @@ const NoteEditor = ({
   };
 
   return (
-    <div className={`note-${note.id}`}>
+    <div className={`note-${note.id} note-editor`}>
       <Editor
         containerClassName={`note-${note.id}`}
         onChange={onChange}

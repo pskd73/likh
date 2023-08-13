@@ -244,6 +244,10 @@ const SidePanel = () => {
               {isRoll && <RollOutline />}
               <Outline />
               <Links />
+              <SidePanelBrowse />
+              <WithTitle title="Trash" active={false}>
+                <Trash />
+              </WithTitle>
               {navigationItems.length > 0 && (
                 <WithTitle title="Navigation" active>
                   <List>
@@ -253,10 +257,6 @@ const SidePanel = () => {
                   </List>
                 </WithTitle>
               )}
-              <SidePanelBrowse />
-              <WithTitle title="Trash" active={false}>
-                <Trash />
-              </WithTitle>
               <Settings />
             </div>
           </>

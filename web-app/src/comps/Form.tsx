@@ -6,8 +6,8 @@ export const Input = ({ className, ...restProps }: ComponentProps<"input">) => {
     <input
       placeholder="Add topic"
       className={twMerge(
-        className,
-        "outline-none h-9 px-2 flex items-center bg-primary rounded bg-opacity-10 placeholder-primary-500"
+        "outline-none h-9 px-2 flex items-center bg-primary rounded bg-opacity-10 placeholder-primary-500",
+        className
       )}
       {...restProps}
     />

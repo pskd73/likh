@@ -9,6 +9,7 @@ import { TimestampPlugin } from "./Timestamp";
 import { RNPluginCreator } from "./type";
 import BulletsPlugin from "./Bullets/Plugin";
 import SpellCheckPlugin from "./SpellCheck";
+import GoogleFontsPlugin from "./GoogleFonts";
 
 export const enabledPlugins: RNPluginCreator[] = [
   TimestampPlugin,
@@ -23,4 +24,5 @@ export const plugins: ReactElement[] = [
   <LinkGraphPlugin />,
   <SharePlugin />,
   <SpellCheckPlugin />,
+  <GoogleFontsPlugin />,
 ];
