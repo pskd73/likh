@@ -1,5 +1,6 @@
 import classNames from "classnames";
-import { ComponentProps, PropsWithChildren } from "react";
+import { Component, ComponentProps, PropsWithChildren } from "react";
+import { twMerge } from "tailwind-merge";
 
 const Container = ({ children }: PropsWithChildren) => {
   return (
@@ -17,17 +18,21 @@ const Items = ({ children }: PropsWithChildren) => {
   return <ul>{children}</ul>;
 };
 
-const Item = ({ children, active }: PropsWithChildren & {active?: boolean}) => {
+const Item = ({
+  children,
+  active,
+}: PropsWithChildren & { active?: boolean }) => {
   return (
     <div
       className={classNames(
         "flex bg-primary-700 bg-opacity-5 rounded-2xl p-4 space-x-4",
-        "space-x-4 border-4 border-primary-700 cursor-pointer transition-all", 
-        "mb-4", {
+        "space-x-4 border-4 border-primary-700 cursor-pointer transition-all",
+        "mb-4",
+        {
           "border-opacity-10": !active,
           "border-opacity-60": active,
           "shadow-md": active,
-          "hover:bg-opacity-10": !active
+          "hover:bg-opacity-10": !active,
         }
       )}
     >
@@ -62,6 +67,40 @@ const Description = ({ children }: PropsWithChildren) => {
   return <p className="font-light">{children}</p>;
 };
 
+const ImgContainer = ({
+  children,
+  visible,
+}: ComponentProps<"div"> & { visible: boolean }) => {
+  return (
+    <div
+      className={classNames(
+        "flex justify-center items-center h-full",
+        "relative",
+        {
+          hidden: !visible,
+        }
+      )}
+    >
+      {children}
+    </div>
+  );
+};
+
+const Img = ({ className, ...restProps }: ComponentProps<"img">) => {
+  return (
+    <img
+      className={twMerge(
+        classNames(
+          "rounded-xl shadow-xl absolute max-w-[60%]",
+          "hover:scale-105 transition-all"
+        ),
+        className
+      )}
+      {...restProps}
+    />
+  );
+};
+
 Item.Icon = Icon;
 Item.Title = Title;
 Item.Content = Content;
@@ -72,6 +111,8 @@ const UseCase = {
   Column,
   Item,
   Items,
+  Img,
+  ImgContainer,
 };
 
 export default UseCase;

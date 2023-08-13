@@ -4,6 +4,7 @@ import Highlight from "@/components/NewLanding/Highlight";
 import Title from "@/components/NewLanding/Title";
 import UseCase from "@/components/NewLanding/UseCase";
 import classNames from "classnames";
+import React from "react";
 import { ComponentProps, useEffect, useState } from "react";
 import {
   BiBookContent,
@@ -356,7 +357,29 @@ const NewLandingPage = () => {
               </li>
             </UseCase.Items>
           </UseCase.Column>
-          <UseCase.Column></UseCase.Column>
+          <UseCase.Column>
+            <UseCase.ImgContainer visible={activeItem === "organize"}>
+              <UseCase.Img
+                src="/usecases/organize-plain.png"
+                className="-rotate-[15deg] top-[50px] left-[40px]"
+              />
+              <UseCase.Img
+                src="/usecases/organize-expanded.png"
+                className="rotate-[8deg] left-[180px]"
+              />
+            </UseCase.ImgContainer>
+
+            <UseCase.ImgContainer visible={activeItem === "link-notes"}>
+              <UseCase.Img
+                src="/usecases/link-graph.png"
+                className="-rotate-[15deg] top-[50px] left-[40px]"
+              />
+              <UseCase.Img
+                src="/usecases/link-add.png"
+                className="rotate-[8deg] top-[260px] left-[80px] max-w-[80%]"
+              />
+            </UseCase.ImgContainer>
+          </UseCase.Column>
         </UseCase.Container>
       </div>
     </div>
