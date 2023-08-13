@@ -22,6 +22,9 @@ import { PluginContext } from "./Context";
 import Tooltip from "src/comps/Tooltip";
 import List from "../List";
 import classNames from "classnames";
+import rehypeKatex from 'rehype-katex';
+import remarkMath from 'remark-math'
+import 'katex/dist/katex.min.css'
 
 const HOST = "https://api.retronote.app";
 
@@ -220,7 +223,8 @@ const SharePage = () => {
           <SaveAsNote text={shared.text} />
           <div className="prose my-6">
             <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
+              remarkPlugins={[remarkGfm, remarkMath]}
+              rehypePlugins={[rehypeKatex]}
               components={{
                 p: ({ node, ...props }) => (
                   <p style={{ whiteSpace: "pre-wrap" }} {...props} />
