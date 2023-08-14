@@ -10,6 +10,7 @@ import { RNPluginCreator } from "./type";
 import BulletsPlugin from "./Bullets/Plugin";
 import SpellCheckPlugin from "./SpellCheck";
 import GoogleFontsPlugin from "./GoogleFonts";
+import TablesPlugin from "./Tables";
 
 export const enabledPlugins: RNPluginCreator[] = [
   TimestampPlugin,
@@ -18,6 +19,7 @@ export const enabledPlugins: RNPluginCreator[] = [
   BulletsPlugin,
   EmojisPlugin,
   HeadingsPlugin,
+  TablesPlugin,
 ];
 
 export const plugins: ReactElement[] = [
