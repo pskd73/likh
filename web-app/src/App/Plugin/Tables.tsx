@@ -68,10 +68,18 @@ const getTable = (editor: CustomEditor, path: number[]): Table | undefined => {
     focus: Editor.end(editor, end),
   };
 
+  const paths = [...prevPaths.reverse(), ...nextPaths];
+
+  if (paths.length < 2) return;
+
+  const [second] = editor.node(paths[1]);
+  const secondText = getNodeText(second);
+  if (!secondText.match(/^\|?(:?-+:?\|)+\|?(:?-+:?)?$/)) return;
+
   return {
     start,
     end,
-    paths: [...prevPaths.reverse(), ...nextPaths],
+    paths,
     range,
   };
 };
@@ -125,10 +133,13 @@ const viewTable = (editor: CustomEditor, table: Table) => {
   div.id = id;
   div.contentEditable = "false";
   div.onclick = (e) => {
-    editor.setSelection({
-      anchor: table.range.anchor,
-      focus: table.range.anchor,
-    });
+    editor.setSelection(table.range);
+  };
+  div.onfocus = (e) => {
+    editor.setSelection(table.range);
+  };
+  div.onkeyup = (e) => {
+    editor.setSelection(table.range);
   };
   const root = (ReactDOM as any).createRoot(div);
   root.render(raw);
