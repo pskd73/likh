@@ -118,7 +118,14 @@ const viewTable = (editor: CustomEditor, table: Table) => {
   document.getElementById(id)?.remove();
 
   const raw = (
-    <div className={classNames("table-view prose")}>
+    <div
+      className={classNames(
+        "table-view prose",
+        "border border-primary border-opacity-20",
+        "rounded-md my-2",
+        "prose-th:p-2 prose-td:p-2 prose-table:m-0",
+      )}
+    >
       <ReactMarkdown
         className="viewer"
         remarkPlugins={[remarkGfm, remarkMath]}
