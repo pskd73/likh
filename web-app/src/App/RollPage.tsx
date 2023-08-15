@@ -69,9 +69,10 @@ const RollPage = () => {
 
         if (shouldCreate) {
           Event.track("new_roll_note");
+          const dtStr = moment(new Date()).format("YYYY-MM-DD")
           const savedNote = newNote(
             {
-              text: `${hashtag}\nWrite your journal ...`,
+              text: `# 🗓️ ${dtStr}\n${hashtag}\n`,
             },
             false
           );
