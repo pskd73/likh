@@ -38,10 +38,12 @@ function addStylesheet(url: string) {
   });
 }
 
-const loadGoogleFont = async (family: string) => {
-  await addStylesheet(
-    `https://fonts.googleapis.com/css2?family=${family}&display=swap`
-  );
+const loadGoogleFont = async (font: SavedFont) => {
+  let link = `https://fonts.googleapis.com/css2?family=${font.name}&display=swap`;
+  if (font.link) {
+    link = font.link;
+  }
+  await addStylesheet(link);
 };
 
 const applyFontFamily = (fontFamily: string) => {
@@ -57,7 +59,8 @@ const CustomInput = ({ ...restProps }: ComponentProps<"input">) => {
       type="text"
       className={classNames(
         "h-auto py-1 placeholder-primary placeholder-opacity-50",
-        "border border-primary border-opacity-20"
+        "border border-primary border-opacity-20",
+        "max-w-sm w-full"
       )}
       {...restProps}
     />
@@ -67,6 +70,7 @@ const CustomInput = ({ ...restProps }: ComponentProps<"input">) => {
 type SavedFont = {
   name: string;
   family: string;
+  link?: string;
   inbuilt?: boolean;
 };
 
@@ -79,16 +83,19 @@ const defaultFonts: SavedFont[] = [
   {
     name: "Roboto Mono",
     family: "'Roboto Mono', monospace",
+    link: "https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;0,600;1,400;1,600&display=swap",
     inbuilt: true,
   },
   {
     name: "Nanum Myeongjo",
     family: "'Nanum Myeongjo', serif",
+    link: "https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@800&display=swap",
     inbuilt: true,
   },
   {
     name: "IM Fell English",
     family: "'IM Fell English', serif",
+    link: "https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&display=swap",
     inbuilt: true,
   },
   {
@@ -98,27 +105,89 @@ const defaultFonts: SavedFont[] = [
   },
 ];
 
+const extractLink = (importStr: string) => {
+  const match = importStr.match(/@import url\('(.*)'\)/);
+  return match ? match[1] : undefined;
+};
+
+const extractFontFamily = (cssStr: string) => {
+  const match = cssStr.match(/font-family: (.*);/);
+  const ff = cssStr.match(/font-family/g);
+  return match && ff && ff.length === 1 ? match[1] : undefined;
+};
+
+const AddFont = () => {
+  const { getState } = useContext(PluginContext);
+  const { set, get } = getState("google-fonts");
+  const [name, setName] = useState("");
+  const [css, setCss] = useState("");
+  const [_import, setImport] = useState("");
+
+  const fonts = get<SavedFont[]>("fonts") || [];
+
+  const handleAdd = () => {
+    if (!name || !css || !_import) {
+      return alert("Please fill all the fields");
+    }
+    const link = extractLink(_import);
+    if (!link) {
+      return alert("Please paste valid @import");
+    }
+    const family = extractFontFamily(css);
+    if (!family) {
+      return alert("Please paste valid CSS. Only one font-family allowed");
+    }
+    const font = { name: name, link, family };
+    loadGoogleFont(font);
+    set("fonts", [...fonts, font]);
+    setName("");
+    setCss("");
+    setImport("");
+  };
+
+  return (
+    <div className="space-y-2">
+      <h2 className="text-3xl font-bold mb-4 mt-6">Add new font</h2>
+      <textarea
+        placeholder="Paste @import"
+        value={_import}
+        onChange={(e) => setImport(e.target.value)}
+        className={classNames(
+          "border border-primary border-opacity-20",
+          "outline-none rounded",
+          "bg-primary bg-opacity-10 max-w-sm w-full",
+          "p-2 placeholder-primary placeholder-opacity-50"
+        )}
+        rows={7}
+      />
+      <CustomInput
+        placeholder="Paste CSS"
+        value={css}
+        onChange={(e) => setCss(e.target.value)}
+      />
+      <CustomInput
+        placeholder="Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <Button onClick={handleAdd}>Add font</Button>
+    </div>
+  );
+};
+
 const Page = () => {
   const { getState } = useContext(PluginContext);
   const { set, get } = getState("google-fonts");
-  const [tmpName, setTmpName] = useState("");
-  const [tmpFamily, setTmpFamily] = useState("");
 
   const fonts = get<SavedFont[]>("fonts") || [];
   const activeFont = get<SavedFont | undefined>("active-font");
 
   useEffect(() => {
     Event.track("google-fonts");
-    [...defaultFonts, ...fonts].forEach((font) => loadGoogleFont(font.name));
+    [...defaultFonts, ...fonts].forEach(
+      (font) => font.name !== "Default" && loadGoogleFont(font)
+    );
   }, []);
-
-  const handleAdd = () => {
-    if (!tmpName || !tmpFamily) {
-      return alert("Please enter both name and family name to add");
-    }
-    loadGoogleFont(tmpName);
-    set("fonts", [...fonts, { name: tmpName, family: tmpFamily }]);
-  };
 
   const handleFontClick = (font: SavedFont) => {
     if (font.name === "Default") {
@@ -136,7 +205,7 @@ const Page = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 pb-10">
       <div className="text-3xl font-bold">Google Fonts</div>
       <p>
         Change the font of the notes. Apart from available fonts, you can add
@@ -169,7 +238,7 @@ const Page = () => {
               fontFamily: font.family,
             }}
             className={classNames(
-              "flex items-center space-x-2 p-2 cursor-pointer",
+              "flex items-start justify-between space-x-2 p-2 cursor-pointer",
               "rounded",
               {
                 "bg-primary bg-opacity-10": activeFont?.name === font.name,
@@ -179,12 +248,13 @@ const Page = () => {
             )}
             onClick={() => handleFontClick(font)}
           >
-            <span>
+            <div>
               <span>{font.name}</span>
-              <span className="text-primary text-opacity-50 ml-2">
-                {font.family}
-              </span>
-            </span>
+              <div className="text-primary text-opacity-50 text-xs">
+                {font.family && <div>Family: {font.family}</div>}
+                {font.link && <div>Link: {font.link}</div>}
+              </div>
+            </div>
             {activeFont?.name !== font.name && !font.inbuilt && (
               <Button
                 className="text-xs"
@@ -205,19 +275,7 @@ const Page = () => {
         ))}
       </ul>
       <hr />
-      <div className="md:flex items-center md:space-x-2 space-y-2 md:space-y-0">
-        <CustomInput
-          placeholder="Name"
-          value={tmpName}
-          onChange={(e) => setTmpName(e.target.value)}
-        />
-        <CustomInput
-          placeholder="Font family"
-          value={tmpFamily}
-          onChange={(e) => setTmpFamily(e.target.value)}
-        />
-        <Button onClick={handleAdd}>Add font</Button>
-      </div>
+      <AddFont />
     </div>
   );
 };
@@ -241,7 +299,7 @@ const GoogleFontsPlugin = () => {
   useEffect(() => {
     (async () => {
       if (activeFont) {
-        await loadGoogleFont(activeFont.name);
+        await loadGoogleFont(activeFont);
         applyFontFamily(activeFont.family);
       }
     })();
