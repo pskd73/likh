@@ -4,6 +4,9 @@ import { RNPluginCreator } from "../type";
 import { ReactEditor } from "slate-react";
 import { hasChildren, isCollapsed } from "./utils";
 import { Bullet, Space } from "./Components";
+import { EditorContextType } from "src/App/Context";
+
+let state: EditorContextType|undefined = undefined;
 
 const BulletsPlugin: RNPluginCreator = () => {
   return {
@@ -16,7 +19,6 @@ const BulletsPlugin: RNPluginCreator = () => {
           justBullet: /^ *[-*+]( \[[ a-zA-Z/]\])?/m,
           bulletSpace: / $/m,
         },
-        
       },
       bulletOrdered: {
         pattern: /^ *[\d]+\. /m,
@@ -24,22 +26,25 @@ const BulletsPlugin: RNPluginCreator = () => {
           justBullet: /^ *[\d]+\./m,
           bulletSpace: / $/m,
         },
-        
       },
     }),
+    updateState(editorState) {
+      state = editorState;
+    },
     leafMaker: ({ leaf, attributes, children, editor }) => {
       if (leaf.justBullet) {
         const parsed = parseListText(leaf.text + " ");
         const level = parsed?.level || 0;
-        const width = (level + 1) * 40;
+        const width = (level + 1) * 100;
         const _hasChildren = hasChildren(editor, parsed!.level, leaf.path);
         const [element]: any = editor.node([leaf.path[0]]);
+        const spaceWidth = state?.spaceWidth || 4;
 
         return (
           <span
             {...attributes}
             className={classNames("inline-flex justify-end")}
-            style={{ marginLeft: -width - 4, width }}
+            style={{ marginLeft: -width - spaceWidth, width }}
           >
             <Bullet
               editor={editor}
