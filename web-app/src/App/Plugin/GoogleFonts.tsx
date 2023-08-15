@@ -116,6 +116,21 @@ const extractFontFamily = (cssStr: string) => {
   return match && ff && ff.length === 1 ? match[1] : undefined;
 };
 
+const getSpaceWidth = (family: string) => {
+  const s = document.createElement("span");
+  const ed = document.body;
+
+  ed.appendChild(s);
+  s.innerHTML = "&nbsp;";
+  s.style.position = "absolute";
+  s.style.left = "-9999px";
+  s.style.top = "-9999px";
+  s.style.fontFamily = family;
+  const width = s.getBoundingClientRect().width;
+  s.remove();
+  return width;
+};
+
 const AddFont = () => {
   const { getState } = useContext(PluginContext);
   const { set, get } = getState("google-fonts");
@@ -177,6 +192,7 @@ const AddFont = () => {
 
 const Page = () => {
   const { getState } = useContext(PluginContext);
+  const { setSpaceWidth } = useContext(EditorContext);
   const { set, get } = getState("google-fonts");
 
   const fonts = get<SavedFont[]>("fonts") || [];
@@ -195,6 +211,7 @@ const Page = () => {
     } else {
       set("active-font", font);
     }
+    setSpaceWidth(getSpaceWidth(font.family));
   };
 
   const handleDelete = (font: SavedFont) => {

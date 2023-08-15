@@ -30,6 +30,8 @@ const { hook: useThemeName } = PersistedState<Theme>("themeName");
 const { hook: useColorTheme } = PersistedState<Theme>("colorTheme");
 const { hook: usePluginsState } =
   PersistedState<Record<string, any>>("pluginState");
+const { hook: useSpaceWidth } =
+  PersistedState<Record<string, any>>("spaceWidth");
 
 export const useEditor = ({
   storage,
@@ -60,6 +62,7 @@ export const useEditor = ({
     {}
   );
   const [fullPage, setFullPage] = useState(false);
+  const [spaceWidth, setSpaceWidth] = useSpaceWidth(4);
 
   useEffect(() => {
     (async () => {
@@ -332,5 +335,8 @@ export const useEditor = ({
 
     fullPage,
     setFullPage,
+
+    spaceWidth,
+    setSpaceWidth,
   };
 };
