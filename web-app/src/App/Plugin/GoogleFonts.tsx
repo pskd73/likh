@@ -220,7 +220,7 @@ const Page = () => {
         </a>
         .{" "}
         <a
-          href="https://twitter.com/pramodk73/status/1690655433231564800"
+          href="https://twitter.com/pramodk73/status/1691305552381710337"
           target="_blank"
           rel="noreferrer"
           className="underline"
