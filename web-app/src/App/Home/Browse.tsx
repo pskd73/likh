@@ -28,19 +28,22 @@ const Files = <T extends unknown>({
 }) => {
   return (
     <List>
-      {files.map((file, i) => (
-        <List.Item
-          key={i}
-          withIcon
-          className="last:mb-0"
-          onClickKind={() => onClick(file)}
-        >
-          <List.Item.Icon>
-            <BiFile />
-          </List.Item.Icon>
-          <span>{toTitle(file)}</span>
-        </List.Item>
-      ))}
+      {files
+        .map((file) => ({ title: toTitle(file), file }))
+        .sort((a, b) => a.title.localeCompare(b.title))
+        .map((info, i) => (
+          <List.Item
+            key={i}
+            withIcon
+            className="last:mb-0"
+            onClickKind={() => onClick(info.file)}
+          >
+            <List.Item.Icon>
+              <BiFile />
+            </List.Item.Icon>
+            <span>{info.title}</span>
+          </List.Item>
+        ))}
     </List>
   );
 };
@@ -74,36 +77,38 @@ const Folders = <T extends unknown>({
 
   return (
     <List>
-      {folderize(Object.keys(map), prefix).map((hashtag, i) => {
-        const exp = expanded.includes(hashtag);
-        return (
-          <Fragment key={i}>
-            <List.Item withIcon key={i} onClickKind={() => toggle(hashtag)}>
-              <List.Item.Icon>
-                <BiHash />
-              </List.Item.Icon>
-              <span>{hashtag.replaceAll("#", "")}</span>
-            </List.Item>
-            {exp && (
-              <div className="ml-3 pl-1 border-l border-primary border-opacity-30">
-                {inject(prefix, hashtag)}
-                <Folders
-                  onFileClick={onFileClick}
-                  map={map}
-                  prefix={prefix + hashtag + "/"}
-                  toTitle={toTitle}
-                  inject={inject}
-                />
-                <Files
-                  onClick={onFileClick}
-                  files={map[prefix + hashtag] || []}
-                  toTitle={toTitle}
-                />
-              </div>
-            )}
-          </Fragment>
-        );
-      })}
+      {folderize(Object.keys(map), prefix)
+        .sort((a, b) => a.localeCompare(b))
+        .map((hashtag, i) => {
+          const exp = expanded.includes(hashtag);
+          return (
+            <Fragment key={i}>
+              <List.Item withIcon key={i} onClickKind={() => toggle(hashtag)}>
+                <List.Item.Icon>
+                  <BiHash />
+                </List.Item.Icon>
+                <span>{hashtag.replaceAll("#", "")}</span>
+              </List.Item>
+              {exp && (
+                <div className="ml-3 pl-1 border-l border-primary border-opacity-30">
+                  {inject(prefix, hashtag)}
+                  <Folders
+                    onFileClick={onFileClick}
+                    map={map}
+                    prefix={prefix + hashtag + "/"}
+                    toTitle={toTitle}
+                    inject={inject}
+                  />
+                  <Files
+                    onClick={onFileClick}
+                    files={map[prefix + hashtag] || []}
+                    toTitle={toTitle}
+                  />
+                </div>
+              )}
+            </Fragment>
+          );
+        })}
     </List>
   );
 };
