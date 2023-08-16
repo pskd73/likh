@@ -6,7 +6,7 @@ import { hasChildren, isCollapsed } from "./utils";
 import { Bullet, Space } from "./Components";
 import { EditorContextType } from "src/App/Context";
 
-let state: EditorContextType|undefined = undefined;
+let state: EditorContextType | undefined = undefined;
 
 const BulletsPlugin: RNPluginCreator = () => {
   return {
@@ -44,7 +44,7 @@ const BulletsPlugin: RNPluginCreator = () => {
           <span
             {...attributes}
             className={classNames("inline-flex justify-end")}
-            style={{ marginLeft: -width - spaceWidth, width }}
+            style={{ marginLeft: -width - (spaceWidth - 0.1) , width }}
           >
             <Bullet
               editor={editor}
