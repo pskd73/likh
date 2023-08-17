@@ -311,7 +311,7 @@ const Page = () => {
   );
 };
 
-const EpubPlugin = () => {
+const EBookPlugin = () => {
   const { register } = useContext(PluginContext);
 
   useEffect(() => {
@@ -328,4 +328,4 @@ const EpubPlugin = () => {
   return null;
 };
 
-export default EpubPlugin;
+export default EBookPlugin;
