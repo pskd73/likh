@@ -11,6 +11,7 @@ import BulletsPlugin from "./Bullets/Plugin";
 import SpellCheckPlugin from "./SpellCheck";
 import GoogleFontsPlugin from "./GoogleFonts";
 import TablesPlugin from "./Tables";
+import EBookPlugin from "./EBook";
 
 export const enabledPlugins: RNPluginCreator[] = [
   TimestampPlugin,
@@ -27,4 +28,5 @@ export const plugins: ReactElement[] = [
   <SharePlugin />,
   <SpellCheckPlugin />,
   <GoogleFontsPlugin />,
+  <EBookPlugin />,
 ];
