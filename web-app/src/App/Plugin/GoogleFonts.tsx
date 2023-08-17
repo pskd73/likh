@@ -8,6 +8,7 @@ import { BiCheck, BiFont, BiTrash } from "react-icons/bi";
 import classNames from "classnames";
 import { useNavigate } from "react-router-dom";
 import Event from "src/components/Event";
+import { CustomInput } from "./UI";
 
 const NavLink = () => {
   const navigate = useNavigate();
@@ -51,20 +52,6 @@ const applyFontFamily = (fontFamily: string) => {
   editorElem.forEach((elem: any) => {
     elem.style.fontFamily = fontFamily;
   });
-};
-
-const CustomInput = ({ ...restProps }: ComponentProps<"input">) => {
-  return (
-    <Input
-      type="text"
-      className={classNames(
-        "h-auto py-1 placeholder-primary placeholder-opacity-50",
-        "border border-primary border-opacity-20",
-        "max-w-sm w-full"
-      )}
-      {...restProps}
-    />
-  );
 };
 
 type SavedFont = {
