@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import Prism from "prismjs";
 import {
+  ClipboardEventHandler,
   KeyboardEventHandler,
   useCallback,
   useEffect,
@@ -17,17 +18,14 @@ import {
 } from "slate";
 import { withHistory } from "slate-history";
 import { Slate, Editable, withReact } from "slate-react";
-import {
-  CustomGrammarValue,
-  imageRegex,
-  quoteRegex,
-} from "src/App/grammer";
+import { CustomGrammarValue, imageRegex, quoteRegex } from "src/App/grammer";
 import {
   CustomEditor,
   CustomElement,
   serialize,
   deserialize,
   focusEnd,
+  getNodeText,
 } from "src/App/Core/Core";
 import { handleEnterForList, intend } from "src/App/Core/List";
 import {
@@ -351,6 +349,18 @@ const Editor = ({
     return defaultValue;
   };
 
+  const handleCopy: ClipboardEventHandler<HTMLDivElement> = (e) => {
+    if (editor.selection) {
+      const fragments = editor.fragment(editor.selection);
+      const text = fragments
+        .map((frag) => getNodeText(frag))
+        .join("\n");
+      e.clipboardData.setData("text/plain", text);
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  };
+
   return (
     <div id="editorContainer">
       <Slate
@@ -364,6 +374,7 @@ const Editor = ({
           renderElement={renderElement}
           onKeyDown={handleKeyDown}
           onPaste={handlePaste}
+          onCopy={handleCopy}
           spellCheck={false}
         />
         <ContextMenu

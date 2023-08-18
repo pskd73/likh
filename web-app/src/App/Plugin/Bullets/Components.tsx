@@ -91,7 +91,10 @@ export const PlainBullet = ({
   );
 };
 
-export const OrderedBullet = ({ children, leaf }: PropsWithChildren & {leaf: any}) => {
+export const OrderedBullet = ({
+  children,
+  leaf,
+}: PropsWithChildren & { leaf: any }) => {
   return (
     <span className="text-primary text-opacity-50 self-baseline">
       <span
