@@ -12,9 +12,11 @@ import { SavedNote } from "../type";
 import { EditorContext } from "../Context";
 import { textToTitle } from "src/Note";
 import { DownloadableNote, getDownloadableNote } from "../File";
-import { Input } from "src/comps/Form";
+import Event from "src/components/Event";
 import { CustomInput, CustomSelect } from "./UI";
 import Button from "src/comps/Button";
+import { useNavigate } from "react-router-dom";
+import { BiBook } from "react-icons/bi";
 
 function container() {
   return `<?xml version="1.0" encoding="UTF-8" ?>
@@ -141,8 +143,11 @@ function toc(epub: Epub) {
           ${chapters
             .map(
               (chapter) =>
-                // prettier-ignore
-                `<li id="chapter-${chapter.id}"><a epub:type="bodymatter" href="${chapter.id}.xhtml">${escapeXml(chapter.title)}</a></li>`
+                `<li id="chapter-${chapter.id}">
+                  <a epub:type="bodymatter" href="${chapter.id}.xhtml">
+                    ${escapeXml(chapter.title)}
+                  </a>
+                </li>`
             )
             .join("\n")}
         </ol>
@@ -158,13 +163,15 @@ function getChapter(chapter: Chapter) {
     <!DOCTYPE html>
     <html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="en">
       <head>
-      <meta charset="UTF-8" />
-      <title>${title}</title>
+        <meta charset="UTF-8" />
+        <title>${title}</title>
       </head>
-    <body>
-      <p><a href="${url}">${url}</a></p>
-      ${content}
-    </body>
+      <body>
+        <p>
+          <a href="${url}">${url}</a>
+        </p>
+        ${content}
+      </body>
     </html>
   `;
 }
@@ -243,29 +250,66 @@ const make = async (
     });
 };
 
+function unique<T>(value: T, index: number, array: T[]) {
+  return array.indexOf(value) === index;
+}
+
+type OrderedSavedNote = {
+  note: SavedNote;
+  idx: number;
+};
+
 const Page = () => {
+  const navigate = useNavigate();
   const { allNotes, getHashtags, storage } = useContext(EditorContext);
   const hashtags = useMemo(() => getHashtags(), [allNotes]);
+  const tagsToShow = useMemo(
+    () =>
+      Object.keys(hashtags)
+        .map((tag) => tag.split("/")[0])
+        .filter(unique)
+        .sort((a, b) => a.localeCompare(b))
+        .filter((t) => !!t),
+    [hashtags]
+  );
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [author, setAuthor] = useState("");
   const [tag, setTag] = useState("");
+
+  const chapterNotes = useMemo(() => {
+    if (!tag) return [];
+
+    let notes: OrderedSavedNote[] = [];
+    for (const _tag of Object.keys(hashtags)) {
+      if (_tag.startsWith(tag)) {
+        const match = _tag.split("/")[1]?.match(/^chapter_(\d+)$/);
+        const idx = match ? Number(match[1]) : 10000000;
+        notes = [...notes, ...hashtags[_tag].map((note) => ({ note, idx }))];
+      }
+    }
+    return notes.sort((a, b) => a.idx - b.idx).map((n) => n.note);
+  }, [tag, allNotes, hashtags]);
+
+  useEffect(() => {
+    Event.track("ebook_page");
+  }, []);
 
   const generate = async () => {
     if (!title || !description || !author || !tag) {
       return alert("Please fill all the details");
     }
 
-    const savedNotes = hashtags[tag];
     const notes: Array<{ downloadable: DownloadableNote; saved: SavedNote }> =
       [];
 
-    for (const saved of savedNotes) {
+    for (const saved of chapterNotes) {
       const downloadable = await getDownloadableNote(saved, storage.pouch);
       notes.push({ downloadable, saved });
     }
 
     make(title, description, author, notes);
+    Event.track("ebook_make");
     setTitle("");
     setDescription("");
     setAuthor("");
@@ -277,6 +321,25 @@ const Page = () => {
       <h2 className="text-3xl font-bold mb-2">Create eBook</h2>
       <hr />
       <div className="space-y-2 mt-6 flex flex-col">
+        <CustomSelect value={tag} onChange={(e) => setTag(e.target.value)}>
+          <option disabled selected value={""}>
+            Select tag
+          </option>
+          {tagsToShow.map((tag, i) => (
+            <option value={tag}>{tag}</option>
+          ))}
+        </CustomSelect>
+        {!!chapterNotes.length && (
+          <div className="text-sm space-y-2 max-w-sm">
+            <List>
+              {chapterNotes.map((note, i) => (
+                <List.Item onClick={() => navigate(`/write/note/${note.id}`)}>
+                  {i + 1}. {textToTitle(note.text)}
+                </List.Item>
+              ))}
+            </List>
+          </div>
+        )}
         <CustomInput
           type="text"
           placeholder="Book name"
@@ -295,19 +358,24 @@ const Page = () => {
           value={author}
           onChange={(e) => setAuthor(e.target.value)}
         />
-        <CustomSelect value={tag} onChange={(e) => setTag(e.target.value)}>
-          <option disabled selected value={""}>
-            Select tag
-          </option>
-          {Object.keys(hashtags).map((tag, i) => (
-            <option value={tag}>{tag}</option>
-          ))}
-        </CustomSelect>
         <div>
-          <Button onClick={generate}>Generate</Button>
+          <Button onClick={generate}>Generate .epub</Button>
         </div>
       </div>
     </div>
+  );
+};
+
+const NavItem = () => {
+  const navigate = useNavigate();
+
+  return (
+    <List.Item withIcon onClick={() => navigate("/write/plugin/ebook")}>
+      <List.Item.Icon>
+        <BiBook />
+      </List.Item.Icon>
+      <span>Make Ebook</span>
+    </List.Item>
   );
 };
 
@@ -318,7 +386,7 @@ const EBookPlugin = () => {
     register("epug", {
       name: "Epub",
       version: 1,
-      navigationItems: [],
+      navigationItems: [<NavItem />],
       pages: {
         ebook: { page: <Page /> },
       },
