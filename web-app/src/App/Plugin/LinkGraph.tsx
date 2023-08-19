@@ -10,6 +10,7 @@ import { BiGitRepoForked } from "react-icons/bi";
 import Event from "src/components/Event";
 import { Select } from "src/comps/Form";
 import classNames from "classnames";
+import { FolderItem } from "../Folders";
 
 // https://observablehq.com/@d3/disjoint-force-directed-graph/2?intent=fork
 
@@ -285,7 +286,7 @@ const Page = () => {
   );
 };
 
-const NavItem = () => {
+const MobileNavItem = () => {
   const navigate = useNavigate();
   return (
     <List.Item withIcon onClick={() => navigate("/write/plugin/link-graph")}>
@@ -294,6 +295,24 @@ const NavItem = () => {
       </List.Item.Icon>
       <span>Link graph</span>
     </List.Item>
+  );
+};
+
+const NavItem = () => {
+  const navigate = useNavigate();
+  return (
+    <FolderItem
+      level={0}
+      label={"Link graph"}
+      icon={<BiGitRepoForked />}
+      onClickKind={() => navigate("/write/plugin/link-graph")}
+    />
+    // <List.Item withIcon onClick={() => navigate("/write/plugin/link-graph")}>
+    //   <List.Item.Icon>
+    //     <BiGitRepoForked />
+    //   </List.Item.Icon>
+    //   <span>Link graph</span>
+    // </List.Item>
   );
 };
 
@@ -306,7 +325,7 @@ export const LinkGraphPlugin = () => {
       version: 1,
       pages: { "link-graph": { page: <Page /> } },
       navigationItems: [<NavItem />],
-      mobileSettingItems: [<NavItem />],
+      mobileSettingItems: [<MobileNavItem />],
     });
   }, []);
 

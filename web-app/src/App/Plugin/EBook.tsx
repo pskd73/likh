@@ -17,6 +17,7 @@ import { CustomInput, CustomSelect } from "./UI";
 import Button from "src/comps/Button";
 import { useNavigate } from "react-router-dom";
 import { BiBook } from "react-icons/bi";
+import { FolderItem } from "../Folders";
 
 function container() {
   return `<?xml version="1.0" encoding="UTF-8" ?>
@@ -370,12 +371,18 @@ const NavItem = () => {
   const navigate = useNavigate();
 
   return (
-    <List.Item withIcon onClick={() => navigate("/write/plugin/ebook")}>
-      <List.Item.Icon>
-        <BiBook />
-      </List.Item.Icon>
-      <span>Make Ebook</span>
-    </List.Item>
+    <FolderItem
+      level={0}
+      label={"Make Ebook"}
+      icon={<BiBook />}
+      onClickKind={() => navigate("/write/plugin/ebook")}
+    />
+    // <List.Item withIcon onClick={() => navigate("/write/plugin/ebook")}>
+    //   <List.Item.Icon>
+    //     <BiBook />
+    //   </List.Item.Icon>
+    //   <span>Make Ebook</span>
+    // </List.Item>
   );
 };
 

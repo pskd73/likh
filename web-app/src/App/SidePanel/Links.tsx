@@ -5,6 +5,7 @@ import { isMobile } from "src/App/device";
 import { WithTitle } from "src/App/SidePanel/Common";
 import { BiLink, BiNetworkChart } from "react-icons/bi";
 import useDelayedEffect from "src/App/useDelayedEffect";
+import { FolderItem } from "../Folders";
 
 type NoteLink = {
   text: string;
@@ -34,21 +35,33 @@ const Links = () => {
     <WithTitle title="Linked notes" active={false}>
       <List>
         {links.map((link, i) => (
-          <List.Item
+          <FolderItem
             key={i}
-            withIcon
+            level={0}
+            label={link.text}
+            icon={<BiNetworkChart />}
             onClickKind={() => {
               if (isMobile) {
                 setSideBar(undefined);
               }
               (window.location as any).href = `#${link.id}`;
             }}
-          >
-            <List.Item.Icon>
-              <BiNetworkChart />
-            </List.Item.Icon>
-            <span>{link.text}</span>
-          </List.Item>
+          />
+          // <List.Item
+          //   key={i}
+          //   withIcon
+          //   onClickKind={() => {
+          //     if (isMobile) {
+          //       setSideBar(undefined);
+          //     }
+          //     (window.location as any).href = `#${link.id}`;
+          //   }}
+          // >
+          //   <List.Item.Icon>
+          //     <BiNetworkChart />
+          //   </List.Item.Icon>
+          //   <span>{link.text}</span>
+          // </List.Item>
         ))}
       </List>
     </WithTitle>

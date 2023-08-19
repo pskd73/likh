@@ -9,8 +9,9 @@ import classNames from "classnames";
 import { useNavigate } from "react-router-dom";
 import Event from "src/components/Event";
 import { CustomInput } from "./UI";
+import { FolderItem } from "../Folders";
 
-const NavLink = () => {
+const MobileNavLink = () => {
   const navigate = useNavigate();
 
   return (
@@ -20,6 +21,25 @@ const NavLink = () => {
       </List.Item.Icon>
       <span>Google fonts</span>
     </List.Item>
+  );
+};
+
+const NavLink = () => {
+  const navigate = useNavigate();
+
+  return (
+    <FolderItem
+      level={0}
+      label={"Google fonts"}
+      icon={<BiFont />}
+      onClickKind={() => navigate("/write/plugin/google-fonts")}
+    />
+    // <List.Item withIcon onClick={() => navigate("/write/plugin/google-fonts")}>
+    //   <List.Item.Icon>
+    //     <BiFont />
+    //   </List.Item.Icon>
+    //   <span>Google fonts</span>
+    // </List.Item>
   );
 };
 
@@ -296,7 +316,7 @@ const GoogleFontsPlugin = () => {
       version: 1,
       pages: { "google-fonts": { page: <Page /> } },
       navigationItems: [<NavLink />],
-      mobileSettingItems: [<NavLink />],
+      mobileSettingItems: [<MobileNavLink />],
     });
   }, []);
 
