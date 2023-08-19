@@ -1,17 +1,17 @@
 import { Fragment, useContext, useState } from "react";
 import { EditorContext } from "src/App/Context";
-import classNames from "classnames";
 import { isMobile } from "src/App/device";
 import { scrollTo } from "src/App/scroll";
 import { WithTitle } from "src/App/SidePanel/Common";
 import useDelayedEffect from "src/App/useDelayedEffect";
 import List from "../List";
+import { FolderItem } from "../Folders";
 
 type OutlineTitle = {
   text: string | null;
   level: number;
   id: string;
-  children: OutlineTitle[];
+  // children: OutlineTitle[];
   slug: string;
 };
 
@@ -26,7 +26,7 @@ const nested = (
     if (prev) {
       if (prev.level < titles[i].level) {
         const { children, nextIdx } = nested(titles, i);
-        prev.children = children;
+        // prev.children = children;
         i = nextIdx;
         continue;
       } else if (prev.level > titles[i].level) {
@@ -48,7 +48,7 @@ const generateTitles = () => {
       level: Number(node.getAttribute("data-title-level")),
       slug: node.getAttribute("data-title-slug")!.toString(),
       id: node.id,
-      children: [],
+      // children: [],
     });
   });
   return titles;
@@ -75,21 +75,27 @@ const TitleList = ({
   return (
     <List>
       {titles.map((title, i) => (
-        <Fragment key={i}>
-          <List.Item onClickKind={() => handleClick(title)}>
-            {/* {prefix}
-            {i + 1}. {title.text} */}
-            {title.text}
-          </List.Item>
-          {title.children && (
-            <div className="ml-3 pl-1 border-l border-primary border-opacity-30">
-              <TitleList
-                titles={title.children}
-                prefix={`${prefix}${i + 1}.`}
-              />
-            </div>
-          )}
-        </Fragment>
+        <FolderItem
+          key={i}
+          level={title.level - 1}
+          label={title.text || ""}
+          onClickKind={() => handleClick(title)}
+        />
+        // <Fragment key={i}>
+        //   <List.Item onClickKind={() => handleClick(title)}>
+        //     {/* {prefix}
+        //     {i + 1}. {title.text} */}
+        //     {title.text}
+        //   </List.Item>
+        //   {title.children && (
+        //     <div className="ml-3 pl-1 border-l border-primary border-opacity-30">
+        //       <TitleList
+        //         titles={title.children}
+        //         prefix={`${prefix}${i + 1}.`}
+        //       />
+        //     </div>
+        //   )}
+        // </Fragment>
       ))}
     </List>
   );
@@ -101,7 +107,7 @@ const Outline = () => {
 
   useDelayedEffect(() => {
     const titles = generateTitles();
-    setTitles(nested(titles, 0).children);
+    setTitles(titles);
   }, [note]);
 
   if (titles.length === 0) return null;

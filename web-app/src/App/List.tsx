@@ -1,10 +1,5 @@
 import classNames from "classnames";
-import {
-  ComponentProps,
-  KeyboardEventHandler,
-  MouseEventHandler,
-  PropsWithChildren,
-} from "react";
+import { ComponentProps, KeyboardEventHandler, MouseEventHandler } from "react";
 import { twMerge } from "tailwind-merge";
 
 const List = ({ children, className, ...restProps }: ComponentProps<"ul">) => {
@@ -15,15 +10,7 @@ const List = ({ children, className, ...restProps }: ComponentProps<"ul">) => {
   );
 };
 
-const Item = ({
-  children,
-  className,
-  active,
-  noHover,
-  withIcon,
-  onClickKind,
-  ...restProps
-}: ComponentProps<"li"> & {
+export type ItemProps = ComponentProps<"li"> & {
   active?: boolean;
   noHover?: boolean;
   withIcon?: boolean;
@@ -32,7 +19,17 @@ const Item = ({
     clickEvent?: React.MouseEvent<HTMLLIElement, MouseEvent>,
     keyUpEvent?: React.KeyboardEvent<HTMLLIElement>
   ) => void;
-}) => {
+};
+
+const Item = ({
+  children,
+  className,
+  active,
+  noHover,
+  withIcon,
+  onClickKind,
+  ...restProps
+}: ItemProps) => {
   const handleClick: MouseEventHandler<HTMLLIElement> = (e) => {
     onClickKind && onClickKind("click", e);
   };
@@ -49,10 +46,10 @@ const Item = ({
       onKeyUp={handleKeyUp}
       tabIndex={0}
       className={twMerge(
-        classNames("py-1 px-2", "rounded outline-none", {
+        classNames("py-1 px-4", "rounded outline-none", {
           "bg-opacity-10": active,
           "bg-opacity-0": !active,
-          "bg-primary transition-colors cursor-pointer": !noHover,
+          "bg-primary cursor-pointer": !noHover,
           "hover:bg-opacity-10 focus:bg-opacity-10 active:bg-opacity-20":
             !noHover,
           "flex space-x-2": withIcon,
@@ -84,8 +81,16 @@ const Description = ({
   );
 };
 
-const Icon = ({ children }: PropsWithChildren) => {
-  return <span className="mt-1">{children}</span>;
+const Icon = ({
+  children,
+  className,
+  ...restProps
+}: ComponentProps<"span">) => {
+  return (
+    <span className={twMerge(className, classNames("mt-1"))} {...restProps}>
+      {children}
+    </span>
+  );
 };
 
 Item.Icon = Icon;
