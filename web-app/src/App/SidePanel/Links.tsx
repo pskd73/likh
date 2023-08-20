@@ -47,21 +47,6 @@ const Links = () => {
               (window.location as any).href = `#${link.id}`;
             }}
           />
-          // <List.Item
-          //   key={i}
-          //   withIcon
-          //   onClickKind={() => {
-          //     if (isMobile) {
-          //       setSideBar(undefined);
-          //     }
-          //     (window.location as any).href = `#${link.id}`;
-          //   }}
-          // >
-          //   <List.Item.Icon>
-          //     <BiNetworkChart />
-          //   </List.Item.Icon>
-          //   <span>{link.text}</span>
-          // </List.Item>
         ))}
       </List>
     </WithTitle>

@@ -104,18 +104,6 @@ const Files = <T extends unknown>({
           level={level}
           onClickKind={() => onClick(file)}
         />
-        // <List.Item
-        //   key={i}
-        //   withIcon
-        //   className={classNames("relative", getPadding(level))}
-        //   onClickKind={() => onClick(info.file)}
-        // >
-        //   <Lines level={level} />
-        //   <List.Item.Icon style={{ marginLeft: 0 }}>
-        //     <BiFile />
-        //   </List.Item.Icon>
-        //   <span>{info.title}</span>
-        // </List.Item>
       ))}
     </List>
   );
@@ -174,18 +162,6 @@ export const Folders = <T extends unknown>({
                 icon={folderIcon(hashtag, i)}
                 onClickKind={() => toggle(hashtag)}
               />
-              {/* <List.Item
-                withIcon
-                key={i}
-                onClickKind={() => toggle(hashtag)}
-                className={classNames("relative", getPadding(level))}
-              >
-                <Lines level={level} />
-                <List.Item.Icon style={{ marginLeft: 0 }}>
-                  <BiHash />
-                </List.Item.Icon>
-                <span>{hashtag.replaceAll("#", "")}</span>
-              </List.Item> */}
               {exp && (
                 <div>
                   {inject(prefix, hashtag, level + 1)}

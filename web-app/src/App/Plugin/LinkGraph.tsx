@@ -307,12 +307,6 @@ const NavItem = () => {
       icon={<BiGitRepoForked />}
       onClickKind={() => navigate("/write/plugin/link-graph")}
     />
-    // <List.Item withIcon onClick={() => navigate("/write/plugin/link-graph")}>
-    //   <List.Item.Icon>
-    //     <BiGitRepoForked />
-    //   </List.Item.Icon>
-    //   <span>Link graph</span>
-    // </List.Item>
   );
 };
 

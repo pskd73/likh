@@ -377,12 +377,6 @@ const NavItem = () => {
       icon={<BiBook />}
       onClickKind={() => navigate("/write/plugin/ebook")}
     />
-    // <List.Item withIcon onClick={() => navigate("/write/plugin/ebook")}>
-    //   <List.Item.Icon>
-    //     <BiBook />
-    //   </List.Item.Icon>
-    //   <span>Make Ebook</span>
-    // </List.Item>
   );
 };
 

@@ -34,12 +34,6 @@ const NavLink = () => {
       icon={<BiFont />}
       onClickKind={() => navigate("/write/plugin/google-fonts")}
     />
-    // <List.Item withIcon onClick={() => navigate("/write/plugin/google-fonts")}>
-    //   <List.Item.Icon>
-    //     <BiFont />
-    //   </List.Item.Icon>
-    //   <span>Google fonts</span>
-    // </List.Item>
   );
 };
 

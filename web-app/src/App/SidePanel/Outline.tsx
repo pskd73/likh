@@ -1,4 +1,4 @@
-import { Fragment, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { EditorContext } from "src/App/Context";
 import { isMobile } from "src/App/device";
 import { scrollTo } from "src/App/scroll";
@@ -11,32 +11,7 @@ type OutlineTitle = {
   text: string | null;
   level: number;
   id: string;
-  // children: OutlineTitle[];
   slug: string;
-};
-
-const nested = (
-  titles: OutlineTitle[],
-  startIdx: number
-): { children: OutlineTitle[]; nextIdx: number } => {
-  const result: OutlineTitle[] = [];
-  let i = startIdx;
-  while (i < titles.length) {
-    const prev = result[result.length - 1];
-    if (prev) {
-      if (prev.level < titles[i].level) {
-        const { children, nextIdx } = nested(titles, i);
-        // prev.children = children;
-        i = nextIdx;
-        continue;
-      } else if (prev.level > titles[i].level) {
-        return { children: result, nextIdx: i };
-      }
-    }
-    result.push(titles[i]);
-    i += 1;
-  }
-  return { children: result, nextIdx: i };
 };
 
 const generateTitles = () => {
@@ -48,21 +23,12 @@ const generateTitles = () => {
       level: Number(node.getAttribute("data-title-level")),
       slug: node.getAttribute("data-title-slug")!.toString(),
       id: node.id,
-      // children: [],
     });
   });
   return titles;
 };
 
-const TitleList = ({
-  titles,
-  root,
-  prefix = "",
-}: {
-  titles: OutlineTitle[];
-  root?: boolean;
-  prefix?: string;
-}) => {
+const TitleList = ({ titles }: { titles: OutlineTitle[] }) => {
   const { setSideBar } = useContext(EditorContext);
 
   const handleClick = (title: OutlineTitle) => {
@@ -81,21 +47,6 @@ const TitleList = ({
           label={title.text || ""}
           onClickKind={() => handleClick(title)}
         />
-        // <Fragment key={i}>
-        //   <List.Item onClickKind={() => handleClick(title)}>
-        //     {/* {prefix}
-        //     {i + 1}. {title.text} */}
-        //     {title.text}
-        //   </List.Item>
-        //   {title.children && (
-        //     <div className="ml-3 pl-1 border-l border-primary border-opacity-30">
-        //       <TitleList
-        //         titles={title.children}
-        //         prefix={`${prefix}${i + 1}.`}
-        //       />
-        //     </div>
-        //   )}
-        // </Fragment>
       ))}
     </List>
   );
@@ -114,7 +65,7 @@ const Outline = () => {
 
   return (
     <WithTitle title="Outline" active={false}>
-      {titles && <TitleList titles={titles} root />}
+      {titles && <TitleList titles={titles} />}
     </WithTitle>
   );
 };
