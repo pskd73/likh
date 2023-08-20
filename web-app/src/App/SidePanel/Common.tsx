@@ -17,11 +17,11 @@ export const WithTitle = ({
   const expanded = active || initActive === undefined;
 
   return (
-    <div className={classNames({ "px-4": !noPadding })}>
+    <div>
       <div
         className={classNames(
           "text-xs font-bold text-primary text-opacity-40",
-          "mb-1 flex items-center space-x-1 mx-2"
+          "mb-1 flex items-center space-x-1 px-4"
         )}
       >
         <span>{title.toUpperCase()}</span>
