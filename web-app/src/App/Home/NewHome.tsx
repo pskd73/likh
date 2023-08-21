@@ -219,11 +219,11 @@ const NewHome = () => {
           "mb-10 items-center space-y-4 lg:space-y-0"
         )}
       >
-        <div className="text-3xl font-CrimsonText flex items-center space-x-4">
+        <div className="text-3xl font-CourierPrime italic flex items-center space-x-4">
           <div className="fill-primary w-10 max-h-full">
             <Logo />
           </div>
-          <span>RetroNote</span>
+          <span className="mt-2">RetroNote</span>
         </div>
         <DateTime />
       </div>
