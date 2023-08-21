@@ -17,7 +17,7 @@ const MobileSearch = () => {
   }, []);
 
   return (
-    <div className="pb-20">
+    <div className="pb-32">
       <div className="p-4">
         <Search onChange={(v) => setSearchTerm(v)} searchTerm={searchTerm} />
       </div>

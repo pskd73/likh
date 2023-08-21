@@ -21,17 +21,17 @@ export const WithTitle = ({
       <div
         className={classNames(
           "text-xs font-bold text-primary text-opacity-40",
-          "mb-1 flex items-center space-x-1 px-4"
+          "py-1 flex items-center space-x-1 px-4",
+          "hover:bg-primary hover:bg-opacity-10 cursor-pointer"
         )}
+        onClick={() => setActive((a) => !a)}
       >
         <span>{title.toUpperCase()}</span>
         {initActive !== undefined && (
           <button
             className={classNames(
-              "text-lg w-4 h-4 flex justify-center items-center transition-all",
-              "hover:bg-primary hover:bg-opacity-20 rounded cursor-pointer"
+              "text-lg w-4 h-4 flex justify-center items-center transition-all"
             )}
-            onClick={() => setActive((a) => !a)}
           >
             {active ? <BiChevronUp /> : <BiChevronDown />}
           </button>

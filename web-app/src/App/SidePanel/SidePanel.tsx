@@ -231,7 +231,7 @@ const SidePanel = () => {
             </div>
             <div
               style={{ maxHeight: "calc(100vh - 50px)" }}
-              className="overflow-scroll scrollbar-hide py-4 space-y-4 pb-10"
+              className="overflow-scroll scrollbar-hide py-4 space-y-1 pb-10"
             >
               <div className="px-4 mb-4">
                 <Search searchTerm={searchTerm} onChange={setSearchTerm} />
