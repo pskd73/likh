@@ -1,13 +1,11 @@
-import { Fragment, ReactElement, useContext, useMemo, useState } from "react";
-import List from "src/App/List";
+import { useContext, useMemo } from "react";
 import { EditorContext } from "src/App/Context";
 import { BiFile, BiBook, BiHash } from "react-icons/bi";
 import { textToTitle } from "src/Note";
 import { useNavigate } from "react-router-dom";
 import { SavedNote } from "../type";
 import { isMobile } from "../device";
-import classNames from "classnames";
-import { FolderItem, FolderTree, Folders, getPadding } from "../Folders";
+import { FolderItem, FolderTree } from "../Folders";
 
 const Browse = () => {
   const navigate = useNavigate();
@@ -47,22 +45,6 @@ const Browse = () => {
               }
               onClickKind={() => handleJournal(prefix + hashtag)}
             />
-          );
-          return (
-            <List>
-              <List.Item
-                withIcon
-                onClickKind={() => handleJournal(prefix + hashtag)}
-                className={classNames(getPadding(level))}
-              >
-                <List.Item.Icon>
-                  <BiBook />
-                </List.Item.Icon>
-                <span className="font-CrimsonText italic">
-                  Journal it &rarr;
-                </span>
-              </List.Item>
-            </List>
           );
         }
         return null;

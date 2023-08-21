@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import Browse from "./Home/Browse";
 import Search from "./SidePanel/Search";
 import { EditorContext } from "./Context";
@@ -7,11 +7,20 @@ import { WithTitle } from "./SidePanel/Common";
 import Trash from "./Home/Trash";
 
 const MobileSearch = () => {
-  const { searchTerm, setSearchTerm } = useContext(EditorContext);
+  const { searchTerm, setSearchTerm, setFullPage } = useContext(EditorContext);
+
+  useEffect(() => {
+    setFullPage(true);
+    return () => {
+      setFullPage(false);
+    };
+  }, []);
 
   return (
-    <div className="space-y-4 pb-20">
-      <Search onChange={(v) => setSearchTerm(v)} searchTerm={searchTerm} />
+    <div className="pb-20">
+      <div className="p-4">
+        <Search onChange={(v) => setSearchTerm(v)} searchTerm={searchTerm} />
+      </div>
       {searchTerm ? (
         <div>
           <Notes />
