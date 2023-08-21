@@ -26,7 +26,6 @@ export const WithTitle = ({
         )}
         onClick={() => setActive((a) => !a)}
       >
-        <span>{title.toUpperCase()}</span>
         {initActive !== undefined && (
           <button
             className={classNames(
@@ -36,6 +35,7 @@ export const WithTitle = ({
             {active ? <BiChevronUp /> : <BiChevronDown />}
           </button>
         )}
+        <span>{title.toUpperCase()}</span>
       </div>
       <div
         className={classNames("overflow-hidden", {
