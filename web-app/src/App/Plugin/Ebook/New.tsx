@@ -73,7 +73,7 @@ export const New = () => {
       const downloadable = await getDownloadableNote(saved, storage.pouch);
       notes.push({ downloadable, saved });
     }
-    const epub = make({
+    const epub = await make({
       title,
       description,
       author,
