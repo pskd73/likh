@@ -47,6 +47,7 @@ export const New = () => {
   const [noHashtags, setNoHashtags] = useState(true);
   const [noMentions, setNoMentions] = useState(true);
   const [chapterLabel, setChapterLabel] = useState(true);
+  const [epub, setEpub] = useState<any>();
 
   const chapterNotes = useMemo(() => {
     if (!tag) return [];
@@ -62,13 +63,17 @@ export const New = () => {
     return notes.sort((a, b) => a.idx - b.idx).map((n) => n.note);
   }, [tag, allNotes, hashtags]);
 
-  const epub: any = useMemoAsync(async () => {
+  useEffect(() => {
+    preview();
+  }, [chapterNotes]);
+
+  const preview = async () => {
     const notes: CombinedNote[] = [];
     for (const saved of chapterNotes) {
       const downloadable = await getDownloadableNote(saved, storage.pouch);
       notes.push({ downloadable, saved });
     }
-    return make({
+    const epub = make({
       title,
       description,
       author,
@@ -77,15 +82,8 @@ export const New = () => {
       chapterLabel,
       noMentions,
     });
-  }, [
-    chapterNotes,
-    noHashtags,
-    chapterLabel,
-    noMentions,
-    title,
-    description,
-    author
-  ]);
+    setEpub(epub);
+  };
 
   const generate = async () => {
     if (!title || !description || !author) {
@@ -165,7 +163,8 @@ export const New = () => {
           />
           <span>Remove mentions</span>
         </label>
-        <div className="pt-4 flex justify-end">
+        <div className="pt-4 flex justify-end space-x-2">
+          <Button onClick={preview}>Preview</Button>
           <Button onClick={generate}>Download</Button>
         </div>
       </div>
