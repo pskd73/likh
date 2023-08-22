@@ -34,7 +34,7 @@ export const Preview = ({ epub }: { epub: unknown }) => {
 
   useEffect(() => {
     const elem = document.getElementById("ebook-preview");
-    if (elem && epub) {
+    if (elem && epub && (window as any).ePub) {
       elem.innerHTML = "";
       const book = (window as any).ePub(epub, { encoding: "binary" });
       render.current = book.renderTo("ebook-preview", {
