@@ -11,7 +11,7 @@ import BulletsPlugin from "./Bullets/Plugin";
 import SpellCheckPlugin from "./SpellCheck";
 import GoogleFontsPlugin from "./GoogleFonts";
 import TablesPlugin from "./Tables";
-import EBookPlugin from "./EBook";
+import EBookPlugin from "./Ebook/Plugin";
 
 export const enabledPlugins: RNPluginCreator[] = [
   TimestampPlugin,
