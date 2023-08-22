@@ -3,7 +3,7 @@ import * as d3 from "d3";
 import { EditorContext } from "../Context";
 import { textToTitle } from "src/Note";
 import useMemoAsync from "../useMemoAsync";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { PluginContext } from "./Context";
 import List from "../List";
 import { BiGitRepoForked } from "react-icons/bi";
@@ -300,12 +300,15 @@ const MobileNavItem = () => {
 
 const NavItem = () => {
   const navigate = useNavigate();
+  const {pluginUrl} = useParams();
+
   return (
     <FolderItem
       level={0}
       label={"Link graph"}
       icon={<BiGitRepoForked />}
       onClickKind={() => navigate("/write/plugin/link-graph")}
+      active={pluginUrl === "link-graph"}
     />
   );
 };

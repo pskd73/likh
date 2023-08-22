@@ -6,7 +6,7 @@ import Button from "src/comps/Button";
 import { Input } from "src/comps/Form";
 import { BiCheck, BiFont, BiTrash } from "react-icons/bi";
 import classNames from "classnames";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Event from "src/components/Event";
 import { CustomInput } from "./UI";
 import { FolderItem } from "../Folders";
@@ -26,6 +26,7 @@ const MobileNavLink = () => {
 
 const NavLink = () => {
   const navigate = useNavigate();
+  const { pluginUrl } = useParams();
 
   return (
     <FolderItem
@@ -33,6 +34,7 @@ const NavLink = () => {
       label={"Google fonts"}
       icon={<BiFont />}
       onClickKind={() => navigate("/write/plugin/google-fonts")}
+      active={pluginUrl === "google-fonts"}
     />
   );
 };

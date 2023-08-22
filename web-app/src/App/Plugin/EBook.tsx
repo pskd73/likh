@@ -15,7 +15,7 @@ import { DownloadableNote, getDownloadableNote } from "../File";
 import Event from "src/components/Event";
 import { CustomInput, CustomSelect } from "./UI";
 import Button from "src/comps/Button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { BiBook } from "react-icons/bi";
 import { FolderItem } from "../Folders";
 
@@ -369,6 +369,7 @@ const Page = () => {
 
 const NavItem = () => {
   const navigate = useNavigate();
+  const { pluginUrl } = useParams();
 
   return (
     <FolderItem
@@ -376,6 +377,7 @@ const NavItem = () => {
       label={"Make Ebook"}
       icon={<BiBook />}
       onClickKind={() => navigate("/write/plugin/ebook")}
+      active={pluginUrl === "ebook"}
     />
   );
 };
