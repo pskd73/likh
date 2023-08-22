@@ -45,6 +45,7 @@ export const New = () => {
   const [author, setAuthor] = useState("");
   const [tag, setTag] = useState("");
   const [noHashtags, setNoHashtags] = useState(true);
+  const [noMentions, setNoMentions] = useState(true);
   const [chapterLabel, setChapterLabel] = useState(true);
 
   const chapterNotes = useMemo(() => {
@@ -74,8 +75,17 @@ export const New = () => {
       notes,
       noHashtags,
       chapterLabel,
+      noMentions,
     });
-  }, [chapterNotes, title, description, author, noHashtags, chapterLabel]);
+  }, [
+    chapterNotes,
+    title,
+    description,
+    author,
+    noHashtags,
+    chapterLabel,
+    noMentions,
+  ]);
 
   const generate = async () => {
     if (!title || !description || !author) {
@@ -146,6 +156,14 @@ export const New = () => {
             onChange={(e) => setChapterLabel(e.target.checked)}
           />
           <span>Chapter labels</span>
+        </label>
+        <label className="space-x-2 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={noMentions}
+            onChange={(e) => setNoMentions(e.target.checked)}
+          />
+          <span>Remove mentions</span>
         </label>
         <div className="pt-4 flex justify-end">
           <Button onClick={generate}>Download</Button>

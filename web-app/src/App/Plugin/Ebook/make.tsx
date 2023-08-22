@@ -236,7 +236,7 @@ const getByTitle = (title: string, notes: SavedNote[]) => {
   }
 };
 
-const linkify = (md: string, notes: SavedNote[]) => {
+const linkify = (md: string, notes: SavedNote[], removeMentions?: boolean) => {
   const matches = md.matchAll(/\[\[([^\[\]]+)\]\]/g);
   Array.from(matches).forEach((match) => {
     const linkedNote = getByTitle(match[1], notes);
@@ -245,6 +245,8 @@ const linkify = (md: string, notes: SavedNote[]) => {
         match[0],
         `<a epub:type="bodymatter" href="${linkedNote.id}.xhtml">${match[1]}</a>`
       );
+    } else if (removeMentions) {
+      md = md.replaceAll(match[0], match[1]);
     }
   });
   return md;
@@ -261,6 +263,7 @@ export const make = async ({
   notes,
   noHashtags,
   chapterLabel,
+  noMentions,
 }: {
   title: string;
   description: string;
@@ -268,6 +271,7 @@ export const make = async ({
   notes: { downloadable: DownloadableNote; saved: SavedNote }[];
   noHashtags?: boolean;
   chapterLabel?: boolean;
+  noMentions?: boolean;
 }) => {
   return new Promise(async (res) => {
     const chapters: Chapter[] = [];
@@ -279,7 +283,8 @@ export const make = async ({
       let content = await mdToHtml(md);
       content = linkify(
         content,
-        notes.map((n) => n.saved)
+        notes.map((n) => n.saved),
+        noMentions
       );
       chapters.push({
         id: note.saved.id,
