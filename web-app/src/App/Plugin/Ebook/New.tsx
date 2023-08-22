@@ -82,6 +82,9 @@ export const New = () => {
     noHashtags,
     chapterLabel,
     noMentions,
+    title,
+    description,
+    author
   ]);
 
   const generate = async () => {
