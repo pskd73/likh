@@ -1,12 +1,26 @@
 import classNames from "classnames";
-import { ComponentProps, KeyboardEventHandler, useEffect, useRef } from "react";
+import {
+  ComponentProps,
+  KeyboardEventHandler,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 
 const loadJS = (file: string) => {
-  var jsElm = document.createElement("script");
-  jsElm.type = "application/javascript";
-  jsElm.src = file;
-  document.body.appendChild(jsElm);
+  return new Promise<void>((res, rej) => {
+    var jsElm = document.createElement("script");
+    jsElm.type = "application/javascript";
+    jsElm.src = file;
+    jsElm.onload = function () {
+      res();
+    };
+    jsElm.onerror = function () {
+      rej();
+    };
+    document.body.appendChild(jsElm);
+  });
 };
 
 const NavContainer = ({ children, ...restProps }: ComponentProps<"div">) => {
@@ -25,16 +39,20 @@ const NavContainer = ({ children, ...restProps }: ComponentProps<"div">) => {
 };
 
 export const Preview = ({ epub }: { epub: unknown }) => {
+  const [loaded, setLoaded] = useState(false);
   const render = useRef<any>(null);
 
   useEffect(() => {
-    loadJS("https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js");
-    loadJS("https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js");
+    loadJS("https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js")
+      .then(() => {
+        loadJS("https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js");
+      })
+      .then(() => setLoaded(true));
   }, []);
 
   useEffect(() => {
     const elem = document.getElementById("ebook-preview");
-    if (elem && epub && (window as any).ePub) {
+    if (loaded && elem && epub && (window as any).ePub) {
       elem.innerHTML = "";
       const book = (window as any).ePub(epub, { encoding: "binary" });
       render.current = book.renderTo("ebook-preview", {
@@ -43,19 +61,19 @@ export const Preview = ({ epub }: { epub: unknown }) => {
       });
       render.current!.display();
     }
-  }, [epub]);
+  }, [epub, loaded]);
 
   const handleLeft = () => {
     if (render.current) {
       render.current.prev();
     }
-  }
+  };
 
   const handleRight = () => {
     if (render.current) {
       render.current.next();
     }
-  }
+  };
 
   return (
     <div className="flex">

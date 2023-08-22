@@ -79,9 +79,6 @@ export const New = () => {
     });
   }, [
     chapterNotes,
-    title,
-    description,
-    author,
     noHashtags,
     chapterLabel,
     noMentions,
