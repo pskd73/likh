@@ -98,7 +98,7 @@ export const New = () => {
 
   return (
     <div className={classNames("flex justify-between")}>
-      <div className="space-y-2 mt-6 flex flex-col">
+      <div className="space-y-2 mt-6 flex flex-col flex-1 pr-10">
         <CustomSelect value={tag} onChange={(e) => setTag(e.target.value)}>
           <option disabled selected value={""}>
             Select tag
