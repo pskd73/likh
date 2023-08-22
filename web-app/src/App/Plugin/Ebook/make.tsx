@@ -161,6 +161,7 @@ function getChapter(chapter: Chapter, opts: { chapterLabel?: boolean }) {
           border-left: 10px solid #ccc;
           margin: 1.5em 10px;
           padding: 0.5em 10px;
+          padding-top: 1.5em;
         }
         blockquote:before {
           color: #ccc;
@@ -171,7 +172,7 @@ function getChapter(chapter: Chapter, opts: { chapterLabel?: boolean }) {
           vertical-align: -0.4em;
         }
         blockquote p {
-          display: inline;
+          margin-top: -4px;
         }
         </style>
       </head>
