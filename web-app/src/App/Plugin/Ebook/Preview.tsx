@@ -62,7 +62,7 @@ export const Preview = ({ epub }: { epub: unknown }) => {
       <NavContainer onClick={handleLeft}>
         <BiChevronLeft />
       </NavContainer>
-      <div id="ebook-preview" className="bg-primary bg-opacity-20 py-4" />
+      <div id="ebook-preview" className="bg-primary bg-opacity-5 py-4" />
       <NavContainer onClick={handleRight}>
         <BiChevronRight />
       </NavContainer>

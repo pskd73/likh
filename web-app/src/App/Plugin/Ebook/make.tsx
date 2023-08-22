@@ -155,13 +155,32 @@ function getChapter(chapter: Chapter, opts: { chapterLabel?: boolean }) {
       <head>
         <meta charset="UTF-8" />
         <title>${title}</title>
+        <style>
+        blockquote {
+          background: #f9f9f9;
+          border-left: 10px solid #ccc;
+          margin: 1.5em 10px;
+          padding: 0.5em 10px;
+        }
+        blockquote:before {
+          color: #ccc;
+          content: open-quote;
+          font-size: 4em;
+          line-height: 0.1em;
+          margin-right: 0.25em;
+          vertical-align: -0.4em;
+        }
+        blockquote p {
+          display: inline;
+        }
+        </style>
       </head>
       <body>
         ${
           opts.chapterLabel
             ? `
         <div class="chapter-label">
-          <h6>CHAPTER ${number}</h6>
+          <h4>CHAPTER ${number}</h4>
         </div>
         `
             : ""
@@ -184,6 +203,11 @@ const mdToHtml = (md: string): Promise<string> => {
         components={{
           p: ({ node, ...props }) => (
             <p style={{ whiteSpace: "pre-wrap" }} {...props} />
+          ),
+          img: ({ node, ...props }) => (
+            <div style={{ textAlign: "center" }}>
+              <img {...props} />
+            </div>
           ),
         }}
       />
