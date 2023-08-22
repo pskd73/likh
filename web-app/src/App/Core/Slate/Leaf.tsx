@@ -60,7 +60,7 @@ function Leaf({
     "opacity-30 nl": leaf.notelink && leaf.notelinkId,
 
     // inlineCode
-    "font-CourierPrime bg-primary bg-opacity-20 px-1 rounded inline-flex items-center":
+    "font-CourierPrime bg-primary bg-opacity-20 px-2 rounded inline-flex items-center":
       leaf.inlineCode && !leaf.punctuation,
 
     // mdLink
