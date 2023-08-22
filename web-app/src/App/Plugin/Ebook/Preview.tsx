@@ -44,9 +44,9 @@ export const Preview = ({ epub }: { epub: unknown }) => {
 
   useEffect(() => {
     loadJS("https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js")
-      .then(() => {
-        loadJS("https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js");
-      })
+      .then(() =>
+        loadJS("https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js")
+      )
       .then(() => setLoaded(true));
   }, []);
 
