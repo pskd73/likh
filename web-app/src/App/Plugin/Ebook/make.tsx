@@ -230,7 +230,7 @@ const getByTitle = (title: string, notes: SavedNote[]) => {
   title = title.trim().toLowerCase();
   for (const note of notes) {
     const noteTitle = textToTitle(note.text).trim().toLowerCase();
-    if (noteTitle === title) {
+    if (noteTitle.startsWith(title)) {
       return note;
     }
   }
