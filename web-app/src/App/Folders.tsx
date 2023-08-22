@@ -44,16 +44,20 @@ export const FolderItem = ({
   level,
   icon,
   label,
+  active,
   ...restProps
 }: ItemProps & {
   level: number;
   icon?: ReactElement;
   label: string | ReactElement;
+  active?: boolean;
 }) => {
   return (
     <List.Item
       withIcon={!!icon}
-      className={classNames("relative rounded-none", getPadding(level))}
+      className={classNames("relative rounded-none", getPadding(level), {
+        "bg-primary bg-opacity-10": active,
+      })}
       {...restProps}
     >
       <Lines level={level} />
@@ -79,6 +83,7 @@ const Files = <T extends unknown>({
   level,
   icon,
   sort,
+  isActive
 }: {
   files: T[];
   onClick: (file: T) => void;
@@ -86,6 +91,7 @@ const Files = <T extends unknown>({
   level: number;
   icon: FileIconGetter;
   sort?: (a: T, b: T) => number;
+  isActive: (file: T) => boolean;
 }) => {
   const filesToShow: T[] = useMemo(() => {
     if (sort) {
@@ -103,6 +109,7 @@ const Files = <T extends unknown>({
           icon={icon(file, i)}
           level={level}
           onClickKind={() => onClick(file)}
+          active={isActive(file)}
         />
       ))}
     </List>
@@ -122,6 +129,8 @@ export type FoldersProps<T> = {
   level: number;
   fileIcon: FileIconGetter;
   folderIcon: FolderIconGetter;
+  isFileActive: (file: T) => boolean;
+  isFolderActive: (folder: string) => boolean;
 };
 
 export const Folders = <T extends unknown>({
@@ -133,6 +142,8 @@ export const Folders = <T extends unknown>({
   level,
   fileIcon,
   folderIcon,
+  isFileActive,
+  isFolderActive,
 }: FoldersProps<T>) => {
   const [expanded, setExpanded] = useState<string[]>([]);
 
@@ -161,6 +172,7 @@ export const Folders = <T extends unknown>({
                 label={hashtag.replaceAll("#", "")}
                 icon={folderIcon(hashtag, i)}
                 onClickKind={() => toggle(hashtag)}
+                active={isFolderActive(hashtag)}
               />
               {exp && (
                 <div>
@@ -174,6 +186,8 @@ export const Folders = <T extends unknown>({
                     level={level + 1}
                     folderIcon={folderIcon}
                     fileIcon={fileIcon}
+                    isFileActive={isFileActive}
+                    isFolderActive={isFolderActive}
                   />
                   <Files
                     onClick={onFileClick}
@@ -181,6 +195,7 @@ export const Folders = <T extends unknown>({
                     title={title}
                     level={level + 1}
                     icon={fileIcon}
+                    isActive={isFileActive}
                   />
                 </div>
               )}
@@ -210,6 +225,7 @@ export const FolderTree = <T extends unknown>(
         title={props.title}
         level={0}
         icon={props.fileIcon}
+        isActive={props.isFileActive}
       />
     </Fragment>
   );

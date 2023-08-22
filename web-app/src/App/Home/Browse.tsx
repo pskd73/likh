@@ -2,13 +2,14 @@ import { useContext, useMemo } from "react";
 import { EditorContext } from "src/App/Context";
 import { BiFile, BiBook, BiHash } from "react-icons/bi";
 import { textToTitle } from "src/Note";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { SavedNote } from "../type";
 import { isMobile } from "../device";
 import { FolderItem, FolderTree } from "../Folders";
 
 const Browse = () => {
   const navigate = useNavigate();
+  const { noteId } = useParams();
   const { allNotes, note, getHashtags, setSideBar } = useContext(EditorContext);
   const hashtags = useMemo(() => getHashtags(), [allNotes, note]);
 
@@ -32,6 +33,8 @@ const Browse = () => {
       title={toTitle}
       fileIcon={() => <BiFile />}
       folderIcon={() => <BiHash />}
+      isFileActive={(note) => note.id === noteId}
+      isFolderActive={() => false}
       inject={(prefix, hashtag, level) => {
         if (prefix.toLowerCase() === "#journal/") {
           return (

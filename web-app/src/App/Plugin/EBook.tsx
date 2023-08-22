@@ -319,7 +319,7 @@ const Page = () => {
 
   return (
     <div>
-      <h2 className="text-3xl font-bold mb-2">Create eBook</h2>
+      <h2 className="text-3xl font-bold mb-2">Create Ebook</h2>
       <hr />
       <div className="space-y-2 mt-6 flex flex-col">
         <CustomSelect value={tag} onChange={(e) => setTag(e.target.value)}>
