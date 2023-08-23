@@ -67,13 +67,13 @@ export const New = () => {
     preview();
   }, [chapterNotes]);
 
-  const preview = async () => {
+  const preview = async (download?: boolean) => {
     const notes: CombinedNote[] = [];
     for (const saved of chapterNotes) {
       const downloadable = await getDownloadableNote(saved, storage.pouch);
       notes.push({ downloadable, saved });
     }
-    const epub = await make({
+    const epub: any = await make({
       title,
       description,
       author,
@@ -83,13 +83,11 @@ export const New = () => {
       noMentions,
     });
     setEpub(epub);
-  };
 
-  const generate = async () => {
-    if (!title || !description || !author) {
-      return alert("Please enter title, description, and author names!");
-    }
-    if (epub) {
+    if (download) {
+      if (!title || !description || !author) {
+        return alert("Please enter title, description, and author names!");
+      }
       saveAs(epub, `${title}.epub`);
     }
   };
@@ -164,8 +162,8 @@ export const New = () => {
           <span>Remove mentions</span>
         </label>
         <div className="pt-4 flex justify-end space-x-2">
-          <Button onClick={preview}>Preview</Button>
-          <Button onClick={generate}>Download</Button>
+          <Button onClick={() => preview()}>Preview</Button>
+          <Button onClick={() => preview(true)}>Download</Button>
         </div>
       </div>
       <div>
