@@ -47,7 +47,9 @@ export const Preview = ({ epub }: { epub: unknown }) => {
       .then(() =>
         loadJS("https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js")
       )
-      .then(() => setLoaded(true));
+      .then(() => {
+        setLoaded(true);
+      });
   }, []);
 
   useEffect(() => {
@@ -60,6 +62,15 @@ export const Preview = ({ epub }: { epub: unknown }) => {
         height: 700,
       });
       render.current!.display();
+      render.current.themes.default({
+        body: {
+          "font-family": "PT Serif",
+          color: "#3b444b",
+        },
+        a: {
+          color: "#3b444b",
+        },
+      });
     }
   }, [epub, loaded]);
 

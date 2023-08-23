@@ -1,7 +1,11 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { EditorContext } from "src/App/Context";
-import { DownloadableNote, getDownloadableNote } from "src/App/File";
+import {
+  DownloadableNote,
+  getDownloadableNote,
+  selectFile,
+} from "src/App/File";
 import { SavedNote } from "src/App/type";
 import { CustomInput, CustomSelect } from "../UI";
 import List from "src/App/List";
@@ -48,6 +52,7 @@ export const New = () => {
   const [noMentions, setNoMentions] = useState(true);
   const [chapterLabel, setChapterLabel] = useState(true);
   const [epub, setEpub] = useState<any>();
+  const [coverImg, setCoverImg] = useState<Blob>();
 
   const chapterNotes = useMemo(() => {
     if (!tag) return [];
@@ -65,7 +70,7 @@ export const New = () => {
 
   useEffect(() => {
     preview();
-  }, [chapterNotes]);
+  }, [chapterNotes, coverImg]);
 
   const preview = async (download?: boolean) => {
     const notes: CombinedNote[] = [];
@@ -81,6 +86,7 @@ export const New = () => {
       noHashtags,
       chapterLabel,
       noMentions,
+      coverImg
     });
     setEpub(epub);
 
@@ -89,6 +95,17 @@ export const New = () => {
         return alert("Please enter title, description, and author names!");
       }
       saveAs(epub, `${title}.epub`);
+    }
+  };
+
+  const handleAddCoverImage = async () => {
+    if (coverImg) {
+      return setCoverImg(undefined);
+    }
+
+    const file = await selectFile(".png,.jpg,.jpeg");
+    if (file) {
+      setCoverImg(file);
     }
   };
 
@@ -137,6 +154,9 @@ export const New = () => {
           value={author}
           onChange={(e) => setAuthor(e.target.value)}
         />
+        <Button onClick={handleAddCoverImage}>
+          {coverImg ? "Clear" : "Add"} cover image
+        </Button>
         <label className="space-x-2 cursor-pointer">
           <input
             type="checkbox"
