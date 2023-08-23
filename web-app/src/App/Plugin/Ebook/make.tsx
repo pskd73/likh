@@ -24,6 +24,7 @@ type Epub = {
   images: any;
   author: string;
   publisher: string;
+  coverImg?: string;
 };
 
 function container() {
@@ -54,7 +55,8 @@ function escapeXml(unsafe: string) {
 }
 
 function content(epub: Epub) {
-  const { description, title, author, publisher, chapters, images } = epub;
+  const { description, title, author, publisher, chapters, images, coverImg } =
+    epub;
   const modified = new Date().toISOString().split(".")[0] + "Z";
 
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -86,7 +88,7 @@ function content(epub: Epub) {
 
     <manifest>
       <item id="toc" href="toc.xhtml" media-type="application/xhtml+xml" properties="nav" />
-      <item id="chapter-image-placeholder" href="images/img-placeholder.jpg" media-type="image/jpeg" />
+      <item id="cover" href="cover.xhtml" media-type="application/xhtml+xml" />
       
       ${chapters
         .map(
@@ -106,6 +108,7 @@ function content(epub: Epub) {
         .join("\n")}
     </manifest>
     <spine>
+      ${coverImg ? `<itemref idref="cover"/>` : ""}
       <itemref idref="toc"/>
       ${chapters
         .map((chapter) => `<itemref idref="chapter-${chapter.id}" />`)
@@ -192,6 +195,26 @@ function getChapter(chapter: Chapter, opts: { chapterLabel?: boolean }) {
   `;
 }
 
+function getCover(img: string) {
+  return `<?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE html>
+    <html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <title>Cover</title>
+        <style>
+          body {
+            text-align: center;
+          }
+        </style>
+      </head>
+      <body>
+        <img src="${img}"/>
+      </body>
+    </html>
+  `;
+}
+
 const mdToHtml = (md: string): Promise<string> => {
   return new Promise((res) => {
     const div = document.createElement("div");
@@ -256,6 +279,23 @@ const removeHashtags = (md: string) => {
   return md.replace(/^ *(#[a-zA-Z0-9_\/]+ *)+$/gm, "");
 };
 
+const readCoverImg = (blob: Blob) => {
+  return new Promise<string>((res, rej) => {
+    var reader = new FileReader();
+    reader.readAsDataURL(blob);
+
+    reader.onload = (readerEvent) => {
+      if (readerEvent.target && readerEvent.target.result) {
+        res(readerEvent.target.result.toString());
+      } else {
+        rej();
+      }
+    };
+
+    reader.onerror = rej;
+  });
+};
+
 export const make = async ({
   title,
   description,
@@ -264,6 +304,7 @@ export const make = async ({
   noHashtags,
   chapterLabel,
   noMentions,
+  coverImg,
 }: {
   title: string;
   description: string;
@@ -272,6 +313,7 @@ export const make = async ({
   noHashtags?: boolean;
   chapterLabel?: boolean;
   noMentions?: boolean;
+  coverImg?: Blob;
 }) => {
   return new Promise(async (res) => {
     const chapters: Chapter[] = [];
@@ -303,12 +345,18 @@ export const make = async ({
       chapters,
       author,
       publisher: "RetroNote",
+      coverImg: coverImg ? await readCoverImg(coverImg) : undefined,
     };
     let zip = new JSZip();
     zip.file("mimetype", "application/epub+zip");
     zip.file("META-INF/container.xml", container());
     zip.file("OEBPS/content.opf", content(epub));
     zip.file("OEBPS/toc.xhtml", toc(epub));
+
+    if (epub.coverImg) {
+      zip.file(`OEBPS/cover.xhtml`, getCover(epub.coverImg));
+    }
+
     epub.chapters.forEach((chapter) => {
       zip.file(
         `OEBPS/${chapter.id}.xhtml`,
@@ -322,7 +370,6 @@ export const make = async ({
     zip
       .generateAsync({ type: "blob", mimeType: "application/epub+zip" })
       .then((content) => {
-        // saveAs(content, `${title}.epub`);
         res(content);
       });
   });
