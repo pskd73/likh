@@ -5,11 +5,11 @@ import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Retro Note - A place to journal and take notes",
+  title: "RetroNote - A markdown based writing app for all your needs",
   description:
-    "A simple, powerful, minimalistic, markdown based note taking and journaling app all that you need!",
+    "RetroNote is a web based note taking app. It simple, distraction free, markdown based for all your academic, research, blogging, and writing needs!",
   openGraph: {
-    title: "Retro Note - A place to journal and take notes",
+    title: "RetroNote - A markdown based writing app for all your needs",
     type: "website",
     images: "./og.png",
     url: "https://retronote.app",

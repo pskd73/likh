@@ -15,7 +15,7 @@ const Column = ({ children }: PropsWithChildren) => {
 };
 
 const Items = ({ children }: PropsWithChildren) => {
-  return <ul className="grid w-full grid-cols-2 gap-4">{children}</ul>;
+  return <ul className="grid w-full grid-cols-1 lg:grid-cols-2 gap-4">{children}</ul>;
 };
 
 const Item = ({

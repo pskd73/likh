@@ -24,6 +24,8 @@ import {
 import { BsMarkdownFill } from "react-icons/bs";
 import { twMerge } from "tailwind-merge";
 import { RxTwitterLogo, RxDiscordLogo } from "react-icons/rx";
+import { Courier_Prime } from "next/font/google";
+import { Courier } from "@/components/font";
 
 const P = ({ className, children, ...restProps }: ComponentProps<"p">) => {
   return (
@@ -75,8 +77,49 @@ const NewLandingPage = () => {
   };
 
   return (
-    <div className="bg-base text-primary-700 p-10">
-      <div className="flex flex-col items-center">
+    <div className="bg-base text-primary-700">
+      <nav
+        className={classNames(
+          "w-full mb-14 py-2",
+          "border-b border-primary-700 border-opacity-10",
+          "flex justify-center",
+          "bg-base sticky top-0 z-20",
+          "px-2 md:px-0"
+        )}
+      >
+        <div
+          className={classNames(
+            "flex justify-between",
+            "max-w-[1000px] w-full"
+          )}
+        >
+          <div
+            className={classNames(
+              "text-4xl italic flex items-center space-x-4",
+              Courier.className
+            )}
+          >
+            <img src="/og.png" className="w-14 h-14" alt="RetroNote" />
+            <span className="mt-2">RetroNote</span>
+          </div>
+          <ul
+            className={classNames("space-x-10 items-center", "hidden lg:flex")}
+          >
+            <li>
+              <a href="#use-cases" className="hover:underline">
+                Use cases
+              </a>
+            </li>
+            <li>
+              <a href="#faq" className="hover:underline">
+                FAQ
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <div className="flex flex-col items-center px-4 lg:px-0">
         <Title>
           Writing made <Highlight>easy</Highlight> for the web!
         </Title>
@@ -93,39 +136,44 @@ const NewLandingPage = () => {
 
         <p className="max-w-[1000px] py-10">
           <img
-            src="/preview.png"
+            src="/preview.webp"
             className="rounded-lg"
             style={{ boxShadow: "0px 0px 37px 0px rgba(0, 0, 0, 0.25)" }}
+            alt="RetroNote - A simple web based note taking app"
           />
         </p>
 
-        {usecases.map((usecase, i) => (
-          <Title
-            key={i}
-            className={classNames("mt-24 mb-14", {
-              hidden: activeUsecase !== i,
-            })}
-          >
-            {usecase.prefix}
-            <Highlight.NavBtn
-              left
-              onClick={() => handleUsecaseClick({ prev: true })}
+        <div id="use-cases">
+          {usecases.map((usecase, i) => (
+            <Title
+              key={i}
+              className={classNames("mt-24 mb-14", {
+                hidden: activeUsecase !== i,
+              })}
             >
-              <BiChevronLeft className="inline" />
-            </Highlight.NavBtn>
-            <Highlight
-              bottom={-16}
-              className="cursor-pointer w-80 inline-block text-center"
-              onClick={() => handleUsecaseClick({})}
-            >
-              {usecase.highlight}
-            </Highlight>
-            <Highlight.NavBtn right onClick={() => handleUsecaseClick({})}>
-              <BiChevronRight className="inline" />
-            </Highlight.NavBtn>
-            {usecase.postfix}
-          </Title>
-        ))}
+              {usecase.prefix}{" "}
+              <div className="whitespace-nowrap inline-block">
+                <Highlight.NavBtn
+                  left
+                  onClick={() => handleUsecaseClick({ prev: true })}
+                >
+                  <BiChevronLeft className="inline" />
+                </Highlight.NavBtn>
+                <Highlight
+                  bottom={-10}
+                  className="cursor-pointer w-56 md:w-80 inline-block text-center"
+                  onClick={() => handleUsecaseClick({})}
+                >
+                  {usecase.highlight}
+                </Highlight>
+                <Highlight.NavBtn right onClick={() => handleUsecaseClick({})}>
+                  <BiChevronRight className="inline" />
+                </Highlight.NavBtn>
+              </div>{" "}
+              {usecase.postfix}
+            </Title>
+          ))}
+        </div>
 
         <UseCase.Container>
           <UseCase.Items>
@@ -372,7 +420,9 @@ const NewLandingPage = () => {
           </UseCase.Items>
         </UseCase.Container>
 
-        <Title className="mt-24 mb-14">FAQs</Title>
+        <Title className="mt-24 mb-14" id="faq">
+          FAQ
+        </Title>
 
         <div className="space-y-2 max-w-[1000px]">
           <FAQ
@@ -402,23 +452,45 @@ const NewLandingPage = () => {
           <P className="mt-2">No login required</P>
         </div>
 
-        <div className="max-w-[400px] w-full flex justify-between items-center">
+        <div
+          className={classNames(
+            "max-w-[400px] w-full flex justify-between items-center mb-10",
+            "flex-col lg:flex-row space-y-4 lg:space-y-0"
+          )}
+        >
           <div className={classNames("text-3xl flex space-x-4")}>
-            <a href="https://twitter.com/retronote_app" target="_blank">
+            <a
+              href="https://twitter.com/retronote_app"
+              target="_blank"
+              rel="noreferrer"
+            >
               <SocialLink>
                 <RxTwitterLogo />
               </SocialLink>
             </a>
-            <a href="https://discord.gg/wqThG6K5f" target="_blank">
+            <a
+              href="https://discord.gg/wqThG6K5f"
+              target="_blank"
+              rel="noreferrer"
+            >
               <SocialLink>
                 <RxDiscordLogo />
               </SocialLink>
             </a>
           </div>
           <div className="space-x-4">
-            <a href=""><SocialLink>Terms</SocialLink></a>
-            <a href=""><SocialLink>Policy</SocialLink></a>
-            <a href=""><SocialLink>Built by @pramodk73</SocialLink></a>
+            <a href="" rel="noreferrer">
+              <SocialLink>Terms</SocialLink>
+            </a>
+            <a href="" rel="noreferrer">
+              <SocialLink>Policy</SocialLink>
+            </a>
+            <span className="text-primary-700 text-opacity-50">
+              Built by{" "}
+              <a href="https://twitter.com/pramodk73" rel="noreferrer">
+                <SocialLink>@pramodk73</SocialLink>
+              </a>
+            </span>
           </div>
         </div>
       </div>
