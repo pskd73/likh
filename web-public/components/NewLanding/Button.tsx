@@ -3,22 +3,27 @@ import { ComponentProps } from "react";
 import { twMerge } from "tailwind-merge";
 import { Courier } from "../font";
 
-const Button = ({
+const LinkButton = ({
   className,
   children,
   ...restProps
-}: ComponentProps<"button">) => {
+}: ComponentProps<"a">) => {
   return (
-    <button
+    <a
       className={twMerge(
         className,
-        classNames("bg-primary-700 text-white py-4 px-8", "italic text-3xl rounded-full", Courier.className)
+        classNames(
+          "bg-primary-700 text-white py-4 px-8",
+          "italic text-3xl rounded-full",
+          "block",
+          Courier.className
+        )
       )}
       {...restProps}
     >
       {children}
-    </button>
+    </a>
   );
 };
 
-export default Button;
+export default LinkButton;

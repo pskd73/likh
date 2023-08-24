@@ -1,5 +1,5 @@
 "use client";
-import Button from "@/components/NewLanding/Button";
+import LinkButton from "@/components/NewLanding/Button";
 import FAQ from "@/components/NewLanding/FAQ";
 import Highlight from "@/components/NewLanding/Highlight";
 import Title from "@/components/NewLanding/Title";
@@ -130,7 +130,9 @@ const NewLandingPage = () => {
         </P>
 
         <p className="py-8">
-          <Button>Start writing</Button>
+          <LinkButton href="https://app.retronote.app/write">
+            Start writing
+          </LinkButton>
           <P className="mt-2">No login required</P>
         </p>
 
@@ -448,7 +450,9 @@ const NewLandingPage = () => {
         </div>
 
         <div className="my-24">
-          <Button>Start writing</Button>
+          <LinkButton href="https://app.retronote.app/write">
+            Start writing
+          </LinkButton>
           <P className="mt-2">No login required</P>
         </div>
 
@@ -479,10 +483,10 @@ const NewLandingPage = () => {
             </a>
           </div>
           <div className="space-x-4">
-            <a href="" rel="noreferrer">
+            <a href="/terms" rel="noreferrer">
               <SocialLink>Terms</SocialLink>
             </a>
-            <a href="" rel="noreferrer">
+            <a href="/policy" rel="noreferrer">
               <SocialLink>Policy</SocialLink>
             </a>
             <span className="text-primary-700 text-opacity-50">

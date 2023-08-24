@@ -26,11 +26,11 @@ const Highlight = ({
       {...restProps}
     >
       {children}
-      <img
+      {/* <img
         src="/underline.png"
         className="max-w-full absolute left-0"
         style={{ bottom: bottom ? bottom : 0 }}
-      />
+      /> */}
     </span>
   );
 };
