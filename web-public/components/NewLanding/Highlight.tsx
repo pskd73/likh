@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import { ComponentProps, PropsWithChildren } from "react";
 import { twMerge } from "tailwind-merge";
+import { Courier } from "../font";
 
 const Background = ({ children }: PropsWithChildren) => {
   return (
@@ -20,9 +21,11 @@ const Highlight = ({
   ...restProps
 }: ComponentProps<"span"> & { bottom?: number }) => {
   return (
-    <span className={twMerge(className, classNames("relative"))} {...restProps}>
+    <span
+      className={twMerge(className, classNames("relative italic", Courier.className))}
+      {...restProps}
+    >
       {children}
-      <Background>{children}</Background>
       <img
         src="/underline.png"
         className="max-w-full absolute left-0"

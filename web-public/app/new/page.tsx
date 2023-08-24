@@ -1,5 +1,6 @@
 "use client";
 import Button from "@/components/NewLanding/Button";
+import FAQ from "@/components/NewLanding/FAQ";
 import Highlight from "@/components/NewLanding/Highlight";
 import Title from "@/components/NewLanding/Title";
 import UseCase from "@/components/NewLanding/UseCase";
@@ -22,6 +23,7 @@ import {
 } from "react-icons/bi";
 import { BsMarkdownFill } from "react-icons/bs";
 import { twMerge } from "tailwind-merge";
+import { RxTwitterLogo, RxDiscordLogo } from "react-icons/rx";
 
 const P = ({ className, children, ...restProps }: ComponentProps<"p">) => {
   return (
@@ -31,6 +33,20 @@ const P = ({ className, children, ...restProps }: ComponentProps<"p">) => {
     >
       {children}
     </p>
+  );
+};
+
+const SocialLink = ({ children, ...restProps }: ComponentProps<"span">) => {
+  return (
+    <span
+      className={classNames(
+        "text-primary-700 text-opacity-50",
+        "hover:text-opacity-100"
+      )}
+      {...restProps}
+    >
+      {children}
+    </span>
   );
 };
 
@@ -98,8 +114,8 @@ const NewLandingPage = () => {
               <BiChevronLeft className="inline" />
             </Highlight.NavBtn>
             <Highlight
-              bottom={-10}
-              className="cursor-pointer"
+              bottom={-16}
+              className="cursor-pointer w-80 inline-block text-center"
               onClick={() => handleUsecaseClick({})}
             >
               {usecase.highlight}
@@ -112,275 +128,299 @@ const NewLandingPage = () => {
         ))}
 
         <UseCase.Container>
-          <UseCase.Column>
-            <UseCase.Items>
-              <li
-                onClick={() => setActiveItem("organize")}
-                className={classNames({
-                  hidden: !["academic"].includes(
-                    usecases[activeUsecase].highlight
-                  ),
-                })}
-              >
-                <UseCase.Item active={activeItem === "organize"}>
-                  <UseCase.Item.Icon>
-                    <BiHash />
-                  </UseCase.Item.Icon>
-                  <UseCase.Item.Content>
-                    <UseCase.Item.Title>Organize</UseCase.Item.Title>
-                    <UseCase.Item.Description>
-                      Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry.
-                    </UseCase.Item.Description>
-                  </UseCase.Item.Content>
-                </UseCase.Item>
-              </li>
+          <UseCase.Items>
+            <li
+              onClick={() => setActiveItem("organize")}
+              className={classNames({
+                hidden: !["academic"].includes(
+                  usecases[activeUsecase].highlight
+                ),
+              })}
+            >
+              <UseCase.Item>
+                <UseCase.Item.Icon>
+                  <BiHash />
+                </UseCase.Item.Icon>
+                <UseCase.Item.Content>
+                  <UseCase.Item.Title>Organize</UseCase.Item.Title>
+                  <UseCase.Item.Description>
+                    Group the notes easily by just using hashtags. You can use
+                    "/" to event nest them!
+                  </UseCase.Item.Description>
+                </UseCase.Item.Content>
+              </UseCase.Item>
+            </li>
 
-              <li
-                onClick={() => setActiveItem("link-notes")}
-                className={classNames({
-                  hidden: !["academic", "research", "writing"].includes(
-                    usecases[activeUsecase].highlight
-                  ),
-                })}
-              >
-                <UseCase.Item active={activeItem === "link-notes"}>
-                  <UseCase.Item.Icon>
-                    <BiLink />
-                  </UseCase.Item.Icon>
-                  <UseCase.Item.Content>
-                    <UseCase.Item.Title>Link notes</UseCase.Item.Title>
-                    <UseCase.Item.Description>
-                      Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry.
-                    </UseCase.Item.Description>
-                  </UseCase.Item.Content>
-                </UseCase.Item>
-              </li>
+            <li
+              onClick={() => setActiveItem("link-notes")}
+              className={classNames({
+                hidden: !["academic", "research", "writing"].includes(
+                  usecases[activeUsecase].highlight
+                ),
+              })}
+            >
+              <UseCase.Item>
+                <UseCase.Item.Icon>
+                  <BiLink />
+                </UseCase.Item.Icon>
+                <UseCase.Item.Content>
+                  <UseCase.Item.Title>Link notes</UseCase.Item.Title>
+                  <UseCase.Item.Description>
+                    Link the notes by just wrapping the words inside [[]]. Helps
+                    in building map of thoughts!
+                  </UseCase.Item.Description>
+                </UseCase.Item.Content>
+              </UseCase.Item>
+            </li>
 
-              <li
-                onClick={() => setActiveItem("search")}
-                className={classNames({
-                  hidden: !["academic"].includes(
-                    usecases[activeUsecase].highlight
-                  ),
-                })}
-              >
-                <UseCase.Item active={activeItem === "search"}>
-                  <UseCase.Item.Icon>
-                    <BiSearchAlt />
-                  </UseCase.Item.Icon>
-                  <UseCase.Item.Content>
-                    <UseCase.Item.Title>Search</UseCase.Item.Title>
-                    <UseCase.Item.Description>
-                      Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry.
-                    </UseCase.Item.Description>
-                  </UseCase.Item.Content>
-                </UseCase.Item>
-              </li>
+            <li
+              onClick={() => setActiveItem("search")}
+              className={classNames({
+                hidden: !["academic"].includes(
+                  usecases[activeUsecase].highlight
+                ),
+              })}
+            >
+              <UseCase.Item>
+                <UseCase.Item.Icon>
+                  <BiSearchAlt />
+                </UseCase.Item.Icon>
+                <UseCase.Item.Content>
+                  <UseCase.Item.Title>Search</UseCase.Item.Title>
+                  <UseCase.Item.Description>
+                    Quickly search the notes across the collection right from
+                    the navigation menu!
+                  </UseCase.Item.Description>
+                </UseCase.Item.Content>
+              </UseCase.Item>
+            </li>
 
-              <li
-                onClick={() => setActiveItem("outline")}
-                className={classNames({
-                  hidden: !["academic"].includes(
-                    usecases[activeUsecase].highlight
-                  ),
-                })}
-              >
-                <UseCase.Item active={activeItem === "outline"}>
-                  <UseCase.Item.Icon>
-                    <BiBookContent />
-                  </UseCase.Item.Icon>
-                  <UseCase.Item.Content>
-                    <UseCase.Item.Title>Outline</UseCase.Item.Title>
-                    <UseCase.Item.Description>
-                      Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry.
-                    </UseCase.Item.Description>
-                  </UseCase.Item.Content>
-                </UseCase.Item>
-              </li>
+            <li
+              onClick={() => setActiveItem("outline")}
+              className={classNames({
+                hidden: !["academic"].includes(
+                  usecases[activeUsecase].highlight
+                ),
+              })}
+            >
+              <UseCase.Item>
+                <UseCase.Item.Icon>
+                  <BiBookContent />
+                </UseCase.Item.Icon>
+                <UseCase.Item.Content>
+                  <UseCase.Item.Title>Outline</UseCase.Item.Title>
+                  <UseCase.Item.Description>
+                    Have a mini map of the notes in the form of outline using
+                    headings.
+                  </UseCase.Item.Description>
+                </UseCase.Item.Content>
+              </UseCase.Item>
+            </li>
 
-              <li
-                onClick={() => setActiveItem("e2e")}
-                className={classNames({
-                  hidden: !["research", "writing"].includes(
-                    usecases[activeUsecase].highlight
-                  ),
-                })}
-              >
-                <UseCase.Item active={activeItem === "e2e"}>
-                  <UseCase.Item.Icon>
-                    <BiLock />
-                  </UseCase.Item.Icon>
-                  <UseCase.Item.Content>
-                    <UseCase.Item.Title>E2E encryption</UseCase.Item.Title>
-                    <UseCase.Item.Description>
-                      Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry.
-                    </UseCase.Item.Description>
-                  </UseCase.Item.Content>
-                </UseCase.Item>
-              </li>
+            <li
+              onClick={() => setActiveItem("e2e")}
+              className={classNames({
+                hidden: !["research", "writing"].includes(
+                  usecases[activeUsecase].highlight
+                ),
+              })}
+            >
+              <UseCase.Item>
+                <UseCase.Item.Icon>
+                  <BiLock />
+                </UseCase.Item.Icon>
+                <UseCase.Item.Content>
+                  <UseCase.Item.Title>E2E encryption</UseCase.Item.Title>
+                  <UseCase.Item.Description>
+                    All your notes are end to end encrypted even when they are
+                    synced across devices!
+                  </UseCase.Item.Description>
+                </UseCase.Item.Content>
+              </UseCase.Item>
+            </li>
 
-              <li
-                onClick={() => setActiveItem("images")}
-                className={classNames({
-                  hidden: !["research", "blogging"].includes(
-                    usecases[activeUsecase].highlight
-                  ),
-                })}
-              >
-                <UseCase.Item active={activeItem === "images"}>
-                  <UseCase.Item.Icon>
-                    <BiImage />
-                  </UseCase.Item.Icon>
-                  <UseCase.Item.Content>
-                    <UseCase.Item.Title>Images</UseCase.Item.Title>
-                    <UseCase.Item.Description>
-                      Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry.
-                    </UseCase.Item.Description>
-                  </UseCase.Item.Content>
-                </UseCase.Item>
-              </li>
+            <li
+              onClick={() => setActiveItem("images")}
+              className={classNames({
+                hidden: !["research", "blogging"].includes(
+                  usecases[activeUsecase].highlight
+                ),
+              })}
+            >
+              <UseCase.Item>
+                <UseCase.Item.Icon>
+                  <BiImage />
+                </UseCase.Item.Icon>
+                <UseCase.Item.Content>
+                  <UseCase.Item.Title>Images</UseCase.Item.Title>
+                  <UseCase.Item.Description>
+                    You can quickly add images to your notes by either drag and
+                    drop or copy and paste!
+                  </UseCase.Item.Description>
+                </UseCase.Item.Content>
+              </UseCase.Item>
+            </li>
 
-              <li
-                onClick={() => setActiveItem("code")}
-                className={classNames({
-                  hidden: !["blogging"].includes(
-                    usecases[activeUsecase].highlight
-                  ),
-                })}
-              >
-                <UseCase.Item active={activeItem === "code"}>
-                  <UseCase.Item.Icon>
-                    <BiCodeAlt />
-                  </UseCase.Item.Icon>
-                  <UseCase.Item.Content>
-                    <UseCase.Item.Title>Code blocks</UseCase.Item.Title>
-                    <UseCase.Item.Description>
-                      Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry.
-                    </UseCase.Item.Description>
-                  </UseCase.Item.Content>
-                </UseCase.Item>
-              </li>
+            <li
+              onClick={() => setActiveItem("code")}
+              className={classNames({
+                hidden: !["blogging"].includes(
+                  usecases[activeUsecase].highlight
+                ),
+              })}
+            >
+              <UseCase.Item>
+                <UseCase.Item.Icon>
+                  <BiCodeAlt />
+                </UseCase.Item.Icon>
+                <UseCase.Item.Content>
+                  <UseCase.Item.Title>Code blocks</UseCase.Item.Title>
+                  <UseCase.Item.Description>
+                    Insert code blocks with syntax highlighting with standard
+                    markdown!
+                  </UseCase.Item.Description>
+                </UseCase.Item.Content>
+              </UseCase.Item>
+            </li>
 
-              <li
-                onClick={() => setActiveItem("markdown")}
-                className={classNames({
-                  hidden: !["blogging", "writing"].includes(
-                    usecases[activeUsecase].highlight
-                  ),
-                })}
-              >
-                <UseCase.Item active={activeItem === "markdown"}>
-                  <UseCase.Item.Icon>
-                    <BsMarkdownFill />
-                  </UseCase.Item.Icon>
-                  <UseCase.Item.Content>
-                    <UseCase.Item.Title>Pure markdown</UseCase.Item.Title>
-                    <UseCase.Item.Description>
-                      Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry.
-                    </UseCase.Item.Description>
-                  </UseCase.Item.Content>
-                </UseCase.Item>
-              </li>
+            <li
+              onClick={() => setActiveItem("markdown")}
+              className={classNames({
+                hidden: !["blogging", "writing"].includes(
+                  usecases[activeUsecase].highlight
+                ),
+              })}
+            >
+              <UseCase.Item>
+                <UseCase.Item.Icon>
+                  <BsMarkdownFill />
+                </UseCase.Item.Icon>
+                <UseCase.Item.Content>
+                  <UseCase.Item.Title>Pure markdown</UseCase.Item.Title>
+                  <UseCase.Item.Description>
+                    Use markdown to format the notes. No proprietary format, no
+                    lock in!
+                  </UseCase.Item.Description>
+                </UseCase.Item.Content>
+              </UseCase.Item>
+            </li>
 
-              <li
-                onClick={() => setActiveItem("export")}
-                className={classNames({
-                  hidden: !["writing"].includes(
-                    usecases[activeUsecase].highlight
-                  ),
-                })}
-              >
-                <UseCase.Item active={activeItem === "export"}>
-                  <UseCase.Item.Icon>
-                    <BiExport />
-                  </UseCase.Item.Icon>
-                  <UseCase.Item.Content>
-                    <UseCase.Item.Title>Full export</UseCase.Item.Title>
-                    <UseCase.Item.Description>
-                      Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry.
-                    </UseCase.Item.Description>
-                  </UseCase.Item.Content>
-                </UseCase.Item>
-              </li>
+            <li
+              onClick={() => setActiveItem("export")}
+              className={classNames({
+                hidden: !["writing"].includes(
+                  usecases[activeUsecase].highlight
+                ),
+              })}
+            >
+              <UseCase.Item>
+                <UseCase.Item.Icon>
+                  <BiExport />
+                </UseCase.Item.Icon>
+                <UseCase.Item.Content>
+                  <UseCase.Item.Title>Full export</UseCase.Item.Title>
+                  <UseCase.Item.Description>
+                    Your notes are always yours! You can export all your notes
+                    with one shortcut!
+                  </UseCase.Item.Description>
+                </UseCase.Item.Content>
+              </UseCase.Item>
+            </li>
 
-              <li
-                onClick={() => setActiveItem("math")}
-                className={classNames({
-                  hidden: !["research"].includes(
-                    usecases[activeUsecase].highlight
-                  ),
-                })}
-              >
-                <UseCase.Item active={activeItem === "math"}>
-                  <UseCase.Item.Icon>
-                    <BiMath />
-                  </UseCase.Item.Icon>
-                  <UseCase.Item.Content>
-                    <UseCase.Item.Title>Math expressions</UseCase.Item.Title>
-                    <UseCase.Item.Description>
-                      Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry.
-                    </UseCase.Item.Description>
-                  </UseCase.Item.Content>
-                </UseCase.Item>
-              </li>
+            <li
+              onClick={() => setActiveItem("math")}
+              className={classNames({
+                hidden: !["research"].includes(
+                  usecases[activeUsecase].highlight
+                ),
+              })}
+            >
+              <UseCase.Item>
+                <UseCase.Item.Icon>
+                  <BiMath />
+                </UseCase.Item.Icon>
+                <UseCase.Item.Content>
+                  <UseCase.Item.Title>Math expressions</UseCase.Item.Title>
+                  <UseCase.Item.Description>
+                    Use LaTeX syntax to insert math expressions. Just wrap them
+                    inside $$!
+                  </UseCase.Item.Description>
+                </UseCase.Item.Content>
+              </UseCase.Item>
+            </li>
 
-              <li
-                onClick={() => setActiveItem("share")}
-                className={classNames({
-                  hidden: !["blogging"].includes(
-                    usecases[activeUsecase].highlight
-                  ),
-                })}
-              >
-                <UseCase.Item active={activeItem === "share"}>
-                  <UseCase.Item.Icon>
-                    <BiShareAlt />
-                  </UseCase.Item.Icon>
-                  <UseCase.Item.Content>
-                    <UseCase.Item.Title>Quick share</UseCase.Item.Title>
-                    <UseCase.Item.Description>
-                      Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry.
-                    </UseCase.Item.Description>
-                  </UseCase.Item.Content>
-                </UseCase.Item>
-              </li>
-            </UseCase.Items>
-          </UseCase.Column>
-          <UseCase.Column>
-            <UseCase.ImgContainer visible={activeItem === "organize"}>
-              <UseCase.Img
-                src="/usecases/organize-plain.png"
-                className="-rotate-[15deg] top-[50px] left-[40px]"
-              />
-              <UseCase.Img
-                src="/usecases/organize-expanded.png"
-                className="rotate-[8deg] left-[180px]"
-              />
-            </UseCase.ImgContainer>
-
-            <UseCase.ImgContainer visible={activeItem === "link-notes"}>
-              <UseCase.Img
-                src="/usecases/link-graph.png"
-                className="-rotate-[15deg] top-[50px] left-[40px]"
-              />
-              <UseCase.Img
-                src="/usecases/link-add.png"
-                className="rotate-[8deg] top-[260px] left-[80px] max-w-[80%]"
-              />
-            </UseCase.ImgContainer>
-          </UseCase.Column>
+            <li
+              onClick={() => setActiveItem("share")}
+              className={classNames({
+                hidden: !["blogging"].includes(
+                  usecases[activeUsecase].highlight
+                ),
+              })}
+            >
+              <UseCase.Item>
+                <UseCase.Item.Icon>
+                  <BiShareAlt />
+                </UseCase.Item.Icon>
+                <UseCase.Item.Content>
+                  <UseCase.Item.Title>Quick share</UseCase.Item.Title>
+                  <UseCase.Item.Description>
+                    Share your notes quickly with public right from the app!
+                  </UseCase.Item.Description>
+                </UseCase.Item.Content>
+              </UseCase.Item>
+            </li>
+          </UseCase.Items>
         </UseCase.Container>
+
+        <Title className="mt-24 mb-14">FAQs</Title>
+
+        <div className="space-y-2 max-w-[1000px]">
+          <FAQ
+            question="What is RetroNote?"
+            answer="RetroNote is a note taking app. These notes can be your daily journals, research notes, book writing, to-dos, academic notes, blog posts, etc."
+          />
+          <FAQ
+            question="How is RetroNote different from other apps?"
+            answer="RetroNote stands out for its simplicity and no overwhelming features. It local-first and provides distraction free environment for your writing activity without any lock in."
+          />
+          <FAQ
+            question="How do I install the app?"
+            answer="RetroNote is a web app. The app runs completely on your browser. You can install as PWA as well and it runs like a native application."
+          />
+          <FAQ
+            question="Where are my notes stored?"
+            answer="All your notes are stored on your browser itself. If you enable multi-device sync, the notes are copied to our sync servers in encrypted form."
+          />
+          <FAQ
+            question="How secured my notes are?"
+            answer="Your notes are completely end to end encrypted. Even when they are copied to sync servers, they are encrypted and RetroNote and the team has no way to read the notes."
+          />
+        </div>
+
+        <div className="my-24">
+          <Button>Start writing</Button>
+          <P className="mt-2">No login required</P>
+        </div>
+
+        <div className="max-w-[400px] w-full flex justify-between items-center">
+          <div className={classNames("text-3xl flex space-x-4")}>
+            <a href="https://twitter.com/retronote_app" target="_blank">
+              <SocialLink>
+                <RxTwitterLogo />
+              </SocialLink>
+            </a>
+            <a href="https://discord.gg/wqThG6K5f" target="_blank">
+              <SocialLink>
+                <RxDiscordLogo />
+              </SocialLink>
+            </a>
+          </div>
+          <div className="space-x-4">
+            <a href=""><SocialLink>Terms</SocialLink></a>
+            <a href=""><SocialLink>Policy</SocialLink></a>
+            <a href=""><SocialLink>Built by @pramodk73</SocialLink></a>
+          </div>
+        </div>
       </div>
     </div>
   );
