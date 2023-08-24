@@ -145,7 +145,7 @@ const NewLandingPage = () => {
                   <UseCase.Item.Title>Organize</UseCase.Item.Title>
                   <UseCase.Item.Description>
                     Group the notes easily by just using hashtags. You can use
-                    "/" to event nest them!
+                    &quot;/&quot; to event nest them!
                   </UseCase.Item.Description>
                 </UseCase.Item.Content>
               </UseCase.Item>
