@@ -24,8 +24,8 @@ import {
 import { BsMarkdownFill } from "react-icons/bs";
 import { twMerge } from "tailwind-merge";
 import { RxTwitterLogo, RxDiscordLogo } from "react-icons/rx";
-import { Courier_Prime } from "next/font/google";
 import { Courier } from "@/components/font";
+import Event from "@/components/Event";
 
 const P = ({ className, children, ...restProps }: ComponentProps<"p">) => {
   return (
@@ -78,6 +78,7 @@ const NewLandingPage = () => {
 
   return (
     <div className="bg-base text-primary-700">
+      <Event name="landing_page" />
       <nav
         className={classNames(
           "w-full mb-14 py-2",
