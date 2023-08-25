@@ -26,7 +26,7 @@ const Question = ({ children, ...restProps }: ComponentProps<"div">) => {
       )}
       {...restProps}
     >
-      <span>{children}</span>
+      <h3>{children}</h3>
       <span>
         <BiChevronDown />
       </span>
