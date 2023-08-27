@@ -4,17 +4,7 @@ import "./index.css";
 import "./prism.css";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import App from "./App";
-import PublicNote from "./Public/PublicNote";
-import Home from "./Home/Home";
-import MyNotes from "./Notes/MyNotes";
-import Settings from "./Settings/Settings";
-import Write from "./Write/Write";
-import New from "./Write/New";
-import { Private } from "./comps/Layout";
 import WriteV2 from "./Write";
-import Roll from "./Write/Roll";
-import Landing from "./Landing";
 import Timeline from "./App/Home/Timeline";
 import NotePage from "./App/NotePage";
 import Storage from "./App/SidePanel/Storage";
@@ -27,11 +17,7 @@ import PluginPage from "./App/PluginPage";
 
 const router = createBrowserRouter([
   {
-    path: "/old",
-    element: <Landing />,
-  },
-  {
-    path: "/write",
+    path: "/",
     element: <WriteV2 />,
     children: [
       {
@@ -73,41 +59,44 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/note",
-    element: <App nav={false} />,
-    children: [{ path: ":noteId", element: <PublicNote /> }],
-  },
-  {
-    path: "/",
-    element: (
-      <Private>
-        <App />
-      </Private>
-    ),
+    path: "/write",
+    element: <WriteV2 />,
     children: [
       {
-        path: "",
-        element: <Home />,
+        index: true,
+        element: <NewHome />,
       },
       {
-        path: "notes",
-        element: <MyNotes />,
+        path: "tags",
+        element: <MobileSearch />,
+      },
+      {
+        path: "timeline",
+        element: <Timeline />,
+      },
+      {
+        path: "note/:noteId",
+        element: <NotePage />,
+      },
+      {
+        path: "journal/:hashtag",
+        element: <RollPage />,
+      },
+      {
+        path: "settings/sync",
+        element: <Storage />,
       },
       {
         path: "settings",
-        element: <Settings />,
+        element: <MobileSettings />,
       },
       {
-        path: "write/:noteId",
-        element: <Write />,
+        path: "init",
+        element: <Init />,
       },
       {
-        path: "write/new",
-        element: <New />,
-      },
-      {
-        path: "roll",
-        element: <Roll />,
+        path: "plugin/:pluginUrl",
+        element: <PluginPage />,
       },
     ],
   },
