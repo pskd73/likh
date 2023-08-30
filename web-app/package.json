@@ -44,7 +44,8 @@
     "start": "PORT=3006 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "tauri": "tauri"
   },
   "eslintConfig": {
     "extends": [
@@ -66,6 +67,7 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.9",
+    "@tauri-apps/cli": "^1.4.0",
     "@types/crypto-js": "^4.1.1",
     "@types/d3": "^7.4.0",
     "@types/file-saver": "^2.0.5",
