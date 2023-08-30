@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { EditorContext } from "src/App/Context";
 import { useMiddle } from "src/comps/useMiddle";
 import { CustomEditor } from "src/App/Core/Core";
