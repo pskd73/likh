@@ -21,6 +21,7 @@ import Button from "src/comps/Button";
 import NoteTab from "./NoteTab";
 import { EditorContext } from "./Context";
 import { useTitle } from "src/comps/useTitle";
+import { useWindowSize } from "./useWindowSize";
 
 type Tab = {
   key: string;
@@ -115,9 +116,10 @@ const Tabs = () => {
   const ref = useRef<HTMLUListElement>(null);
   const { tabs, closeTab } = useContext(TabsContext);
   const navigate = useNavigate();
+  const { width: windowWidth } = useWindowSize();
   const width = useMemo(
     () => (ref.current ? ref.current.getBoundingClientRect().width : null),
-    [ref.current]
+    [ref.current, windowWidth, tabs]
   );
 
   if (!Object.keys(tabs).length) return null;
