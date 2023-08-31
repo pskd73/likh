@@ -98,7 +98,7 @@ export const useMiddle = (
     scrollToTop,
     scrollTo,
     style: {
-      paddingTop: options.typeWriter ? paddingTop : 0,
+      paddingTop: options.typeWriter ? paddingTop : 14,
       paddingBottom: options.typeWriter ? height / 2 : 100,
     },
   };

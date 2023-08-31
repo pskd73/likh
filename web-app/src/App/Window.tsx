@@ -13,6 +13,7 @@ import { Outlet } from "react-router-dom";
 import { enabledPlugins } from "./Plugin/List";
 import MobileNavBar from "./MobileNavBar";
 import { WithPlugins } from "./Plugin/Context";
+import Tabs, { TabsContainer, TabsContext, useTabs } from "./Tabs";
 
 const STATUS_BAR_HEIGHT = 30;
 
@@ -22,6 +23,7 @@ const EditorWindow = () => {
   const pdb = PouchDB.usePouchDb();
   const storage = useStorage(pdb);
   const editorState = useEditor({ storage, pdb, plugins });
+  const tabsState = useTabs();
 
   const statusBarPadding = useMemo(() => (iOS() ? 20 : 0), []);
 
@@ -54,21 +56,10 @@ const EditorWindow = () => {
                     : "100vw",
               }}
             >
-              <div
-                id="page-container"
-                className={classNames("flex-1 flex justify-center", {
-                  "p-4 py-8": !editorState.fullPage,
-                })}
-                tabIndex={-1}
-              >
-                <div
-                  className={classNames("w-full", {
-                    "max-w-[1000px]": !editorState.fullPage,
-                  })}
-                >
-                  <Outlet />
-                </div>
-              </div>
+              <TabsContext.Provider value={tabsState}>
+                <Tabs />
+                <TabsContainer />
+              </TabsContext.Provider>
               {!isMobile ? (
                 <StatusBar
                   height={STATUS_BAR_HEIGHT}

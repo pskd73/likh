@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { EditorContext } from "src/App/Context";
 import { useMiddle } from "src/comps/useMiddle";
 import { CustomEditor } from "src/App/Core/Core";
@@ -105,7 +105,7 @@ const NotePage = () => {
       ref={ref}
       key={note.id}
       style={{ ...scroll.style }}
-      className={classNames("space-y-6 md:px-20")}
+      className={classNames("space-y-6 p-4")}
     >
       <NoteEditor
         onChange={handleChange}

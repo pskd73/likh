@@ -15,7 +15,7 @@ type OutlineTitle = {
 };
 
 const generateTitles = () => {
-  const nodes = document.querySelectorAll("[data-title-level]");
+  const nodes = document.querySelectorAll(".tab.active [data-title-level]");
   const titles: OutlineTitle[] = [];
   nodes.forEach((node) => {
     titles.push({

@@ -128,11 +128,11 @@ const Timeline = () => {
   if (!timeline) return null;
 
   return (
-    <div>
+    <div className="p-4">
       <div
         ref={focusDtRef}
         className={classNames(
-          "sticky top-0",
+          "sticky top-10",
           "flex items-center space-x-4 z-20",
           {
             hidden: !focusDt,

@@ -212,7 +212,12 @@ const NewHome = () => {
   };
 
   return (
-    <div className={classNames({ "pb-10": !isMobile, "pb-20": isMobile })}>
+    <div
+      className={classNames("p-4", {
+        "pb-10": !isMobile,
+        "pb-20": isMobile,
+      })}
+    >
       <div
         className={classNames(
           "flex flex-col lg:flex-row justify-between",

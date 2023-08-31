@@ -4,6 +4,7 @@ import classNames from "classnames";
 import slugify from "slugify";
 import { BaseRange } from "slate";
 import { CustomEditor } from "../Core";
+import { slugifyTitle } from "src/App/slug";
 
 export type LeafMaker = (props: {
   attributes: any;
@@ -147,7 +148,7 @@ function Leaf({
         }}
         id={
           !leaf.punctuation && !leaf.notelinkId
-            ? slugify(leaf.text, { lower: true })
+            ? slugifyTitle(leaf.text)
             : undefined
         }
       >

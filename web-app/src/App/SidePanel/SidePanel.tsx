@@ -166,7 +166,7 @@ const SidePanel = () => {
           <>
             <div
               className={classNames(
-                "flex p-2 text-xl justify-end",
+                "flex px-2 text justify-end h-8 py-1",
                 "border-b border-primary border-opacity-10"
               )}
             >

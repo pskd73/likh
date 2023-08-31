@@ -2,6 +2,7 @@ import classNames from "classnames";
 import { CustomGrammarValue } from "../grammer";
 import { RNPluginCreator } from "./type";
 import slugify from "slugify";
+import { slugifyTitle } from "../slug";
 
 export const title: CustomGrammarValue = {
   pattern: /^#{1,6} .*$/m,
@@ -47,7 +48,7 @@ const HeadingsPlugin: RNPluginCreator = () => {
             className={classNames("mt-4 mb-3")}
             {...attributes}
             data-title-level={level}
-            data-title-slug={slugify(text, { lower: true })}
+            data-title-slug={slugifyTitle(text)}
           >
             {children}
           </p>
