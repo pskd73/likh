@@ -80,7 +80,7 @@ const Storage = () => {
   };
 
   return (
-    <div className="space-y-10 p-2 w-full max-w-[400px]">
+    <div className="space-y-10 p-4 w-full max-w-[400px]">
       <div>
         <div className="mb-2">
           <Label>Secret</Label>

@@ -159,11 +159,14 @@ const Tabs = () => {
   );
 };
 
-const ScrollableCenter = ({ children }: PropsWithChildren) => {
+const ScrollableCenter = ({
+  children,
+  tabView,
+}: PropsWithChildren & { tabView: boolean }) => {
   return (
     <div
       className="flex justify-center overflow-y-scroll"
-      style={{ height: "calc(100vh - 62px)" }}
+      style={{ height: tabView ? "calc(100vh - 62px)" : "calc(100vh - 30px)" }}
     >
       {children}
     </div>
@@ -204,13 +207,9 @@ export const TabsContainer = () => {
   }, [pathname, tabs]);
 
   return (
-    <ScrollableCenter>
+    <ScrollableCenter tabView={tabView}>
       <Paged>
-        {!tabView && (
-          <div className="py-8">
-            <Outlet />
-          </div>
-        )}
+        {!tabView && <Outlet />}
         {tabView &&
           Object.values(tabs).map((tab) => (
             <div

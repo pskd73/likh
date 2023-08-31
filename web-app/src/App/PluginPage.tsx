@@ -21,7 +21,7 @@ const PluginPage = () => {
     return element;
   }, [pluginUrl, plugins, newPlugins]);
 
-  return <div>{page}</div>;
+  return <div className="p-4">{page}</div>;
 };
 
 export default PluginPage;

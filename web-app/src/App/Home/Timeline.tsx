@@ -128,7 +128,7 @@ const Timeline = () => {
   if (!timeline) return null;
 
   return (
-    <div>
+    <div className="p-4">
       <div
         ref={focusDtRef}
         className={classNames(

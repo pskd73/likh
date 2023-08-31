@@ -105,7 +105,7 @@ const NotePage = () => {
       ref={ref}
       key={note.id}
       style={{ ...scroll.style }}
-      className={classNames("space-y-6 md:px-20")}
+      className={classNames("space-y-6 p-4")}
     >
       <NoteEditor
         onChange={handleChange}
