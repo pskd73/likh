@@ -3,6 +3,11 @@ import { Note } from "./type";
 
 const MAX_FOCUS_LENGTH = 30;
 
+function htmlDecode(input: string) {
+  const doc = new DOMParser().parseFromString(input, "text/html");
+  return doc.documentElement.textContent;
+}
+
 export const textToTitle = (text: string, max?: number) => {
   const MAX_LENGTH = 100;
   max = max || MAX_LENGTH;
@@ -17,12 +22,12 @@ export const textToTitle = (text: string, max?: number) => {
   cleaned = marked
     .parse(cleaned, { mangle: false, headerIds: false })
     .replace(/<[^>]+>/g, "");
+  cleaned = htmlDecode(cleaned) || cleaned;
 
-  cleaned = (
+  cleaned =
     cleaned.replaceAll("\n", " ").substring(0, max) +
-    (cleaned.length > max ? "..." : "")
-  );
-  return cleaned || "Note"
+    (cleaned.length > max ? "..." : "");
+  return cleaned || "Note";
 };
 
 export const getNoteTitle = (note: Note) => {
