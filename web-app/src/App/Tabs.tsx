@@ -68,7 +68,7 @@ const Tab = ({
   return (
     <li
       className={classNames(
-        "max-w-[140px] h-full",
+        "max-w-[140px] h-full relative",
         "flex items-center px-2 justify-between",
         "border-r border-primary border-opacity-10",
         "cursor-pointer",
@@ -104,6 +104,14 @@ const Tab = ({
           <BiX />
         </Button>
       </div>
+      {active && (
+        <div
+          className={classNames(
+            "absolute w-full left-0 right-0 -bottom-1",
+            "bg-base h-2",
+          )}
+        />
+      )}
     </li>
   );
 };
@@ -130,7 +138,11 @@ const Tabs = () => {
     >
       <ul
         ref={ref}
-        className={classNames("h-full bg-primary bg-opacity-10", "flex")}
+        className={classNames(
+          "h-full bg-primary bg-opacity-10",
+          "flex",
+          "border-b border-primary border-opacity-10"
+        )}
       >
         {Object.values(tabs).map((tab, i) => (
           <Tab
