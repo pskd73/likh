@@ -147,7 +147,12 @@ function Leaf({
         }}
         id={
           !leaf.punctuation && !leaf.notelinkId
-            ? slugify(leaf.text, { lower: true })
+            ? "title-" +
+              slugify(leaf.text, {
+                lower: true,
+                remove: /[*+~.()'"!:@#]/g,
+                strict: true,
+              })
             : undefined
         }
       >

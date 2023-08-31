@@ -47,7 +47,14 @@ const HeadingsPlugin: RNPluginCreator = () => {
             className={classNames("mt-4 mb-3")}
             {...attributes}
             data-title-level={level}
-            data-title-slug={slugify(text, { lower: true })}
+            data-title-slug={
+              "title-" +
+              slugify(text, {
+                lower: true,
+                remove: /[*+~.()'"!:@#]/g,
+                strict: true,
+              })
+            }
           >
             {children}
           </p>
