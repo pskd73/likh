@@ -3,7 +3,7 @@ import { useContext, useState } from "react";
 import { EditorContext } from "src/App/Context";
 import { isMobile } from "src/App/device";
 import { WithTitle } from "src/App/SidePanel/Common";
-import { BiLink, BiNetworkChart } from "react-icons/bi";
+import { BiNetworkChart } from "react-icons/bi";
 import useDelayedEffect from "src/App/useDelayedEffect";
 import { FolderItem } from "../Folders";
 
@@ -13,7 +13,7 @@ type NoteLink = {
 };
 
 const generateLinks = () => {
-  const nodes = document.querySelectorAll(".notelink");
+  const nodes = document.querySelectorAll(".tab.active .notelink");
   const links: NoteLink[] = [];
   nodes.forEach((node) => {
     links.push({ text: node.textContent!, id: node.id });

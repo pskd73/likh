@@ -253,7 +253,7 @@ const Page = () => {
     <div className="relative">
       <div
         className={classNames(
-          "p-6 absolute top-0 left-0",
+          "absolute top-0 left-0",
           "md:flex items-center md:space-x-2",
           "space-y-1 md:space-y-0"
         )}

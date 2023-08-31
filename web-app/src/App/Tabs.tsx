@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import {
   ComponentProps,
+  PropsWithChildren,
   ReactElement,
   createContext,
   useContext,
@@ -10,18 +11,13 @@ import {
   useState,
 } from "react";
 import { BiX } from "react-icons/bi";
-import {
-  Outlet,
-  useLocation,
-  useNavigate,
-  useNavigation,
-  useOutlet,
-} from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Button from "src/comps/Button";
 import NoteTab from "./NoteTab";
 import { EditorContext } from "./Context";
 import { useTitle } from "src/comps/useTitle";
 import { useWindowSize } from "./useWindowSize";
+import { isMobile } from "./device";
 
 type Tab = {
   key: string;
@@ -163,19 +159,42 @@ const Tabs = () => {
   );
 };
 
+const ScrollableCenter = ({ children }: PropsWithChildren) => {
+  return (
+    <div
+      className="flex justify-center overflow-y-scroll"
+      style={{ height: "calc(100vh - 62px)" }}
+    >
+      {children}
+    </div>
+  );
+};
+
+const Paged = ({ children }: PropsWithChildren) => {
+  return (
+    <div id="page-container" className={classNames("max-w-[1000px] w-full")}>
+      {children}
+    </div>
+  );
+};
+
 export const TabsContainer = () => {
   const { tabs, addTab } = useContext(TabsContext);
   const { setNote } = useContext(EditorContext);
   const { pathname } = useLocation();
   const { setTitle } = useTitle();
+  const tabView = useMemo(
+    () => !isMobile && pathname.startsWith("/write/note"),
+    [pathname]
+  );
 
   useEffect(() => {
-    if (pathname.startsWith("/write/note")) {
+    if (tabView) {
       const noteId = pathname.split("/").pop()!;
       addTab(window.location.pathname, <NoteTab noteId={noteId} />);
       setNote({ id: noteId });
     }
-  }, [pathname]);
+  }, [pathname, tabView]);
 
   useEffect(() => {
     const active = tabs[pathname];
@@ -184,21 +203,28 @@ export const TabsContainer = () => {
     }
   }, [pathname, tabs]);
 
-  if (!pathname.startsWith("/write/note")) return <Outlet />;
-
   return (
-    <>
-      {Object.values(tabs).map((tab) => (
-        <div
-          key={tab.key}
-          className={classNames({
-            hidden: pathname !== tab.key,
-          })}
-        >
-          {tab.elem}
-        </div>
-      ))}
-    </>
+    <ScrollableCenter>
+      <Paged>
+        {!tabView && (
+          <div className="py-8">
+            <Outlet />
+          </div>
+        )}
+        {tabView &&
+          Object.values(tabs).map((tab) => (
+            <div
+              key={tab.key}
+              className={classNames("tab p-8", {
+                hidden: pathname !== tab.key,
+                active: pathname === tab.key,
+              })}
+            >
+              {tab.elem}
+            </div>
+          ))}
+      </Paged>
+    </ScrollableCenter>
   );
 };
 

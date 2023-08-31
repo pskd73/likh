@@ -58,16 +58,7 @@ const EditorWindow = () => {
             >
               <TabsContext.Provider value={tabsState}>
                 <Tabs />
-                <div className="flex justify-center">
-                  <div
-                    id="page-container"
-                    className={classNames("max-w-[1000px] w-full", {
-                      "p-4 py-8": !editorState.fullPage,
-                    })}
-                  >
-                    <TabsContainer />
-                  </div>
-                </div>
+                <TabsContainer />
               </TabsContext.Provider>
               {!isMobile ? (
                 <StatusBar
