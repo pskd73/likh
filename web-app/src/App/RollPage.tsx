@@ -149,7 +149,7 @@ const RollPage = () => {
     <div
       ref={ref}
       style={{ ...scroll.style }}
-      className={classNames("space-y-6 md:px-20")}
+      className={classNames("space-y-6")}
     >
       {notes
         .sort((a, b) => a.created_at - b.created_at)
