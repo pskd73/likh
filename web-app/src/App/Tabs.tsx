@@ -106,8 +106,9 @@ const Tab = ({
       </div>
       {active && (
         <div
+          style={{bottom: -1}}
           className={classNames(
-            "absolute w-full left-0 right-0 -bottom-1",
+            "absolute w-full left-0 right-0",
             "bg-base h-2",
           )}
         />
