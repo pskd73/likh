@@ -35,6 +35,13 @@ const EditorWindow = () => {
     );
   }, [editorState]);
 
+  useEffect(() => {
+    document.body.style.overflowY = "hidden";
+    return () => {
+      document.body.style.overflowY = "auto";
+    };
+  }, []);
+
   return (
     <PouchDB.PouchContext.Provider value={pdb}>
       <TabsContext.Provider value={tabsState}>

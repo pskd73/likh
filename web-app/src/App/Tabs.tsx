@@ -78,6 +78,7 @@ const Tab = ({
           "bg-primary bg-opacity-0": !active,
           "hover:bg-opacity-10": !active,
           "rounded-t": active,
+          "border border-primary border-opacity-20 border-b-0": active,
         }
       )}
       style={{ width: 100, ...style }}
@@ -175,12 +176,12 @@ const Tabs = () => {
 
 const ScrollableCenter = ({
   children,
-  tabView,
-}: PropsWithChildren & { tabView: boolean }) => {
+  tabs,
+}: PropsWithChildren & { tabs: boolean }) => {
   return (
     <div
       className="flex justify-center overflow-y-scroll"
-      style={{ height: tabView ? "calc(100vh - 62px)" : "calc(100vh - 30px)" }}
+      style={{ height: tabs ? "calc(100vh - 62px)" : "calc(100vh - 30px)" }}
     >
       {children}
     </div>
@@ -228,7 +229,7 @@ export const TabsContainer = () => {
   }, [pathname, tabs, allNotes]);
 
   return (
-    <ScrollableCenter tabView={tabView}>
+    <ScrollableCenter tabs={!!Object.keys(tabs).length}>
       <Paged>
         {!tabView && <Outlet />}
         {tabView &&

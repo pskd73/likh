@@ -213,7 +213,7 @@ const NewHome = () => {
 
   return (
     <div
-      className={classNames("p-4", {
+      className={classNames("p-4 py-8", {
         "pb-10": !isMobile,
         "pb-20": isMobile,
       })}
