@@ -37,41 +37,41 @@ const EditorWindow = () => {
 
   return (
     <PouchDB.PouchContext.Provider value={pdb}>
-      <EditorContext.Provider value={editorState}>
-        <WithPlugins>
-          <div
-            className={classNames("min-h-[100vh] bg-base text-primary flex", {
-              "theme-base": editorState.colorTheme === "base",
-              "theme-dark": editorState.colorTheme === "dark",
-              "theme-accent": editorState.colorTheme === "accent",
-              "theme-secondary": editorState.colorTheme === "secondary",
-            })}
-          >
-            <SidePanel />
+      <TabsContext.Provider value={tabsState}>
+        <EditorContext.Provider value={editorState}>
+          <WithPlugins>
             <div
-              style={{
-                width:
-                  editorState.sideBar && !isMobile
-                    ? "calc(100vw - 300px)"
-                    : "100vw",
-              }}
+              className={classNames("min-h-[100vh] bg-base text-primary flex", {
+                "theme-base": editorState.colorTheme === "base",
+                "theme-dark": editorState.colorTheme === "dark",
+                "theme-accent": editorState.colorTheme === "accent",
+                "theme-secondary": editorState.colorTheme === "secondary",
+              })}
             >
-              <TabsContext.Provider value={tabsState}>
+              <SidePanel />
+              <div
+                style={{
+                  width:
+                    editorState.sideBar && !isMobile
+                      ? "calc(100vw - 300px)"
+                      : "100vw",
+                }}
+              >
                 <Tabs />
                 <TabsContainer />
-              </TabsContext.Provider>
-              {!isMobile ? (
-                <StatusBar
-                  height={STATUS_BAR_HEIGHT}
-                  padding={statusBarPadding}
-                />
-              ) : (
-                <MobileNavBar />
-              )}
+                {!isMobile ? (
+                  <StatusBar
+                    height={STATUS_BAR_HEIGHT}
+                    padding={statusBarPadding}
+                  />
+                ) : (
+                  <MobileNavBar />
+                )}
+              </div>
             </div>
-          </div>
-        </WithPlugins>
-      </EditorContext.Provider>
+          </WithPlugins>
+        </EditorContext.Provider>
+      </TabsContext.Provider>
     </PouchDB.PouchContext.Provider>
   );
 };

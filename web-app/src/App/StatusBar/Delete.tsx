@@ -5,8 +5,10 @@ import { BiCheck, BiX } from "react-icons/bi";
 import { EditorContext } from "src/App/Context";
 import Tooltip from "src/comps/Tooltip";
 import { useNavigate } from "react-router-dom";
+import { TabsContext } from "../Tabs";
 
 const Delete = () => {
+  const { closeTab } = useContext(TabsContext);
   const { deleteNote, note } = useContext(EditorContext);
   const [prompt, setPrompt] = useState(false);
   const navigate = useNavigate();
@@ -15,6 +17,7 @@ const Delete = () => {
     if (note) {
       deleteNote(note.id);
       setPrompt(false);
+      closeTab(window.location.pathname);
       navigate("/write");
     }
   };

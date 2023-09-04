@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { Storage } from "./useStorage";
 import { NewNote, SavedNote } from "./type";
-import { isLinked } from "src/Note";
+import { isLinked, textToTitle } from "src/Note";
 import { getLinkSuggestions } from "./Suggestion";
 import { PersistedState } from "./usePersistedState";
 import { Theme } from "./Theme";
@@ -127,7 +127,7 @@ export const useEditor = ({
   const newNote = (note: NewNote, replace: boolean = true) => {
     const savedNote = storage.newNote(note.text, note.created_at, note.id);
     if (!savedNote) return;
-    setAllNotes({ ...allNotes, [savedNote.id]: savedNote });
+    setAllNotes(_an => ({ ..._an, [savedNote.id]: savedNote }));
     return savedNote;
   };
 
