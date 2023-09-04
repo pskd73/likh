@@ -149,7 +149,7 @@ const Editor = ({
       contextMenu.setCount(0);
       return setSuggestions([]);
     })();
-  }, [contextMenu.search, contextMenu.activePrefix]);
+  }, [contextMenu.search, contextMenu.activePrefix, getSuggestions]);
 
   useEditorPaste({
     editor,
@@ -175,7 +175,7 @@ const Editor = ({
         editor={editor}
       />
     ),
-    []
+    [onNoteLinkClick]
   );
 
   const decorate = useCallback(
@@ -352,9 +352,7 @@ const Editor = ({
   const handleCopy: ClipboardEventHandler<HTMLDivElement> = (e) => {
     if (editor.selection) {
       const fragments = editor.fragment(editor.selection);
-      const text = fragments
-        .map((frag) => getNodeText(frag))
-        .join("\n");
+      const text = fragments.map((frag) => getNodeText(frag)).join("\n");
       e.clipboardData.setData("text/plain", text);
       e.preventDefault();
       e.stopPropagation();
