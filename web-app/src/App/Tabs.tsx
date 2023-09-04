@@ -18,6 +18,7 @@ import { EditorContext } from "./Context";
 import { useTitle } from "src/comps/useTitle";
 import { useWindowSize } from "./useWindowSize";
 import { isMobile } from "./device";
+import { textToTitle } from "src/Note";
 
 type Tab = {
   key: string;
@@ -94,7 +95,7 @@ const Tab = ({
       <div>
         <Button
           lite
-          className="w-6 h-6 p-0 flex justify-center items-center"
+          className="w-4 h-4 p-0 flex justify-center items-center"
           onClick={(e) => {
             onClose();
             e.preventDefault();
@@ -106,10 +107,10 @@ const Tab = ({
       </div>
       {active && (
         <div
-          style={{bottom: -1}}
+          style={{ bottom: -1 }}
           className={classNames(
             "absolute w-full left-0 right-0",
-            "bg-base h-2",
+            "bg-base h-2"
           )}
         />
       )}
@@ -195,8 +196,8 @@ const Paged = ({ children }: PropsWithChildren) => {
 };
 
 export const TabsContainer = () => {
-  const { tabs, addTab } = useContext(TabsContext);
-  const { setNote } = useContext(EditorContext);
+  const { tabs, addTab, setTitle: setTabTitle } = useContext(TabsContext);
+  const { setNote, allNotes } = useContext(EditorContext);
   const { pathname } = useLocation();
   const { setTitle } = useTitle();
   const tabView = useMemo(
@@ -213,11 +214,18 @@ export const TabsContainer = () => {
   }, [pathname, tabView]);
 
   useEffect(() => {
-    const active = tabs[pathname];
-    if (active && active.title) {
-      setTitle(active.title);
+    if (tabView) {
+      const active = tabs[pathname];
+      const noteId = pathname.split("/").pop()!;
+      if (allNotes[noteId]) {
+        const newTitle = textToTitle(allNotes[noteId].text);
+        if (active && active.title !== newTitle) {
+          setTitle(newTitle);
+          setTabTitle(pathname, newTitle);
+        }
+      }
     }
-  }, [pathname, tabs]);
+  }, [pathname, tabs, allNotes]);
 
   return (
     <ScrollableCenter tabView={tabView}>
