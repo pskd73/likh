@@ -236,7 +236,7 @@ export const TabsContainer = () => {
           Object.values(tabs).map((tab) => (
             <div
               key={tab.key}
-              className={classNames("tab p-8", {
+              className={classNames("tab p-8 py-16", {
                 hidden: pathname !== tab.key,
                 active: pathname === tab.key,
               })}
