@@ -134,7 +134,7 @@ const Tabs = () => {
   return (
     <div
       className={classNames(
-        "sticky top-0 left-[300px] h-8 w-full",
+        "fixed top-0 left-[300px] h-8 w-full",
         "border-primary border-opacity-20",
         "bg-base z-10"
       )}

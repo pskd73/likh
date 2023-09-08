@@ -114,7 +114,7 @@ const StatusBar = ({
       className={classNames(
         "w-full right-0 z-30 flex justify-between items-center",
         "bg-base shadow-2xl border-t border-primary border-opacity-10",
-        "absolute bottom-0"
+        "fixed bottom-0"
       )}
       style={{ height: height + padding, paddingBottom: padding }}
     >
