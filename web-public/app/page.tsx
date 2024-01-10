@@ -474,7 +474,7 @@ const NewLandingPage = () => {
               </SocialLink>
             </a>
             <a
-              href="https://discord.gg/wqThG6K5f"
+              href="https://discord.gg/KS9khUH9m3"
               target="_blank"
               rel="noreferrer"
             >
